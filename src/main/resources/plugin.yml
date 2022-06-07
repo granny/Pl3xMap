@@ -1,0 +1,14 @@
+name: "${name}"
+main: "${group}.${name}"
+version: "${version}"
+api-version: "1.18"
+author: "BillyGalbreath"
+description: "${description}"
+
+commands:
+  pl3xmap:
+    description: Control the plugin
+    permission: command.pl3xmap
+    usage: /<command>
+    aliases:
+      - map

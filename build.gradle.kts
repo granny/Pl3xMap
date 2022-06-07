@@ -19,7 +19,6 @@ tasks {
     assemble {
         dependsOn(reobfJar)
     }
-
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -29,5 +28,11 @@ tasks {
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name()
+        expand(
+            "name" to rootProject.name,
+            "group" to project.group,
+            "version" to project.version,
+            "description" to project.description,
+        )
     }
 }
