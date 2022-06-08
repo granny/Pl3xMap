@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HelpCommand extends BaseCommand {
     public HelpCommand(Pl3xMap plugin) {
-        super(plugin, "help", Lang.CMD_HELP_DESCRIPTION, "pl3xmap.command.help", "/<command> help (subcommand)");
+        super(plugin, "help", Lang.COMMAND_HELP_DESCRIPTION, "pl3xmap.command.help", "/<command> help (subcommand)");
     }
 
     @Override

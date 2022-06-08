@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ReloadCommand extends BaseCommand {
     public ReloadCommand(Pl3xMap plugin) {
-        super(plugin, "reload", Lang.CMD_RELOAD_DESCRIPTION, "pl3xmap.command.reload", "/<command> reload");
+        super(plugin, "reload", Lang.COMMAND_RELOAD_DESCRIPTION, "pl3xmap.command.reload", "/<command> reload");
     }
 
     @Override
@@ -27,9 +27,10 @@ public class ReloadCommand extends BaseCommand {
         getPlugin().disable();
         getPlugin().enable();
 
-        Lang.send(sender, Lang.CMD_RELOAD_SUCCESS,
-                Placeholder.parsed("name", getPlugin().getName()),
-                Placeholder.parsed("version", getPlugin().getDescription().getVersion()));
+        String version = getPlugin().getDescription().getVersion();
+
+        Lang.send(sender, Lang.COMMAND_RELOAD_SUCCESS,
+                Placeholder.parsed("version", version));
         return true;
     }
 }

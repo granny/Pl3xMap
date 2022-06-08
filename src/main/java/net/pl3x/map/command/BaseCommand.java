@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +62,7 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     public void showUsage(CommandSender sender) {
-        Lang.send(sender, Lang.COMMAND_USAGE,
+        Lang.send(sender, Lang.COMMAND_BASE_USAGE,
                 Placeholder.parsed("command", getName()),
                 Placeholder.parsed("description", getDescription()),
                 Placeholder.parsed("usage", getUsage()));
@@ -103,7 +104,7 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     public boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
-        if (args.size() > 0) {
+        if (args != null && args.size() > 0) {
             BaseCommand subCmd = this.subCommands.get(args.pop().toLowerCase());
             if (subCmd != null) {
                 return subCmd.handleCommand(sender, command, args);
@@ -115,18 +116,18 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     private void showSubCommands(CommandSender sender) {
-        Lang.send(sender, Lang.COMMAND_HELP_SUBCOMMANDS_TITLE);
-        Lang.send(sender, false, Lang.COMMAND_HELP_SUBCOMMANDS_FULL_COMMAND,
+        Lang.send(sender, Lang.COMMAND_BASE_SUBCOMMANDS_TITLE);
+        Lang.send(sender, false, Lang.COMMAND_BASE_SUBCOMMANDS_FULL_COMMAND,
                 Placeholder.parsed("command", this.getName()));
         boolean hasSubCmds = false;
         int i = 1;
         Collection<BaseCommand> subCmds = this.subCommands.values();
         for (BaseCommand subCmd : subCmds) {
             if (sender.hasPermission(subCmd.getPermission())) {
-                Lang.send(sender, false, Lang.COMMAND_HELP_SUBCOMMANDS_ENTRY,
+                Lang.send(sender, false, Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY,
                         Placeholder.parsed("prefix", i == subCmds.size() ?
-                                Lang.COMMAND_HELP_SUBCOMMANDS_ENTRY_PREFIX_LAST :
-                                Lang.COMMAND_HELP_SUBCOMMANDS_ENTRY_PREFIX),
+                                Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST :
+                                Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX),
                         Placeholder.parsed("command", subCmd.getName()),
                         Placeholder.parsed("description", subCmd.getDescription()));
                 hasSubCmds = true;
@@ -143,7 +144,7 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     protected Player getPlayer(CommandSender sender, LinkedList<String> args, String targetPerm) {
-        String target = args.pop();
+        String target = args == null || args.size() < 1 ? null : args.pop();
         if (target == null) {
             if (sender instanceof Player player) {
                 return player;
@@ -161,7 +162,7 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     public MapWorld getMapWorld(CommandSender sender, LinkedList<String> args) {
-        String target = args.pop();
+        String target = args == null || args.size() < 1 ? null : args.pop();
         World world = null;
         if (target == null) {
             if (!(sender instanceof Player player)) {
@@ -183,16 +184,18 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     public List<String> tabPlayers(String target) {
+        String lower = target.toUpperCase(Locale.ROOT);
         return Bukkit.getOnlinePlayers().stream()
-                .map(player -> player.getName().toLowerCase(Locale.ROOT))
-                .filter(name -> name.startsWith(target.toLowerCase(Locale.ROOT)))
+                .map(HumanEntity::getName)
+                .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(lower))
                 .collect(Collectors.toList());
     }
 
     public List<String> tabMapWorlds(String target) {
+        String lower = target.toLowerCase(Locale.ROOT);
         return getPlugin().getWorldManager().getMapWorlds().stream()
-                .map(world -> world.getName().toLowerCase(Locale.ROOT))
-                .filter(name -> name.startsWith(target.toLowerCase(Locale.ROOT)))
+                .map(MapWorld::getName)
+                .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(lower))
                 .collect(Collectors.toList());
     }
 }

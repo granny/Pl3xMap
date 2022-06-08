@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ShowCommand extends BaseCommand {
     public ShowCommand(Pl3xMap plugin) {
-        super(plugin, "show", Lang.CMD_SHOW_DESCRIPTION, "pl3xmap.command.show", "/<command> show (player)");
+        super(plugin, "show", Lang.COMMAND_SHOW_DESCRIPTION, "pl3xmap.command.show", "/<command> show (player)");
     }
 
     @Override
@@ -32,11 +32,11 @@ public class ShowCommand extends BaseCommand {
         Player target = getPlayer(sender, args, "pl3xmap.command.show.others");
         PlayerManager playerManager = getPlugin().getPlayerManager();
         if (!playerManager.isHidden(target)) {
-            Lang.send(sender, Lang.CMD_SHOW_NOT_HIDDEN, Placeholder.parsed("player", target.getName()));
+            Lang.send(sender, Lang.COMMAND_SHOW_NOT_HIDDEN, Placeholder.parsed("player", target.getName()));
             return true;
         }
         playerManager.setHidden(target, false, true);
-        Lang.send(sender, Lang.CMD_SHOW_SUCCESS, Placeholder.parsed("player", target.getName()));
+        Lang.send(sender, Lang.COMMAND_SHOW_SUCCESS, Placeholder.parsed("player", target.getName()));
         return true;
     }
 }

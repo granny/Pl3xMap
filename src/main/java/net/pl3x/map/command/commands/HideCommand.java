@@ -16,7 +16,7 @@ import java.util.List;
 
 public class HideCommand extends BaseCommand {
     public HideCommand(Pl3xMap plugin) {
-        super(plugin, "hide", Lang.CMD_HIDE_DESCRIPTION, "pl3xmap.command.hide", "/<command> hide (player)");
+        super(plugin, "hide", Lang.COMMAND_HIDE_DESCRIPTION, "pl3xmap.command.hide", "/<command> hide (player)");
     }
 
     @Override
@@ -32,11 +32,11 @@ public class HideCommand extends BaseCommand {
         Player target = getPlayer(sender, args, "pl3xmap.command.hide.others");
         PlayerManager playerManager = getPlugin().getPlayerManager();
         if (playerManager.isHidden(target)) {
-            Lang.send(sender, Lang.CMD_HIDE_ALREADY_HIDDEN, Placeholder.parsed("player", target.getName()));
+            Lang.send(sender, Lang.COMMAND_HIDE_ALREADY_HIDDEN, Placeholder.parsed("player", target.getName()));
             return true;
         }
         playerManager.setHidden(target, true, true);
-        Lang.send(sender, Lang.CMD_HIDE_SUCCESS, Placeholder.parsed("player", target.getName()));
+        Lang.send(sender, Lang.COMMAND_HIDE_SUCCESS, Placeholder.parsed("player", target.getName()));
         return true;
     }
 }
