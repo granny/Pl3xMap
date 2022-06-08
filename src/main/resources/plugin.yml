@@ -12,3 +12,35 @@ commands:
     usage: /<command>
     aliases:
       - map
+
+permissions:
+  pl3xmap.command.pl3xmap:
+    default: op
+
+  pl3xmap.command.help:
+    default: op
+    children:
+      pl3xmap.command.pl3xmap: true
+
+  pl3xmap.command.hide:
+    default: op
+    children:
+      pl3xmap.command.pl3xmap: true
+  pl3xmap.command.hide.others:
+    default: op
+    children:
+      pl3xmap.command.hide: true
+
+  pl3xmap.command.show:
+    default: op
+    children:
+      pl3xmap.command.pl3xmap: true
+  pl3xmap.command.show.others:
+    default: op
+    children:
+      pl3xmap.command.show: true
+
+  pl3xmap.command.reload:
+    default: op
+    children:
+      pl3xmap.command.pl3xmap: true
