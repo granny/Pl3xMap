@@ -23,6 +23,6 @@ public class Config extends AbstractConfig {
     private static final Config CONFIG = new Config();
 
     public static void reload(File dir) {
-        CONFIG.reload(dir, "config.yml", Config.class);
+        CONFIG.reload(new File(dir, "config.yml"), Config.class);
     }
 }

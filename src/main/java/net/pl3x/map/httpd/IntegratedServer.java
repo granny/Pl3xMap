@@ -8,7 +8,6 @@ import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.handlers.resource.ResourceManager;
 import io.undertow.util.ETag;
 import io.undertow.util.Headers;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.FileUtil;
@@ -66,10 +65,9 @@ public class IntegratedServer {
                     .build();
             server.start();
 
-            Logger.info(
-                    Lang.HTTPD_STARTED,
-                    Placeholder.parsed("bind", Config.HTTPD_BIND),
-                    Placeholder.parsed("port", Integer.toString(Config.HTTPD_PORT))
+            Logger.info(Lang.HTTPD_STARTED
+                    .replace("<bind>", Config.HTTPD_BIND)
+                    .replace("<port>", Integer.toString(Config.HTTPD_PORT))
             );
         } catch (Exception e) {
             server = null;

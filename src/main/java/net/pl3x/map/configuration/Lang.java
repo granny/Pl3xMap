@@ -10,8 +10,6 @@ import java.io.File;
 public class Lang extends AbstractConfig {
     @Key("prefix.command")
     public static String COMMAND_PREFIX = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
-    @Key("prefix.logger")
-    public static String LOGGER_PREFIX = "<dark_aqua>[<light_purple>Pl3xMap</light_purple>]</dark_aqua> ";
 
     @Key("command.base.usage")
     public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n   <yellow>/<grey><usage>";
@@ -77,7 +75,7 @@ public class Lang extends AbstractConfig {
     private static final Lang CONFIG = new Lang();
 
     public static void reload(File dir) {
-        CONFIG.reload(dir, Config.LANGUAGE_FILE, Lang.class);
+        CONFIG.reload(new File(dir, Config.LANGUAGE_FILE), Lang.class);
     }
 
     public static void send(Audience recipient, String msg, TagResolver.Single... placeholders) {

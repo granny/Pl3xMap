@@ -34,7 +34,7 @@ public class Pl3xMap extends JavaPlugin {
             // try to hack in a fancier logger :3
             Field logger = JavaPlugin.class.getDeclaredField("logger");
             logger.trySetAccessible();
-            logger.set(this, new Pl3xLogger());
+            logger.set(this, Pl3xLogger.INSTANCE);
         } catch (Throwable ignore) {
         }
 
