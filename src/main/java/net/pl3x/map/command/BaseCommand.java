@@ -73,7 +73,7 @@ public abstract class BaseCommand implements TabExecutor {
         return handleTabComplete(sender, command, new LinkedList<>(Arrays.asList(strings)));
     }
 
-    public List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
+    protected List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
         if (args.size() > 1) {
             BaseCommand subCmd = this.subCommands.get(args.pop().toLowerCase());
             if (subCmd != null && sender.hasPermission(subCmd.getPermission())) {
@@ -94,7 +94,7 @@ public abstract class BaseCommand implements TabExecutor {
         try {
             return handleCommand(sender, command, new LinkedList<>(Arrays.asList(args)));
         } catch (CommandException e) {
-            if (e.getMessage() == null || e.getMessage().equals("")) {
+            if (e.getMessage() == null || e.getMessage().isBlank()) {
                 Lang.send(sender, Lang.ERROR_UNKNOWN_ERROR);
             } else {
                 Lang.send(sender, e.getMessage());
@@ -103,10 +103,19 @@ public abstract class BaseCommand implements TabExecutor {
         }
     }
 
-    public boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         if (args != null && args.size() > 0) {
             BaseCommand subCmd = this.subCommands.get(args.pop().toLowerCase());
             if (subCmd != null) {
+                String arg = args.peek();
+                if (arg != null && arg.equals("?")) {
+                    showUsage(sender);
+                    return true;
+                }
+                if (!sender.hasPermission(subCmd.getPermission())) {
+                    sender.sendMessage(Bukkit.getPermissionMessage());
+                    return true;
+                }
                 return subCmd.handleCommand(sender, command, args);
             }
             Lang.send(sender, Lang.ERROR_UNKNOWN_SUBCOMMAND);
@@ -184,6 +193,9 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     public List<String> tabPlayers(String target) {
+        if (target == null || target.isBlank()) {
+            return Collections.emptyList();
+        }
         String lower = target.toUpperCase(Locale.ROOT);
         return Bukkit.getOnlinePlayers().stream()
                 .map(HumanEntity::getName)

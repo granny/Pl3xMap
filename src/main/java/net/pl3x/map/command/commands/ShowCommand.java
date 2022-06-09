@@ -20,15 +20,15 @@ public class ShowCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
-        if (args.size() > 0 && sender.hasPermission("pl3xmap.command.show.others")) {
+    protected List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
+        if (args != null && sender.hasPermission("pl3xmap.command.show.others")) {
             return tabPlayers(args.peek());
         }
         return Collections.emptyList();
     }
 
     @Override
-    public boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         Player target = getPlayer(sender, args, "pl3xmap.command.show.others");
         PlayerManager playerManager = getPlugin().getPlayerManager();
         if (!playerManager.isHidden(target)) {

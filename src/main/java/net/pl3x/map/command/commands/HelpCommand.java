@@ -17,12 +17,12 @@ public class HelpCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
+    protected List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
         return Collections.emptyList();
     }
 
     @Override
-    public boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         Lang.send(sender, "todo"); // TODO
         return true;
     }
