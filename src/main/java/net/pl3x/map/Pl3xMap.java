@@ -6,10 +6,12 @@ import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.httpd.IntegratedServer;
 import net.pl3x.map.player.PlayerManager;
 import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.util.LogFilter;
 import net.pl3x.map.util.Logger;
 import net.pl3x.map.util.Pl3xLogger;
 import net.pl3x.map.world.WorldManager;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.command.PluginCommand;
@@ -41,6 +43,9 @@ public class Pl3xMap extends JavaPlugin {
         integratedServer = new IntegratedServer();
         playerManager = new PlayerManager(this);
         worldManager = new WorldManager();
+
+        // this filter lets us hide undertow/xnio/jboss messages to the logger
+        ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new LogFilter());
     }
 
     @Override

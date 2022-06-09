@@ -11,6 +11,7 @@ import io.undertow.util.Headers;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.util.LogFilter;
 import net.pl3x.map.util.Logger;
 
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class IntegratedServer {
                 }
             });
 
+            LogFilter.ENABLED = true;
             server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
@@ -64,6 +66,7 @@ public class IntegratedServer {
                     })
                     .build();
             server.start();
+            LogFilter.ENABLED = false;
 
             Logger.info(Lang.HTTPD_STARTED
                     .replace("<bind>", Config.HTTPD_BIND)
@@ -85,7 +88,10 @@ public class IntegratedServer {
             return;
         }
 
+        LogFilter.ENABLED = true;
         server.stop();
+        LogFilter.ENABLED = false;
+
         server = null;
         Logger.info(Lang.HTTPD_STOPPED);
     }
