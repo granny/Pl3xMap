@@ -8,9 +8,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import java.io.File;
 
 public class Lang extends AbstractConfig {
-    @Key("prefix.command")
-    public static String COMMAND_PREFIX = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
-
+    @Key("command.base.prefix")
+    public static String COMMAND_BASE_PREFIX = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
     @Key("command.base.usage")
     public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n   <yellow>/<grey><usage>";
     @Key("command.base.subcommands.title")
@@ -87,7 +86,7 @@ public class Lang extends AbstractConfig {
             return;
         }
         for (String part : msg.split("\\n")) {
-            recipient.sendMessage(parse((prefix ? Lang.COMMAND_PREFIX : "") + part, placeholders));
+            recipient.sendMessage(parse((prefix ? Lang.COMMAND_BASE_PREFIX : "") + part, placeholders));
         }
     }
 

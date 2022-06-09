@@ -1,0 +1,16 @@
+html,body {
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  overflow: hidden;
+}
+.map {
+  width: 100%;
+  height: 100vh;
+  background: black;
+}
+img.leaflet-tile {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
