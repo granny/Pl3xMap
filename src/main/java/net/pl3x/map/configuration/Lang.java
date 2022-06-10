@@ -87,7 +87,7 @@ public class Lang extends AbstractConfig {
                 "questions related to Pl3xMap, join us in our Discord",
                 "",
                 "Discord: https://discord.gg/nhGzEkwXQX",
-                "Wiki: https://github.com/BillyGalbreath/Pl3xMap2/wiki"
+                "Wiki: https://github.com/pl3xgaming/Pl3xMap/wiki"
         ));
         CONFIG.reload(new File(dir, Config.LANGUAGE_FILE), Lang.class);
     }
