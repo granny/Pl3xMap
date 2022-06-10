@@ -92,18 +92,18 @@ public abstract class BaseCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         try {
-            return handleCommand(sender, command, new LinkedList<>(Arrays.asList(args)));
+            handleCommand(sender, command, new LinkedList<>(Arrays.asList(args)));
         } catch (CommandException e) {
             if (e.getMessage() == null || e.getMessage().isBlank()) {
                 Lang.send(sender, Lang.ERROR_UNKNOWN_ERROR);
             } else {
                 Lang.send(sender, e.getMessage());
             }
-            return true;
         }
+        return true;
     }
 
-    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         if (args != null && args.size() > 0) {
             String cmd = args.pop().toLowerCase();
             BaseCommand subCmd = this.subCommands.get(cmd);
@@ -111,20 +111,20 @@ public abstract class BaseCommand implements TabExecutor {
                 String arg = args.peek();
                 if (arg != null && arg.equals("?")) {
                     subCmd.showUsage(sender);
-                    return true;
+                    return;
                 }
                 if (!sender.hasPermission(subCmd.getPermission())) {
                     sender.sendMessage(Bukkit.getPermissionMessage());
-                    return true;
+                    return;
                 }
-                return subCmd.handleCommand(sender, command, args);
+                subCmd.handleCommand(sender, command, args);
+                return;
             }
             if (!cmd.equals("?")) {
                 Lang.send(sender, Lang.ERROR_UNKNOWN_SUBCOMMAND);
             }
         }
         showSubCommands(sender);
-        return true;
     }
 
     protected void showSubCommands(CommandSender sender) {
@@ -207,6 +207,9 @@ public abstract class BaseCommand implements TabExecutor {
     }
 
     public List<String> tabMapWorlds(String target) {
+        if (target == null || target.isBlank()) {
+            return Collections.emptyList();
+        }
         String lower = target.toLowerCase(Locale.ROOT);
         return getPlugin().getWorldManager().getMapWorlds().stream()
                 .map(MapWorld::getName)

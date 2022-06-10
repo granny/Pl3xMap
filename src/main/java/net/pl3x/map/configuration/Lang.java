@@ -6,6 +6,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
 import java.io.File;
+import java.util.List;
 
 public class Lang extends AbstractConfig {
     @Key("command.base.prefix")
@@ -25,6 +26,8 @@ public class Lang extends AbstractConfig {
 
     @Key("command.fullrender.description")
     public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
+    @Key("command.fullrender.already-rendering")
+    public static String COMMAND_FULLRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
 
     @Key("command.help.description")
     public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";
@@ -77,6 +80,15 @@ public class Lang extends AbstractConfig {
     private static final Lang CONFIG = new Lang();
 
     public static void reload(File dir) {
+        CONFIG.setHeader(List.of(
+                "This is the main language file for Pl3xMap.",
+                "",
+                "If you need help with the configuration or have any",
+                "questions related to Pl3xMap, join us in our Discord",
+                "",
+                "Discord: https://discord.gg/nhGzEkwXQX",
+                "Wiki: https://github.com/BillyGalbreath/Pl3xMap2/wiki"
+        ));
         CONFIG.reload(new File(dir, Config.LANGUAGE_FILE), Lang.class);
     }
 

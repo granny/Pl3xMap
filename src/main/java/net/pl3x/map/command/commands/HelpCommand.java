@@ -22,8 +22,7 @@ public class HelpCommand extends BaseCommand {
     }
 
     @Override
-    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         Lang.send(sender, "todo"); // TODO
-        return true;
     }
 }

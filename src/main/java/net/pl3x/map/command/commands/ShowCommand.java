@@ -28,15 +28,14 @@ public class ShowCommand extends BaseCommand {
     }
 
     @Override
-    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         Player target = getPlayer(sender, args, "pl3xmap.command.show.others");
         PlayerManager playerManager = getPlugin().getPlayerManager();
         if (!playerManager.isHidden(target)) {
             Lang.send(sender, Lang.COMMAND_SHOW_NOT_HIDDEN, Placeholder.parsed("player", target.getName()));
-            return true;
+            return;
         }
         playerManager.setHidden(target, false, true);
         Lang.send(sender, Lang.COMMAND_SHOW_SUCCESS, Placeholder.parsed("player", target.getName()));
-        return true;
     }
 }

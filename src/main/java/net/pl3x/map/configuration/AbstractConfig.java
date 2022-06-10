@@ -12,10 +12,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 public class AbstractConfig {
     private YamlConfiguration config;
+    private List<String> header;
 
     public void reload(File configFile, Class<? extends AbstractConfig> clazz) {
         this.config = new YamlConfiguration();
@@ -30,7 +31,7 @@ public class AbstractConfig {
 
         this.config.options().copyDefaults(true);
         this.config.options().width(9999); // don't split long lines, smh my head
-        this.config.options().setHeader(Collections.emptyList()); // TODO - header pointing to wiki
+        this.config.options().setHeader(this.header);
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             Key key = field.getDeclaredAnnotation(Key.class);
@@ -51,6 +52,10 @@ public class AbstractConfig {
         }
     }
 
+    protected void setHeader(List<String> header) {
+        this.header = header;
+    }
+
     private Object get(String path, Object def) {
         this.config.addDefault(path, def);
         return this.config.get(path, this.config.get(path));
@@ -58,7 +63,7 @@ public class AbstractConfig {
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
-    protected @interface Key {
+    public @interface Key {
         String value();
     }
 }

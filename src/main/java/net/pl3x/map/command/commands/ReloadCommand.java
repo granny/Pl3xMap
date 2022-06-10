@@ -23,7 +23,7 @@ public class ReloadCommand extends BaseCommand {
     }
 
     @Override
-    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         getPlugin().disable();
         getPlugin().enable();
 
@@ -31,6 +31,5 @@ public class ReloadCommand extends BaseCommand {
 
         Lang.send(sender, Lang.COMMAND_RELOAD_SUCCESS,
                 Placeholder.parsed("version", version));
-        return true;
     }
 }

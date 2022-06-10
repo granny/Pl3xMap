@@ -1,6 +1,7 @@
 package net.pl3x.map.configuration;
 
 import java.io.File;
+import java.util.List;
 
 public class Config extends AbstractConfig {
     @Key("settings.debug-mode")
@@ -23,6 +24,15 @@ public class Config extends AbstractConfig {
     private static final Config CONFIG = new Config();
 
     public static void reload(File dir) {
+        CONFIG.setHeader(List.of(
+                "This is the main configuration file for Pl3xMap.",
+                "",
+                "If you need help with the configuration or have any",
+                "questions related to Pl3xMap, join us in our Discord",
+                "",
+                "Discord: https://discord.gg/nhGzEkwXQX",
+                "Wiki: https://github.com/BillyGalbreath/Pl3xMap2/wiki"
+        ));
         CONFIG.reload(new File(dir, "config.yml"), Config.class);
     }
 }

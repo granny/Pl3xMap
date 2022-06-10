@@ -28,15 +28,14 @@ public class HideCommand extends BaseCommand {
     }
 
     @Override
-    protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         Player target = getPlayer(sender, args, "pl3xmap.command.hide.others");
         PlayerManager playerManager = getPlugin().getPlayerManager();
         if (playerManager.isHidden(target)) {
             Lang.send(sender, Lang.COMMAND_HIDE_ALREADY_HIDDEN, Placeholder.parsed("player", target.getName()));
-            return true;
+            return;
         }
         playerManager.setHidden(target, true, true);
         Lang.send(sender, Lang.COMMAND_HIDE_SUCCESS, Placeholder.parsed("player", target.getName()));
-        return true;
     }
 }
