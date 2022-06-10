@@ -11,9 +11,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HelpCommand extends BaseCommand {
-    public HelpCommand(Pl3xMap plugin) {
-        super(plugin, "help", Lang.COMMAND_HELP_DESCRIPTION, "pl3xmap.command.help", "[subcommand]");
+public class FullRenderCommand extends BaseCommand {
+    public FullRenderCommand(Pl3xMap plugin) {
+        super(plugin, "fullrender", Lang.COMMAND_FULLRENDER_DESCRIPTION, "pl3xmap.command.fullrender", "[world]");
     }
 
     @Override

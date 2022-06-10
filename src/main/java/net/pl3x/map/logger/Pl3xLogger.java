@@ -1,4 +1,4 @@
-package net.pl3x.map.util;
+package net.pl3x.map.logger;
 
 import io.papermc.paper.console.HexFormattingConverter;
 import net.kyori.adventure.text.Component;
@@ -11,8 +11,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class Pl3xLogger extends Logger {
-    public static final Pl3xLogger INSTANCE = new Pl3xLogger();
-
     private static final String RESET = "\u001b[0m";
     private static final String CYAN = "\u001b[36m";
     private static final String BRIGHT_RED = "\u001b[31;1m";
@@ -49,7 +47,7 @@ public class Pl3xLogger extends Logger {
     }
 
     /*
-     * The rest of this is just copying methods in order to use the changed doLog private method above..
+     * The rest of this is just copying methods in order to use the modified doLog private method above..
      */
 
     @Override

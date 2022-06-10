@@ -16,7 +16,7 @@ import java.util.List;
 
 public class HideCommand extends BaseCommand {
     public HideCommand(Pl3xMap plugin) {
-        super(plugin, "hide", Lang.COMMAND_HIDE_DESCRIPTION, "pl3xmap.command.hide", "/<command> hide (player)");
+        super(plugin, "hide", Lang.COMMAND_HIDE_DESCRIPTION, "pl3xmap.command.hide", "[player]");
     }
 
     @Override

@@ -4,11 +4,11 @@ import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.httpd.IntegratedServer;
+import net.pl3x.map.logger.LogFilter;
+import net.pl3x.map.logger.Logger;
+import net.pl3x.map.logger.Pl3xLogger;
 import net.pl3x.map.player.PlayerManager;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.util.LogFilter;
-import net.pl3x.map.util.Logger;
-import net.pl3x.map.util.Pl3xLogger;
 import net.pl3x.map.world.WorldManager;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +36,7 @@ public class Pl3xMap extends JavaPlugin {
             // try to hack in a fancier logger :3
             Field logger = JavaPlugin.class.getDeclaredField("logger");
             logger.trySetAccessible();
-            logger.set(this, Pl3xLogger.INSTANCE);
+            logger.set(this, new Pl3xLogger());
         } catch (Throwable ignore) {
         }
 

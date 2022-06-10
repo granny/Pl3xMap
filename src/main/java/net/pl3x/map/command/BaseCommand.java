@@ -105,11 +105,12 @@ public abstract class BaseCommand implements TabExecutor {
 
     protected boolean handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         if (args != null && args.size() > 0) {
-            BaseCommand subCmd = this.subCommands.get(args.pop().toLowerCase());
+            String cmd = args.pop().toLowerCase();
+            BaseCommand subCmd = this.subCommands.get(cmd);
             if (subCmd != null) {
                 String arg = args.peek();
                 if (arg != null && arg.equals("?")) {
-                    showUsage(sender);
+                    subCmd.showUsage(sender);
                     return true;
                 }
                 if (!sender.hasPermission(subCmd.getPermission())) {
@@ -118,13 +119,15 @@ public abstract class BaseCommand implements TabExecutor {
                 }
                 return subCmd.handleCommand(sender, command, args);
             }
-            Lang.send(sender, Lang.ERROR_UNKNOWN_SUBCOMMAND);
+            if (!cmd.equals("?")) {
+                Lang.send(sender, Lang.ERROR_UNKNOWN_SUBCOMMAND);
+            }
         }
         showSubCommands(sender);
         return true;
     }
 
-    private void showSubCommands(CommandSender sender) {
+    protected void showSubCommands(CommandSender sender) {
         Lang.send(sender, Lang.COMMAND_BASE_SUBCOMMANDS_TITLE);
         Lang.send(sender, false, Lang.COMMAND_BASE_SUBCOMMANDS_FULL_COMMAND,
                 Placeholder.parsed("command", this.getName()));

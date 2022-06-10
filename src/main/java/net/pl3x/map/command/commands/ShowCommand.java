@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ShowCommand extends BaseCommand {
     public ShowCommand(Pl3xMap plugin) {
-        super(plugin, "show", Lang.COMMAND_SHOW_DESCRIPTION, "pl3xmap.command.show", "/<command> show (player)");
+        super(plugin, "show", Lang.COMMAND_SHOW_DESCRIPTION, "pl3xmap.command.show", "[player]");
     }
 
     @Override

@@ -11,8 +11,8 @@ import io.undertow.util.Headers;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.util.LogFilter;
-import net.pl3x.map.util.Logger;
+import net.pl3x.map.logger.LogFilter;
+import net.pl3x.map.logger.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -11,7 +11,7 @@ public class Lang extends AbstractConfig {
     @Key("command.base.prefix")
     public static String COMMAND_BASE_PREFIX = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
     @Key("command.base.usage")
-    public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n   <yellow>/<grey><usage>";
+    public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n<yellow>/<grey><command> <usage>";
     @Key("command.base.subcommands.title")
     public static String COMMAND_BASE_SUBCOMMANDS_TITLE = "<color:#25b8ff>Available Commands</color><color:#9558ff>:";
     @Key("command.base.subcommands.full-command")
@@ -22,6 +22,9 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX = "\\u251C";
     @Key("command.base.subcommands.entry.prefix-last")
     public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST = "\\u2514";
+
+    @Key("command.fullrender.description")
+    public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
 
     @Key("command.help.description")
     public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";

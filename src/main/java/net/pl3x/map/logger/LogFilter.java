@@ -1,4 +1,4 @@
-package net.pl3x.map.util;
+package net.pl3x.map.logger;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;

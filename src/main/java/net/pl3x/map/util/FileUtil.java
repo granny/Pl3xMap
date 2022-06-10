@@ -2,6 +2,7 @@ package net.pl3x.map.util;
 
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
+import net.pl3x.map.logger.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

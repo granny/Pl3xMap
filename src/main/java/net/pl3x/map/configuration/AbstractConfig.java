@@ -1,6 +1,6 @@
 package net.pl3x.map.configuration;
 
-import net.pl3x.map.util.Logger;
+import net.pl3x.map.logger.Logger;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
