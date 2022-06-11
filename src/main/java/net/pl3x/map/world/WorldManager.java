@@ -1,5 +1,6 @@
 package net.pl3x.map.world;
 
+import net.pl3x.map.configuration.WorldConfig;
 import org.bukkit.World;
 
 import java.util.Collection;
@@ -40,7 +41,14 @@ public class WorldManager {
      * @return map world
      */
     public MapWorld loadWorld(World world) {
-        return this.mapWorlds.computeIfAbsent(world.getUID(), uuid -> new MapWorld(world));
+        if (mapWorlds.containsKey(world.getUID())) {
+            throw new RuntimeException("World is already loaded");
+        }
+        WorldConfig config = new WorldConfig(world);
+        config.reload();
+        MapWorld mapWorld = new MapWorld(world, config);
+        mapWorlds.put(world.getUID(), mapWorld);
+        return mapWorld;
     }
 
     /**
@@ -49,6 +57,9 @@ public class WorldManager {
      * @param world Bukkit world
      */
     public void unloadWorld(World world) {
-        this.mapWorlds.remove(world.getUID());
+        MapWorld mapWorld = this.mapWorlds.remove(world.getUID());
+        if (mapWorld != null) {
+            mapWorld.unload();
+        }
     }
 }

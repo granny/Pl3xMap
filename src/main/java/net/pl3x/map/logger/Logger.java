@@ -7,10 +7,6 @@ import java.util.logging.Level;
 
 public class Logger {
     public static void debug(String message) {
-        debug(message, null);
-    }
-
-    public static void debug(String message, Throwable t) {
         if (Config.DEBUG_MODE) {
             info("<yellow>[DEBUG]</yellow> " + message);
         }
@@ -29,7 +25,7 @@ public class Logger {
     }
 
     public static void warn(String message, Throwable t) {
-        log().log(Level.WARNING, "<yellow>" + message, t);
+        log().log(Level.WARNING, message, t);
     }
 
     public static void severe(String message) {
@@ -37,7 +33,7 @@ public class Logger {
     }
 
     public static void severe(String message, Throwable t) {
-        log().log(Level.SEVERE, "<red>" + message, t);
+        log().log(Level.SEVERE, message, t);
     }
 
     private static java.util.logging.Logger log() {

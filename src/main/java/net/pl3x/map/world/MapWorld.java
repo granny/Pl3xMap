@@ -1,5 +1,7 @@
 package net.pl3x.map.world;
 
+import net.pl3x.map.configuration.WorldConfig;
+import net.pl3x.map.renderer.AbstractRenderer;
 import org.bukkit.World;
 
 import java.util.UUID;
@@ -9,12 +11,16 @@ import java.util.UUID;
  */
 public class MapWorld {
     private final World world;
+    private final WorldConfig config;
+
+    private AbstractRenderer renderer;
 
     /**
      * Constructs a MapWorld for given world
      */
-    public MapWorld(World world) {
+    public MapWorld(World world, WorldConfig config) {
         this.world = world;
+        this.config = config;
     }
 
     /**
@@ -44,12 +50,15 @@ public class MapWorld {
         return world.getUID();
     }
 
-    /**
-     * Check if a render is currently in progress on this world
-     *
-     * @return true if a render is in progress
-     */
-    public boolean isRendering() {
-        return false; // TODO
+    public WorldConfig getConfig() {
+        return this.config;
+    }
+
+    public AbstractRenderer getRenderer() {
+        return this.renderer;
+    }
+
+    public void unload() {
+        this.renderer.stop();
     }
 }

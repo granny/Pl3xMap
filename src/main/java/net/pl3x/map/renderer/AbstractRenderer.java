@@ -65,5 +65,18 @@ public abstract class AbstractRenderer {
         return this.clearWater;
     }
 
+    /**
+     * Check if a render is currently in progress on this world
+     *
+     * @return true if a render is in progress
+     */
+    public boolean isRendering() {
+        return false; // TODO
+    }
+
     public abstract void renderRegion(int x, int z);
+
+    public void stop() {
+        // store progress and stop
+    }
 }

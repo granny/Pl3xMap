@@ -28,7 +28,7 @@ public class FullRenderCommand extends BaseCommand {
     @Override
     protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         MapWorld mapWorld = getMapWorld(sender, args);
-        if (mapWorld.isRendering()) {
+        if (mapWorld.getRenderer().isRendering()) {
             Lang.send(sender, Lang.COMMAND_FULLRENDER_ALREADY_RENDERING);
             return;
         }

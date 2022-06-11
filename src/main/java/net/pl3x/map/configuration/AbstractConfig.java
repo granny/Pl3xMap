@@ -22,7 +22,7 @@ public class AbstractConfig {
         this.config = new YamlConfiguration();
 
         try {
-            this.config.load(configFile.getCanonicalFile());
+            this.config.load(configFile);
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException e) {
             Logger.severe("Could not load " + configFile.getName() + ", please correct your syntax errors", e);
@@ -37,7 +37,7 @@ public class AbstractConfig {
             Key key = field.getDeclaredAnnotation(Key.class);
             if (key != null) {
                 try {
-                    Object value = get(key.value(), field.get(null));
+                    Object value = get(getKeyValue(key), field.get(null));
                     field.set(null, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
                 } catch (IllegalAccessException e) {
                     Logger.warn("Failed to load " + configFile.getName(), e);
@@ -50,6 +50,10 @@ public class AbstractConfig {
         } catch (IOException e) {
             Logger.severe("Could not save " + configFile.getName(), e);
         }
+    }
+
+    protected String getKeyValue(Key key) {
+        return key.value();
     }
 
     protected void setHeader(List<String> header) {

@@ -12,9 +12,10 @@ import java.util.logging.Logger;
 
 public class Pl3xLogger extends Logger {
     private static final String RESET = "\u001b[0m";
+    private static final String BOLD = "\u001b[1m";
     private static final String CYAN = "\u001b[36m";
-    private static final String BRIGHT_RED = "\u001b[31;1m";
-    private static final String BRIGHT_YELLOW = "\u001b[33;1m";
+    private static final String RED = "\u001b[31m";
+    private static final String YELLOW = "\u001b[33m";
 
     public Pl3xLogger() {
         super("Pl3xMap", null);
@@ -24,7 +25,7 @@ public class Pl3xLogger extends Logger {
     @Override
     public String getName() {
         // bright colors (\u001b[#;1m) don't seem to work correctly here. hmm..
-        return RESET + CYAN + super.getName() + RESET;
+        return RESET + CYAN + BOLD +super.getName() + RESET;
     }
 
     private String parseMiniMessage(String miniMessage) {
@@ -36,9 +37,9 @@ public class Pl3xLogger extends Logger {
         lr.setMessage(parseMiniMessage(lr.getMessage()));
 
         if (lr.getLevel() == Level.SEVERE) {
-            lr.setLoggerName(getName() + BRIGHT_RED);
+            lr.setLoggerName(getName() + RED + BOLD);
         } else if (lr.getLevel() == Level.WARNING) {
-            lr.setLoggerName(getName() + BRIGHT_YELLOW);
+            lr.setLoggerName(getName() + YELLOW + BOLD);
         } else {
             lr.setLoggerName(getName());
         }
