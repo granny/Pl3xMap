@@ -1,6 +1,7 @@
 package net.pl3x.map.world;
 
 import net.minecraft.server.level.ServerLevel;
+import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.task.AbstractRender;
@@ -97,7 +98,7 @@ public class MapWorld {
         }
 
         this.activeRender = render;
-        this.activeRender.run();
+        this.activeRender.runTaskAsynchronously(Pl3xMap.getInstance());
     }
 
     public void unload() {

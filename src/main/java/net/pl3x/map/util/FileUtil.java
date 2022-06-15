@@ -24,7 +24,7 @@ import java.util.zip.ZipFile;
 public class FileUtil {
     public static final Path PLUGIN_DIR = Pl3xMap.getInstance().getDataFolder().toPath();
 
-    public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:*.mca");
+    public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.mca");
 
     public static void extract(String inDir, Path outDir, boolean replace) {
         // https://coderanch.com/t/472574/java/extract-directory-current-jar

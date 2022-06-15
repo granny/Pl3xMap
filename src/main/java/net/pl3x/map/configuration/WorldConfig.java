@@ -2,6 +2,9 @@ package net.pl3x.map.configuration;
 
 import org.bukkit.World;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class WorldConfig extends AbstractConfig {
     @Key("render.background.enabled")
     public boolean RENDER_BACKGROUND_ENABLED;
@@ -13,11 +16,15 @@ public class WorldConfig extends AbstractConfig {
     }
 
     public void reload() {
-        reload(WORLD_DIR.resolve(worldName + ".yml"), WorldConfig.class);
+        Path path = WORLD_DIR.resolve(worldName + ".yml");
+        if (!Files.exists(path)) {
+            throw new RuntimeException();
+        }
+        reload(path, WorldConfig.class);
     }
 
     @Override
-    protected String getKeyValue(Key key) {
-        return "worlds." + this.worldName + "." + key.value();
+    protected Object getClassObject() {
+        return this;
     }
 }

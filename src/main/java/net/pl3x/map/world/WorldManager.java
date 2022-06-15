@@ -1,6 +1,7 @@
 package net.pl3x.map.world;
 
 import net.pl3x.map.configuration.WorldConfig;
+import net.pl3x.map.logger.Logger;
 import org.bukkit.World;
 
 import java.util.Collection;
@@ -47,10 +48,17 @@ public class WorldManager {
             throw new RuntimeException("World is already loaded");
         }
         WorldConfig config = new WorldConfig(world);
-        config.reload();
-        // TODO - check if world is enabled before continuing
+        try {
+            config.reload();
+        } catch (RuntimeException ignore) {
+            Logger.debug("<yellow>Skipping <world>"
+                    .replace("<world>", world.getName()));
+            return null;
+        }
         MapWorld mapWorld = new MapWorld(world, config);
         mapWorlds.put(world.getUID(), mapWorld);
+        Logger.debug("<green>Loaded <world>"
+                .replace("<world>", world.getName()));
         return mapWorld;
     }
 

@@ -40,8 +40,8 @@ public class AbstractConfig {
                 return;
             }
             try {
-                Object value = this.config.get(getKeyValue(key));
-                field.set(null, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
+                Object value = this.config.get(key.value());
+                field.set(getClassObject(), value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
             } catch (IllegalAccessException e) {
                 Logger.warn("Failed to load " + configFile.getFileName());
                 e.printStackTrace();
@@ -49,8 +49,8 @@ public class AbstractConfig {
         });
     }
 
-    protected String getKeyValue(Key key) {
-        return key.value();
+    protected Object getClassObject() {
+        return null;
     }
 
     @Target(ElementType.FIELD)
