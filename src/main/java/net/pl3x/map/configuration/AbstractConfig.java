@@ -54,6 +54,11 @@ public class AbstractConfig {
                 Logger.warn("Failed to load " + filename);
                 e.printStackTrace();
             }
+            Comment comment = field.getDeclaredAnnotation(Comment.class);
+            if (comment == null) {
+                return;
+            }
+            this.config.setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
         });
 
         try {
@@ -76,6 +81,12 @@ public class AbstractConfig {
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Key {
+        String value();
+    }
+
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Comment {
         String value();
     }
 }
