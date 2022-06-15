@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,17 +23,23 @@ public class AbstractConfig {
 
     private YamlConfiguration config;
 
-    public void reload(Path configFile, Class<? extends AbstractConfig> clazz) {
+    public void reload(Path path, Class<? extends AbstractConfig> clazz) {
         this.config = new YamlConfiguration();
 
+        File file = path.toFile();
+        String filename = path.getFileName().toString();
+
         try {
-            this.config.load(configFile.toFile());
+            this.config.load(file);
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException e) {
-            Logger.severe("Could not load " + configFile.getFileName() + ", please correct your syntax errors");
+            Logger.severe("Could not load " + filename + ", please correct your syntax errors");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+
+        config.options().copyDefaults(true);
+        config.options().width(9999);
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             Key key = field.getDeclaredAnnotation(Key.class);
@@ -40,17 +47,30 @@ public class AbstractConfig {
                 return;
             }
             try {
-                Object value = this.config.get(key.value());
-                field.set(getClassObject(), value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
+                Object classObj = getClassObject();
+                Object value = getValue(key.value(), field.get(classObj));
+                field.set(classObj, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
             } catch (IllegalAccessException e) {
-                Logger.warn("Failed to load " + configFile.getFileName());
+                Logger.warn("Failed to load " + filename);
                 e.printStackTrace();
             }
         });
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            Logger.severe("Could not save " + path);
+            e.printStackTrace();
+        }
     }
 
     protected Object getClassObject() {
         return null;
+    }
+
+    private Object getValue(String path, Object def) {
+        this.config.addDefault(path, def);
+        return this.config.get(path, this.config.get(path));
     }
 
     @Target(ElementType.FIELD)

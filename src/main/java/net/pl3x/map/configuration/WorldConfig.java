@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class WorldConfig extends AbstractConfig {
     @Key("render.background.enabled")
-    public boolean RENDER_BACKGROUND_ENABLED;
+    public boolean RENDER_BACKGROUND_ENABLED = true;
 
     private final String worldName;
 

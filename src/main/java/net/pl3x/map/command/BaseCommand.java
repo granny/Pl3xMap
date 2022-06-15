@@ -138,7 +138,7 @@ public abstract class BaseCommand implements TabExecutor {
         Collection<BaseCommand> subCmds = this.subCommands.values();
         for (BaseCommand subCmd : subCmds) {
             if (sender.hasPermission(subCmd.getPermission())) {
-                Lang.send(sender, false, Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY,
+                Lang.send(sender, false, Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY_TEXT,
                         Placeholder.parsed("prefix", i == subCmds.size() ?
                                 Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST :
                                 Lang.COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX),
