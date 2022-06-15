@@ -1,5 +1,5 @@
-var map;
-var world = `world`; // temp
+let map;
+let world = `world`; // temp
 
 window.onload = function () {
     map = L.map(`map`, {

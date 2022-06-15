@@ -1,68 +1,56 @@
 package net.pl3x.map.configuration;
 
 import net.pl3x.map.logger.Logger;
+import net.pl3x.map.util.FileUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 
 public class AbstractConfig {
-    private YamlConfiguration config;
-    private List<String> header;
+    public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
+    public static final Path LOCALE_DIR = FileUtil.PLUGIN_DIR.resolve("locale");
+    public static final Path RENDERER_DIR = FileUtil.PLUGIN_DIR.resolve("renderer");
+    public static final Path WORLD_DIR = FileUtil.PLUGIN_DIR.resolve("world");
 
-    public void reload(File configFile, Class<? extends AbstractConfig> clazz) {
+    private YamlConfiguration config;
+
+    public void reload(Path configFile, Class<? extends AbstractConfig> clazz) {
         this.config = new YamlConfiguration();
 
         try {
-            this.config.load(configFile);
+            this.config.load(configFile.toFile());
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException e) {
-            Logger.severe("Could not load " + configFile.getName() + ", please correct your syntax errors", e);
+            Logger.severe("Could not load " + configFile.getFileName() + ", please correct your syntax errors");
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-        this.config.options().copyDefaults(true);
-        this.config.options().width(9999); // don't split long lines, smh my head
-        this.config.options().setHeader(this.header);
-
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             Key key = field.getDeclaredAnnotation(Key.class);
-            if (key != null) {
-                try {
-                    Object value = get(getKeyValue(key), field.get(null));
-                    field.set(null, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
-                } catch (IllegalAccessException e) {
-                    Logger.warn("Failed to load " + configFile.getName(), e);
-                }
+            if (key == null) {
+                return;
+            }
+            try {
+                Object value = this.config.get(getKeyValue(key));
+                field.set(null, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
+            } catch (IllegalAccessException e) {
+                Logger.warn("Failed to load " + configFile.getFileName());
+                e.printStackTrace();
             }
         });
-
-        try {
-            this.config.save(configFile);
-        } catch (IOException e) {
-            Logger.severe("Could not save " + configFile.getName(), e);
-        }
     }
 
     protected String getKeyValue(Key key) {
         return key.value();
-    }
-
-    protected void setHeader(List<String> header) {
-        this.header = header;
-    }
-
-    private Object get(String path, Object def) {
-        this.config.addDefault(path, def);
-        return this.config.get(path, this.config.get(path));
     }
 
     @Target(ElementType.FIELD)

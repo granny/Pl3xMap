@@ -1,13 +1,10 @@
 package net.pl3x.map.configuration;
 
-import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 
-import java.util.List;
-
 public class WorldConfig extends AbstractConfig {
-    @Key("renderer")
-    public String renderer;
+    @Key("render.background.enabled")
+    public boolean RENDER_BACKGROUND_ENABLED;
 
     private final String worldName;
 
@@ -16,16 +13,7 @@ public class WorldConfig extends AbstractConfig {
     }
 
     public void reload() {
-        setHeader(List.of(
-                "This is the worlds configuration file for Pl3xMap.",
-                "",
-                "If you need help with the configuration or have any",
-                "questions related to Pl3xMap, join us in our Discord",
-                "",
-                "Discord: https://discord.gg/nhGzEkwXQX",
-                "Wiki: https://github.com/pl3xgaming/Pl3xMap/wiki"
-        ));
-        reload(FileUtil.PLUGIN_DIR.resolve("worlds.yml").toFile(), WorldConfig.class);
+        reload(WORLD_DIR.resolve(worldName + ".yml"), WorldConfig.class);
     }
 
     @Override

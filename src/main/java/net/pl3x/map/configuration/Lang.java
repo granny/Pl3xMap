@@ -5,91 +5,92 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
-import java.io.File;
-import java.util.List;
-
 public class Lang extends AbstractConfig {
     @Key("command.base.prefix")
-    public static String COMMAND_BASE_PREFIX = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
+    public static String COMMAND_BASE_PREFIX;
     @Key("command.base.usage")
-    public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n<yellow>/<grey><command> <usage>";
+    public static String COMMAND_BASE_USAGE;
     @Key("command.base.subcommands.title")
-    public static String COMMAND_BASE_SUBCOMMANDS_TITLE = "<color:#25b8ff>Available Commands</color><color:#9558ff>:";
+    public static String COMMAND_BASE_SUBCOMMANDS_TITLE;
     @Key("command.base.subcommands.full-command")
-    public static String COMMAND_BASE_SUBCOMMANDS_FULL_COMMAND = "<color:#9558ff>/<color:#dedede><command>";
+    public static String COMMAND_BASE_SUBCOMMANDS_FULL_COMMAND;
     @Key("command.base.subcommands.entry.text")
-    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY = " <color:#999999><prefix> <color:#dedede><command></color> <color:#9558ff>-</color> <i><description>";
+    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY;
     @Key("command.base.subcommands.entry.prefix")
-    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX = "\\u251C";
+    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX;
     @Key("command.base.subcommands.entry.prefix-last")
-    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST = "\\u2514";
+    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST;
 
     @Key("command.fullrender.description")
-    public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
+    public static String COMMAND_FULLRENDER_DESCRIPTION;
     @Key("command.fullrender.already-rendering")
-    public static String COMMAND_FULLRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
+    public static String COMMAND_FULLRENDER_ALREADY_RENDERING;
+    @Key("command.fullrender.starting")
+    public static String COMMAND_FULLRENDER_STARTING;
+    @Key("command.fullrender.obtaining-regions")
+    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS;
+    @Key("command.fullrender.sorting-regions")
+    public static String COMMAND_FULLRENDER_SORTING_REGIONS;
+    @Key("command.fullrender.found-total-regions")
+    public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS;
+    @Key("command.fullrender.error-parsing-region-file")
+    public static String COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE;
 
     @Key("command.help.description")
-    public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";
+    public static String COMMAND_HELP_DESCRIPTION;
 
     @Key("command.hide.description")
-    public static String COMMAND_HIDE_DESCRIPTION = "Hide a player from the map";
+    public static String COMMAND_HIDE_DESCRIPTION;
     @Key("command.hide.already-hidden")
-    public static String COMMAND_HIDE_ALREADY_HIDDEN = "<red><player> is already hidden from map";
+    public static String COMMAND_HIDE_ALREADY_HIDDEN;
     @Key("command.hide.success")
-    public static String COMMAND_HIDE_SUCCESS = "<green><player> is now hidden from map";
+    public static String COMMAND_HIDE_SUCCESS;
 
     @Key("command.reload.description")
-    public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";
+    public static String COMMAND_RELOAD_DESCRIPTION;
     @Key("command.reload.success")
-    public static String COMMAND_RELOAD_SUCCESS = "<green>Pl3xMap v<version> reloaded";
+    public static String COMMAND_RELOAD_SUCCESS;
 
     @Key("command.show.description")
-    public static String COMMAND_SHOW_DESCRIPTION = "Show a player on the map";
+    public static String COMMAND_SHOW_DESCRIPTION;
     @Key("command.show.not-hidden")
-    public static String COMMAND_SHOW_NOT_HIDDEN = "<red><player> is not hidden from map";
+    public static String COMMAND_SHOW_NOT_HIDDEN;
     @Key("command.show.success")
-    public static String COMMAND_SHOW_SUCCESS = "<green><player> is no longer hidden from map";
+    public static String COMMAND_SHOW_SUCCESS;
+
+    @Key("command.status.description")
+    public static String COMMAND_STATUS_DESCRIPTION;
 
     @Key("httpd.started.success")
-    public static String HTTPD_STARTED = "<green>Internal webserver running on <yellow><bind></yellow>:<yellow><port></yellow>";
+    public static String HTTPD_STARTED;
     @Key("httpd.started.error")
-    public static String HTTPD_START_ERROR = "<red>Internal webserver could not start";
+    public static String HTTPD_START_ERROR;
     @Key("httpd.stopped.success")
-    public static String HTTPD_STOPPED = "<green>Internal webserver stopped";
+    public static String HTTPD_STOPPED;
     @Key("httpd.stopped.error")
-    public static String HTTPD_STOP_ERROR = "<red>An error occurred with the internal webserver";
+    public static String HTTPD_STOP_ERROR;
     @Key("httpd.disabled")
-    public static String HTTPD_DISABLED = "<green>Internal webserver is disabled in config.yml";
+    public static String HTTPD_DISABLED;
 
     @Key("error.unknown-error")
-    public static String ERROR_UNKNOWN_ERROR = "<red>Unknown error";
+    public static String ERROR_UNKNOWN_ERROR;
     @Key("error.unknown-subcommand")
-    public static String ERROR_UNKNOWN_SUBCOMMAND = "<red>Unknown subcommand";
+    public static String ERROR_UNKNOWN_SUBCOMMAND;
     @Key("error.must-specify-player")
-    public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
+    public static String ERROR_MUST_SPECIFY_PLAYER;
     @Key("error.no-such-player")
-    public static String ERROR_NO_SUCH_PLAYER = "<red>No such player";
+    public static String ERROR_NO_SUCH_PLAYER;
     @Key("error.must-specify-world")
-    public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
+    public static String ERROR_MUST_SPECIFY_WORLD;
     @Key("error.no-such-world")
-    public static String ERROR_NO_SUCH_WORLD = "<red>No such world";
+    public static String ERROR_NO_SUCH_WORLD;
     @Key("error.world-disabled")
-    public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled in this world";
+    public static String ERROR_WORLD_DISABLED;
 
     private static final Lang CONFIG = new Lang();
 
-    public static void reload(File dir) {
-        CONFIG.setHeader(List.of(
-                "This is the main language file for Pl3xMap.",
-                "",
-                "If you need help with the configuration or have any",
-                "questions related to Pl3xMap, join us in our Discord",
-                "",
-                "Discord: https://discord.gg/nhGzEkwXQX",
-                "Wiki: https://github.com/pl3xgaming/Pl3xMap/wiki"
-        ));
-        CONFIG.reload(new File(dir, Config.LANGUAGE_FILE), Lang.class);
+    public static void reload() {
+        CONFIG.reload(LOCALE_DIR.resolve(Config.LANGUAGE_FILE), Lang.class);
     }
 
     public static void send(Audience recipient, String msg, TagResolver.Single... placeholders) {
@@ -101,8 +102,12 @@ public class Lang extends AbstractConfig {
             return;
         }
         for (String part : msg.split("\\n")) {
-            recipient.sendMessage(parse((prefix ? Lang.COMMAND_BASE_PREFIX : "") + part, placeholders));
+            send(recipient, parse((prefix ? Lang.COMMAND_BASE_PREFIX : "") + part, placeholders));
         }
+    }
+
+    public static void send(Audience recipient, Component component) {
+        recipient.sendMessage(component);
     }
 
     public static Component parse(String msg, TagResolver.Single... placeholders) {

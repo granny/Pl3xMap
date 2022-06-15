@@ -13,27 +13,15 @@ public class Logger {
     }
 
     public static void info(String message) {
-        info(message, null);
-    }
-
-    public static void info(String message, Throwable t) {
-        log().log(Level.INFO, message, t);
+        log().log(Level.INFO, message);
     }
 
     public static void warn(String message) {
-        warn(message, null);
-    }
-
-    public static void warn(String message, Throwable t) {
-        log().log(Level.WARNING, message, t);
+        log().log(Level.WARNING, message);
     }
 
     public static void severe(String message) {
-        severe(message, null);
-    }
-
-    public static void severe(String message, Throwable t) {
-        log().log(Level.SEVERE, message, t);
+        log().log(Level.SEVERE, message);
     }
 
     private static java.util.logging.Logger log() {

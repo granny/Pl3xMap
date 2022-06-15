@@ -1,9 +1,11 @@
 package net.pl3x.map.command;
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -114,7 +116,7 @@ public abstract class BaseCommand implements TabExecutor {
                     return;
                 }
                 if (!sender.hasPermission(subCmd.getPermission())) {
-                    sender.sendMessage(Bukkit.getPermissionMessage());
+                    sender.sendMessage(Bukkit.permissionMessage());
                     return;
                 }
                 subCmd.handleCommand(sender, command, args);
@@ -147,7 +149,7 @@ public abstract class BaseCommand implements TabExecutor {
             i++;
         }
         if (!hasSubCmds) {
-            Lang.send(sender, Bukkit.getPermissionMessage());
+            Lang.send(sender, Bukkit.permissionMessage());
         }
     }
 
@@ -164,7 +166,7 @@ public abstract class BaseCommand implements TabExecutor {
             throw new CommandException(Lang.ERROR_MUST_SPECIFY_PLAYER);
         }
         if (targetPerm != null && !sender.hasPermission(targetPerm)) {
-            throw new CommandException(Bukkit.getPermissionMessage());
+            throw new CommandException(LegacyComponentSerializer.legacySection().serialize(Bukkit.permissionMessage()));
         }
         Player player = Bukkit.getPlayer(target);
         if (player == null) {
@@ -184,11 +186,11 @@ public abstract class BaseCommand implements TabExecutor {
         }
         if (world == null) {
             world = Bukkit.getWorld(target);
-            if (world == null) {
-                throw new CommandException(Lang.ERROR_NO_SUCH_WORLD);
-            }
         }
-        MapWorld mapWorld = getPlugin().getWorldManager().getMapWorld(world);
+        if (world == null) {
+            throw new CommandException(Lang.ERROR_NO_SUCH_WORLD);
+        }
+        MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(world);
         if (mapWorld == null) {
             throw new CommandException(Lang.ERROR_WORLD_DISABLED);
         }
@@ -211,7 +213,7 @@ public abstract class BaseCommand implements TabExecutor {
             return Collections.emptyList();
         }
         String lower = target.toLowerCase(Locale.ROOT);
-        return getPlugin().getWorldManager().getMapWorlds().stream()
+        return WorldManager.INSTANCE.getMapWorlds().stream()
                 .map(MapWorld::getName)
                 .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(lower))
                 .collect(Collectors.toList());

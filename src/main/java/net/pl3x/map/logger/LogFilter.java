@@ -13,7 +13,7 @@ import java.util.List;
 public class LogFilter implements Filter {
     private final List<String> filters = new ArrayList<>();
 
-    public static boolean ENABLED = false;
+    public static boolean HIDE_UNDERTOW_LOGS = false;
 
     public LogFilter() {
         filters.add("io.undertow");
@@ -23,7 +23,7 @@ public class LogFilter implements Filter {
     }
 
     public Result checkMessage(String message) {
-        if (ENABLED) {
+        if (HIDE_UNDERTOW_LOGS) {
             for (String filter : filters) {
                 if (message.contains(filter)) {
                     return Result.DENY;

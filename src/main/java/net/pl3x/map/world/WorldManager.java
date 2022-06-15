@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Manages mapped worlds
  */
 public class WorldManager {
+    public static final WorldManager INSTANCE = new WorldManager();
+
     private final Map<UUID, MapWorld> mapWorlds = new ConcurrentHashMap<>();
 
     /**
@@ -46,6 +48,7 @@ public class WorldManager {
         }
         WorldConfig config = new WorldConfig(world);
         config.reload();
+        // TODO - check if world is enabled before continuing
         MapWorld mapWorld = new MapWorld(world, config);
         mapWorlds.put(world.getUID(), mapWorld);
         return mapWorld;

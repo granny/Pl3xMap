@@ -6,6 +6,7 @@ import net.pl3x.map.command.commands.HelpCommand;
 import net.pl3x.map.command.commands.HideCommand;
 import net.pl3x.map.command.commands.ReloadCommand;
 import net.pl3x.map.command.commands.ShowCommand;
+import net.pl3x.map.command.commands.StatusCommand;
 
 public class Pl3xMapCommand extends BaseCommand {
     public Pl3xMapCommand(Pl3xMap plugin) {
@@ -15,5 +16,6 @@ public class Pl3xMapCommand extends BaseCommand {
         registerSubcommand(new HideCommand(plugin));
         registerSubcommand(new ReloadCommand(plugin));
         registerSubcommand(new ShowCommand(plugin));
+        registerSubcommand(new StatusCommand(plugin));
     }
 }

@@ -1,4 +1,4 @@
-package net.pl3x.map.renderer.iterator.coordinate;
+package net.pl3x.map.render.iterator.coordinate;
 
 /**
  * Represents block coordinates

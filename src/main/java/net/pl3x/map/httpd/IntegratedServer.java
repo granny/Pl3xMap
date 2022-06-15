@@ -10,9 +10,9 @@ import io.undertow.util.ETag;
 import io.undertow.util.Headers;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.logger.LogFilter;
 import net.pl3x.map.logger.Logger;
+import net.pl3x.map.world.MapWorld;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class IntegratedServer {
+    public static final IntegratedServer INSTANCE = new IntegratedServer();
+
     private Undertow server;
 
     public void startServer() {
@@ -30,7 +32,7 @@ public class IntegratedServer {
 
         try {
             ResourceManager resourceManager = PathResourceManager.builder()
-                    .setBase(Paths.get(FileUtil.WEB_DIR.toFile().getAbsolutePath()))
+                    .setBase(Paths.get(MapWorld.WEB_DIR.toFile().getAbsolutePath()))
                     .setETagFunction((path) -> {
                         try {
                             BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
@@ -54,7 +56,7 @@ public class IntegratedServer {
                 }
             });
 
-            LogFilter.ENABLED = true;
+            LogFilter.HIDE_UNDERTOW_LOGS = true;
             server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
@@ -66,7 +68,7 @@ public class IntegratedServer {
                     })
                     .build();
             server.start();
-            LogFilter.ENABLED = false;
+            LogFilter.HIDE_UNDERTOW_LOGS = false;
 
             Logger.info(Lang.HTTPD_STARTED
                     .replace("<bind>", Config.HTTPD_BIND)
@@ -74,7 +76,8 @@ public class IntegratedServer {
             );
         } catch (Exception e) {
             server = null;
-            Logger.severe(Lang.HTTPD_START_ERROR, e);
+            Logger.severe(Lang.HTTPD_START_ERROR);
+            e.printStackTrace();
         }
     }
 
@@ -88,9 +91,9 @@ public class IntegratedServer {
             return;
         }
 
-        LogFilter.ENABLED = true;
+        LogFilter.HIDE_UNDERTOW_LOGS = true;
         server.stop();
-        LogFilter.ENABLED = false;
+        LogFilter.HIDE_UNDERTOW_LOGS = false;
 
         server = null;
         Logger.info(Lang.HTTPD_STOPPED);

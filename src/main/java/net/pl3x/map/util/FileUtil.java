@@ -1,7 +1,7 @@
 package net.pl3x.map.util;
 
+import net.minecraft.server.level.ServerLevel;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.configuration.Config;
 import net.pl3x.map.logger.Logger;
 
 import java.io.BufferedOutputStream;
@@ -11,23 +11,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class FileUtil {
     public static final Path PLUGIN_DIR = Pl3xMap.getInstance().getDataFolder().toPath();
-    public static final Path WEB_DIR = PLUGIN_DIR.resolve(Config.WEB_DIR);
-    public static final Path DATA_DIR = PLUGIN_DIR.resolve("data");
-    public static final Path LOCALE_DIR = PLUGIN_DIR.resolve("locale");
-    public static final Path TILES_DIR = WEB_DIR.resolve("tiles");
-    public static final Map<UUID, Path> WORLD_DIRS = new HashMap<>();
-    public static final Map<UUID, Path> REGION_DIRS = new HashMap<>();
+
+    public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:*.mca");
 
     public static void extract(String inDir, Path outDir, boolean replace) {
         // https://coderanch.com/t/472574/java/extract-directory-current-jar
@@ -43,7 +40,8 @@ public class FileUtil {
             Logger.debug("Extracting " + inDir + " directory from jar...");
             jar = ((JarURLConnection) dirURL.openConnection()).getJarFile();
         } catch (IOException e) {
-            Logger.severe("Failed to extract directory from jar", e);
+            Logger.severe("Failed to extract directory from jar");
+            e.printStackTrace();
             return;
         }
         String path = inDir.substring(1);
@@ -86,6 +84,15 @@ public class FileUtil {
                 Logger.warn("Failed to extract file (" + name + ") from jar!");
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static List<Path> getRegionFiles(ServerLevel level) {
+        Path regionDir = level.convertable.getDimensionPath(level.dimension()).resolve("region");
+        try (Stream<Path> stream = Files.list(regionDir)) {
+            return stream.filter(MCA_MATCHER::matches).toList();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to list region files in directory '" + regionDir.toAbsolutePath() + "'", e);
         }
     }
 }

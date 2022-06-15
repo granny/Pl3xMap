@@ -1,25 +1,35 @@
 package net.pl3x.map.world;
 
+import net.minecraft.server.level.ServerLevel;
+import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
-import net.pl3x.map.renderer.AbstractRenderer;
+import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
  * Represents a world which is mapped by Pl3xMap
  */
 public class MapWorld {
+    public static final Path WEB_DIR = FileUtil.PLUGIN_DIR.resolve(Config.WEB_DIR);
+    public static final Path TILES_DIR = WEB_DIR.resolve("tiles");
+
     private final World world;
+    private final ServerLevel level;
     private final WorldConfig config;
 
-    private AbstractRenderer renderer;
+    private AbstractRender activeRender = null;
 
     /**
      * Constructs a MapWorld for given world
      */
     public MapWorld(World world, WorldConfig config) {
         this.world = world;
+        this.level = ((CraftWorld) world).getHandle();
         this.config = config;
     }
 
@@ -30,6 +40,15 @@ public class MapWorld {
      */
     public World getWorld() {
         return world;
+    }
+
+    /**
+     * Get the level instance
+     *
+     * @return level
+     */
+    public ServerLevel getLevel() {
+        return level;
     }
 
     /**
@@ -54,11 +73,34 @@ public class MapWorld {
         return this.config;
     }
 
-    public AbstractRenderer getRenderer() {
-        return this.renderer;
+    /**
+     * Check if a render is currently in progress on this world
+     *
+     * @return true if a render is in progress
+     */
+    public boolean isRendering() {
+        return this.activeRender != null;
+    }
+
+    public void stopRender() {
+        if (!isRendering()) {
+            throw new IllegalStateException("No render to stop");
+        }
+
+        this.activeRender.cancel();
+        this.activeRender = null;
+    }
+
+    public void startRender(AbstractRender render) {
+        if (isRendering()) {
+            throw new IllegalStateException("Already rendering");
+        }
+
+        this.activeRender = render;
+        this.activeRender.run();
     }
 
     public void unload() {
-        this.renderer.stop();
+        this.activeRender.cancel();
     }
 }

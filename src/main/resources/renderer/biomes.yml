@@ -1,0 +1,17 @@
+height:
+  min: default
+  max: default
+iterate-down: true
+scan: biomes
+biomes:
+  colors:
+    blend-radius: 0
+fluids:
+  translucent:
+    lava: false
+    water: false
+  checkerboard:
+    lava: false
+    water: false
+glass:
+  translucent: false

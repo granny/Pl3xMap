@@ -1,32 +1,34 @@
-package net.pl3x.map.renderer;
+package net.pl3x.map.render;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractRenderer {
+public abstract class Renderer {
     private final int maxHeight;
     private final int minHeight;
-    private final boolean iterateUp;
-    private final boolean checkerboardLava;
-    private final boolean checkerboardWater;
+    private final boolean iterateDown;
+    private final ScanType scanType;
     private final boolean biomes;
     private final int biomesBlend;
-    private final boolean clearGlass;
-    private final boolean clearWater;
+    private final boolean checkerboardLava;
+    private final boolean checkerboardWater;
+    private final boolean translucentGlass;
+    private final boolean translucentWater;
 
     private final Map<String, Integer> blockColors = new HashMap<>();
     private final Map<String, Integer> biomeColors = new HashMap<>();
 
-    public AbstractRenderer(int maxHeight, int minHeight, boolean iterateUp, boolean checkerboardLava, boolean checkerboardWater, boolean biomes, int biomesBlend, boolean clearGlass, boolean clearWater) {
+    public Renderer(int maxHeight, int minHeight, boolean iterateDown, ScanType scanType, boolean checkerboardLava, boolean checkerboardWater, boolean biomes, int biomesBlend, boolean translucentGlass, boolean translucentWater) {
         this.maxHeight = maxHeight;
         this.minHeight = minHeight;
-        this.iterateUp = iterateUp;
+        this.iterateDown = iterateDown;
+        this.scanType = scanType;
         this.checkerboardLava = checkerboardLava;
         this.checkerboardWater = checkerboardWater;
         this.biomes = biomes;
         this.biomesBlend = biomesBlend;
-        this.clearGlass = clearGlass;
-        this.clearWater = clearWater;
+        this.translucentGlass = translucentGlass;
+        this.translucentWater = translucentWater;
     }
 
     public int getMaxHeight() {
@@ -37,8 +39,12 @@ public abstract class AbstractRenderer {
         return this.minHeight;
     }
 
-    public boolean isIterateUp() {
-        return this.iterateUp;
+    public boolean isIterateDown() {
+        return this.iterateDown;
+    }
+
+    public ScanType getScanType() {
+        return this.scanType;
     }
 
     public boolean isCheckerboardLava() {
@@ -57,26 +63,17 @@ public abstract class AbstractRenderer {
         return this.biomesBlend;
     }
 
-    public boolean isClearGlass() {
-        return this.clearGlass;
+    public boolean isTranslucentGlass() {
+        return this.translucentGlass;
     }
 
-    public boolean isClearWater() {
-        return this.clearWater;
-    }
-
-    /**
-     * Check if a render is currently in progress on this world
-     *
-     * @return true if a render is in progress
-     */
-    public boolean isRendering() {
-        return false; // TODO
+    public boolean isTranslucentWater() {
+        return this.translucentWater;
     }
 
     public abstract void renderRegion(int x, int z);
 
-    public void stop() {
-        // store progress and stop
+    public enum ScanType {
+        BLOCKS, BIOMES
     }
 }

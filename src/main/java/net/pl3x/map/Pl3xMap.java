@@ -1,31 +1,33 @@
 package net.pl3x.map;
 
 import net.pl3x.map.command.Pl3xMapCommand;
+import net.pl3x.map.configuration.AbstractConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.httpd.IntegratedServer;
 import net.pl3x.map.logger.LogFilter;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.logger.Pl3xLogger;
-import net.pl3x.map.player.PlayerManager;
+import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.world.MapWorld;
 import net.pl3x.map.world.WorldManager;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
 public class Pl3xMap extends JavaPlugin {
     private static Pl3xMap instance;
 
-    private final IntegratedServer integratedServer;
-    private final PlayerManager playerManager;
-    private final WorldManager worldManager;
+    public static Pl3xMap getInstance() {
+        return instance;
+    }
 
     public Pl3xMap() {
         super();
@@ -39,10 +41,6 @@ public class Pl3xMap extends JavaPlugin {
             logger.set(this, new Pl3xLogger());
         } catch (Throwable ignore) {
         }
-
-        integratedServer = new IntegratedServer();
-        playerManager = new PlayerManager(this);
-        worldManager = new WorldManager();
 
         // this filter lets us hide undertow/xnio/jboss messages to the logger
         ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new LogFilter());
@@ -59,7 +57,17 @@ public class Pl3xMap extends JavaPlugin {
             return;
         }
 
+        // register bukkit listeners
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+
+        // enable the plugin
         enable();
+
+        // register command executor
+        PluginCommand command = getCommand("map");
+        if (command != null) {
+            command.setExecutor(new Pl3xMapCommand(this));
+        }
 
         // start bstats metrics
         Metrics metrics = new Metrics(this, 10133);
@@ -73,42 +81,28 @@ public class Pl3xMap extends JavaPlugin {
     }
 
     public void disable() {
-        if (Config.HTTPD_ENABLED) {
-            integratedServer.stopServer();
-        }
+        // stop integrated server
+        IntegratedServer.INSTANCE.stopServer();
     }
 
     public void enable() {
+        // extract folders from jar
+        FileUtil.extract("/data/", AbstractConfig.DATA_DIR, false);
+        FileUtil.extract("/locale/", AbstractConfig.LOCALE_DIR, false);
+        FileUtil.extract("/renderer/", AbstractConfig.RENDERER_DIR, false);
+
         // load up configs
-        Config.reload(getDataFolder());
+        Config.reload();
+        Lang.reload();
 
-        // this has to load after config.yml in order to know if web dir should be overwritten
-        // but also before advanced.yml to ensure foliage.png and grass.png are already on disk
-        FileUtil.extract("/web/", FileUtil.WEB_DIR, !Config.WEB_DIR_READONLY);
-        FileUtil.extract("/locale/", FileUtil.LOCALE_DIR, false);
-
-        // load language file
-        Lang.reload(new File(getDataFolder(), "locale"));
+        // this has to load after configs in order to know
+        // what web dir is and if it should be overwritten
+        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
 
         // start integrated server
-        integratedServer.startServer();
+        IntegratedServer.INSTANCE.startServer();
 
-        // register command executor
-        PluginCommand command = getCommand("map");
-        if (command != null) {
-            command.setExecutor(new Pl3xMapCommand(this));
-        }
-    }
-
-    public static Pl3xMap getInstance() {
-        return instance;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return this.playerManager;
-    }
-
-    public WorldManager getWorldManager() {
-        return this.worldManager;
+        // load up worlds already loaded in bukkit
+        Bukkit.getWorlds().forEach(WorldManager.INSTANCE::loadWorld);
     }
 }

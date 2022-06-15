@@ -13,11 +13,13 @@ import java.util.UUID;
  * Manages player specific data
  */
 public class PlayerManager {
+    public static final PlayerManager INSTANCE = new PlayerManager();
+
     private final Set<UUID> hidden = new HashSet<>();
     private final NamespacedKey hiddenPDC;
 
-    public PlayerManager(Pl3xMap plugin) {
-        this.hiddenPDC = new NamespacedKey(plugin, "hidden");
+    public PlayerManager() {
+        this.hiddenPDC = new NamespacedKey(Pl3xMap.getInstance(), "hidden");
     }
 
     /**

@@ -1,6 +1,6 @@
-package net.pl3x.map.renderer.iterator;
+package net.pl3x.map.render.iterator;
 
-import net.pl3x.map.renderer.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 
 /**
  * In iterator that spirals around center region coordinates in a clockwise pattern
