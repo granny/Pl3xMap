@@ -76,15 +76,15 @@ public abstract class SpiralIterator<T> implements Iterator<T> {
         }
 
         // calculate where we are in the spiral
-        currentStep++;
-        currentStepInLeg++;
-        if (currentStepInLeg > totalStepsInLeg) {
-            direction = direction.next();
-            currentStepInLeg = 0;
-            legAxis++;
-            if (legAxis > 1) {
-                legAxis = 0;
-                totalStepsInLeg++;
+        this.currentStep++;
+        this.currentStepInLeg++;
+        if (this.currentStepInLeg > this.totalStepsInLeg) {
+            this.direction = this.direction.next();
+            this.currentStepInLeg = 0;
+            this.legAxis++;
+            if (this.legAxis > 1) {
+                this.legAxis = 0;
+                this.totalStepsInLeg++;
             }
         }
 
@@ -98,7 +98,7 @@ public abstract class SpiralIterator<T> implements Iterator<T> {
     public enum Direction {
         EAST, SOUTH, WEST, NORTH;
 
-        private static final Direction[] values = values();
+        private static final Direction[] VALUES = values();
 
         /**
          * Get the next direction in a clockwise pattern
@@ -106,7 +106,7 @@ public abstract class SpiralIterator<T> implements Iterator<T> {
          * @return next direction
          */
         public Direction next() {
-            return values[(ordinal() + 1) % values.length];
+            return VALUES[(ordinal() + 1) % VALUES.length];
         }
     }
 }

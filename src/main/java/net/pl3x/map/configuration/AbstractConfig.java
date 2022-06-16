@@ -18,10 +18,13 @@ import java.util.Arrays;
 public class AbstractConfig {
     public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
     public static final Path LOCALE_DIR = FileUtil.PLUGIN_DIR.resolve("locale");
-    public static final Path RENDERER_DIR = FileUtil.PLUGIN_DIR.resolve("renderer");
-    public static final Path WORLD_DIR = FileUtil.PLUGIN_DIR.resolve("world");
+    public static final Path RENDERER_DIR = FileUtil.PLUGIN_DIR.resolve("renderers");
 
     private YamlConfiguration config;
+
+    public YamlConfiguration getConfig() {
+        return this.config;
+    }
 
     public void reload(Path path, Class<? extends AbstractConfig> clazz) {
         this.config = new YamlConfiguration();
@@ -30,7 +33,7 @@ public class AbstractConfig {
         String filename = path.getFileName().toString();
 
         try {
-            this.config.load(file);
+            getConfig().load(file);
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException e) {
             Logger.severe("Could not load " + filename + ", please correct your syntax errors");
@@ -38,8 +41,8 @@ public class AbstractConfig {
             throw new RuntimeException(e);
         }
 
-        config.options().copyDefaults(true);
-        config.options().width(9999);
+        getConfig().options().copyDefaults(true);
+        getConfig().options().width(9999);
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             Key key = field.getDeclaredAnnotation(Key.class);
@@ -58,11 +61,11 @@ public class AbstractConfig {
             if (comment == null) {
                 return;
             }
-            this.config.setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
+            getConfig().setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
         });
 
         try {
-            config.save(file);
+            getConfig().save(file);
         } catch (IOException e) {
             Logger.severe("Could not save " + path);
             e.printStackTrace();
@@ -73,9 +76,9 @@ public class AbstractConfig {
         return null;
     }
 
-    private Object getValue(String path, Object def) {
-        this.config.addDefault(path, def);
-        return this.config.get(path, this.config.get(path));
+    protected Object getValue(String path, Object def) {
+        getConfig().addDefault(path, def);
+        return getConfig().get(path);
     }
 
     @Target(ElementType.FIELD)

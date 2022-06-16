@@ -17,6 +17,11 @@ permissions:
   pl3xmap.command.pl3xmap:
     default: op
 
+  pl3xmap.command.fullrender:
+    default: op
+    children:
+      pl3xmap.command.pl3xmap: true
+
   pl3xmap.command.help:
     default: op
     children:
@@ -31,6 +36,11 @@ permissions:
     children:
       pl3xmap.command.hide: true
 
+  pl3xmap.command.reload:
+    default: op
+    children:
+      pl3xmap.command.pl3xmap: true
+
   pl3xmap.command.show:
     default: op
     children:
@@ -40,7 +50,7 @@ permissions:
     children:
       pl3xmap.command.show: true
 
-  pl3xmap.command.reload:
+  pl3xmap.command.status:
     default: op
     children:
       pl3xmap.command.pl3xmap: true

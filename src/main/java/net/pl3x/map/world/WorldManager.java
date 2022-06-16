@@ -6,6 +6,7 @@ import org.bukkit.World;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +45,7 @@ public class WorldManager {
      * @return map world
      */
     public MapWorld loadWorld(World world) {
-        if (mapWorlds.containsKey(world.getUID())) {
+        if (this.mapWorlds.containsKey(world.getUID())) {
             throw new RuntimeException("World is already loaded");
         }
         WorldConfig config = new WorldConfig(world);
@@ -56,7 +57,7 @@ public class WorldManager {
             return null;
         }
         MapWorld mapWorld = new MapWorld(world, config);
-        mapWorlds.put(world.getUID(), mapWorld);
+        this.mapWorlds.put(world.getUID(), mapWorld);
         Logger.debug("<green>Loaded <world>"
                 .replace("<world>", world.getName()));
         return mapWorld;
@@ -72,5 +73,9 @@ public class WorldManager {
         if (mapWorld != null) {
             mapWorld.unload();
         }
+    }
+
+    public void unload() {
+        new HashSet<>(this.mapWorlds.values()).forEach(mapWorld -> unloadWorld(mapWorld.getWorld()));
     }
 }

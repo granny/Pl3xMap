@@ -1,0 +1,6 @@
+world-settings:
+  world_nether:
+    render:
+      types:
+        - nether
+        - biomes

@@ -40,7 +40,7 @@ public class MapWorld {
      * @return bukkit world
      */
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     /**
@@ -49,7 +49,7 @@ public class MapWorld {
      * @return level
      */
     public ServerLevel getLevel() {
-        return level;
+        return this.level;
     }
 
     /**
@@ -58,7 +58,7 @@ public class MapWorld {
      * @return world name
      */
     public String getName() {
-        return world.getName();
+        return this.world.getName();
     }
 
     /**
@@ -67,7 +67,7 @@ public class MapWorld {
      * @return world uuid
      */
     public UUID getUUID() {
-        return world.getUID();
+        return this.world.getUID();
     }
 
     public WorldConfig getConfig() {
@@ -102,6 +102,8 @@ public class MapWorld {
     }
 
     public void unload() {
-        this.activeRender.cancel();
+        if (isRendering()) {
+            stopRender();
+        }
     }
 }

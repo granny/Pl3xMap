@@ -29,7 +29,7 @@ public class PlayerManager {
      * @return True if player is hidden from the map
      */
     public boolean isHidden(Player player) {
-        return this.hidden.contains(player.getUniqueId()) || getByte(player, hiddenPDC) != (byte) 0;
+        return this.hidden.contains(player.getUniqueId()) || getByte(player, this.hiddenPDC) != (byte) 0;
     }
 
     /**
@@ -46,7 +46,7 @@ public class PlayerManager {
             this.hidden.remove(player.getUniqueId());
         }
         if (persistent) {
-            setByte(player, hiddenPDC, (byte) (hidden ? 1 : 0));
+            setByte(player, this.hiddenPDC, (byte) (hidden ? 1 : 0));
         }
     }
 

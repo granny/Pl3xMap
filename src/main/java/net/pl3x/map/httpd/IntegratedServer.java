@@ -57,7 +57,7 @@ public class IntegratedServer {
             });
 
             LogFilter.HIDE_UNDERTOW_LOGS = true;
-            server = Undertow.builder()
+            this.server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
                     .setHandler(exchange -> {
@@ -67,7 +67,7 @@ public class IntegratedServer {
                         resourceHandler.handleRequest(exchange);
                     })
                     .build();
-            server.start();
+            this.server.start();
             LogFilter.HIDE_UNDERTOW_LOGS = false;
 
             Logger.info(Lang.HTTPD_STARTED
@@ -75,7 +75,7 @@ public class IntegratedServer {
                     .replace("<port>", Integer.toString(Config.HTTPD_PORT))
             );
         } catch (Exception e) {
-            server = null;
+            this.server = null;
             Logger.severe(Lang.HTTPD_START_ERROR);
             e.printStackTrace();
         }
@@ -86,16 +86,16 @@ public class IntegratedServer {
             return;
         }
 
-        if (server == null) {
+        if (this.server == null) {
             Logger.warn(Lang.HTTPD_STOP_ERROR);
             return;
         }
 
         LogFilter.HIDE_UNDERTOW_LOGS = true;
-        server.stop();
+        this.server.stop();
         LogFilter.HIDE_UNDERTOW_LOGS = false;
 
-        server = null;
+        this.server = null;
         Logger.info(Lang.HTTPD_STOPPED);
     }
 }

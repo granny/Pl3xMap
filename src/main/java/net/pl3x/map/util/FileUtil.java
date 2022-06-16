@@ -5,6 +5,7 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.logger.Logger;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,12 @@ public class FileUtil {
 
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.mca");
 
+    public static void extract(String filename, boolean replace) {
+        if (!new File(filename).exists()) {
+            Pl3xMap.getInstance().saveResource(filename, replace);
+        }
+    }
+
     public static void extract(String inDir, Path outDir, boolean replace) {
         // https://coderanch.com/t/472574/java/extract-directory-current-jar
         URL dirURL = FileUtil.class.getResource(inDir);
@@ -41,8 +48,7 @@ public class FileUtil {
             jar = ((JarURLConnection) dirURL.openConnection()).getJarFile();
         } catch (IOException e) {
             Logger.severe("Failed to extract directory from jar");
-            e.printStackTrace();
-            return;
+            throw new RuntimeException(e);
         }
         String path = inDir.substring(1);
         Enumeration<? extends ZipEntry> entries = jar.entries();

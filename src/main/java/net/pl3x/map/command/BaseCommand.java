@@ -132,7 +132,7 @@ public abstract class BaseCommand implements TabExecutor {
     protected void showSubCommands(CommandSender sender) {
         Lang.send(sender, Lang.COMMAND_BASE_SUBCOMMANDS_TITLE);
         Lang.send(sender, false, Lang.COMMAND_BASE_SUBCOMMANDS_FULL_COMMAND,
-                Placeholder.parsed("command", this.getName()));
+                Placeholder.parsed("command", getName()));
         boolean hasSubCmds = false;
         int i = 1;
         Collection<BaseCommand> subCmds = this.subCommands.values();

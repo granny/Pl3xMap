@@ -10,14 +10,16 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (PlayerManager.INSTANCE.isHidden(player)) {
-            PlayerManager.INSTANCE.setHidden(player, PlayerManager.INSTANCE.isHidden(player), false);
+        PlayerManager manager = PlayerManager.INSTANCE;
+        if (manager.isHidden(player)) {
+            manager.setHidden(player, manager.isHidden(player), false);
         }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        PlayerManager.INSTANCE.setHidden(player, false, false);
+        PlayerManager manager = PlayerManager.INSTANCE;
+        manager.setHidden(player, false, false);
     }
 }

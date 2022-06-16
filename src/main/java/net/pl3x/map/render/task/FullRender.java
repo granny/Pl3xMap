@@ -45,7 +45,7 @@ public class FullRender extends AbstractRender {
         Logger.info(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
 
         List<RegionCoordinate> regionFiles = new ArrayList<>();
-        for (Path path : FileUtil.getRegionFiles(mapWorld.getLevel())) {
+        for (Path path : FileUtil.getRegionFiles(this.mapWorld.getLevel())) {
             if (isCancelled()) {
                 return;
             }

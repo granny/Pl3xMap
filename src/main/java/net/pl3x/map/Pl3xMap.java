@@ -11,6 +11,7 @@ import net.pl3x.map.logger.Pl3xLogger;
 import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.WorldListener;
 import net.pl3x.map.world.WorldManager;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
@@ -57,8 +58,23 @@ public class Pl3xMap extends JavaPlugin {
             return;
         }
 
+        // extract folders from jar
+        FileUtil.extract("worlds.yml", false);
+        FileUtil.extract("/data/", AbstractConfig.DATA_DIR, false);
+        FileUtil.extract("/locale/", AbstractConfig.LOCALE_DIR, false);
+        FileUtil.extract("/renderers/", AbstractConfig.RENDERER_DIR, false);
+
         // register bukkit listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(), this);
+
+        // load up configs
+        Config.reload();
+        Lang.reload();
+
+        // this has to load after configs in order to know
+        // what web dir is and if it should be overwritten
+        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
 
         // enable the plugin
         enable();
@@ -80,29 +96,19 @@ public class Pl3xMap extends JavaPlugin {
         disable();
     }
 
-    public void disable() {
-        // stop integrated server
-        IntegratedServer.INSTANCE.stopServer();
-    }
-
     public void enable() {
-        // extract folders from jar
-        FileUtil.extract("/data/", AbstractConfig.DATA_DIR, false);
-        FileUtil.extract("/locale/", AbstractConfig.LOCALE_DIR, false);
-        FileUtil.extract("/renderer/", AbstractConfig.RENDERER_DIR, false);
-
-        // load up configs
-        Config.reload();
-        Lang.reload();
-
-        // this has to load after configs in order to know
-        // what web dir is and if it should be overwritten
-        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
-
         // start integrated server
         IntegratedServer.INSTANCE.startServer();
 
         // load up worlds already loaded in bukkit
         Bukkit.getWorlds().forEach(WorldManager.INSTANCE::loadWorld);
+    }
+
+    public void disable() {
+        // stop integrated server
+        IntegratedServer.INSTANCE.stopServer();
+
+        // unload all map worlds
+        WorldManager.INSTANCE.unload();
     }
 }

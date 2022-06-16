@@ -16,15 +16,15 @@ public class LogFilter implements Filter {
     public static boolean HIDE_UNDERTOW_LOGS = false;
 
     public LogFilter() {
-        filters.add("io.undertow");
-        filters.add("org.xnio");
-        filters.add("org.xnio.nio");
-        filters.add("org.jboss.threads");
+        this.filters.add("io.undertow");
+        this.filters.add("org.xnio");
+        this.filters.add("org.xnio.nio");
+        this.filters.add("org.jboss.threads");
     }
 
     public Result checkMessage(String message) {
         if (HIDE_UNDERTOW_LOGS) {
-            for (String filter : filters) {
+            for (String filter : this.filters) {
                 if (message.contains(filter)) {
                     return Result.DENY;
                 }

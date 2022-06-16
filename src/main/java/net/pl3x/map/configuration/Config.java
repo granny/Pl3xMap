@@ -1,6 +1,6 @@
 package net.pl3x.map.configuration;
 
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.util.FileUtil;
 
 public class Config extends AbstractConfig {
     @Key("settings.debug-mode")
@@ -30,6 +30,6 @@ public class Config extends AbstractConfig {
     private static final Config CONFIG = new Config();
 
     public static void reload() {
-        CONFIG.reload(Pl3xMap.getInstance().getDataFolder().toPath().resolve("config.yml"), Config.class);
+        CONFIG.reload(FileUtil.PLUGIN_DIR.resolve("config.yml"), Config.class);
     }
 }

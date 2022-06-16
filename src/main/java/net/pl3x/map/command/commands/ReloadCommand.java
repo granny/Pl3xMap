@@ -3,6 +3,7 @@ package net.pl3x.map.command.commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.command.BaseCommand;
+import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -25,6 +26,10 @@ public class ReloadCommand extends BaseCommand {
     @Override
     protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         getPlugin().disable();
+
+        Config.reload();
+        Lang.reload();
+
         getPlugin().enable();
 
         String version = getPlugin().getDescription().getVersion();
