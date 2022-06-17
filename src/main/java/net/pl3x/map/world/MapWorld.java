@@ -1,10 +1,12 @@
 package net.pl3x.map.world;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
@@ -23,6 +25,9 @@ public class MapWorld {
     private final ServerLevel level;
     private final WorldConfig config;
 
+    private final BiomeColors biomeColors;
+    private final long biomeSeed;
+
     private AbstractRender activeRender = null;
 
     /**
@@ -32,6 +37,9 @@ public class MapWorld {
         this.world = world;
         this.level = ((CraftWorld) world).getHandle();
         this.config = config;
+
+        this.biomeColors = new BiomeColors(this.level);
+        this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
     }
 
     /**
@@ -72,6 +80,14 @@ public class MapWorld {
 
     public WorldConfig getConfig() {
         return this.config;
+    }
+
+    public BiomeColors getBiomeColors() {
+        return this.biomeColors;
+    }
+
+    public long getBiomeSeed() {
+        return this.biomeSeed;
     }
 
     /**

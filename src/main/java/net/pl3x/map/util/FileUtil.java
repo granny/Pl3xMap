@@ -5,7 +5,6 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.logger.Logger;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ public class FileUtil {
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.mca");
 
     public static void extract(String filename, boolean replace) {
-        if (!new File(filename).exists()) {
+        if (!Files.exists(FileUtil.PLUGIN_DIR.resolve(filename))) {
             Pl3xMap.getInstance().saveResource(filename, replace);
         }
     }

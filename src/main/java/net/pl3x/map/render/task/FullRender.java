@@ -1,30 +1,29 @@
 package net.pl3x.map.render.task;
 
+import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.RegionSpiralIterator;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.task.queue.ScanQueue;
+import net.pl3x.map.render.queue.ScanRegion;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Map;
 
 public class FullRender extends AbstractRender {
-    private final LinkedBlockingQueue<Queue> queue = new LinkedBlockingQueue<>();
-
     private int maxRadius = 0;
+
     private int totalChunks;
     private int totalRegions;
 
-    private boolean processing;
-
     public FullRender(MapWorld mapWorld) {
-        super(mapWorld);
+        super(mapWorld, true, true, true, true);
     }
 
     @Override
@@ -40,12 +39,12 @@ public class FullRender extends AbstractRender {
     @Override
     public void run() {
         Logger.info(Lang.COMMAND_FULLRENDER_STARTING
-                .replace("<world>", this.mapWorld.getName()));
+                .replace("<world>", getWorld().getName()));
 
         Logger.info(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
 
         List<RegionCoordinate> regionFiles = new ArrayList<>();
-        for (Path path : FileUtil.getRegionFiles(this.mapWorld.getLevel())) {
+        for (Path path : FileUtil.getRegionFiles(getWorld().getLevel())) {
             if (isCancelled()) {
                 return;
             }
@@ -81,6 +80,8 @@ public class FullRender extends AbstractRender {
 
         Logger.info(Lang.COMMAND_FULLRENDER_SORTING_REGIONS);
 
+        Map<RegionCoordinate, ScanRegion> tasks = new LinkedHashMap<>();
+
         int failsafe = 0;
         while (spiral.hasNext()) {
             if (isCancelled()) {
@@ -90,39 +91,28 @@ public class FullRender extends AbstractRender {
             if (failsafe > 500000) {
                 // we scanned over half a million non-existent regions straight
                 // quit the spiral and add the remaining regions to the end
-                regionFiles.forEach(region -> this.queue.add(new ScanQueue(region)));
+                regionFiles.forEach(region -> tasks.put(region, new ScanRegion(this, region)));
                 break;
             }
 
             RegionCoordinate region = spiral.next();
             if (regionFiles.remove(region)) {
-                this.queue.add(new ScanQueue(region));
+                tasks.put(region, new ScanRegion(this, region));
                 failsafe = 0;
             } else {
                 failsafe++;
             }
         }
 
-        this.totalRegions = this.queue.size();
+        this.totalRegions = tasks.size();
         this.totalChunks = totalRegions() * 32 * 32;
 
         Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
                 .replace("<total>", Integer.toString(totalRegions())));
 
-        this.processing = true;
-        ThreadManager.INSTANCE.runAsync(this::processQueue,
-                ThreadManager.INSTANCE.getRenderExecutor());
-    }
+        tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
 
-    private void processQueue() {
-        while (this.processing) {
-            try {
-                this.queue.take().run();
-            } catch (InterruptedException e) {
-                this.processing = false;
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
-        }
+        // a temporary timer for CPS reports until /status is made
+        this.timer = new TempTimer().runTaskTimerAsynchronously(Pl3xMap.getInstance(), 20, 20);
     }
 }
