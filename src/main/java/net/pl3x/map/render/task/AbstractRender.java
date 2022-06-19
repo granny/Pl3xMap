@@ -139,14 +139,14 @@ public abstract class AbstractRender extends BukkitRunnable {
             long save = saveExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
             long render = renderExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
 
-            Logger.debug("Progress: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
+            Logger.info("Progress: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
 
             // TODO - this finishing needs some work..
             if (render <= 0) {
                 cur = finishedChunks.get();
                 save = saveExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
                 render = renderExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
-                Logger.debug("<dark_aqua>Finished: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
+                Logger.info("<dark_aqua>Finished: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
                 cancel();
             }
         }
