@@ -20,16 +20,17 @@ import java.util.NoSuchElementException;
  * @param <T> The type of coordinates returned by this iterator
  */
 public abstract class SpiralIterator<T> implements Iterator<T> {
-    protected Direction direction = Direction.WEST;
+    protected final long totalSteps;
+
     protected int currentX;
     protected int currentZ;
+    protected long currentStep;
 
-    protected final int totalSteps;
-    protected int currentStep;
+    protected long totalStepsInLeg;
+    protected long currentStepInLeg;
+    protected long legAxis;
 
-    protected int totalStepsInLeg;
-    protected int currentStepInLeg;
-    protected int legAxis;
+    protected Direction direction = Direction.WEST;
 
     /**
      * Constructs a new SpiralIterator with given center coordinates and radius
@@ -41,7 +42,7 @@ public abstract class SpiralIterator<T> implements Iterator<T> {
     public SpiralIterator(int centerX, int centerZ, int radius) {
         this.currentX = centerX;
         this.currentZ = centerZ;
-        this.totalSteps = (radius * 2 + 1) * (radius * 2 + 1);
+        this.totalSteps = (radius * 2L + 1) * (radius * 2L + 1);
     }
 
     @Override
