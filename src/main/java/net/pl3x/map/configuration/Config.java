@@ -27,6 +27,13 @@ public class Config extends AbstractConfig {
     @Comment("The port the built-in web server listens to.")
     public static int HTTPD_PORT = 8080;
 
+    @Key("settings.threading.render-threads")
+    @Comment("The number of threads to use for loading and scanning chunks.\nValue of -1 will use 50% of the available cores.")
+    public static int RENDER_THREADS = -1;
+    @Key("settings.threading.image-threads")
+    @Comment("The number of threads to use for reading and saving the PNG tile images.\nValue of -1 will use 50% of the available cores.")
+    public static int IMAGE_THREADS = -1;
+
     private static final Config CONFIG = new Config();
 
     public static void reload() {

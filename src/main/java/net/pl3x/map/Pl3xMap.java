@@ -69,8 +69,10 @@ public class Pl3xMap extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
-        // load up configs
+        // load up configs (load twice to fix no comments on first load bug)
         Config.reload();
+        Config.reload();
+        Lang.reload();
         Lang.reload();
 
         // this has to load after configs in order to know

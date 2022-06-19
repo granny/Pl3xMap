@@ -1,6 +1,7 @@
 package net.pl3x.map.render.task;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import net.pl3x.map.configuration.Config;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,14 +17,14 @@ public class ThreadManager {
 
     public ExecutorService getRenderExecutor() {
         if (this.renderExecutor == null) {
-            this.renderExecutor = Executors.newFixedThreadPool(Math.max(1, getThreads()), new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build());
+            this.renderExecutor = Executors.newFixedThreadPool(Math.max(1, getThreads(Config.RENDER_THREADS)), new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build());
         }
         return this.renderExecutor;
     }
 
     public ExecutorService getSaveExecutor() {
         if (this.saveExecutor == null) {
-            this.saveExecutor = Executors.newFixedThreadPool(Math.max(1, getThreads()), new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build());
+            this.saveExecutor = Executors.newFixedThreadPool(Math.max(1, getThreads(Config.IMAGE_THREADS)), new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build());
         }
 
         return this.saveExecutor;
@@ -34,8 +35,7 @@ public class ThreadManager {
         getSaveExecutor().shutdownNow();
     }
 
-    private int getThreads() {
-        int threads = 8; // TODO - make configurable
+    private int getThreads(int threads) {
         if (threads < 1) {
             threads = Runtime.getRuntime().availableProcessors() / 2;
         }

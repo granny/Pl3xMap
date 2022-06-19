@@ -42,6 +42,7 @@ public class AbstractConfig {
         }
 
         getConfig().options().copyDefaults(true);
+        getConfig().options().parseComments(true);
         getConfig().options().width(9999);
 
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
