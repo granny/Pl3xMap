@@ -28,7 +28,7 @@ public class StatusCommand extends BaseCommand {
     @Override
     protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
         MapWorld mapWorld = getMapWorld(sender, args);
-        if (mapWorld.isRendering()) {
+        if (mapWorld.hasActiveRender()) {
             //
         }
 

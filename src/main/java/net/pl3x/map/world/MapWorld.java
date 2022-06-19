@@ -95,12 +95,16 @@ public class MapWorld {
      *
      * @return true if a render is in progress
      */
-    public boolean isRendering() {
-        return this.activeRender != null;
+    public boolean hasActiveRender() {
+        return getActiveRender() != null;
+    }
+
+    public AbstractRender getActiveRender() {
+        return this.activeRender;
     }
 
     public void stopRender() {
-        if (!isRendering()) {
+        if (!hasActiveRender()) {
             throw new IllegalStateException("No render to stop");
         }
 
@@ -109,7 +113,7 @@ public class MapWorld {
     }
 
     public void startRender(AbstractRender render) {
-        if (isRendering()) {
+        if (hasActiveRender()) {
             throw new IllegalStateException("Already rendering");
         }
 
@@ -118,7 +122,7 @@ public class MapWorld {
     }
 
     public void unload() {
-        if (isRendering()) {
+        if (hasActiveRender()) {
             stopRender();
         }
     }

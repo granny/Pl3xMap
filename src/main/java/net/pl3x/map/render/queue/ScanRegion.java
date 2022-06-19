@@ -63,7 +63,7 @@ public class ScanRegion implements Runnable {
                 ChunkAccess chunk = this.chunkHelper.getChunk(level, chunkX, chunkZ);
                 if (chunk == null) {
                     // increment for CPS counter
-                    this.render.finishedChunks.incrementAndGet();
+                    this.render.getProgress().getProcessedChunks().incrementAndGet();
                     continue;
                 }
 
@@ -178,7 +178,7 @@ public class ScanRegion implements Runnable {
                 }
 
                 // increment for CPS counter
-                this.render.finishedChunks.incrementAndGet();
+                this.render.getProgress().getProcessedChunks().incrementAndGet();
 
             }
         }
@@ -194,7 +194,7 @@ public class ScanRegion implements Runnable {
 
     private void cleanup() {
         this.chunkHelper.clear();
-        this.render.finishedRegions.getAndIncrement();
+        this.render.getProgress().getProcessedRegions().getAndIncrement();
     }
 
     private int findRenderableBlock(ChunkAccess chunk, BlockPos.MutableBlockPos pos) {

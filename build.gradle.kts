@@ -12,8 +12,12 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+repositories {
+    maven("https://repo.purpurmc.org/snapshots")
+}
+
 dependencies {
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
+    paperweightDevBundle("org.purpurmc.purpur", "1.19-R0.1-SNAPSHOT")
     implementation("io.undertow", "undertow-core", "2.2.17.Final")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 }

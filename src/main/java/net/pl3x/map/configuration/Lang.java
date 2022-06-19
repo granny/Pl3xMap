@@ -21,6 +21,13 @@ public class Lang extends AbstractConfig {
     @Key("command.base.subcommands.entry.prefix-last")
     public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST = "\\u2514";
 
+    @Key("command.cancelrender.description")
+    public static String COMMAND_CANCELRENDER_DESCRIPTION = "Cancel active render of a world";
+    @Key("command.cancelrender.already-rendering")
+    public static String COMMAND_CANCELRENDER_NOT_RENDERING = "<red><world> does not have active render";
+    @Key("command.cancelrender.success")
+    public static String COMMAND_CANCELRENDER_SUCCESS = "<green>Render on <world> has been cancelled";
+
     @Key("command.fullrender.description")
     public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
     @Key("command.fullrender.already-rendering")

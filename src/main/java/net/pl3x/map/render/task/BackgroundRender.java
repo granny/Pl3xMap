@@ -8,16 +8,6 @@ public class BackgroundRender extends AbstractRender {
     }
 
     @Override
-    public void run() {
-    }
-
-    @Override
-    public int totalChunks() {
-        return 0;
-    }
-
-    @Override
-    public int totalRegions() {
-        return 0;
+    public void render() {
     }
 }

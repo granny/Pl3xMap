@@ -1,6 +1,5 @@
 package net.pl3x.map.render.task;
 
-import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.RegionSpiralIterator;
@@ -19,25 +18,12 @@ import java.util.Map;
 public class FullRender extends AbstractRender {
     private int maxRadius = 0;
 
-    private int totalChunks;
-    private int totalRegions;
-
     public FullRender(MapWorld mapWorld) {
         super(mapWorld, true, true, true, true);
     }
 
     @Override
-    public int totalChunks() {
-        return this.totalChunks;
-    }
-
-    @Override
-    public int totalRegions() {
-        return this.totalRegions;
-    }
-
-    @Override
-    public void run() {
+    public void render() {
         Logger.info(Lang.COMMAND_FULLRENDER_STARTING
                 .replace("<world>", getWorld().getName()));
 
@@ -104,15 +90,11 @@ public class FullRender extends AbstractRender {
             }
         }
 
-        this.totalRegions = tasks.size();
-        this.totalChunks = totalRegions() * 32 * 32;
+        getProgress().setTotalRegions(tasks.size());
 
         Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
-                .replace("<total>", Integer.toString(totalRegions())));
+                .replace("<total>", Integer.toString(getProgress().getTotalRegions())));
 
         tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
-
-        // a temporary timer for CPS reports until /status is made
-        this.timer = new TempTimer().runTaskTimerAsynchronously(Pl3xMap.getInstance(), 20, 20);
     }
 }
