@@ -194,6 +194,7 @@ public class ScanRegion implements Runnable {
 
     private void cleanup() {
         this.chunkHelper.clear();
+        this.render.finishedRegions.getAndIncrement();
     }
 
     private int findRenderableBlock(ChunkAccess chunk, BlockPos.MutableBlockPos pos) {

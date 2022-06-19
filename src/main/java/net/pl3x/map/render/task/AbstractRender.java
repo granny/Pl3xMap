@@ -29,6 +29,7 @@ public abstract class AbstractRender extends BukkitRunnable {
     private int centerZ;
 
     public AtomicInteger finishedChunks = new AtomicInteger();
+    public AtomicInteger finishedRegions = new AtomicInteger();
     protected CPS cps = new CPS();
 
     private boolean cancelled;
@@ -139,13 +140,9 @@ public abstract class AbstractRender extends BukkitRunnable {
             long save = saveExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
             long render = renderExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
 
-            Logger.info("Progress: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
-
-            // TODO - this finishing needs some work..
-            if (render <= 0) {
-                cur = finishedChunks.get();
-                save = saveExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
-                render = renderExecutor.getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count();
+            if (finishedRegions.get() < totalRegions()) {
+                Logger.info("Progress: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
+            } else {
                 Logger.info("<dark_aqua>Finished: " + cur + "/" + totalChunks() + " (" + String.format("%.2f%%", ((float) cur / (float) totalChunks()) * 100.0F) + ") " + String.format("<gold>%.2f", cps.average()) + " cps</gold> (" + save + "," + render + ")");
                 cancel();
             }
