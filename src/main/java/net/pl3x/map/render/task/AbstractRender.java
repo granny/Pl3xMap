@@ -1,13 +1,14 @@
 package net.pl3x.map.render.task;
 
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.render.Progress;
+import net.pl3x.map.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class AbstractRender extends BukkitRunnable {
     private final MapWorld mapWorld;
+    private final String type;
     private final Progress progress;
 
     private final boolean renderBlocks;
@@ -20,8 +21,9 @@ public abstract class AbstractRender extends BukkitRunnable {
 
     private boolean cancelled;
 
-    public AbstractRender(MapWorld mapWorld, boolean renderBlocks, boolean renderBiomes, boolean renderHeights, boolean renderFluids) {
+    public AbstractRender(MapWorld mapWorld, String type, boolean renderBlocks, boolean renderBiomes, boolean renderHeights, boolean renderFluids) {
         this.mapWorld = mapWorld;
+        this.type = type;
         this.progress = new Progress(this);
 
         this.renderBlocks = renderBlocks;
@@ -36,6 +38,10 @@ public abstract class AbstractRender extends BukkitRunnable {
 
     public MapWorld getWorld() {
         return this.mapWorld;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
     public Progress getProgress() {
@@ -88,6 +94,6 @@ public abstract class AbstractRender extends BukkitRunnable {
     public void run() {
         render();
 
-        this.progress.runTaskTimerAsynchronously(Pl3xMap.getInstance(), 20, 20);
+        getProgress().runTaskTimerAsynchronously(Pl3xMap.getInstance(), 20, 20);
     }
 }

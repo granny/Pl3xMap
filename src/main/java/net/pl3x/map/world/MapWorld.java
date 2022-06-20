@@ -103,27 +103,32 @@ public class MapWorld {
         return this.activeRender;
     }
 
-    public void stopRender() {
-        if (!hasActiveRender()) {
-            throw new IllegalStateException("No render to stop");
-        }
-
-        this.activeRender.cancel();
-        this.activeRender = null;
-    }
-
     public void startRender(AbstractRender render) {
         if (hasActiveRender()) {
             throw new IllegalStateException("Already rendering");
         }
-
         this.activeRender = render;
         this.activeRender.runTaskAsynchronously(Pl3xMap.getInstance());
     }
 
+    public void cancelRender() {
+        if (!hasActiveRender()) {
+            throw new IllegalStateException("No render to cancel");
+        }
+        this.activeRender.cancel();
+        this.activeRender = null;
+    }
+
+    public void finishRender() {
+        if (!hasActiveRender()) {
+            throw new IllegalStateException("No render to finish");
+        }
+        this.activeRender = null;
+    }
+
     public void unload() {
         if (hasActiveRender()) {
-            stopRender();
+            cancelRender();
         }
     }
 }

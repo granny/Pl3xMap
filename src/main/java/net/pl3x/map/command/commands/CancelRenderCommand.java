@@ -36,7 +36,7 @@ public class CancelRenderCommand extends BaseCommand {
             return;
         }
 
-        mapWorld.stopRender();
+        mapWorld.cancelRender();
 
         if (sender instanceof Player) {
             Lang.send(sender, Lang.COMMAND_CANCELRENDER_SUCCESS,

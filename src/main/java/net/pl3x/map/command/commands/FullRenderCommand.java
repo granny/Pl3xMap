@@ -42,7 +42,10 @@ public class FullRenderCommand extends BaseCommand {
         if (sender instanceof Player player) {
             Lang.send(sender, Lang.COMMAND_FULLRENDER_STARTING,
                     Placeholder.parsed("world", mapWorld.getName()));
-            render.getProgress().addPlayerToShow(player);
+
+            Lang.send(sender, Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
+
+            render.getProgress().getBossbar().show(player);
         }
 
         mapWorld.startRender(render);

@@ -19,7 +19,7 @@ public class FullRender extends AbstractRender {
     private int maxRadius = 0;
 
     public FullRender(MapWorld mapWorld) {
-        super(mapWorld, true, true, true, true);
+        super(mapWorld, "FullRender", true, true, true, true);
     }
 
     @Override
@@ -94,6 +94,8 @@ public class FullRender extends AbstractRender {
 
         Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
                 .replace("<total>", Integer.toString(getProgress().getTotalRegions())));
+
+        Logger.info(Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
         tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
     }

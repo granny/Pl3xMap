@@ -25,7 +25,7 @@ public class PlayerListener implements Listener {
             if (!mapWorld.hasActiveRender()) {
                 return;
             }
-            mapWorld.getActiveRender().getProgress().removePlayerToShow(player);
+            mapWorld.getActiveRender().getProgress().hide(player);
         });
     }
 }

@@ -1,8 +1,8 @@
 package net.pl3x.map.logger;
 
-import io.papermc.paper.console.HexFormattingConverter;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.pl3x.map.configuration.Lang;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -11,40 +11,24 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class Pl3xLogger extends Logger {
-    private static final String RESET = "\u001b[0m";
-    private static final String BOLD = "\u001b[1m";
-    private static final String CYAN = "\u001b[36m";
-    private static final String RED = "\u001b[31m";
-    private static final String YELLOW = "\u001b[33m";
+    private static final ComponentLogger LOGGER = ComponentLogger.logger(org.apache.logging.log4j.LogManager.getRootLogger().getName());
 
     public Pl3xLogger() {
         super("Pl3xMap", null);
         LogManager.getLogManager().addLogger(this);
     }
 
-    @Override
-    public String getName() {
-        // bright colors (\u001b[#;1m) don't seem to work correctly here. hmm..
-        return RESET + CYAN + BOLD +super.getName() + RESET;
-    }
-
-    private String parseMiniMessage(String miniMessage) {
-        Component component = MiniMessage.miniMessage().deserialize(miniMessage);
-        return HexFormattingConverter.SERIALIZER.serialize(component);
-    }
-
     private void doLog(LogRecord lr) {
-        lr.setMessage(parseMiniMessage(lr.getMessage()));
-
-        if (lr.getLevel() == Level.SEVERE) {
-            lr.setLoggerName(getName() + RED + BOLD);
-        } else if (lr.getLevel() == Level.WARNING) {
-            lr.setLoggerName(getName() + YELLOW + BOLD);
-        } else {
-            lr.setLoggerName(getName());
+        Level level = lr.getLevel();
+        if (level == Level.INFO) {
+            LOGGER.info(MiniMessage.miniMessage().deserialize(Lang.PREFIX_LOGGER + lr.getMessage()));
+        } else if (level == Level.WARNING) {
+            LOGGER.warn(MiniMessage.miniMessage().stripTags(Lang.PREFIX_LOGGER + lr.getMessage()));
+        } else if (level == Level.SEVERE) {
+            LOGGER.error(MiniMessage.miniMessage().stripTags(Lang.PREFIX_LOGGER + lr.getMessage()));
+        } else if (level == Level.CONFIG) {
+            LOGGER.debug(MiniMessage.miniMessage().deserialize(Lang.PREFIX_LOGGER + lr.getMessage()));
         }
-
-        log(lr);
     }
 
     /*

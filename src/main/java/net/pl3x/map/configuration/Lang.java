@@ -4,10 +4,14 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.bukkit.command.ConsoleCommandSender;
 
 public class Lang extends AbstractConfig {
-    @Key("command.base.prefix")
-    public static String COMMAND_BASE_PREFIX = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
+    @Key("prefix.logger")
+    public static String PREFIX_LOGGER = "[<dark_aqua>Pl3xMap</dark_aqua>] ";
+    @Key("prefix.command")
+    public static String PREFIX_COMMAND = "[<blue>Pl3xMap</blue>] ";
+
     @Key("command.base.usage")
     public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n<yellow>/<grey><command> <usage>";
     @Key("command.base.subcommands.title")
@@ -23,7 +27,7 @@ public class Lang extends AbstractConfig {
 
     @Key("command.cancelrender.description")
     public static String COMMAND_CANCELRENDER_DESCRIPTION = "Cancel active render of a world";
-    @Key("command.cancelrender.already-rendering")
+    @Key("command.cancelrender.not-rendering")
     public static String COMMAND_CANCELRENDER_NOT_RENDERING = "<red><world> does not have active render";
     @Key("command.cancelrender.success")
     public static String COMMAND_CANCELRENDER_SUCCESS = "<green>Render on <world> has been cancelled";
@@ -35,11 +39,13 @@ public class Lang extends AbstractConfig {
     @Key("command.fullrender.starting")
     public static String COMMAND_FULLRENDER_STARTING = "<green>Starting full render of <world>";
     @Key("command.fullrender.obtaining-regions")
-    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining region files... (this may take a moment)";
+    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining region files";
     @Key("command.fullrender.sorting-regions")
-    public static String COMMAND_FULLRENDER_SORTING_REGIONS = "<yellow>Sorting region files... (this may take a moment)";
+    public static String COMMAND_FULLRENDER_SORTING_REGIONS = "<yellow>Sorting region files";
     @Key("command.fullrender.found-total-regions")
     public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS = "<green>Found <gray><total> <green>region files";
+    @Key("command.fullrender.use-status-for-progress")
+    public static String COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/status</grey> command to view progress";
     @Key("command.fullrender.error-parsing-region-file")
     public static String COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE = "Failed to parse coordinates for region file '<path>' (<filename>)";
 
@@ -67,6 +73,18 @@ public class Lang extends AbstractConfig {
 
     @Key("command.status.description")
     public static String COMMAND_STATUS_DESCRIPTION = "View a world's render status";
+    @Key("command.status.already-rendering")
+    public static String COMMAND_STATUS_NOT_RENDERING = "<gold>Map status of <world>\\n" +
+            "Background: <green>Running\\n" +
+            "Active: <red>Not Running";
+    @Key("command.status.success")
+    public static String COMMAND_STATUS_RENDERING = "<gold>Map status of <world>\\n" +
+            "Background: <red>Paused\\n" +
+            "Active: <green><status>\\n" +
+            "  <gray>- Chunks Rendered <chunk_done>/<chunks_total> (<gold><percent>%</gold>)\\n" +
+            "  <gray>- Time Remaining: <remaining> (<gold><cps> cps</gold>)";
+    @Key("command.status.player-only-feature")
+    public static String COMMAND_STATUS_PLAYER_ONLY_FEATURE = "<red>That is a player only feature";
 
     @Key("httpd.started.success")
     public static String HTTPD_STARTED = "<green>Internal webserver running on <yellow><bind></yellow>:<yellow><port></yellow>";
@@ -108,13 +126,21 @@ public class Lang extends AbstractConfig {
         if (msg == null) {
             return;
         }
-        for (String part : msg.split("\\n")) {
-            send(recipient, parse((prefix ? Lang.COMMAND_BASE_PREFIX : "") + part, placeholders));
+        for (String part : msg.split("\n")) {
+            send(recipient, prefix, parse(part, placeholders));
         }
     }
 
     public static void send(Audience recipient, Component component) {
-        recipient.sendMessage(component);
+        send(recipient, true, component);
+    }
+
+    public static void send(Audience recipient, boolean prefix, Component component) {
+        if (recipient instanceof ConsoleCommandSender) {
+            recipient.sendMessage(prefix ? parse(Lang.PREFIX_LOGGER).append(component) : component);
+        } else {
+            recipient.sendMessage(prefix ? parse(Lang.PREFIX_COMMAND).append(component) : component);
+        }
     }
 
     public static Component parse(String msg, TagResolver.Single... placeholders) {

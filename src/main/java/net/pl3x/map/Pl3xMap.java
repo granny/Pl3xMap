@@ -59,8 +59,10 @@ public class Pl3xMap extends JavaPlugin {
             return;
         }
 
-        // extract folders from jar
+        // extract default worlds.yml file for nether and end default stuff
         FileUtil.extract("worlds.yml", false);
+
+        // extract folders from jar
         FileUtil.extract("/data/", AbstractConfig.DATA_DIR, false);
         FileUtil.extract("/locale/", AbstractConfig.LOCALE_DIR, false);
         FileUtil.extract("/renderers/", AbstractConfig.RENDERER_DIR, false);
