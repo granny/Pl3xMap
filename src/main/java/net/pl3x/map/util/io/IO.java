@@ -5,10 +5,6 @@ import net.pl3x.map.render.Image;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public abstract class IO {
     private static final Png PNG = new Png();
@@ -29,23 +25,8 @@ public abstract class IO {
 
         public abstract String extension();
 
-        protected abstract BufferedImage readNoLock(Path path);
+        protected abstract BufferedImage readBuffer(Path path);
 
-        public final BufferedImage readBuffer(Path path) {
-            //ReadWriteLock lock = IO.FILE_LOCKS.computeIfAbsent(path.toString(), k -> new ReentrantReadWriteLock(true));
-            //lock.readLock().lock();
-            BufferedImage buffer = readNoLock(path);
-            //lock.readLock().unlock();
-            return buffer;
-        }
-
-        protected abstract void writeNoLock(Path path, BufferedImage buffer);
-
-        public final void writeBuffer(Path path, BufferedImage buffer) {
-            //ReadWriteLock lock = IO.FILE_LOCKS.computeIfAbsent(path.toString(), k -> new ReentrantReadWriteLock(true));
-            //lock.writeLock().lock();
-            writeNoLock(path, buffer);
-            //lock.writeLock().unlock();
-        }
+        protected abstract void writeBuffer(Path path, BufferedImage buffer);
     }
 }

@@ -122,7 +122,7 @@ public class Colors {
         return block == Blocks.VINE || block == Blocks.OAK_LEAVES || block == Blocks.JUNGLE_LEAVES || block == Blocks.ACACIA_LEAVES || block == Blocks.DARK_OAK_LEAVES;
     }
 
-    public static Map<Block, Integer> blockColors = Map.ofEntries(
+    public static final Map<Block, Integer> blockColors = Map.ofEntries(
             Map.entry(Blocks.LAVA, 0xEA5C0F),
 
             Map.entry(Blocks.ORANGE_TULIP, 0xBD6A22),
@@ -257,7 +257,7 @@ public class Colors {
             Map.entry(Blocks.SPRUCE_LEAVES, 0x4e7a4e) // 25% darker than normal
     );
 
-    public static Map<ResourceKey<Biome>, Integer> biomeColors = Map.ofEntries(
+    public static final Map<ResourceKey<Biome>, Integer> biomeColors = Map.ofEntries(
             Map.entry(Biomes.THE_VOID, 0x00000000),
             Map.entry(Biomes.PLAINS, 0xFF8DB360),
             Map.entry(Biomes.SUNFLOWER_PLAINS, 0xFFB5DB88),

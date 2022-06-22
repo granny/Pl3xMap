@@ -14,7 +14,6 @@ import net.pl3x.map.render.Image;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.task.AbstractRender;
-import net.pl3x.map.render.task.ThreadManager;
 import net.pl3x.map.util.ChunkHelper;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.Mathf;
@@ -40,7 +39,7 @@ public class ScanRegion implements Runnable {
     public void run() {
         // wrap in try/catch because ExecutorService's Future swallows all exceptions :3
         try {
-        justDoIt();
+            justDoIt();
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -86,7 +85,7 @@ public class ScanRegion implements Runnable {
                 for (int z = 0; z < 16; z++) {
 
                     // we need the bottom row of the chunk to the north to get heightmap correct
-                    if (z == 0 && this.render.renderHeights()) {
+                    if (z == 0 && this.mapWorld.getConfig().RENDER_LAYER_HEIGHTS) {
                         ChunkAccess northChunk = this.chunkHelper.getChunk(level, chunkX, chunkZ - 1);
                         if (northChunk == null) {
                             Arrays.fill(lastY, Integer.MAX_VALUE);
@@ -100,7 +99,7 @@ public class ScanRegion implements Runnable {
                                     pos.move(Direction.DOWN);
                                     state = northChunk.getBlockState(pos);
                                     color = Colors.getBlockColor(this.mapWorld, null, state, pos);
-                                    isFluid = !state.getFluidState().isEmpty();
+                                    isFluid = this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT && !state.getFluidState().isEmpty();
                                 } while (pos.getY() > minY && (color <= 0 || isFluid));
                                 lastY[x] = pos.getY();
                             }
@@ -123,7 +122,7 @@ public class ScanRegion implements Runnable {
                             pos.move(Direction.DOWN);
                             state = chunk.getBlockState(pos);
                             isFluid = !state.getFluidState().isEmpty();
-                            if (isFluid) {
+                            if (isFluid && this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT) {
                                 if (lava == null) {
                                     lava = chunk.getBlockState(pos).is(Blocks.LAVA);
                                 }
@@ -131,26 +130,31 @@ public class ScanRegion implements Runnable {
                             } else {
                                 blockColor = Colors.getBlockColor(this.mapWorld, null, state, pos);
                             }
-                        } while (pos.getY() > minY && (blockColor <= 0 || isFluid));
+                        } while (pos.getY() > minY && (blockColor <= 0 || (isFluid && this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT)));
+                        lava = BooleanUtils.isTrue(lava);
 
                         // biomes layer
-                        if (this.render.renderBiomes()) {
+                        if (this.mapWorld.getConfig().RENDER_LAYER_BIOMES) {
                             Holder<Biome> biomeHolder = this.chunkHelper.getBiome(this.mapWorld, pos);
                             biome = biomeHolder.value();
                             imageSet.getBiomes().setPixel(pixelX, pixelZ, Colors.biomeColors.getOrDefault(biomeHolder.unwrapKey().orElse(null), 0));
                         }
 
                         // blocks layers
-                        if (this.render.renderBlocks()) {
+                        if (this.mapWorld.getConfig().RENDER_LAYER_BLOCKS) {
                             // recalculate grass/foliage in correct biome
                             if (biome != null && (Colors.isGrass(state.getBlock()) || Colors.isFoliage(state.getBlock()))) {
                                 blockColor = Colors.getBlockColor(this.mapWorld, biome, state, pos);
+                            }
+                            // opaque fluids
+                            else if (isFluid && !this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT) {
+                                blockColor = lava ? Colors.blockColors.get(Blocks.LAVA) : Colors.getWaterColor(this.mapWorld, biome);
                             }
                             imageSet.getBlocks().setPixel(pixelX, pixelZ, blockColor == 0 ? blockColor : (0xFF << 24) | blockColor);
                         }
 
                         // fluids layers
-                        if (this.render.renderFluids()) {
+                        if (this.mapWorld.getConfig().RENDER_LAYER_FLUIDS && this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT) {
                             lava = BooleanUtils.isTrue(lava);
                             int fluidColor = lava ? Colors.blockColors.get(Blocks.LAVA) : Colors.getWaterColor(this.mapWorld, biome);
                             // let's do some maths to get pretty fluid colors based on depth
@@ -160,7 +164,7 @@ public class ScanRegion implements Runnable {
                         }
 
                         // heights layers
-                        if (this.render.renderHeights()) {
+                        if (this.mapWorld.getConfig().RENDER_LAYER_HEIGHTS) {
                             int heightColor = 0x22;
                             if (lastY[x] != Integer.MAX_VALUE) {
                                 if (pos.getY() > lastY[x]) {
@@ -186,7 +190,7 @@ public class ScanRegion implements Runnable {
         if (!this.render.isCancelled()) {
             //ThreadManager.INSTANCE.getSaveExecutor().submit(() -> {
             //    try {
-                    imageSet.save();
+            imageSet.save();
             //    } catch (Throwable t ) {
             //        t.printStackTrace();
             //    }

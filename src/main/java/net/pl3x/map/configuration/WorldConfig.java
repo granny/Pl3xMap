@@ -3,13 +3,22 @@ package net.pl3x.map.configuration;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 
-import java.util.List;
-
 public class WorldConfig extends AbstractConfig {
-    @Key("render.types")
-    public List<String> RENDER_TYPES = List.of("basic", "biomes");
     @Key("render.background.enabled")
     public boolean RENDER_BACKGROUND_ENABLED = true;
+
+    @Key("render.layer.blocks")
+    public boolean RENDER_LAYER_BLOCKS = true;
+    @Key("render.layer.biomes")
+    public boolean RENDER_LAYER_BIOMES = true;
+    @Key("render.layer.heights")
+    public boolean RENDER_LAYER_HEIGHTS = true;
+    @Key("render.layer.fluids")
+    public boolean RENDER_LAYER_FLUIDS = true;
+
+    @Key("render.fluids.translucent")
+    public boolean RENDER_FLUIDS_TRANSLUCENT = true;
+
     @Key("zoom.default")
     public int ZOOM_DEFAULT = 0;
     @Key("zoom.max-out")

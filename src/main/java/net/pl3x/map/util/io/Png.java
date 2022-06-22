@@ -22,7 +22,7 @@ class Png extends IO.Type {
     }
 
     @Override
-    protected BufferedImage readNoLock(Path path) {
+    protected BufferedImage readBuffer(Path path) {
         BufferedImage buffer = null;
         ImageReader reader = null;
         try (ImageInputStream in = ImageIO.createImageInputStream(Files.newInputStream(path))) {
@@ -44,7 +44,7 @@ class Png extends IO.Type {
     }
 
     @Override
-    protected void writeNoLock(Path path, BufferedImage buffer) {
+    protected void writeBuffer(Path path, BufferedImage buffer) {
         ImageWriter writer = null;
         try (ImageOutputStream out = ImageIO.createImageOutputStream(Files.newOutputStream(path))) {
             writer = ImageIO.getImageWritersBySuffix(extension()).next();

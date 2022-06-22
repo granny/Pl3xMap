@@ -13,26 +13,16 @@ public abstract class AbstractRender extends BukkitRunnable {
     private final Audience starter;
     private final Progress progress;
 
-    private final boolean renderBlocks;
-    private final boolean renderBiomes;
-    private final boolean renderHeights;
-    private final boolean renderFluids;
-
     private int centerX;
     private int centerZ;
 
     private boolean cancelled;
 
-    public AbstractRender(MapWorld mapWorld, String type, Audience starter, boolean renderBlocks, boolean renderBiomes, boolean renderHeights, boolean renderFluids) {
+    public AbstractRender(MapWorld mapWorld, String type, Audience starter) {
         this.mapWorld = mapWorld;
         this.type = type;
         this.starter = starter;
         this.progress = new Progress(this);
-
-        this.renderBlocks = renderBlocks;
-        this.renderBiomes = renderBiomes;
-        this.renderHeights = renderHeights;
-        this.renderFluids = renderFluids;
 
         Location spawn = this.mapWorld.getWorld().getSpawnLocation();
         setCenterX(spawn.getBlockX());
@@ -53,22 +43,6 @@ public abstract class AbstractRender extends BukkitRunnable {
 
     public Progress getProgress() {
         return this.progress;
-    }
-
-    public boolean renderBlocks() {
-        return renderBlocks;
-    }
-
-    public boolean renderBiomes() {
-        return renderBiomes;
-    }
-
-    public boolean renderHeights() {
-        return renderHeights;
-    }
-
-    public boolean renderFluids() {
-        return renderFluids;
     }
 
     public int getCenterX() {

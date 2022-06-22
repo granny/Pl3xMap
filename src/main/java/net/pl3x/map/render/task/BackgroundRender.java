@@ -5,7 +5,7 @@ import net.pl3x.map.world.MapWorld;
 
 public class BackgroundRender extends AbstractRender {
     public BackgroundRender(MapWorld mapWorld, Audience starter) {
-        super(mapWorld, "Background", starter, true, true, true, true);
+        super(mapWorld, "Background", starter);
     }
 
     @Override

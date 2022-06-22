@@ -18,7 +18,6 @@ import java.util.Arrays;
 public class AbstractConfig {
     public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
     public static final Path LOCALE_DIR = FileUtil.PLUGIN_DIR.resolve("locale");
-    public static final Path RENDERER_DIR = FileUtil.PLUGIN_DIR.resolve("renderers");
 
     private YamlConfiguration config;
 

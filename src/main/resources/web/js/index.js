@@ -1,5 +1,6 @@
 let map;
 let world = `world`; // temp
+let format = "png";
 let zoom = 3; // current zoom
 let maxZoom = 3;
 let extraZoomIn = 2;
@@ -32,10 +33,10 @@ window.onload = function () {
     layerControls.addTo(map);
 
     // create layers
-    let blocks = L.tileLayer.reversedZoom(`tiles/${world}/{z}/blocks/{x}_{y}.webp`).setZIndex(0);
-    let biomes = L.tileLayer.reversedZoom(`tiles/${world}/{z}/biomes/{x}_{y}.webp`).setZIndex(0);
-    let heights = L.tileLayer.reversedZoom(`tiles/${world}/{z}/heights/{x}_{y}.webp`).setZIndex(1);
-    let fluids = L.tileLayer.reversedZoom(`tiles/${world}/{z}/fluids/{x}_{y}.webp`).setZIndex(2);
+    let blocks = L.tileLayer.reversedZoom(`tiles/${world}/{z}/blocks/{x}_{y}.${format}`).setZIndex(0);
+    let biomes = L.tileLayer.reversedZoom(`tiles/${world}/{z}/biomes/{x}_{y}.${format}`).setZIndex(0);
+    let heights = L.tileLayer.reversedZoom(`tiles/${world}/{z}/heights/{x}_{y}.${format}`).setZIndex(1);
+    let fluids = L.tileLayer.reversedZoom(`tiles/${world}/{z}/fluids/{x}_{y}.${format}`).setZIndex(2);
     let players = new L.layerGroup().setZIndex(100);
 
     // add layers

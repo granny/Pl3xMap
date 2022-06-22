@@ -22,7 +22,7 @@ public class FullRender extends AbstractRender {
     private int maxRadius = 0;
 
     public FullRender(MapWorld mapWorld, Audience starter) {
-        super(mapWorld, "FullRender", starter, true, true, true, true);
+        super(mapWorld, "FullRender", starter);
     }
 
     @Override
