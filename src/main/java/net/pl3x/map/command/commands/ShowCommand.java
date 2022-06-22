@@ -28,7 +28,7 @@ public class ShowCommand extends BaseCommand {
     }
 
     @Override
-    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
         Player target = getPlayer(sender, args, "pl3xmap.command.show.others");
         if (!PlayerManager.INSTANCE.isHidden(target)) {
             Lang.send(sender, Lang.COMMAND_SHOW_NOT_HIDDEN, Placeholder.parsed("player", target.getName()));

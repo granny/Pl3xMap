@@ -39,7 +39,7 @@ public class StatusCommand extends BaseCommand {
     }
 
     @Override
-    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
         MapWorld mapWorld = getMapWorld(sender, args);
 
         // if we're not actively rendering anything, background is working
@@ -87,8 +87,8 @@ public class StatusCommand extends BaseCommand {
                 Placeholder.parsed("world", mapWorld.getName()),
                 Placeholder.parsed("type", render.getType()),
                 Placeholder.parsed("status", "<green>Running"),
-                Placeholder.parsed("chunks_done", Integer.toString(progress.getProcessedChunks().get())),
-                Placeholder.parsed("chunks_total", Integer.toString(progress.getTotalChunks())),
+                Placeholder.parsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
+                Placeholder.parsed("chunks_total", Long.toString(progress.getTotalChunks())),
                 Placeholder.parsed("percent", String.format("%.2f", progress.getPercent())),
                 Placeholder.parsed("remaining", "1:23:45"),
                 Placeholder.parsed("cps", String.format("<gold>%.2f", progress.getCPS()))

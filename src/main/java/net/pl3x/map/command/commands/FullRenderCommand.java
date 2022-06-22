@@ -29,7 +29,7 @@ public class FullRenderCommand extends BaseCommand {
     }
 
     @Override
-    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
         MapWorld mapWorld = getMapWorld(sender, args);
         if (mapWorld.hasActiveRender()) {
             Lang.send(sender, Lang.COMMAND_FULLRENDER_ALREADY_RENDERING,
@@ -37,7 +37,7 @@ public class FullRenderCommand extends BaseCommand {
             return;
         }
 
-        FullRender render = new FullRender(mapWorld);
+        FullRender render = new FullRender(mapWorld, sender);
 
         if (sender instanceof Player player) {
             Lang.send(sender, Lang.COMMAND_FULLRENDER_STARTING,

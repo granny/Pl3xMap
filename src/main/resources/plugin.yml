@@ -8,7 +8,7 @@ description: "${description}"
 commands:
   pl3xmap:
     description: Control the plugin
-    permission: command.pl3xmap
+    permission: pl3xmap.command.pl3xmap
     usage: /<command>
     aliases:
       - map

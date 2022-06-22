@@ -37,15 +37,19 @@ public class Lang extends AbstractConfig {
     @Key("command.fullrender.already-rendering")
     public static String COMMAND_FULLRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
     @Key("command.fullrender.starting")
-    public static String COMMAND_FULLRENDER_STARTING = "<green>Starting full render of <world>";
+    public static String COMMAND_FULLRENDER_STARTING = "<green>Starting fullrender of <world>";
+    @Key("command.fullrender.finished")
+    public static String COMMAND_FULLRENDER_FINISHED = "<green>Finished fullrender on <world>";
+    @Key("command.fullrender.cancelled")
+    public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled fullrender on <world>";
     @Key("command.fullrender.obtaining-regions")
     public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining region files";
     @Key("command.fullrender.sorting-regions")
     public static String COMMAND_FULLRENDER_SORTING_REGIONS = "<yellow>Sorting region files";
     @Key("command.fullrender.found-total-regions")
-    public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS = "<green>Found <gray><total> <green>region files";
+    public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS = "<green>Found <gray><total></grey> region files";
     @Key("command.fullrender.use-status-for-progress")
-    public static String COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/status</grey> command to view progress";
+    public static String COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/map status</grey> command to view progress";
     @Key("command.fullrender.error-parsing-region-file")
     public static String COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE = "Failed to parse coordinates for region file '<path>' (<filename>)";
 
@@ -74,15 +78,17 @@ public class Lang extends AbstractConfig {
     @Key("command.status.description")
     public static String COMMAND_STATUS_DESCRIPTION = "View a world's render status";
     @Key("command.status.already-rendering")
-    public static String COMMAND_STATUS_NOT_RENDERING = "<gold>Map status of <world>\\n" +
-            "Background: <green>Running\\n" +
-            "Active: <red>Not Running";
+    public static String COMMAND_STATUS_NOT_RENDERING = """
+            <gold>Map status of <world>
+            Background: <green>Running
+            Active: <red>Not Running""";
     @Key("command.status.success")
-    public static String COMMAND_STATUS_RENDERING = "<gold>Map status of <world>\\n" +
-            "Background: <red>Paused\\n" +
-            "Active: <green><status>\\n" +
-            "  <gray>- Chunks Rendered <chunk_done>/<chunks_total> (<gold><percent>%</gold>)\\n" +
-            "  <gray>- Time Remaining: <remaining> (<gold><cps> cps</gold>)";
+    public static String COMMAND_STATUS_RENDERING = """
+            <gold>Map status of <world>
+            Background: <red>Paused
+            Active: <green><status>
+              <gray>- Chunks Rendered <chunk_done>/<chunks_total> (<gold><percent>%</gold>)
+              <gray>- Time Remaining: <remaining> (<gold><cps> cps</gold>)""";
     @Key("command.status.player-only-feature")
     public static String COMMAND_STATUS_PLAYER_ONLY_FEATURE = "<red>That is a player only feature";
 

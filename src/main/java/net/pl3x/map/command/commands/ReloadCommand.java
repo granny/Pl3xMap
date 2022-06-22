@@ -24,7 +24,7 @@ public class ReloadCommand extends BaseCommand {
     }
 
     @Override
-    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
         getPlugin().disable();
 
         Config.reload();

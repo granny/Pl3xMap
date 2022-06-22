@@ -1,139 +1,137 @@
 package net.pl3x.map.render;
 
+import net.minecraft.util.Mth;
+import net.pl3x.map.configuration.Config;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.task.AbstractRender;
-import net.pl3x.map.util.Colors;
+import net.pl3x.map.util.io.IO;
 import net.pl3x.map.world.MapWorld;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Image {
+    private static final Map<String, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+
     public static final int SIZE = 512;
+    public static final String DIR_PATH = "%d/%s/";
+    public static final String FILE_PATH = "%d_%d.%s";
 
-    private final Path path;
-    private final int[] pixels = new int[Image.SIZE * Image.SIZE];
+    private final MapWorld mapWorld;
+    private final String type;
+    private final int regionX;
+    private final int regionZ;
 
-    public Image(Path path) {
-        this.path = path;
+    private final int[] pixels = new int[SIZE * SIZE];
+    private final Path worldDir;
+
+    private final IO.Type io;
+
+    public Image(MapWorld mapWorld, String type, int regionX, int regionZ) {
+        this.mapWorld = mapWorld;
+        this.type = type;
+        this.regionX = regionX;
+        this.regionZ = regionZ;
+
+        this.worldDir = MapWorld.TILES_DIR.resolve(mapWorld.getName());
+
+        this.io = IO.get(Config.WEB_TILE_FORMAT);
     }
 
-    public Path path() {
-        return this.path;
-    }
-
-    public void getPixels(BufferedImage buffer) {
-        for (int x = 0; x < buffer.getWidth(); x++) {
-            for (int z = 0; z < buffer.getHeight(); z++) {
-                buffer.setRGB(x, z, Colors.rgb2bgr(getPixel(x, z)));
-            }
-        }
+    private int getIndex(int x, int z) {
+        return z * SIZE + x;
     }
 
     public int getPixel(int x, int z) {
-        return this.pixels[z * Image.SIZE + x];
-    }
-
-    public void setPixels(BufferedImage buffer) {
-        for (int x = 0; x < Image.SIZE; x++) {
-            for (int z = 0; z < Image.SIZE; z++) {
-                setPixel(x, z, buffer.getRGB(x, z));
-            }
-        }
+        return this.pixels[getIndex(x, z)];
     }
 
     public void setPixel(int x, int z, int color) {
-        this.pixels[z * Image.SIZE + x] = Colors.rgb2bgr(color);
+        this.pixels[getIndex(x, z)] = color;
     }
 
-    public void save() {
-        // create directories if they don't exist
-        if (!Files.exists(path().getParent())) {
+    public void saveToDisk() {
+        for (int zoom = 0; zoom <= this.mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
+            Path dirPath = this.worldDir.resolve(String.format(DIR_PATH, zoom, this.type));
+
+            // create directories if they don't exist
+            if (!Files.exists(dirPath)) {
+                try {
+                    Files.createDirectories(dirPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+
+            // calculate correct sizes for this zoom level
+            int step = (int) Math.pow(2, zoom);
+            int size = SIZE / step;
+            int scaledX = Mth.floor((double) this.regionX / step);
+            int scaledZ = Mth.floor((double) this.regionZ / step);
+
+            Path filePath = dirPath.resolve(String.format(FILE_PATH, scaledX, scaledZ, this.io.extension()));
+            BufferedImage buffer = null;
+
+            ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath.toString(), k -> new ReentrantReadWriteLock(true));
+            lock.writeLock().lock();
+
+            // read existing image from disk, except original zoom
             try {
-                Files.createDirectories(path().getParent());
+                if (zoom != 0 && Files.exists(filePath) && Files.size(filePath) > 0) {
+                    buffer = this.io.readBuffer(filePath);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-                return;
             }
+
+            // if not file was loaded, create a new image
+            if (buffer == null) {
+                buffer = this.io.createBuffer();
+            }
+
+            // write new pixels
+            int baseX = (this.regionX * size) & (SIZE - 1);
+            int baseZ = (this.regionZ * size) & (SIZE - 1);
+            for (int x = 0; x < SIZE; x += step) {
+                for (int z = 0; z < SIZE; z += step) {
+                    // TODO merge pixel colors instead of skipping pixels
+                    int rgb = getPixel(x, z);
+                    // skipping 0 prevents overwrite existing
+                    // parts of the buffer on higher zooms
+                    if (rgb != 0) {
+                        buffer.setRGB(baseX + (x / step), baseZ + (z / step), rgb);
+                    }
+                }
+            }
+
+            // finally, save buffer to disk
+            this.io.writeBuffer(filePath, buffer);
+
+            lock.writeLock().unlock();
+
         }
 
-        // write file to tmp on disk
-        // this helps prevent corrupt pngs
-        ImageWriter writer = null;
-        Exception error = null;
-        Path tmpPath = path().resolveSibling(path().getFileName() + ".tmp");
-        try (ImageOutputStream out = ImageIO.createImageOutputStream(Files.newOutputStream(tmpPath))) {
-            BufferedImage buffer = new BufferedImage(Image.SIZE, Image.SIZE, BufferedImage.TYPE_INT_ARGB);
-            ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(buffer);
-            writer = ImageIO.getImageWriters(type, "png").next();
-            ImageWriteParam param = writer.getDefaultWriteParam();
-            if (param.canWriteCompressed()) {
-                param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                // low quality == high compression
-                param.setCompressionQuality(0.0f);
-            }
-            getPixels(buffer);
-            writer.setOutput(out);
-            writer.write(null, new IIOImage(buffer, null, null), param);
-        } catch (IOException e) {
-            // store error so we can return early after finally
-            error = e;
-        } finally {
-            if (writer != null) {
-                writer.dispose();
-            }
-        }
-
-        // error out if we couldn't save tmp file
-        if (error != null) {
-            Logger.warn("Could not save tile image: " + path());
-            error.printStackTrace();
-            return;
-        }
-
-        // move tmp file into proper place
-        try {
-            Files.move(tmpPath, path(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-        } catch (IOException e1) {
-            try {
-                Files.move(tmpPath, path(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        }
+        //Logger.info(String.format("Saved: [%d,%d]", regionX, regionZ));
     }
 
     public static class Set {
-        public static final String PATH = "%s/%d_%d.png";
-
-        private final int x, z;
+        private final int regionX, regionZ;
         private final Image blocks, biomes, heights, fluids;
 
-        public Set(AbstractRender render, RegionCoordinate region) {
-            this(render, region, 0);
-        }
-
-        public Set(AbstractRender render, RegionCoordinate region, int zoom) {
-            this.x = region.getRegionX();
-            this.z = region.getRegionZ();
-
-            Path worldDir = MapWorld.TILES_DIR.resolve(render.getWorld().getName());
-            Path tileDir = worldDir.resolve(Integer.toString(zoom));
-
-            this.blocks = new Image(tileDir.resolve(String.format(PATH, "blocks", this.x, this.z)));
-            this.biomes = new Image(tileDir.resolve(String.format(PATH, "biomes", this.x, this.z)));
-            this.heights = new Image(tileDir.resolve(String.format(PATH, "heights", this.x, this.z)));
-            this.fluids = new Image(tileDir.resolve(String.format(PATH, "fluids", this.x, this.z)));
+        public Set(MapWorld mapWorld, RegionCoordinate region) {
+            this.regionX = region.getRegionX();
+            this.regionZ = region.getRegionZ();
+            this.blocks = new Image(mapWorld, "blocks", this.regionX, this.regionZ);
+            this.biomes = new Image(mapWorld, "biomes", this.regionX, this.regionZ);
+            this.heights = new Image(mapWorld, "heights", this.regionX, this.regionZ);
+            this.fluids = new Image(mapWorld, "fluids", this.regionX, this.regionZ);
         }
 
         public Image getBlocks() {
@@ -153,11 +151,11 @@ public class Image {
         }
 
         public void save() {
-            Logger.debug("Saving images for region " + this.x + ", " + this.z);
-            this.blocks.save();
-            this.biomes.save();
-            this.heights.save();
-            this.fluids.save();
+            Logger.debug("Saving images for region " + this.regionX + ", " + this.regionZ);
+            this.blocks.saveToDisk();
+            this.biomes.saveToDisk();
+            this.heights.saveToDisk();
+            this.fluids.saveToDisk();
         }
     }
 }

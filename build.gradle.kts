@@ -14,8 +14,10 @@ java {
 
 dependencies {
     paperDevBundle("1.19-R0.1-SNAPSHOT")
-    implementation("io.undertow", "undertow-core", "2.2.17.Final")
-    implementation("org.bstats", "bstats-bukkit", "3.0.0")
+    implementation("io.undertow:undertow-core:2.2.17.Final")
+    implementation("com.sksamuel.scrimage:scrimage-core:4.0.31")
+    implementation("com.sksamuel.scrimage:scrimage-webp:4.0.31")
+    implementation("org.bstats:bstats-bukkit:3.0.0")
 }
 
 tasks {

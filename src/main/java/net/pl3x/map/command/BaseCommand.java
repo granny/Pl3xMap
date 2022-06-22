@@ -94,7 +94,7 @@ public abstract class BaseCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         try {
-            handleCommand(sender, command, new LinkedList<>(Arrays.asList(args)));
+            handleCommand(sender, command, label, new LinkedList<>(Arrays.asList(args)));
         } catch (CommandException e) {
             if (e.getMessage() == null || e.getMessage().isBlank()) {
                 Lang.send(sender, Lang.ERROR_UNKNOWN_ERROR);
@@ -105,7 +105,7 @@ public abstract class BaseCommand implements TabExecutor {
         return true;
     }
 
-    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
         if (args != null && args.size() > 0) {
             String cmd = args.pop().toLowerCase();
             BaseCommand subCmd = this.subCommands.get(cmd);
@@ -119,7 +119,7 @@ public abstract class BaseCommand implements TabExecutor {
                     sender.sendMessage(Bukkit.permissionMessage());
                     return;
                 }
-                subCmd.handleCommand(sender, command, args);
+                subCmd.handleCommand(sender, command, label, args);
                 return;
             }
             if (!cmd.equals("?")) {

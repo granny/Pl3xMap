@@ -54,7 +54,7 @@ public class Pl3xMap extends JavaPlugin {
         try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
         } catch (ClassNotFoundException e) {
-            Logger.severe("This plugin requires Paper or one of its forks to run");
+            Logger.error("This plugin requires Paper or one of its forks to run");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -65,7 +65,6 @@ public class Pl3xMap extends JavaPlugin {
         // extract folders from jar
         FileUtil.extract("/data/", AbstractConfig.DATA_DIR, false);
         FileUtil.extract("/locale/", AbstractConfig.LOCALE_DIR, false);
-        FileUtil.extract("/renderers/", AbstractConfig.RENDERER_DIR, false);
 
         // register bukkit listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

@@ -1,34 +1,30 @@
 package net.pl3x.map.progress;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.task.AbstractRender;
-import net.pl3x.map.render.task.ThreadManager;
-import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Progress extends BukkitRunnable {
     private final AbstractRender render;
     private final CPSTracker cpsTracker = new CPSTracker();
 
-    private final AtomicInteger processedChunks = new AtomicInteger(0);
-    private final AtomicInteger processedRegions = new AtomicInteger(0);
+    private final AtomicLong processedChunks = new AtomicLong(0);
+    private final AtomicLong processedRegions = new AtomicLong(0);
 
-    private int prevProcessedChunks = 0;
-    private int totalChunks;
-    private int totalRegions;
+    private long prevProcessedChunks = 0;
+    private long totalChunks;
+    private long totalRegions;
     private float percent;
     private double cps;
 
-    private final Set<CommandSender> showProgressTo = new HashSet<>();
+    private final Set<Audience> audience = new HashSet<>();
     private final ProgressBossbar bossbar;
 
     public Progress(AbstractRender render) {
@@ -36,12 +32,12 @@ public class Progress extends BukkitRunnable {
         this.bossbar = new ProgressBossbar(render.getWorld());
     }
 
-    public void show(CommandSender sender) {
-        this.showProgressTo.add(sender);
+    public void show(Audience audience) {
+        this.audience.add(audience);
     }
 
-    public boolean hide(CommandSender sender) {
-        return this.showProgressTo.remove(sender);
+    public boolean hide(Audience audience) {
+        return this.audience.remove(audience);
     }
 
     public ProgressBossbar getBossbar() {
@@ -56,63 +52,63 @@ public class Progress extends BukkitRunnable {
         return this.cps;
     }
 
-    public int getTotalChunks() {
+    public long getTotalChunks() {
         return this.totalChunks;
     }
 
-    public int getTotalRegions() {
+    public long getTotalRegions() {
         return this.totalRegions;
     }
 
-    public void setTotalRegions(int totalRegions) {
+    public void setTotalRegions(long totalRegions) {
         this.totalRegions = totalRegions;
-        this.totalChunks = totalRegions * 32 * 32;
+        this.totalChunks = totalRegions * 32L * 32L;
     }
 
-    public final AtomicInteger getProcessedChunks() {
+    public final AtomicLong getProcessedChunks() {
         return this.processedChunks;
     }
 
-    public final AtomicInteger getProcessedRegions() {
+    public final AtomicLong getProcessedRegions() {
         return this.processedRegions;
+    }
+
+    public void finish() {
+        cancel();
+        if (this.render.getWorld().hasActiveRender()) {
+            this.render.getWorld().finishRender();
+            getBossbar().finish();
+        } else {
+            getBossbar().hideAll();
+        }
     }
 
     @Override
     public void run() {
-        int processedChunks = getProcessedChunks().get();
+        long processedChunks = getProcessedChunks().get();
         this.cpsTracker.add(processedChunks - this.prevProcessedChunks);
         this.prevProcessedChunks = processedChunks;
         this.percent = ((float) processedChunks / (float) getTotalChunks()) * 100.0F;
         this.cps = this.cpsTracker.average();
 
         // show progress to listeners
-        Component component = MiniMessage.miniMessage().deserialize(
-                String.format("Progress: %d/%d (%s) %s (%d,%d)",
-                        processedChunks,
-                        getTotalChunks(),
-                        String.format("%.2f%%", getPercent()),
-                        String.format("<gold>%.2f", getCPS()) + " cps</gold>",
-                        ((ThreadPoolExecutor) ThreadManager.INSTANCE.getSaveExecutor()).getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count(),
-                        ((ThreadPoolExecutor) ThreadManager.INSTANCE.getRenderExecutor()).getQueue().stream().filter(t -> !((FutureTask<?>) t).isDone()).count()
-                )
+        Component component = Lang.parse(
+                "Progress: <processed_chunks>/<total_chunks> (<percent>) <gold><cps> cps</gold>",
+                Placeholder.parsed("processed_chunks", Long.toString(processedChunks)),
+                Placeholder.parsed("total_chunks", Long.toString(getTotalChunks())),
+                Placeholder.parsed("percent", String.format("%.2f%%", getPercent())),
+                Placeholder.parsed("cps", String.format("%.2f", getCPS()))
         );
-        for (CommandSender sender : this.showProgressTo) {
-            Lang.send(sender, component);
+        for (Audience audience : this.audience) {
+            Lang.send(audience, component);
         }
 
         // show to player bossbars
-        this.bossbar.update(this.percent);
+        getBossbar().update(this.percent);
 
         // check if finished
         if (this.processedRegions.get() >= this.totalRegions) {
-            cancel();
-            if (this.render.getWorld().hasActiveRender()) {
-                Logger.info("Finished rendering " + this.render.getWorld().getName());
-                this.render.getWorld().finishRender();
-                this.bossbar.finish();
-            } else {
-                this.bossbar.clear();
-            }
+            finish();
         }
     }
 }

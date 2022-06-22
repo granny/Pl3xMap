@@ -34,6 +34,7 @@ import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.render.task.AbstractRender;
 import net.pl3x.map.world.MapWorld;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -112,7 +113,12 @@ public class ChunkHelper {
 
         // populate the heightmap from NBT
         if (this.render.renderHeights()) {
-            chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, nbt.getCompound("Heightmaps").getLongArray(Heightmap.Types.WORLD_SURFACE.getSerializationKey()));
+            CompoundTag heightmaps = nbt.getCompound("Heightmaps");
+            String key = Heightmap.Types.WORLD_SURFACE.getSerializationKey();
+            if (heightmaps.contains(key, 12)) {
+                chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, heightmaps.getLongArray(key));
+            }
+            Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
         }
 
         // rejoice

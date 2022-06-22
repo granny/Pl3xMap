@@ -46,7 +46,7 @@ public class FileUtil {
             Logger.debug("Extracting " + inDir + " directory from jar...");
             jar = ((JarURLConnection) dirURL.openConnection()).getJarFile();
         } catch (IOException e) {
-            Logger.severe("Failed to extract directory from jar");
+            Logger.error("Failed to extract directory from jar");
             throw new RuntimeException(e);
         }
         String path = inDir.substring(1);

@@ -123,6 +123,7 @@ public class MapWorld {
         if (!hasActiveRender()) {
             throw new IllegalStateException("No render to finish");
         }
+        this.activeRender.finish();
         this.activeRender = null;
     }
 

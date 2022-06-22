@@ -3,7 +3,6 @@ package net.pl3x.map.render.queue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -19,36 +18,46 @@ import net.pl3x.map.render.task.ThreadManager;
 import net.pl3x.map.util.ChunkHelper;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.Mathf;
+import net.pl3x.map.world.MapWorld;
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Arrays;
 
 public class ScanRegion implements Runnable {
     private final AbstractRender render;
+    private final MapWorld mapWorld;
     private final RegionCoordinate region;
     private final ChunkHelper chunkHelper;
 
-    private BlockPos.MutableBlockPos fluidPos = null;
-    private BlockState state;
-    private int minY;
-
     public ScanRegion(AbstractRender render, RegionCoordinate region) {
         this.render = render;
+        this.mapWorld = render.getWorld();
         this.region = region;
         this.chunkHelper = new ChunkHelper(render);
     }
 
     @Override
     public void run() {
+        // wrap in try/catch because ExecutorService's Future swallows all exceptions :3
+        try {
+        justDoIt();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private void justDoIt() {
         int regionX = this.region.getRegionX();
         int regionZ = this.region.getRegionZ();
 
         Logger.debug("[" + Thread.currentThread().getName() + "] Rendering region " + regionX + ", " + regionZ);
 
-        ServerLevel level = this.render.getWorld().getLevel();
-        this.minY = level.getMinBuildHeight();
+        ServerLevel level = this.mapWorld.getLevel();
+
+        int minY = level.getMinBuildHeight();
 
         // allocate images
-        Image.Set imageSet = new Image.Set(this.render, this.region);
+        Image.Set imageSet = new Image.Set(this.mapWorld, this.region);
 
         // scan chunks in region
         for (int chunkX = this.region.getChunkX(); chunkX < this.region.getChunkX() + 32; chunkX++) {
@@ -67,6 +76,7 @@ public class ScanRegion implements Runnable {
                     continue;
                 }
 
+                BlockState state;
                 BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
                 int blockX = Coordinate.chunkToBlock(chunkX);
                 int blockZ = Coordinate.chunkToBlock(chunkZ);
@@ -84,7 +94,14 @@ public class ScanRegion implements Runnable {
                             for (int x = 0; x < 16; x++) {
                                 pos.set(blockX + x, 0, blockZ + 15);
                                 pos.setY(northChunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) + 1);
-                                findRenderableBlock(northChunk, pos);
+                                int color;
+                                boolean isFluid;
+                                do {
+                                    pos.move(Direction.DOWN);
+                                    state = northChunk.getBlockState(pos);
+                                    color = Colors.getBlockColor(this.mapWorld, null, state, pos);
+                                    isFluid = !state.getFluidState().isEmpty();
+                                } while (pos.getY() > minY && (color <= 0 || isFluid));
                                 lastY[x] = pos.getY();
                             }
                         }
@@ -97,81 +114,63 @@ public class ScanRegion implements Runnable {
                         pos.setY(chunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) + 1);
                         int pixelX = pos.getX() & Image.SIZE - 1;
                         int pixelZ = pos.getZ() & Image.SIZE - 1;
-                        this.fluidPos = null;
-                        ResourceKey<Biome> biomeKey = null;
                         Biome biome = null;
+                        int blockColor = 0;
+                        boolean isFluid;
+                        float depth = 0F;
+                        Boolean lava = null;
+                        do {
+                            pos.move(Direction.DOWN);
+                            state = chunk.getBlockState(pos);
+                            isFluid = !state.getFluidState().isEmpty();
+                            if (isFluid) {
+                                if (lava == null) {
+                                    lava = chunk.getBlockState(pos).is(Blocks.LAVA);
+                                }
+                                depth += 0.025F;
+                            } else {
+                                blockColor = Colors.getBlockColor(this.mapWorld, null, state, pos);
+                            }
+                        } while (pos.getY() > minY && (blockColor <= 0 || isFluid));
 
-                        // blocks, biomes, and heights layers
-                        {
-                            int blockColor = findRenderableBlock(chunk, pos);
-                            // get biome at correct Y level
-                            if (this.render.renderBlocks() || this.render.renderBiomes() || this.render.renderFluids()) {
-                                Holder<Biome> biomeHolder = this.chunkHelper.getBiome(this.render.getWorld(), pos);
-                                biomeKey = biomeHolder.unwrapKey().orElse(null);
-                                biome = biomeHolder.value();
-                            }
-                            if (this.render.renderBlocks()) {
-                                // recalculate grass/foliage in correct biome
-                                if (Colors.isGrass(this.state.getBlock()) || Colors.isFoliage(this.state.getBlock())) {
-                                    blockColor = Colors.getBlockColor(this.render.getWorld(), biome, this.state, pos);
-                                }
-                                // store pixel data
-                                imageSet.getBlocks().setPixel(pixelX, pixelZ, blockColor == 0 ? blockColor : (0xFF << 24) | blockColor);
-                            }
-                            if (this.render.renderBiomes()) {
-                                imageSet.getBiomes().setPixel(pixelX, pixelZ, Colors.biomeColors.getOrDefault(biomeKey, 0));
-                            }
-                            if (this.render.renderHeights()) {
-                                // calculate height
-                                int heightColor = 0x22;
-                                if (lastY[x] != Integer.MAX_VALUE) {
-                                    if (pos.getY() > lastY[x]) {
-                                        heightColor = 0x00;
-                                    } else if (pos.getY() < lastY[x]) {
-                                        heightColor = 0x44;
-                                    }
-                                }
-                                imageSet.getHeights().setPixel(pixelX, pixelZ, heightColor << 24);
-                                lastY[x] = pos.getY();
-                            }
+                        // biomes layer
+                        if (this.render.renderBiomes()) {
+                            Holder<Biome> biomeHolder = this.chunkHelper.getBiome(this.mapWorld, pos);
+                            biome = biomeHolder.value();
+                            imageSet.getBiomes().setPixel(pixelX, pixelZ, Colors.biomeColors.getOrDefault(biomeHolder.unwrapKey().orElse(null), 0));
                         }
 
-                        // lights layer
-                        /*if (this.render.renderLights()) {
-                            // get block's light level
-                            int light = level.getBrightness(LightLayer.BLOCK, (this.fluidPos == null ? pos : this.fluidPos).above());
-                            // convert to alpha value
-                            int alpha = (int) (Mathf.inverseLerp(0, 15, light) * 0xFF);
-                            // convert to darkness color
-                            int darkness = (int) Mathf.clamp(0x00, 0xFF, 0xBB - alpha) << 24;
-                            imageSet.getLights().setPixel(pixelX, pixelZ, darkness);
-                        }*/
-
-                        // fluids layer
-                        if (this.render.renderFluids()) {
-                            int fluidColor = 0;
-                            if (this.fluidPos != null) {
-                                // setup initial fluid stuff
-                                boolean lava;
-                                if (chunk.getBlockState(this.fluidPos).is(Blocks.LAVA)) {
-                                    lava = true;
-                                    fluidColor = Colors.blockColors.get(Blocks.LAVA);
-                                } else {
-                                    lava = false;
-                                    fluidColor = Colors.getWaterColor(this.render.getWorld(), biome);
-                                }
-                                // iterate down until we don't find any more fluids
-                                float depth = 0F;
-                                do {
-                                    this.fluidPos.move(Direction.DOWN);
-                                    this.state = chunk.getBlockState(this.fluidPos);
-                                    depth += 0.025F;
-                                } while (this.fluidPos.getY() > this.minY && !this.state.getFluidState().isEmpty());
-                                // let's do some maths to get pretty fluid colors based on depth
-                                fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, lava ? 0.3F : 0.45F, Easing.cubicOut(depth / 1.5F)));
-                                fluidColor = Colors.setAlpha(lava ? 0xFF : (int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
+                        // blocks layers
+                        if (this.render.renderBlocks()) {
+                            // recalculate grass/foliage in correct biome
+                            if (biome != null && (Colors.isGrass(state.getBlock()) || Colors.isFoliage(state.getBlock()))) {
+                                blockColor = Colors.getBlockColor(this.mapWorld, biome, state, pos);
                             }
+                            imageSet.getBlocks().setPixel(pixelX, pixelZ, blockColor == 0 ? blockColor : (0xFF << 24) | blockColor);
+                        }
+
+                        // fluids layers
+                        if (this.render.renderFluids()) {
+                            lava = BooleanUtils.isTrue(lava);
+                            int fluidColor = lava ? Colors.blockColors.get(Blocks.LAVA) : Colors.getWaterColor(this.mapWorld, biome);
+                            // let's do some maths to get pretty fluid colors based on depth
+                            fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, lava ? 0.3F : 0.45F, Easing.cubicOut(depth / 1.5F)));
+                            fluidColor = Colors.setAlpha(lava ? 0xFF : (int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
                             imageSet.getFluids().setPixel(pixelX, pixelZ, fluidColor);
+                        }
+
+                        // heights layers
+                        if (this.render.renderHeights()) {
+                            int heightColor = 0x22;
+                            if (lastY[x] != Integer.MAX_VALUE) {
+                                if (pos.getY() > lastY[x]) {
+                                    heightColor = 0x00;
+                                } else if (pos.getY() < lastY[x]) {
+                                    heightColor = 0x44;
+                                }
+                            }
+                            imageSet.getHeights().setPixel(pixelX, pixelZ, heightColor << 24);
+                            lastY[x] = pos.getY();
                         }
 
                     }
@@ -185,7 +184,13 @@ public class ScanRegion implements Runnable {
 
         // save images to disk
         if (!this.render.isCancelled()) {
-            ThreadManager.INSTANCE.getSaveExecutor().submit(imageSet::save);
+            //ThreadManager.INSTANCE.getSaveExecutor().submit(() -> {
+            //    try {
+                    imageSet.save();
+            //    } catch (Throwable t ) {
+            //        t.printStackTrace();
+            //    }
+            //});
         }
 
         // we're done with this region \o/
@@ -195,23 +200,6 @@ public class ScanRegion implements Runnable {
     private void cleanup() {
         this.chunkHelper.clear();
         this.render.getProgress().getProcessedRegions().getAndIncrement();
-    }
-
-    private int findRenderableBlock(ChunkAccess chunk, BlockPos.MutableBlockPos pos) {
-        int color;
-        boolean isFluid;
-        // iterate downwards until we find a block to render
-        do {
-            pos.move(Direction.DOWN);
-            this.state = chunk.getBlockState(pos);
-            color = Colors.getBlockColor(this.render.getWorld(), null, this.state, pos);
-            isFluid = this.state.getFluidState().isEmpty();
-            // only track the first time we see a liquid
-            if (this.fluidPos == null && !isFluid) {
-                this.fluidPos = pos.mutable();
-            }
-        } while (pos.getY() > this.minY && (color <= 0 || !isFluid));
-        return color;
     }
 
     public static class Easing {

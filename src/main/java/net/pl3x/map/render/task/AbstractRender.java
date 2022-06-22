@@ -1,5 +1,6 @@
 package net.pl3x.map.render.task;
 
+import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.progress.Progress;
 import net.pl3x.map.world.MapWorld;
@@ -9,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public abstract class AbstractRender extends BukkitRunnable {
     private final MapWorld mapWorld;
     private final String type;
+    private final Audience starter;
     private final Progress progress;
 
     private final boolean renderBlocks;
@@ -21,9 +23,10 @@ public abstract class AbstractRender extends BukkitRunnable {
 
     private boolean cancelled;
 
-    public AbstractRender(MapWorld mapWorld, String type, boolean renderBlocks, boolean renderBiomes, boolean renderHeights, boolean renderFluids) {
+    public AbstractRender(MapWorld mapWorld, String type, Audience starter, boolean renderBlocks, boolean renderBiomes, boolean renderHeights, boolean renderFluids) {
         this.mapWorld = mapWorld;
         this.type = type;
+        this.starter = starter;
         this.progress = new Progress(this);
 
         this.renderBlocks = renderBlocks;
@@ -42,6 +45,10 @@ public abstract class AbstractRender extends BukkitRunnable {
 
     public String getType() {
         return this.type;
+    }
+
+    public Audience getStarter() {
+        return this.starter;
     }
 
     public Progress getProgress() {
@@ -80,20 +87,36 @@ public abstract class AbstractRender extends BukkitRunnable {
         this.centerZ = z;
     }
 
-    public void cancel() {
-        this.cancelled = true;
+    @Override
+    public final void run() {
+        start();
+        render();
+
+        getProgress().runTaskTimerAsynchronously(Pl3xMap.getInstance(), 20, 20);
     }
+
+    public abstract void render();
+
+    public final void start() {
+        onStart();
+    }
+
+    public abstract void onStart();
+
+    public final void finish() {
+        onFinish();
+    }
+
+    public abstract void onFinish();
 
     public boolean isCancelled() {
         return this.cancelled;
     }
 
-    public abstract void render();
-
-    @Override
-    public void run() {
-        render();
-
-        getProgress().runTaskTimerAsynchronously(Pl3xMap.getInstance(), 20, 20);
+    public final void cancel() {
+        this.cancelled = true;
+        onCancel();
     }
+
+    public abstract void onCancel();
 }

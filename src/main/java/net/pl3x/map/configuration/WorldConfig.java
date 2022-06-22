@@ -10,6 +10,12 @@ public class WorldConfig extends AbstractConfig {
     public List<String> RENDER_TYPES = List.of("basic", "biomes");
     @Key("render.background.enabled")
     public boolean RENDER_BACKGROUND_ENABLED = true;
+    @Key("zoom.default")
+    public int ZOOM_DEFAULT = 0;
+    @Key("zoom.max-out")
+    public int ZOOM_MAX_OUT = 3;
+    @Key("zoom.max-in")
+    public int ZOOM_MAX_IN = 2;
 
     private final World world;
 

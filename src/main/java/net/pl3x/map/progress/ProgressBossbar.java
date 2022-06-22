@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.entity.Player;
@@ -21,15 +22,11 @@ public class ProgressBossbar {
     private final MapWorld mapWorld;
     private final BossBar bossbar;
 
-    private final Set<Player> players;
-    private final Audience audience;
+    private final Set<Audience> players = new HashSet<>();
 
     public ProgressBossbar(MapWorld mapWorld) {
         this.mapWorld = mapWorld;
         this.bossbar = BossBar.bossBar(Component.empty(), 0F, BossBar.Color.RED, BossBar.Overlay.NOTCHED_20);
-
-        this.players = new HashSet<>();
-        this.audience = Audience.audience(this.players);
 
         update(0F);
     }
@@ -50,19 +47,20 @@ public class ProgressBossbar {
     }
 
     // called shortly after the progress is finished
-    public void clear() {
-        this.audience.hideBossBar(this.bossbar);
+    public void hideAll() {
+        Audience.audience(this.players).hideBossBar(this.bossbar);
     }
 
     // called every 20 ticks to update progress bar and name
     public void update(float percent) {
         this.bossbar.progress(Math.min(Math.max(Mathf.inverseLerp(0F, 100F, percent), 0), 1));
-        this.bossbar.name(MiniMessage.miniMessage().deserialize(NAME,
+        this.bossbar.name(Lang.parse(NAME,
                 Placeholder.parsed("world", this.mapWorld.getName()),
                 Placeholder.parsed("percent", String.format("%.2f", percent))
         ));
     }
 
+    // remove bossbar from audience after a few seconds
     public void finish() {
         // just for fun, lets flash the colors for a bit before removing
         AtomicInteger i = new AtomicInteger(0);
@@ -79,7 +77,7 @@ public class ProgressBossbar {
                         return;
                     }
                     // out of colors, remove bossbar from players
-                    clear();
+                    hideAll();
                     cancel();
                 }
             }

@@ -28,7 +28,7 @@ public class CancelRenderCommand extends BaseCommand {
     }
 
     @Override
-    protected void handleCommand(CommandSender sender, Command command, LinkedList<String> args) throws CommandException {
+    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
         MapWorld mapWorld = getMapWorld(sender, args);
         if (!mapWorld.hasActiveRender()) {
             Lang.send(sender, Lang.COMMAND_CANCELRENDER_NOT_RENDERING,

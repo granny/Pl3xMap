@@ -13,12 +13,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
 import net.pl3x.map.world.MapWorld;
 
-import java.awt.*;
 import java.util.Map;
 
 public class Colors {
-    public static int shade(int color, float ratio) {
-        return argb(alpha(color), (int) (red(color) * ratio), (int) (green(color) * ratio), (int) (blue(color) * ratio));
+    public static int lerpRGB(int color0, int color1, float delta) {
+        if (color0 == color1) return color0;
+        if (delta >= 1F) return color1;
+        if (delta <= 0F) return color0;
+        return rgb(
+                (int) Mathf.lerp(red(color0), red(color1), delta),
+                (int) Mathf.lerp(green(color0), green(color1), delta),
+                (int) Mathf.lerp(blue(color0), blue(color1), delta)
+        );
     }
 
     public static int lerpARGB(int color0, int color1, float delta) {
@@ -31,56 +37,6 @@ public class Colors {
                 (int) Mathf.lerp(green(color0), green(color1), delta),
                 (int) Mathf.lerp(blue(color0), blue(color1), delta)
         );
-    }
-
-    public static int inverseLerpARGB(int color0, int color1, float delta) {
-        if (color0 == color1) return color0;
-        if (delta >= 1F) return color1;
-        if (delta <= 0F) return color0;
-        return argb(
-                (int) Mathf.inverseLerp(alpha(color0), alpha(color1), delta),
-                (int) Mathf.inverseLerp(red(color0), red(color1), delta),
-                (int) Mathf.inverseLerp(green(color0), green(color1), delta),
-                (int) Mathf.inverseLerp(blue(color0), blue(color1), delta)
-        );
-    }
-
-    public static int lerpHSB(int color0, int color1, float delta) {
-        float[] hsb0 = Color.RGBtoHSB(red(color0), green(color0), blue(color0), null);
-        float[] hsb1 = Color.RGBtoHSB(red(color1), green(color1), blue(color1), null);
-        return setAlpha(
-                (int) Mathf.lerp(alpha(color0), alpha(color1), delta),
-                Color.HSBtoRGB(
-                        lerpShortestAngle(hsb0[0], hsb1[0], delta),
-                        Mathf.lerp(hsb0[1], hsb1[1], delta),
-                        Mathf.lerp(hsb0[2], hsb1[2], delta)
-                )
-        );
-    }
-
-    public static int inverseLerpHSB(int color0, int color1, float delta) {
-        float[] hsb0 = Color.RGBtoHSB(red(color0), green(color0), blue(color0), null);
-        float[] hsb1 = Color.RGBtoHSB(red(color1), green(color1), blue(color1), null);
-        return setAlpha(
-                (int) Mathf.inverseLerp(alpha(color0), alpha(color1), delta),
-                Color.HSBtoRGB(
-                        lerpShortestAngle(hsb0[0], hsb1[0], delta),
-                        Mathf.inverseLerp(hsb0[1], hsb1[1], delta),
-                        Mathf.inverseLerp(hsb0[2], hsb1[2], delta)
-                )
-        );
-    }
-
-    public static float lerpShortestAngle(float start, float end, float delta) {
-        float distCW = (end >= start ? end - start : 1F - (start - end));
-        float distCCW = (start >= end ? start - end : 1F - (end - start));
-        float direction = (distCW <= distCCW ? distCW : -1F * distCCW);
-        return (start + (direction * delta));
-    }
-
-    public static int rgb2bgr(int color) {
-        // Minecraft flips red and blue for some reason. let's flip them back
-        return (alpha(color) << 24) | (blue(color) << 16) | (green(color) << 8) | red(color);
     }
 
     public static int alpha(int argb) {
@@ -97,6 +53,10 @@ public class Colors {
 
     public static int blue(int argb) {
         return argb & 0xFF;
+    }
+
+    public static int rgb(int red, int green, int blue) {
+        return red << 16 | green << 8 | blue;
     }
 
     public static int argb(int alpha, int red, int green, int blue) {
@@ -126,14 +86,14 @@ public class Colors {
 
     public static int getBlockColor(MapWorld mapWorld, Biome biome, BlockState state, BlockPos pos) {
         Block block = state.getBlock();
-        int color = blockColors.getOrDefault(block, -1);//TODO Advanced.getConfig().blockColors.getOrDefault(block, -1);
+        int color = blockColors.getOrDefault(block, -1);
 
         if (color != 0) {
             if (block == Blocks.MELON_STEM || block == Blocks.PUMPKIN_STEM) {
                 int age = state.getValue(StemBlock.AGE);
-                color = argb(0, age * 32, 0xFF - age * 8, age * 4);
+                color = rgb(age * 32, 0xFF - age * 8, age * 4);
             } else if (block == Blocks.WHEAT) {
-                color = Colors.lerpARGB(MaterialColor.PLANT.col, color, (state.getValue(CropBlock.AGE) + 1) / 8F);
+                color = Colors.lerpRGB(MaterialColor.PLANT.col, color, (state.getValue(CropBlock.AGE) + 1) / 8F);
             } else if (block == Blocks.REDSTONE_WIRE) {
                 color = RedStoneWireBlock.getColorForPower(state.getValue(RedStoneWireBlock.POWER));
             } else if (isGrass(block)) {

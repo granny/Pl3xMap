@@ -1,5 +1,7 @@
 package net.pl3x.map.render.task;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.RegionSpiralIterator;
@@ -8,6 +10,7 @@ import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.queue.ScanRegion;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
+import org.bukkit.Bukkit;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,16 +21,13 @@ import java.util.Map;
 public class FullRender extends AbstractRender {
     private int maxRadius = 0;
 
-    public FullRender(MapWorld mapWorld) {
-        super(mapWorld, "FullRender", true, true, true, true);
+    public FullRender(MapWorld mapWorld, Audience starter) {
+        super(mapWorld, "FullRender", starter, true, true, true, true);
     }
 
     @Override
     public void render() {
-        Logger.info(Lang.COMMAND_FULLRENDER_STARTING
-                .replace("<world>", getWorld().getName()));
-
-        Logger.info(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
+        Logger.debug(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
 
         List<RegionCoordinate> regionFiles = new ArrayList<>();
         for (Path path : FileUtil.getRegionFiles(getWorld().getLevel())) {
@@ -64,7 +64,7 @@ public class FullRender extends AbstractRender {
                 Coordinate.blockToRegion(getCenterZ()),
                 this.maxRadius);
 
-        Logger.info(Lang.COMMAND_FULLRENDER_SORTING_REGIONS);
+        Logger.debug(Lang.COMMAND_FULLRENDER_SORTING_REGIONS);
 
         Map<RegionCoordinate, ScanRegion> tasks = new LinkedHashMap<>();
 
@@ -92,11 +92,35 @@ public class FullRender extends AbstractRender {
 
         getProgress().setTotalRegions(tasks.size());
 
-        Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
-                .replace("<total>", Integer.toString(getProgress().getTotalRegions())));
+        Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS,
+                Placeholder.parsed("total", Long.toString(getProgress().getTotalRegions())));
 
         Logger.info(Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
         tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
+    }
+
+    @Override
+    public void onStart() {
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.parsed("world", getWorld().getName()));
+        if (!getStarter().equals(Bukkit.getConsoleSender())) {
+            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.parsed("world", getWorld().getName()));
+        }
+    }
+
+    @Override
+    public void onFinish() {
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FINISHED, Placeholder.parsed("world", getWorld().getName()));
+        if (!getStarter().equals(Bukkit.getConsoleSender())) {
+            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_FINISHED, Placeholder.parsed("world", getWorld().getName()));
+        }
+    }
+
+    @Override
+    public void onCancel() {
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.parsed("world", getWorld().getName()));
+        if (!getStarter().equals(Bukkit.getConsoleSender())) {
+            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.parsed("world", getWorld().getName()));
+        }
     }
 }
