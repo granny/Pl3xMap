@@ -22,7 +22,7 @@ public class Webp extends IO.Type {
     private final ImmutableImageLoader reader;
     private final WebpWriter writer;
 
-    protected Webp() {
+    public Webp() {
         // https://developers.google.com/speed/webp/docs/dwebp
         this.reader = ImmutableImage.loader();
         this.reader.detectOrientation(false);
@@ -45,7 +45,7 @@ public class Webp extends IO.Type {
     }
 
     @Override
-    protected BufferedImage readBuffer(Path path) {
+    public BufferedImage readBuffer(Path path) {
         ImmutableImage image = null;
         try {
             image = this.reader.fromPath(path);
@@ -59,7 +59,7 @@ public class Webp extends IO.Type {
     }
 
     @Override
-    protected void writeBuffer(Path path, BufferedImage buffer) {
+    public void writeBuffer(Path path, BufferedImage buffer) {
         try (OutputStream out = Files.newOutputStream(path)) {
             ImmutableImage image = ImmutableImage.wrapAwt(buffer);
             this.writer.write(image, ImageMetadata.empty, out);

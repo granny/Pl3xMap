@@ -14,6 +14,7 @@ import net.pl3x.map.render.Image;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.render.task.ThreadManager;
 import net.pl3x.map.util.ChunkHelper;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.Mathf;
@@ -188,13 +189,13 @@ public class ScanRegion implements Runnable {
 
         // save images to disk
         if (!this.render.isCancelled()) {
-            //ThreadManager.INSTANCE.getSaveExecutor().submit(() -> {
-            //    try {
-            imageSet.save();
-            //    } catch (Throwable t ) {
-            //        t.printStackTrace();
-            //    }
-            //});
+            ThreadManager.INSTANCE.getSaveExecutor().submit(() -> {
+                try {
+                    imageSet.save();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            });
         }
 
         // we're done with this region \o/

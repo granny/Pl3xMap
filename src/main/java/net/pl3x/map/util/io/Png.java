@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-class Png extends IO.Type {
+public class Png extends IO.Type {
     private static final String EXTENSION = "png";
 
     @Override
@@ -22,7 +22,7 @@ class Png extends IO.Type {
     }
 
     @Override
-    protected BufferedImage readBuffer(Path path) {
+    public BufferedImage readBuffer(Path path) {
         BufferedImage buffer = null;
         ImageReader reader = null;
         try (ImageInputStream in = ImageIO.createImageInputStream(Files.newInputStream(path))) {
@@ -44,7 +44,7 @@ class Png extends IO.Type {
     }
 
     @Override
-    protected void writeBuffer(Path path, BufferedImage buffer) {
+    public void writeBuffer(Path path, BufferedImage buffer) {
         ImageWriter writer = null;
         try (ImageOutputStream out = ImageIO.createImageOutputStream(Files.newOutputStream(path))) {
             writer = ImageIO.getImageWritersBySuffix(extension()).next();
