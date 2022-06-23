@@ -52,9 +52,9 @@ public class Pl3xMap extends JavaPlugin {
     public void onEnable() {
         // test for Paper
         try {
-            Class.forName("com.destroystokyo.paper.PaperConfig");
+            Class.forName("io.papermc.paper.configuration.PaperConfigurations");
         } catch (ClassNotFoundException e) {
-            Logger.error("This plugin requires Paper or one of its forks to run");
+            Logger.severe("This plugin requires Paper or one of its forks to run");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }

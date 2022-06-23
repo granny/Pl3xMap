@@ -16,6 +16,9 @@ public class WorldConfig extends AbstractConfig {
     @Key("render.layer.fluids")
     public boolean RENDER_LAYER_FLUIDS = true;
 
+    @Key("render.blocks.biome-blend")
+    public int RENDER_BLOCKS_BIOME_BLEND = 1;
+
     @Key("render.fluids.translucent")
     public boolean RENDER_FLUIDS_TRANSLUCENT = true;
 

@@ -35,7 +35,7 @@ public class AbstractConfig {
             getConfig().load(file);
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException e) {
-            Logger.error("Could not load " + filename + ", please correct your syntax errors");
+            Logger.severe("Could not load " + filename + ", please correct your syntax errors");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -67,7 +67,7 @@ public class AbstractConfig {
         try {
             getConfig().save(file);
         } catch (IOException e) {
-            Logger.error("Could not save " + path);
+            Logger.severe("Could not save " + path);
             e.printStackTrace();
         }
     }

@@ -76,7 +76,7 @@ public class IntegratedServer {
             );
         } catch (Exception e) {
             this.server = null;
-            Logger.error(Lang.HTTPD_START_ERROR);
+            Logger.severe(Lang.HTTPD_START_ERROR);
             e.printStackTrace();
         }
     }

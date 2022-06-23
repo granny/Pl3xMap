@@ -1,9 +1,11 @@
 package net.pl3x.map.render.task;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
+import net.pl3x.map.progress.Progress;
 import net.pl3x.map.render.iterator.RegionSpiralIterator;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FullRender extends AbstractRender {
+    private long timeStarted;
     private int maxRadius = 0;
 
     public FullRender(MapWorld mapWorld, Audience starter) {
@@ -27,6 +30,8 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void render() {
+        this.timeStarted = System.currentTimeMillis();
+
         Logger.debug(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
 
         List<RegionCoordinate> regionFiles = new ArrayList<>();
@@ -92,8 +97,8 @@ public class FullRender extends AbstractRender {
 
         getProgress().setTotalRegions(tasks.size());
 
-        Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS,
-                Placeholder.parsed("total", Long.toString(getProgress().getTotalRegions())));
+        Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
+                .replace("<total>", Long.toString(getProgress().getTotalRegions())));
 
         Logger.info(Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
@@ -110,9 +115,15 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void onFinish() {
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FINISHED, Placeholder.parsed("world", getWorld().getName()));
+        long timeEnded = System.currentTimeMillis();
+        String elapsed = Progress.formatMilliseconds(timeEnded - this.timeStarted);
+        Component component = Lang.parse(Lang.COMMAND_FULLRENDER_FINISHED,
+                Placeholder.parsed("world", getWorld().getName()),
+                Placeholder.parsed("elapsed", elapsed)
+        );
+        Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
-            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_FINISHED, Placeholder.parsed("world", getWorld().getName()));
+            Lang.send(Bukkit.getConsoleSender(), component);
         }
     }
 

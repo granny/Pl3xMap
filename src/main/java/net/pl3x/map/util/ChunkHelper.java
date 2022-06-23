@@ -30,7 +30,6 @@ import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
-import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.render.task.AbstractRender;
 import net.pl3x.map.world.MapWorld;
 
@@ -41,7 +40,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ChunkHelper {
-    private final Map<ChunkCoordinate, ChunkAccess> chunkCache = new HashMap<>();
+    private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
+    private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
     private final AbstractRender render;
 
     private final Consumer<String> onError = s -> {
@@ -56,7 +56,7 @@ public class ChunkHelper {
     }
 
     public ChunkAccess getChunk(ServerLevel level, int chunkX, int chunkZ) {
-        return this.chunkCache.computeIfAbsent(new ChunkCoordinate(chunkX, chunkZ), k -> getChunkFast(level, chunkX, chunkZ));
+        return this.chunkCache.computeIfAbsent(ChunkPos.asLong(chunkX, chunkZ), k -> getChunkFast(level, chunkX, chunkZ));
     }
 
     @SuppressWarnings("unused")
@@ -123,6 +123,10 @@ public class ChunkHelper {
 
         // rejoice
         return chunk;
+    }
+
+    public Holder<Biome> getBiomeWithCaching(MapWorld mapWorld, BlockPos pos) {
+        return this.biomeCache.computeIfAbsent(ChunkPos.asLong(pos.getX(), pos.getZ()), k -> getBiome(mapWorld, pos));
     }
 
     // BiomeManager#getBiome

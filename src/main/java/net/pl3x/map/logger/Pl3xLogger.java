@@ -1,8 +1,10 @@
 package net.pl3x.map.logger;
 
-import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+import io.papermc.paper.console.HexFormattingConverter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.configuration.Lang;
+import org.bukkit.Bukkit;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -11,24 +13,37 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class Pl3xLogger extends Logger {
-    private static final ComponentLogger LOGGER = ComponentLogger.logger(org.apache.logging.log4j.LogManager.getRootLogger().getName());
-
     public Pl3xLogger() {
         super("Pl3xMap", null);
+
         LogManager.getLogManager().addLogger(this);
     }
 
+    @Override
+    public String getName() {
+        return "<dark_aqua>" + super.getName() + "</dark_aqua>";
+    }
+
+    @Override
+    public void info(String msg) {
+        // send through ConsoleSender so logger will strip colors before putting in log file
+        Lang.send(Bukkit.getConsoleSender(), parseMiniMessage(msg));
+    }
+
+    private String parseMiniMessage(String miniMessage) {
+        Component component = MiniMessage.miniMessage().deserialize(miniMessage);
+        return HexFormattingConverter.SERIALIZER.serialize(component);
+    }
+
     private void doLog(LogRecord lr) {
-        Level level = lr.getLevel();
-        if (level == Level.INFO) {
-            LOGGER.info(MiniMessage.miniMessage().deserialize(Lang.PREFIX_LOGGER + lr.getMessage()));
-        } else if (level == Level.WARNING) {
-            LOGGER.warn(MiniMessage.miniMessage().stripTags(Lang.PREFIX_LOGGER + lr.getMessage()));
-        } else if (level == Level.SEVERE) {
-            LOGGER.error(MiniMessage.miniMessage().stripTags(Lang.PREFIX_LOGGER + lr.getMessage()));
-        } else if (level == Level.CONFIG) {
-            LOGGER.debug(MiniMessage.miniMessage().deserialize(Lang.PREFIX_LOGGER + lr.getMessage()));
+        lr.setMessage(parseMiniMessage(lr.getMessage()));
+
+        // use colorless name for warnings and errors
+        if (lr.getLevel() == Level.WARNING || lr.getLevel() == Level.SEVERE) {
+            lr.setLoggerName(super.getName());
         }
+
+        log(lr);
     }
 
     /*

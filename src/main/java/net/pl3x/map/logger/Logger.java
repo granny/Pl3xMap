@@ -1,11 +1,11 @@
 package net.pl3x.map.logger;
 
-import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
+import org.bukkit.Bukkit;
+
+import java.util.logging.Level;
 
 public class Logger {
     public static void debug(String message) {
@@ -15,30 +15,18 @@ public class Logger {
     }
 
     public static void info(String message) {
-        log().info(Lang.parse(message));
-    }
-
-    public static void info(String message, TagResolver.Single... placeholders) {
-        log().info(Lang.parse(message, placeholders));
+        Lang.send(Bukkit.getConsoleSender(), message);
     }
 
     public static void warn(String message) {
-        log().warn(Lang.parse(message));
+        log().log(Level.WARNING, message);
     }
 
-    public static void warn(String message, TagResolver.Single... placeholders) {
-        log().warn(Lang.parse(message, placeholders));
+    public static void severe(String message) {
+        log().log(Level.SEVERE, message);
     }
 
-    public static void error(String message) {
-        log().error(Lang.parse(message));
-    }
-
-    public static void error(String message, TagResolver.Single... placeholders) {
-        log().error(Lang.parse(message, placeholders));
-    }
-
-    public static ComponentLogger log() {
-        return Pl3xMap.getInstance().getComponentLogger();
+    public static java.util.logging.Logger log() {
+        return Pl3xMap.getInstance().getLogger();
     }
 }

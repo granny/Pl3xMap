@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Progress extends BukkitRunnable {
@@ -109,6 +110,19 @@ public class Progress extends BukkitRunnable {
         // check if finished
         if (this.processedRegions.get() >= this.totalRegions) {
             finish();
+        }
+    }
+
+    public static String formatMilliseconds(long time) {
+        int hrs = (int) TimeUnit.MILLISECONDS.toHours(time);
+        int min = (int) TimeUnit.MILLISECONDS.toMinutes(time) % 60;
+        int sec = (int) TimeUnit.MILLISECONDS.toSeconds(time) % 60;
+        if (hrs > 0) {
+            return String.format("%dh %dm %ds", hrs, min, sec);
+        } else if (min > 0) {
+            return String.format("%dm %ds", min, sec);
+        } else {
+            return String.format("%ds", sec);
         }
     }
 }

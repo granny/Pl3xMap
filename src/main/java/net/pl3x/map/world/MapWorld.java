@@ -38,7 +38,7 @@ public class MapWorld {
         this.level = ((CraftWorld) world).getHandle();
         this.config = config;
 
-        this.biomeColors = new BiomeColors(this.level);
+        this.biomeColors = new BiomeColors(this);
         this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
     }
 

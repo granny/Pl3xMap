@@ -1,9 +1,15 @@
 package net.pl3x.map.util;
 
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.pl3x.map.world.MapWorld;
 
 import javax.imageio.ImageIO;
@@ -12,8 +18,39 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
 
 public class BiomeColors {
+    private static final Set<Block> grassColorBlocks = ImmutableSet.of(
+            Blocks.GRASS_BLOCK,
+            Blocks.GRASS,
+            Blocks.TALL_GRASS,
+            Blocks.FERN,
+            Blocks.LARGE_FERN,
+            Blocks.POTTED_FERN,
+            Blocks.SUGAR_CANE
+    );
+
+    private static final Set<Block> foliageColorBlocks = ImmutableSet.of(
+            Blocks.VINE,
+            Blocks.OAK_LEAVES,
+            Blocks.JUNGLE_LEAVES,
+            Blocks.ACACIA_LEAVES,
+            Blocks.DARK_OAK_LEAVES
+    );
+
+    private static final Set<Block> waterColorBlocks = ImmutableSet.of(
+            Blocks.WATER,
+            Blocks.BUBBLE_COLUMN,
+            Blocks.WATER_CAULDRON
+    );
+
+    private static final Set<Material> waterColorMaterials = ImmutableSet.of(
+            Material.WATER_PLANT,
+            Material.REPLACEABLE_WATER_PLANT
+    );
+
     private static final int[] mapGrass;
     private static final int[] mapFoliage;
 
@@ -24,7 +61,7 @@ public class BiomeColors {
         try {
             imgGrass = ImageIO.read(imagesDir.resolve("grass.png").toFile());
             imgFoliage = ImageIO.read(imagesDir.resolve("foliage.png").toFile());
-        } catch (final IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException("Failed to read biome images", e);
         }
 
@@ -36,8 +73,11 @@ public class BiomeColors {
     private final Map<Biome, Integer> foliageColors = new HashMap<>();
     private final Map<Biome, Integer> waterColors = new HashMap<>();
 
-    public BiomeColors(ServerLevel level) {
-        Registry<Biome> biomeRegistry = getBiomeRegistry(level);
+    private final MapWorld mapWorld;
+
+    public BiomeColors(MapWorld mapWorld) {
+        this.mapWorld = mapWorld;
+        Registry<Biome> biomeRegistry = getBiomeRegistry(mapWorld.getLevel());
         for (Biome biome : biomeRegistry) {
             float temperature = Mth.clamp(biome.getBaseTemperature(), 0.0F, 1.0F);
             float humidity = Mth.clamp(biome.getDownfall(), 0.0F, 1.0F);
@@ -45,18 +85,6 @@ public class BiomeColors {
             foliageColors.put(biome, getDefaultFoliageColor(temperature, humidity));
             waterColors.put(biome, biome.getSpecialEffects().getWaterColor());
         }
-    }
-
-    public int getGrassColor(Biome biome) {
-        return this.grassColors.get(biome);
-    }
-
-    public int getFoliageColor(Biome biome) {
-        return this.foliageColors.get(biome);
-    }
-
-    public int getWaterColor(Biome biome) {
-        return this.waterColors.get(biome);
     }
 
     public static Registry<Biome> getBiomeRegistry(ServerLevel world) {
@@ -77,7 +105,7 @@ public class BiomeColors {
         return map;
     }
 
-    private static int getDefaultGrassColor(double temperature, double humidity) {
+    private int getDefaultGrassColor(double temperature, double humidity) {
         int j = (int) ((1.0 - (humidity * temperature)) * 255.0);
         int i = (int) ((1.0 - temperature) * 255.0);
         int k = j << 8 | i;
@@ -87,9 +115,66 @@ public class BiomeColors {
         return mapGrass[k];
     }
 
-    private static int getDefaultFoliageColor(double temperature, double humidity) {
+    private int getDefaultFoliageColor(double temperature, double humidity) {
         int i = (int) ((1.0 - temperature) * 255.0);
         int j = (int) ((1.0 - (humidity * temperature)) * 255.0);
         return mapFoliage[(j << 8 | i)];
+    }
+
+    private int grassColorSampler(Biome biome, BlockPos pos) {
+        return biome.getSpecialEffects().getGrassColorModifier().modifyColor(pos.getX(), pos.getZ(), this.grassColors.get(biome));
+    }
+
+    public int getGrassColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos, int blend) {
+        if (blend > 0) {
+            return sampleNeighbors(chunkHelper, pos, blend, this::grassColorSampler);
+        }
+        return grassColorSampler(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value(), pos);
+    }
+
+    public int getFoliageColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos, int blend) {
+        if (blend > 0) {
+            return sampleNeighbors(chunkHelper, pos, blend, (biome1, pos1) -> this.foliageColors.get(biome1));
+        }
+        return this.foliageColors.get(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value());
+    }
+
+    public int getWaterColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos, int blend) {
+        if (blend > 0) {
+            return this.sampleNeighbors(chunkHelper, pos, blend, (biome1, pos1) -> this.waterColors.get(biome1));
+        }
+        return this.waterColors.get(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value());
+    }
+
+    private int sampleNeighbors(ChunkHelper chunkHelper, BlockPos pos, int radius, BiFunction<Biome, BlockPos, Integer> colorSampler) {
+        BlockPos.MutableBlockPos pos1 = new BlockPos.MutableBlockPos();
+        int rgb, r = 0, g = 0, b = 0, count = 0;
+        for (int x = pos.getX() - radius; x < pos.getX() + radius; x++) {
+            for (int z = pos.getZ() - radius; z < pos.getZ() + radius; z++) {
+                pos1.set(x, pos.getY(), z);
+                Biome biome1 = chunkHelper.getBiomeWithCaching(this.mapWorld, pos1).value();
+                rgb = colorSampler.apply(biome1, pos1);
+                r += Colors.red(rgb);
+                g += Colors.green(rgb);
+                b += Colors.blue(rgb);
+                count++;
+            }
+        }
+        return Colors.rgb(r / count, g / count, b / count);
+    }
+
+    public int fixBiomeColor(ChunkHelper chunkHelper, Biome biome, BlockState state, BlockPos pos, int color) {
+        int blend = this.mapWorld.getConfig().RENDER_BLOCKS_BIOME_BLEND;
+        boolean translucentFluids = this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT;
+
+        if (grassColorBlocks.contains(state.getBlock())) {
+            color = getGrassColor(chunkHelper, biome, pos, blend);
+        } else if (foliageColorBlocks.contains(state.getBlock())) {
+            color = getFoliageColor(chunkHelper, biome, pos, blend);
+        } else if (!translucentFluids && waterColorBlocks.contains(state.getBlock()) || waterColorMaterials.contains(state.getMaterial())) {
+            color = getWaterColor(chunkHelper, biome, pos, blend);
+        }
+
+        return color;
     }
 }

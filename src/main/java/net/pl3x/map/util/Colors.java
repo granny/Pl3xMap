@@ -39,6 +39,24 @@ public class Colors {
         );
     }
 
+    public static int mix(int color0, int color1, float ratio) {
+        if (ratio >= 1F) return color1;
+        else if (ratio <= 0F) return color0;
+        float iRatio = 1.0F - ratio;
+        int r = (int) ((red(color0) * iRatio) + (red(color1) * ratio));
+        int g = (int) ((green(color0) * iRatio) + (green(color1) * ratio));
+        int b = (int) ((blue(color0) * iRatio) + (blue(color1) * ratio));
+        return setAlpha(0xFF, rgb(r, g, b));
+    }
+
+    public static int rgb(int red, int green, int blue) {
+        return red << 16 | green << 8 | blue;
+    }
+
+    public static int argb(int alpha, int red, int green, int blue) {
+        return alpha << 24 | red << 16 | green << 8 | blue;
+    }
+
     public static int alpha(int argb) {
         return argb >> 24 & 0xFF;
     }
@@ -55,27 +73,6 @@ public class Colors {
         return argb & 0xFF;
     }
 
-    public static int rgb(int red, int green, int blue) {
-        return red << 16 | green << 8 | blue;
-    }
-
-    public static int argb(int alpha, int red, int green, int blue) {
-        return alpha << 24 | red << 16 | green << 8 | blue;
-    }
-
-    public static int mix(int color0, int color1) {
-        int a = alpha(color0);
-        if (a == 0) {
-            return 0;
-        }
-        float ratio = alpha(color1) / 255F;
-        float iRatio = 1F - ratio;
-        int r = (int) ((red(color0) * iRatio) + (red(color1) * ratio));
-        int g = (int) ((green(color0) * iRatio) + (green(color1) * ratio));
-        int b = (int) ((blue(color0) * iRatio) + (blue(color1) * ratio));
-        return (a << 24 | r << 16 | g << 8 | b);
-    }
-
     public static int setAlpha(int alpha, int color) {
         return (alpha << 24) | (color & 0x00FFFFFF);
     }
@@ -84,7 +81,7 @@ public class Colors {
         return (int) Long.parseLong(color.replace("#", ""), 16);
     }
 
-    public static int getBlockColor(MapWorld mapWorld, Biome biome, BlockState state, BlockPos pos) {
+    public static int getBlockColor(MapWorld mapWorld, BlockState state, BlockPos pos) {
         Block block = state.getBlock();
         int color = blockColors.getOrDefault(block, -1);
 
@@ -96,10 +93,6 @@ public class Colors {
                 color = Colors.lerpRGB(MaterialColor.PLANT.col, color, (state.getValue(CropBlock.AGE) + 1) / 8F);
             } else if (block == Blocks.REDSTONE_WIRE) {
                 color = RedStoneWireBlock.getColorForPower(state.getValue(RedStoneWireBlock.POWER));
-            } else if (isGrass(block)) {
-                color = biome == null ? -1 : mapWorld.getBiomeColors().getGrassColor(biome);
-            } else if (isFoliage(block)) {
-                color = biome == null ? -1 : mapWorld.getBiomeColors().getFoliageColor(biome);
             }
         }
 
@@ -108,18 +101,6 @@ public class Colors {
         }
 
         return color;
-    }
-
-    public static int getWaterColor(MapWorld mapWorld, Biome biome) {
-        return biome == null ? MaterialColor.WATER.col : mapWorld.getBiomeColors().getWaterColor(biome);
-    }
-
-    public static boolean isGrass(Block block) {
-        return block == Blocks.GRASS_BLOCK || block == Blocks.GRASS || block == Blocks.TALL_GRASS || block == Blocks.FERN || block == Blocks.LARGE_FERN || block == Blocks.POTTED_FERN || block == Blocks.SUGAR_CANE;
-    }
-
-    public static boolean isFoliage(Block block) {
-        return block == Blocks.VINE || block == Blocks.OAK_LEAVES || block == Blocks.JUNGLE_LEAVES || block == Blocks.ACACIA_LEAVES || block == Blocks.DARK_OAK_LEAVES;
     }
 
     public static final Map<Block, Integer> blockColors = Map.ofEntries(
