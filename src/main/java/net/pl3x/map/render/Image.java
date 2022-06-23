@@ -118,7 +118,7 @@ public class Image {
 
         }
 
-        Logger.info(String.format("Saved: [%d,%d]", regionX, regionZ));
+        Logger.debug(String.format("Saved: [%d,%d]", regionX, regionZ));
     }
 
     public static class Set {
