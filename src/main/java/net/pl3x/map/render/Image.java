@@ -4,6 +4,7 @@ import net.minecraft.util.Mth;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.io.IO;
 import net.pl3x.map.world.MapWorld;
 
@@ -101,13 +102,30 @@ public class Image {
             int baseZ = (this.regionZ * size) & (SIZE - 1);
             for (int x = 0; x < SIZE; x += step) {
                 for (int z = 0; z < SIZE; z += step) {
-                    // TODO merge pixel colors instead of skipping pixels
                     int rgb = getPixel(x, z);
-                    // skipping 0 prevents overwrite existing
-                    // parts of the buffer on higher zooms
-                    if (rgb != 0) {
-                        buffer.setRGB(baseX + (x / step), baseZ + (z / step), rgb);
+                    if (rgb == 0) {
+                        // skipping 0 prevents overwrite existing
+                        // parts of the buffer on higher zooms
+                        continue;
                     }
+                    if (step > 1) {
+                        // merge pixel colors instead of skipping them
+                        int a = Colors.alpha(rgb);
+                        int r = 0, g = 0, b = 0, count = 0;
+                        for (int i = 0; i < step; i++) {
+                            for (int j = 0; j < step; j++) {
+                                if (i != 0 && j != 0) {
+                                    rgb = getPixel(x + i, z + j);
+                                }
+                                r += Colors.red(rgb);
+                                g += Colors.green(rgb);
+                                b += Colors.blue(rgb);
+                                count++;
+                            }
+                        }
+                        rgb = Colors.setAlpha(a, Colors.rgb(r / count, g / count, b / count));
+                    }
+                    buffer.setRGB(baseX + (x / step), baseZ + (z / step), rgb);
                 }
             }
 

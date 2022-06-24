@@ -204,7 +204,6 @@ public class ChunkHelper {
 [ ] Background render
 [ ] Pause/Resume renders
 [ ] Auto resume renders over restart/reload
-[ ] Biome blending for grass/foliage/water
 [ ] Convert commands to a brigadier library
 [ ] API/javadocs
 [ ] Documentation
