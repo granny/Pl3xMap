@@ -3,7 +3,7 @@ package net.pl3x.map.progress;
 import java.util.Arrays;
 
 public class CPSTracker {
-    private static final int SAMPLE_SIZE = 15;
+    private static final int SAMPLE_SIZE = 10;
 
     private final long[] avg = new long[SAMPLE_SIZE];
     private int index = -1;

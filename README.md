@@ -8,7 +8,8 @@
 [![Join us on Discord](https://img.shields.io/discord/944144133054931025.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/nhGzEkwXQX)
 [![wakatime](https://wakatime.com/badge/github/pl3xgaming/Pl3xMap.svg)](https://wakatime.com/badge/github/pl3xgaming/Pl3xMap)
 
-Pl3xMap is a minimalistic and lightweight world map viewer for Paper servers using the vanilla Minecraft rendering style.
+Pl3xMap is the original minimalistic and lightweight world map viewer<br/>
+for Paper servers using the vanilla Minecraft rendering style.
 
 </div>
 

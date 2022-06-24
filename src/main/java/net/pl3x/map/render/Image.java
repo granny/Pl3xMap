@@ -110,20 +110,20 @@ public class Image {
                     }
                     if (step > 1) {
                         // merge pixel colors instead of skipping them
-                        int a = Colors.alpha(rgb);
-                        int r = 0, g = 0, b = 0, count = 0;
+                        int a = 0, r = 0, g = 0, b = 0, count = 0;
                         for (int i = 0; i < step; i++) {
                             for (int j = 0; j < step; j++) {
                                 if (i != 0 && j != 0) {
                                     rgb = getPixel(x + i, z + j);
                                 }
+                                a += Colors.alpha(rgb);
                                 r += Colors.red(rgb);
                                 g += Colors.green(rgb);
                                 b += Colors.blue(rgb);
                                 count++;
                             }
                         }
-                        rgb = Colors.setAlpha(a, Colors.rgb(r / count, g / count, b / count));
+                        rgb = Colors.argb(a / count, r / count, g / count, b / count);
                     }
                     buffer.setRGB(baseX + (x / step), baseZ + (z / step), rgb);
                 }
