@@ -22,7 +22,7 @@ public class Png extends IO.Type {
     }
 
     @Override
-    public BufferedImage readBuffer(Path path) {
+    public BufferedImage read(Path path) {
         BufferedImage buffer = null;
         ImageReader reader = null;
         try (ImageInputStream in = ImageIO.createImageInputStream(Files.newInputStream(path))) {
@@ -44,7 +44,7 @@ public class Png extends IO.Type {
     }
 
     @Override
-    public void writeBuffer(Path path, BufferedImage buffer) {
+    public void write(Path path, BufferedImage buffer) {
         ImageWriter writer = null;
         try (ImageOutputStream out = ImageIO.createImageOutputStream(Files.newOutputStream(path))) {
             writer = ImageIO.getImageWritersBySuffix(extension()).next();

@@ -57,26 +57,18 @@ function toLatLng(x, z) {
     return L.latLng(pixelsToMeters(z), pixelsToMeters(x));
 }
 
-function toPoint(latlng) {
-    return L.point(metersToPixels(latlng.lng), metersToPixels(latlng.lat));
-}
-
 function pixelsToMeters(num) {
     return num * scale;
-}
-
-function metersToPixels(num) {
-    return num / scale;
 }
 
 L.TileLayer.ReversedZoom = L.TileLayer.extend({
     // copied from leaflet source for modification <https://github.com/Leaflet/Leaflet/blob/main/src/layer/tile/TileLayer.js#L220-L231>
     _getZoomForUrl: function () {
-        var zoom = this._tileZoom,
+        let zoom = this._tileZoom,
             maxZoom = this.options.maxZoom,
-            zoomReverse = this.options.zoomReverse,
+            //zoomReverse = this.options.zoomReverse,
             zoomOffset = this.options.zoomOffset;
-        // always reverse the soom here, but not in the options
+        // always reverse the zoom here, but not in the options
         // reversing zoom in the options makes other areas of
         // the map screw up from what we want/expect.
         //if (zoomReverse) {

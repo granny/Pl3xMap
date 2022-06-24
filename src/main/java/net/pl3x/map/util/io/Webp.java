@@ -45,7 +45,7 @@ public class Webp extends IO.Type {
     }
 
     @Override
-    public BufferedImage readBuffer(Path path) {
+    public BufferedImage read(Path path) {
         ImmutableImage image = null;
         try {
             image = this.reader.fromPath(path);
@@ -59,7 +59,7 @@ public class Webp extends IO.Type {
     }
 
     @Override
-    public void writeBuffer(Path path, BufferedImage buffer) {
+    public void write(Path path, BufferedImage buffer) {
         try (OutputStream out = Files.newOutputStream(path)) {
             ImmutableImage image = ImmutableImage.wrapAwt(buffer);
             this.writer.write(image, ImageMetadata.empty, out);

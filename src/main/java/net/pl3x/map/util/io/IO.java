@@ -25,8 +25,8 @@ public abstract class IO {
 
         public abstract String extension();
 
-        public abstract BufferedImage readBuffer(Path path);
+        public abstract BufferedImage read(Path path);
 
-        public abstract void writeBuffer(Path path, BufferedImage buffer);
+        public abstract void write(Path path, BufferedImage buffer);
     }
 }
