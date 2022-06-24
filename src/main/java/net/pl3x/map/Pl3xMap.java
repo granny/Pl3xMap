@@ -1,6 +1,6 @@
 package net.pl3x.map;
 
-import net.pl3x.map.command.Pl3xMapCommand;
+import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.configuration.AbstractConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
@@ -19,7 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -83,10 +82,14 @@ public class Pl3xMap extends JavaPlugin {
         // enable the plugin
         enable();
 
-        // register command executor
-        PluginCommand command = getCommand("map");
-        if (command != null) {
-            command.setExecutor(new Pl3xMapCommand(this));
+        // register command manager
+        try {
+            new CommandManager(this);
+        } catch (Exception e) {
+            Logger.warn("Failed to initialize command manager");
+            e.printStackTrace();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         // start bstats metrics

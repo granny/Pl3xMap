@@ -10,20 +10,19 @@ public class Lang extends AbstractConfig {
     @Key("prefix.logger")
     public static String PREFIX_LOGGER = "[<dark_aqua>Pl3xMap</dark_aqua>] ";
     @Key("prefix.command")
-    public static String PREFIX_COMMAND = "[<blue>Pl3xMap</blue>] ";
+    public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
 
-    @Key("command.base.usage")
-    public static String COMMAND_BASE_USAGE = "<light_purple><description>:\\n<yellow>/<grey><command> <usage>";
-    @Key("command.base.subcommands.title")
-    public static String COMMAND_BASE_SUBCOMMANDS_TITLE = "<color:#25b8ff>Available Commands</color><color:#9558ff>:";
-    @Key("command.base.subcommands.full-command")
-    public static String COMMAND_BASE_SUBCOMMANDS_FULL_COMMAND = "<color:#9558ff>/<color:#dedede><command>";
-    @Key("command.base.subcommands.entry.text")
-    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_TEXT = " <color:#999999><prefix> <color:#dedede><command></color> <color:#9558ff>-</color> <i><description>";
-    @Key("command.base.subcommands.entry.prefix")
-    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX = "\\u251C";
-    @Key("command.base.subcommands.entry.prefix-last")
-    public static String COMMAND_BASE_SUBCOMMANDS_ENTRY_PREFIX_LAST = "\\u2514";
+    @Key("command.event.click-for-help")
+    public static String CLICK_FOR_HELP = "Click for help";
+    @Key("command.event.click-to-confirm")
+    public static String CLICK_TO_CONFIRM = "Click to confirm";
+
+    @Key("command.argument.help-query")
+    public static String COMMAND_ARGUMENT_HELP_QUERY_DESCRIPTION = "Help Query";
+    @Key("command.argument.optional-player")
+    public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
+    @Key("command.argument.optional-world")
+    public static String COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION = "Defaults to the players current world if not provided";
 
     @Key("command.cancelrender.description")
     public static String COMMAND_CANCELRENDER_DESCRIPTION = "Cancel active render of a world";
@@ -103,20 +102,16 @@ public class Lang extends AbstractConfig {
     @Key("httpd.disabled")
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled in config.yml";
 
-    @Key("error.unknown-error")
-    public static String ERROR_UNKNOWN_ERROR = "<red>Unknown error";
-    @Key("error.unknown-subcommand")
-    public static String ERROR_UNKNOWN_SUBCOMMAND = "<red>Unknown subcommand";
     @Key("error.must-specify-player")
     public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
     @Key("error.no-such-player")
-    public static String ERROR_NO_SUCH_PLAYER = "<red>No such player";
+    public static String ERROR_NO_SUCH_PLAYER = "<red>No such player <player>";
     @Key("error.must-specify-world")
     public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
     @Key("error.no-such-world")
-    public static String ERROR_NO_SUCH_WORLD = "<red>No such world";
+    public static String ERROR_NO_SUCH_WORLD = "<red>No such world <world>";
     @Key("error.world-disabled")
-    public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled in this world";
+    public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <world>";
 
     private static final Lang CONFIG = new Lang();
 

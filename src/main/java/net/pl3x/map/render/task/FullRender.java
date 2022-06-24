@@ -107,9 +107,9 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void onStart() {
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.parsed("world", getWorld().getName()));
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.unparsed("world", getWorld().getName()));
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
-            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.parsed("world", getWorld().getName()));
+            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.unparsed("world", getWorld().getName()));
         }
     }
 
@@ -118,7 +118,7 @@ public class FullRender extends AbstractRender {
         long timeEnded = System.currentTimeMillis();
         String elapsed = Progress.formatMilliseconds(timeEnded - this.timeStarted);
         Component component = Lang.parse(Lang.COMMAND_FULLRENDER_FINISHED,
-                Placeholder.parsed("world", getWorld().getName()),
+                Placeholder.unparsed("world", getWorld().getName()),
                 Placeholder.parsed("elapsed", elapsed)
         );
         Lang.send(getStarter(), component);
@@ -129,9 +129,9 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void onCancel() {
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.parsed("world", getWorld().getName()));
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.unparsed("world", getWorld().getName()));
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
-            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.parsed("world", getWorld().getName()));
+            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.unparsed("world", getWorld().getName()));
         }
     }
 }

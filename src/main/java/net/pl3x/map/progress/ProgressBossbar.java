@@ -3,7 +3,6 @@ package net.pl3x.map.progress;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
@@ -55,8 +54,8 @@ public class ProgressBossbar {
     public void update(float percent) {
         this.bossbar.progress(Math.min(Math.max(Mathf.inverseLerp(0F, 100F, percent), 0), 1));
         this.bossbar.name(Lang.parse(NAME,
-                Placeholder.parsed("world", this.mapWorld.getName()),
-                Placeholder.parsed("percent", String.format("%.2f", percent))
+                Placeholder.unparsed("world", this.mapWorld.getName()),
+                Placeholder.unparsed("percent", String.format("%.2f", percent))
         ));
     }
 

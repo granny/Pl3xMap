@@ -95,10 +95,10 @@ public class Progress extends BukkitRunnable {
         // show progress to listeners
         Component component = Lang.parse(
                 "Progress: <processed_chunks>/<total_chunks> (<percent>) <gold><cps> cps</gold>",
-                Placeholder.parsed("processed_chunks", Long.toString(processedChunks)),
-                Placeholder.parsed("total_chunks", Long.toString(getTotalChunks())),
-                Placeholder.parsed("percent", String.format("%.2f%%", getPercent())),
-                Placeholder.parsed("cps", String.format("%.2f", getCPS()))
+                Placeholder.unparsed("processed_chunks", Long.toString(processedChunks)),
+                Placeholder.unparsed("total_chunks", Long.toString(getTotalChunks())),
+                Placeholder.unparsed("percent", String.format("%.2f%%", getPercent())),
+                Placeholder.unparsed("cps", String.format("%.2f", getCPS()))
         );
         for (Audience audience : this.audience) {
             Lang.send(audience, component);

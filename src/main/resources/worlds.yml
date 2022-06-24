@@ -1,0 +1,5 @@
+world-settings:
+  default:
+    enabled: false
+  world:
+    enabled: true

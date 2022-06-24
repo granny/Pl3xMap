@@ -1,30 +1,32 @@
 package net.pl3x.map.command.commands;
 
+import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.command.BaseCommand;
+import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-public class ReloadCommand extends BaseCommand {
-    public ReloadCommand(Pl3xMap plugin) {
-        super(plugin, "reload", Lang.COMMAND_RELOAD_DESCRIPTION, "pl3xmap.command.reload", "");
+public class ReloadCommand extends Pl3xMapCommand {
+    public ReloadCommand(Pl3xMap plugin, CommandManager commandManager) {
+        super(plugin, commandManager);
     }
 
     @Override
-    protected List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
-        return Collections.emptyList();
+    public void register() {
+        getCommandManager().registerSubcommand(builder -> builder.literal("reload")
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_RELOAD_DESCRIPTION))
+                .permission("pl3xmap.command.reload")
+                .handler(this::execute));
     }
 
-    @Override
-    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
+    public void execute(CommandContext<CommandSender> context) {
+        CommandSender sender = context.getSender();
+
         getPlugin().disable();
 
         Config.reload();
@@ -35,6 +37,6 @@ public class ReloadCommand extends BaseCommand {
         String version = getPlugin().getDescription().getVersion();
 
         Lang.send(sender, Lang.COMMAND_RELOAD_SUCCESS,
-                Placeholder.parsed("version", version));
+                Placeholder.unparsed("version", version));
     }
 }

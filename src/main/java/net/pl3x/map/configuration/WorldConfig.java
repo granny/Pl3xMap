@@ -4,22 +4,26 @@ import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 
 public class WorldConfig extends AbstractConfig {
+    @Key("enabled")
+    public boolean ENABLED = false;
+
     @Key("render.background.enabled")
     public boolean RENDER_BACKGROUND_ENABLED = true;
 
-    @Key("render.layer.blocks")
+    @Key("render.layer.blocks.enabled")
     public boolean RENDER_LAYER_BLOCKS = true;
-    @Key("render.layer.biomes")
-    public boolean RENDER_LAYER_BIOMES = true;
-    @Key("render.layer.heights")
-    public boolean RENDER_LAYER_HEIGHTS = true;
-    @Key("render.layer.fluids")
-    public boolean RENDER_LAYER_FLUIDS = true;
-
-    @Key("render.blocks.biome-blend")
+    @Key("render.layer.blocks.biome-blend")
     public int RENDER_BLOCKS_BIOME_BLEND = 1;
 
-    @Key("render.fluids.translucent")
+    @Key("render.layer.biomes.enabled")
+    public boolean RENDER_LAYER_BIOMES = true;
+
+    @Key("render.layer.heights.enabled")
+    public boolean RENDER_LAYER_HEIGHTS = true;
+
+    @Key("render.layer.fluids.enabled")
+    public boolean RENDER_LAYER_FLUIDS = true;
+    @Key("render.layer.fluids.translucent")
     public boolean RENDER_FLUIDS_TRANSLUCENT = true;
 
     @Key("zoom.default")

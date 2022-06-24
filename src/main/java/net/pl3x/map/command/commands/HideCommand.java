@@ -1,40 +1,46 @@
 package net.pl3x.map.command.commands;
 
+import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
+import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.command.BaseCommand;
+import net.pl3x.map.command.CommandHelper;
+import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.player.PlayerManager;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-public class HideCommand extends BaseCommand {
-    public HideCommand(Pl3xMap plugin) {
-        super(plugin, "hide", Lang.COMMAND_HIDE_DESCRIPTION, "pl3xmap.command.hide", "[player]");
+public class HideCommand extends Pl3xMapCommand {
+    public HideCommand(Pl3xMap plugin, CommandManager commandManager) {
+        super(plugin, commandManager);
     }
 
     @Override
-    protected List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
-        if (args != null && sender.hasPermission("pl3xmap.command.hide.others")) {
-            return tabPlayers(args.peek());
-        }
-        return Collections.emptyList();
+    public void register() {
+        getCommandManager().registerSubcommand(builder -> builder.literal("hide")
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_HIDE_DESCRIPTION))
+                .permission("pl3xmap.command.hide")
+                .handler(this::execute));
+        getCommandManager().registerSubcommand(builder -> builder.literal("hide")
+                .argument(SinglePlayerSelectorArgument.optional("player"), CommandHelper.description(Lang.COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_HIDE_DESCRIPTION))
+                .permission("pl3xmap.command.hide.others")
+                .handler(this::execute));
     }
 
-    @Override
-    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
-        Player target = getPlayer(sender, args, "pl3xmap.command.hide.others");
+    private void execute(CommandContext<CommandSender> context) {
+        Player target = CommandHelper.resolvePlayer(context);
+        CommandSender sender = context.getSender();
+
         if (PlayerManager.INSTANCE.isHidden(target)) {
-            Lang.send(sender, Lang.COMMAND_HIDE_ALREADY_HIDDEN, Placeholder.parsed("player", target.getName()));
+            Lang.send(sender, Lang.COMMAND_HIDE_ALREADY_HIDDEN, Placeholder.unparsed("player", target.getName()));
             return;
         }
         PlayerManager.INSTANCE.setHidden(target, true, true);
-        Lang.send(sender, Lang.COMMAND_HIDE_SUCCESS, Placeholder.parsed("player", target.getName()));
+        Lang.send(sender, Lang.COMMAND_HIDE_SUCCESS, Placeholder.unparsed("player", target.getName()));
     }
 }

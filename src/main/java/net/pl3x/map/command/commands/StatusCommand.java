@@ -1,51 +1,62 @@
 package net.pl3x.map.command.commands;
 
+import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.command.BaseCommand;
+import net.pl3x.map.command.CommandHelper;
+import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.Pl3xMapCommand;
+import net.pl3x.map.command.arguments.MapWorldArgument;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.progress.Progress;
 import net.pl3x.map.render.task.AbstractRender;
 import net.pl3x.map.world.MapWorld;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class StatusCommand extends BaseCommand {
-    public StatusCommand(Pl3xMap plugin) {
-        super(plugin, "status", Lang.COMMAND_STATUS_DESCRIPTION, "pl3xmap.command.status", "[world] (chat, bossbar)");
+public class StatusCommand extends Pl3xMapCommand {
+    public StatusCommand(Pl3xMap plugin, CommandManager commandManager) {
+        super(plugin, commandManager);
     }
 
     @Override
-    protected List<String> handleTabComplete(CommandSender sender, Command command, LinkedList<String> args) {
-        if (args != null) {
-            if (args.size() == 1) {
-                return tabMapWorlds(args.get(0));
-            } else if (args.size() == 2) {
-                return Stream.of("chat", "bossbar")
-                        .filter(s -> s.startsWith(args.get(1).toLowerCase(Locale.ROOT)))
-                        .collect(Collectors.toList());
-            }
+    public void register() {
+        getCommandManager().registerSubcommand(builder -> builder.literal("status")
+                .argument(MapWorldArgument.of("world"))
+                .argument(StringArgument.<CommandSender>newBuilder("type").withSuggestionsProvider(this::suggest).asOptional().build())
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_STATUS_DESCRIPTION))
+                .permission("pl3xmap.command.status")
+                .handler(this::execute));
+    }
+
+    private List<String> suggest(CommandContext<CommandSender> context, String arg) {
+        if (arg != null) {
+            return Stream.of("chat", "bossbar")
+                    .filter(s -> s.startsWith(arg.toLowerCase(Locale.ROOT)))
+                    .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    @Override
-    protected void handleCommand(CommandSender sender, Command command, String label, LinkedList<String> args) throws CommandException {
-        MapWorld mapWorld = getMapWorld(sender, args);
+    private void execute(CommandContext<CommandSender> context) {
+        CommandSender sender = context.getSender();
+        MapWorld mapWorld = CommandHelper.resolveWorld(context);
+        Optional<String> type = context.getOptional("type");
 
         // if we're not actively rendering anything, background is working
         if (!mapWorld.hasActiveRender()) {
             Lang.send(sender, Lang.COMMAND_STATUS_NOT_RENDERING,
-                    Placeholder.parsed("world", mapWorld.getName())
+                    Placeholder.unparsed("world", mapWorld.getName())
             );
             return;
         }
@@ -53,17 +64,9 @@ public class StatusCommand extends BaseCommand {
         AbstractRender render = mapWorld.getActiveRender();
         Progress progress = render.getProgress();
 
-        // are we specifying a toggle?
-        String toggle = null;
-        if (args.size() == 1) {
-            toggle = args.get(0);
-        } else if (args.size() == 2) {
-            toggle = args.get(1);
-        }
-
         // toggle it
-        if (toggle != null) {
-            String arg = toggle.toLowerCase(Locale.ROOT);
+        if (type.isPresent()) {
+            String arg = type.get().toLowerCase(Locale.ROOT);
             if (arg.equals("chat")) {
                 if (!progress.hide(sender)) {
                     progress.show(sender);
@@ -84,14 +87,14 @@ public class StatusCommand extends BaseCommand {
 
         // no toggle? fine, show current status
         Lang.send(sender, Lang.COMMAND_STATUS_RENDERING,
-                Placeholder.parsed("world", mapWorld.getName()),
-                Placeholder.parsed("type", render.getType()),
+                Placeholder.unparsed("world", mapWorld.getName()),
+                Placeholder.unparsed("type", render.getType()),
                 Placeholder.parsed("status", "<green>Running"),
-                Placeholder.parsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
-                Placeholder.parsed("chunks_total", Long.toString(progress.getTotalChunks())),
-                Placeholder.parsed("percent", String.format("%.2f", progress.getPercent())),
-                Placeholder.parsed("remaining", "1:23:45"),
-                Placeholder.parsed("cps", String.format("<gold>%.2f", progress.getCPS()))
+                Placeholder.unparsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
+                Placeholder.unparsed("chunks_total", Long.toString(progress.getTotalChunks())),
+                Placeholder.unparsed("percent", String.format("%.2f", progress.getPercent())),
+                Placeholder.unparsed("remaining", "1:23:45"),
+                Placeholder.unparsed("cps", String.format("<gold>%.2f", progress.getCPS()))
         );
     }
 }
