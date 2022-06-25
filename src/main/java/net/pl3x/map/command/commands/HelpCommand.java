@@ -50,7 +50,7 @@ public class HelpCommand extends Pl3xMapCommand {
                 .build();
         getCommandManager().registerSubcommand(builder -> builder.literal("help")
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_HELP_DESCRIPTION))
-                .argument(helpQueryArgument, CommandHelper.description(Lang.COMMAND_ARGUMENT_HELP_QUERY_DESCRIPTION))
+                .argument(helpQueryArgument, description(Lang.COMMAND_ARGUMENT_HELP_QUERY_DESCRIPTION))
                 .permission("pl3xmap.command.help")
                 .handler(this::execute));
     }

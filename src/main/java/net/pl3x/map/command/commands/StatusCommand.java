@@ -6,12 +6,11 @@ import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.command.CommandHelper;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.command.arguments.MapWorldArgument;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.progress.Progress;
+import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.render.task.AbstractRender;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
@@ -20,7 +19,6 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,8 +48,8 @@ public class StatusCommand extends Pl3xMapCommand {
 
     private void execute(CommandContext<CommandSender> context) {
         CommandSender sender = context.getSender();
-        MapWorld mapWorld = CommandHelper.resolveWorld(context);
-        Optional<String> type = context.getOptional("type");
+        MapWorld mapWorld = resolveWorld(context);
+        String type = context.getOrDefault("type", null);
 
         // if we're not actively rendering anything, background is working
         if (!mapWorld.hasActiveRender()) {
@@ -65,8 +63,8 @@ public class StatusCommand extends Pl3xMapCommand {
         Progress progress = render.getProgress();
 
         // toggle it
-        if (type.isPresent()) {
-            String arg = type.get().toLowerCase(Locale.ROOT);
+        if (type != null) {
+            String arg = type.toLowerCase(Locale.ROOT);
             if (arg.equals("chat")) {
                 if (!progress.hide(sender)) {
                     progress.show(sender);

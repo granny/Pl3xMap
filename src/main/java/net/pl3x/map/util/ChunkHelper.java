@@ -197,20 +197,3 @@ public class ChunkHelper {
         return chunkAccess != null ? chunkAccess.getNoiseBiome(biomeX, biomeY, biomeZ) : level.getUncachedNoiseBiome(biomeX, biomeY, biomeZ);
     }
 }
-
-/*
-[ ] Render translucent glass
-[ ] RadiusRender command
-[ ] Background render
-[ ] Pause/Resume renders
-[ ] Auto resume renders over restart/reload
-[ ] Convert commands to a brigadier library
-[ ] API/javadocs
-[ ] Documentation
-[ ] Squeeze out more speed
-[ ] Player Tracker
-[ ] Markers
-[ ] Marker commands
-[ ] Marker API
-[ ] Lighting (night mode)
-*/

@@ -23,6 +23,8 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
     @Key("command.argument.optional-world")
     public static String COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION = "Defaults to the players current world if not provided";
+    @Key("command.argument.optional-center")
+    public static String COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION = "Defaults to (<white>0<gray>,</gray> 0</white>) if unspecified";
 
     @Key("command.cancelrender.description")
     public static String COMMAND_CANCELRENDER_DESCRIPTION = "Cancel active render of a world";
@@ -36,15 +38,13 @@ public class Lang extends AbstractConfig {
     @Key("command.fullrender.already-rendering")
     public static String COMMAND_FULLRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
     @Key("command.fullrender.starting")
-    public static String COMMAND_FULLRENDER_STARTING = "<green>Starting fullrender of <world>";
+    public static String COMMAND_FULLRENDER_STARTING = "<green>Starting full render of <world>";
     @Key("command.fullrender.finished")
-    public static String COMMAND_FULLRENDER_FINISHED = "<green>Finished fullrender on <world> in <elapsed>";
+    public static String COMMAND_FULLRENDER_FINISHED = "<green>Finished full render on <world> in <elapsed>";
     @Key("command.fullrender.cancelled")
-    public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled fullrender on <world>";
+    public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled full render on <world>";
     @Key("command.fullrender.obtaining-regions")
-    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining region files";
-    @Key("command.fullrender.sorting-regions")
-    public static String COMMAND_FULLRENDER_SORTING_REGIONS = "<yellow>Sorting region files";
+    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining regions from files";
     @Key("command.fullrender.found-total-regions")
     public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS = "<green>Found <grey><total></grey> region files";
     @Key("command.fullrender.use-status-for-progress")
@@ -61,6 +61,23 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_HIDE_ALREADY_HIDDEN = "<red><player> is already hidden from map";
     @Key("command.hide.success")
     public static String COMMAND_HIDE_SUCCESS = "<green><player> is now hidden from map";
+
+    @Key("command.radiusrender.description")
+    public static String COMMAND_RADIUSRENDER_DESCRIPTION = "Render a section of a world";
+    @Key("command.radiusrender.already-rendering")
+    public static String COMMAND_RADIUSRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
+    @Key("command.radiusrender.starting")
+    public static String COMMAND_RADIUSRENDER_STARTING = "<green>Starting radius render of <world>";
+    @Key("command.radiusrender.finished")
+    public static String COMMAND_RADIUSRENDER_FINISHED = "<green>Finished radius render on <world> in <elapsed>";
+    @Key("command.radiusrender.cancelled")
+    public static String COMMAND_RADIUSRENDER_CANCELLED = "<red>Cancelled radius render on <world>";
+    @Key("command.radiusrender.obtaining-regions")
+    public static String COMMAND_RADIUSRENDER_OBTAINING_CHUNKS = "<yellow>Obtaining chunks in radius";
+    @Key("command.radiusrender.found-total-regions")
+    public static String COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS = "<green>Found <grey><total></grey> chunks in radius";
+    @Key("command.radiusrender.use-status-for-progress")
+    public static String COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/map status</grey> command to view progress";
 
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";

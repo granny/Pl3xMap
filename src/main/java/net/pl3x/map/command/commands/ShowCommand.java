@@ -26,15 +26,15 @@ public class ShowCommand extends Pl3xMapCommand {
                 .permission("pl3xmap.command.show")
                 .handler(this::execute));
         getCommandManager().registerSubcommand(builder -> builder.literal("show")
-                .argument(SinglePlayerSelectorArgument.optional("player"), CommandHelper.description(Lang.COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION))
+                .argument(SinglePlayerSelectorArgument.optional("player"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_SHOW_DESCRIPTION))
                 .permission("pl3xmap.command.show.others")
                 .handler(this::execute));
     }
 
     private void execute(CommandContext<CommandSender> context) {
-        Player target = CommandHelper.resolvePlayer(context);
         CommandSender sender = context.getSender();
+        Player target = resolvePlayer(context);
 
         if (!PlayerManager.INSTANCE.isHidden(target)) {
             Lang.send(sender, Lang.COMMAND_SHOW_NOT_HIDDEN, Placeholder.unparsed("player", target.getName()));

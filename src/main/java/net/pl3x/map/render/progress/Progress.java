@@ -1,4 +1,4 @@
-package net.pl3x.map.progress;
+package net.pl3x.map.render.progress;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -57,13 +57,16 @@ public class Progress extends BukkitRunnable {
         return this.totalChunks;
     }
 
+    public void setTotalChunks(long totalChunks) {
+        this.totalChunks = totalChunks;
+    }
+
     public long getTotalRegions() {
         return this.totalRegions;
     }
 
     public void setTotalRegions(long totalRegions) {
         this.totalRegions = totalRegions;
-        this.totalChunks = totalRegions * 32L * 32L;
     }
 
     public final AtomicLong getProcessedChunks() {

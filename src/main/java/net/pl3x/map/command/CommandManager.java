@@ -18,6 +18,7 @@ import net.pl3x.map.command.commands.CancelRenderCommand;
 import net.pl3x.map.command.commands.FullRenderCommand;
 import net.pl3x.map.command.commands.HelpCommand;
 import net.pl3x.map.command.commands.HideCommand;
+import net.pl3x.map.command.commands.RadiusRenderCommand;
 import net.pl3x.map.command.commands.ReloadCommand;
 import net.pl3x.map.command.commands.ShowCommand;
 import net.pl3x.map.command.commands.StatusCommand;
@@ -51,6 +52,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                 new FullRenderCommand(plugin, this),
                 new HelpCommand(plugin, this),
                 new HideCommand(plugin, this),
+                new RadiusRenderCommand(plugin, this),
                 new ReloadCommand(plugin, this),
                 new ShowCommand(plugin, this),
                 new StatusCommand(plugin, this)

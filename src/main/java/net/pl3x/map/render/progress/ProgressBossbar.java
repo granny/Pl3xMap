@@ -1,4 +1,4 @@
-package net.pl3x.map.progress;
+package net.pl3x.map.render.progress;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;

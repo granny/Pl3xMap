@@ -2,7 +2,7 @@ package net.pl3x.map.render.task;
 
 import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.progress.Progress;
+import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;

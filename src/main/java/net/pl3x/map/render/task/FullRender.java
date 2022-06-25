@@ -5,10 +5,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
-import net.pl3x.map.progress.Progress;
 import net.pl3x.map.render.iterator.RegionSpiralIterator;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.render.queue.ScanRegion;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 public class FullRender extends AbstractRender {
-    private long timeStarted;
     private int maxRadius = 0;
+    private long timeStarted;
 
     public FullRender(MapWorld mapWorld, Audience starter) {
         super(mapWorld, "FullRender", starter);
@@ -69,8 +69,6 @@ public class FullRender extends AbstractRender {
                 Coordinate.blockToRegion(getCenterZ()),
                 this.maxRadius);
 
-        Logger.debug(Lang.COMMAND_FULLRENDER_SORTING_REGIONS);
-
         Map<RegionCoordinate, ScanRegion> tasks = new LinkedHashMap<>();
 
         int failsafe = 0;
@@ -96,6 +94,7 @@ public class FullRender extends AbstractRender {
         }
 
         getProgress().setTotalRegions(tasks.size());
+        getProgress().setTotalChunks(getProgress().getTotalRegions() * 32L * 32L);
 
         Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
                 .replace("<total>", Long.toString(getProgress().getTotalRegions())));
@@ -107,9 +106,11 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void onStart() {
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.unparsed("world", getWorld().getName()));
+        Component component = Lang.parse(Lang.COMMAND_FULLRENDER_STARTING,
+                Placeholder.unparsed("world", getWorld().getName()));
+        Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
-            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_STARTING, Placeholder.unparsed("world", getWorld().getName()));
+            Lang.send(Bukkit.getConsoleSender(), component);
         }
     }
 
@@ -119,8 +120,7 @@ public class FullRender extends AbstractRender {
         String elapsed = Progress.formatMilliseconds(timeEnded - this.timeStarted);
         Component component = Lang.parse(Lang.COMMAND_FULLRENDER_FINISHED,
                 Placeholder.unparsed("world", getWorld().getName()),
-                Placeholder.parsed("elapsed", elapsed)
-        );
+                Placeholder.parsed("elapsed", elapsed));
         Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
             Lang.send(Bukkit.getConsoleSender(), component);
@@ -129,9 +129,11 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void onCancel() {
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.unparsed("world", getWorld().getName()));
+        Component component = Lang.parse(Lang.COMMAND_FULLRENDER_CANCELLED,
+                Placeholder.unparsed("world", getWorld().getName()));
+        Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
-            Lang.send(Bukkit.getConsoleSender(), Lang.COMMAND_FULLRENDER_CANCELLED, Placeholder.unparsed("world", getWorld().getName()));
+            Lang.send(Bukkit.getConsoleSender(), component);
         }
     }
 }
