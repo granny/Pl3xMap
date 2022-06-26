@@ -25,7 +25,7 @@ public class RadiusRenderCommand extends Pl3xMapCommand {
     public void register() {
         getCommandManager().registerSubcommand(builder -> builder.literal("radiusrender")
                 .argument(MapWorldArgument.of("world"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("radius").withMin(1).build())
+                .argument(IntegerArgument.<CommandSender>newBuilder("radius").withMin(1).withMax(100000).build())
                 .argument(Location2DArgument.optional("center"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_RADIUSRENDER_DESCRIPTION))
                 .permission("pl3xmap.command.radiusrender")
@@ -48,8 +48,6 @@ public class RadiusRenderCommand extends Pl3xMapCommand {
             return;
         }
 
-        Lang.send(sender, Lang.COMMAND_RADIUSRENDER_STARTING,
-                Placeholder.unparsed("world", mapWorld.getName()));
-        mapWorld.startRender(new RadiusRender(mapWorld, sender, center, radius));
+        mapWorld.startRender(new RadiusRender(mapWorld, sender, radius, center.getBlockX(), center.getBlockZ()));
     }
 }

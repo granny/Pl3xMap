@@ -32,10 +32,11 @@ public class FullRender extends AbstractRender {
     public void render() {
         this.timeStarted = System.currentTimeMillis();
 
-        Logger.debug(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
 
         List<RegionCoordinate> regionFiles = new ArrayList<>();
-        for (Path path : FileUtil.getRegionFiles(getWorld().getLevel())) {
+        List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
+        for (Path path : files) {
             if (isCancelled()) {
                 return;
             }
@@ -96,10 +97,10 @@ public class FullRender extends AbstractRender {
         getProgress().setTotalRegions(tasks.size());
         getProgress().setTotalChunks(getProgress().getTotalRegions() * 32L * 32L);
 
-        Logger.info(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
                 .replace("<total>", Long.toString(getProgress().getTotalRegions())));
 
-        Logger.info(Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
+        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
         tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
     }

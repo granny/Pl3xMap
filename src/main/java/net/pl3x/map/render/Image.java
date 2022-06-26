@@ -2,7 +2,6 @@ package net.pl3x.map.render;
 
 import net.minecraft.util.Mth;
 import net.pl3x.map.configuration.Config;
-import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.io.IO;
@@ -88,8 +87,6 @@ public class Image {
             lock.writeLock().unlock();
 
         }
-
-        Logger.debug(String.format("Saved: [%d,%d]", regionX, regionZ));
     }
 
     private void createDirs(Path dirPath) {
@@ -158,16 +155,15 @@ public class Image {
     }
 
     public static class Set {
-        private final int regionX, regionZ;
         private final Image blocks, biomes, heights, fluids;
 
         public Set(MapWorld mapWorld, RegionCoordinate region) {
-            this.regionX = region.getRegionX();
-            this.regionZ = region.getRegionZ();
-            this.blocks = new Image(mapWorld, "blocks", this.regionX, this.regionZ);
-            this.biomes = new Image(mapWorld, "biomes", this.regionX, this.regionZ);
-            this.heights = new Image(mapWorld, "heights", this.regionX, this.regionZ);
-            this.fluids = new Image(mapWorld, "fluids", this.regionX, this.regionZ);
+            int regionX = region.getRegionX();
+            int regionZ = region.getRegionZ();
+            this.blocks = new Image(mapWorld, "blocks", regionX, regionZ);
+            this.biomes = new Image(mapWorld, "biomes", regionX, regionZ);
+            this.heights = new Image(mapWorld, "heights", regionX, regionZ);
+            this.fluids = new Image(mapWorld, "fluids", regionX, regionZ);
         }
 
         public Image getBlocks() {
@@ -187,7 +183,6 @@ public class Image {
         }
 
         public void save() {
-            Logger.debug("Saving images for region " + this.regionX + ", " + this.regionZ);
             this.blocks.saveToDisk();
             this.biomes.saveToDisk();
             this.heights.saveToDisk();

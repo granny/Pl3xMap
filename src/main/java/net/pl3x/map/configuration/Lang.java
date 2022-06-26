@@ -44,7 +44,7 @@ public class Lang extends AbstractConfig {
     @Key("command.fullrender.cancelled")
     public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled full render on <world>";
     @Key("command.fullrender.obtaining-regions")
-    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining regions from files";
+    public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining regions from files... (this may take a moment)";
     @Key("command.fullrender.found-total-regions")
     public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS = "<green>Found <grey><total></grey> region files";
     @Key("command.fullrender.use-status-for-progress")
@@ -73,7 +73,7 @@ public class Lang extends AbstractConfig {
     @Key("command.radiusrender.cancelled")
     public static String COMMAND_RADIUSRENDER_CANCELLED = "<red>Cancelled radius render on <world>";
     @Key("command.radiusrender.obtaining-regions")
-    public static String COMMAND_RADIUSRENDER_OBTAINING_CHUNKS = "<yellow>Obtaining chunks in radius";
+    public static String COMMAND_RADIUSRENDER_OBTAINING_CHUNKS = "<yellow>Obtaining chunks in radius... (this may take a moment)";
     @Key("command.radiusrender.found-total-regions")
     public static String COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS = "<green>Found <grey><total></grey> chunks in radius";
     @Key("command.radiusrender.use-status-for-progress")

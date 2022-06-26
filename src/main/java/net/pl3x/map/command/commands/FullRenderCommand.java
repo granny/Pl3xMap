@@ -5,7 +5,6 @@ import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.command.CommandHelper;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.command.arguments.MapWorldArgument;
@@ -42,11 +41,6 @@ public class FullRenderCommand extends Pl3xMapCommand {
         FullRender render = new FullRender(mapWorld, sender);
 
         if (sender instanceof Player player) {
-            Lang.send(sender, Lang.COMMAND_FULLRENDER_STARTING,
-                    Placeholder.unparsed("world", mapWorld.getName()));
-
-            Lang.send(sender, Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
-
             render.getProgress().getBossbar().show(player);
         }
         mapWorld.startRender(render);

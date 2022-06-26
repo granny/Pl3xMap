@@ -1,7 +1,6 @@
 package net.pl3x.map.render.queue;
 
 import net.minecraft.world.level.ChunkPos;
-import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.Image;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.task.AbstractRender;
@@ -35,8 +34,6 @@ public class ScanRegion extends AbstractScan {
     }
 
     private void justDoIt() {
-        Logger.debug("[" + Thread.currentThread().getName() + "] Rendering region " + this.region.getRegionX() + ", " + this.region.getRegionZ());
-
         config = this.mapWorld.getConfig();
         level = this.mapWorld.getLevel();
         biomeColors = this.mapWorld.getBiomeColors();

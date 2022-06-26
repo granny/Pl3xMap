@@ -12,35 +12,59 @@ import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.render.queue.ScanRegion;
+import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RadiusRender extends AbstractRender {
-    private final int centerX;
-    private final int centerZ;
     private final int radius;
     private long timeStarted;
 
-    public RadiusRender(MapWorld mapWorld, Audience starter, Location center, int radius) {
-        super(mapWorld, "RadiusRender", starter);
+    public RadiusRender(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
+        super(mapWorld, "RadiusRender", starter, centerX, centerZ);
         this.radius = Coordinate.blockToChunk(radius);
-        this.centerX = Coordinate.blockToChunk(center.getBlockX());
-        this.centerZ = Coordinate.blockToChunk(center.getBlockZ());
     }
 
     @Override
     public void render() {
         this.timeStarted = System.currentTimeMillis();
 
-        Logger.debug(Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
+        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
 
-        ChunkSpiralIterator spiral = new ChunkSpiralIterator(this.centerX, this.centerZ, this.radius);
+        List<RegionCoordinate> regionFiles = new ArrayList<>();
+        List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
+        for (Path path : files) {
+            if (isCancelled()) {
+                return;
+            }
+
+            if (path.toFile().length() == 0) {
+                continue;
+            }
+
+            String filename = path.getFileName().toString();
+            String[] split = filename.split("\\.");
+            int x, z;
+            try {
+                x = Integer.parseInt(split[1]);
+                z = Integer.parseInt(split[2]);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+
+            regionFiles.add(new RegionCoordinate(x, z));
+        }
+
+        ChunkSpiralIterator spiral = new ChunkSpiralIterator(
+                Coordinate.blockToChunk(getCenterX()),
+                Coordinate.blockToChunk(getCenterZ()),
+                this.radius);
 
         Map<RegionCoordinate, List<Long>> regions = new LinkedHashMap<>();
 
@@ -53,6 +77,11 @@ public class RadiusRender extends AbstractRender {
 
             ChunkCoordinate chunk = spiral.next();
             RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
+
+            if (!regionFiles.contains(region)) {
+                continue;
+            }
+
             List<Long> list = regions.computeIfAbsent(region, k -> new ArrayList<>());
             list.add(ChunkPos.asLong(chunk.getChunkX(), chunk.getChunkZ()));
 
@@ -66,10 +95,10 @@ public class RadiusRender extends AbstractRender {
         getProgress().setTotalRegions(regions.size());
         getProgress().setTotalChunks(totalChunks);
 
-        Logger.info(Lang.COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS
+        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS
                 .replace("<total>", Long.toString(getProgress().getTotalChunks())));
 
-        Logger.info(Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
+        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
 
         tasks.forEach(task -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
     }

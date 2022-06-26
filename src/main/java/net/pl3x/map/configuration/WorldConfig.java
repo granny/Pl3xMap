@@ -13,7 +13,7 @@ public class WorldConfig extends AbstractConfig {
     @Key("render.layer.blocks.enabled")
     public boolean RENDER_LAYER_BLOCKS = true;
     @Key("render.layer.blocks.biome-blend")
-    public int RENDER_BLOCKS_BIOME_BLEND = 1;
+    public int RENDER_BLOCKS_BIOME_BLEND = 0;
 
     @Key("render.layer.biomes.enabled")
     public boolean RENDER_LAYER_BIOMES = true;

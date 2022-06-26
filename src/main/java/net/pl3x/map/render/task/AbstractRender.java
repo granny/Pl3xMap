@@ -13,20 +13,26 @@ public abstract class AbstractRender extends BukkitRunnable {
     private final Audience starter;
     private final Progress progress;
 
-    private int centerX;
-    private int centerZ;
+    private final int centerX;
+    private final int centerZ;
 
     private boolean cancelled;
 
     public AbstractRender(MapWorld mapWorld, String type, Audience starter) {
+        this(mapWorld, type, starter, mapWorld.getWorld().getSpawnLocation());
+    }
+
+    public AbstractRender(MapWorld mapWorld, String type, Audience starter, Location loc) {
+        this(mapWorld, type, starter, loc.getBlockX(), loc.getBlockZ());
+    }
+
+    public AbstractRender(MapWorld mapWorld, String type, Audience starter, int centerX, int centerZ) {
         this.mapWorld = mapWorld;
         this.type = type;
         this.starter = starter;
         this.progress = new Progress(this);
-
-        Location spawn = this.mapWorld.getWorld().getSpawnLocation();
-        setCenterX(spawn.getBlockX());
-        setCenterZ(spawn.getBlockZ());
+        this.centerX = centerX;
+        this.centerZ = centerZ;
     }
 
     public MapWorld getWorld() {
@@ -49,16 +55,8 @@ public abstract class AbstractRender extends BukkitRunnable {
         return this.centerX;
     }
 
-    public void setCenterX(int x) {
-        this.centerX = x;
-    }
-
     public int getCenterZ() {
         return this.centerZ;
-    }
-
-    public void setCenterZ(int z) {
-        this.centerZ = z;
     }
 
     @Override
