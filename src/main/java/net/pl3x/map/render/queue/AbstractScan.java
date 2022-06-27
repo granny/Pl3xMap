@@ -13,6 +13,7 @@ import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.Image;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.render.task.ThreadManager;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.ChunkHelper;
 import net.pl3x.map.util.Colors;
@@ -58,6 +59,10 @@ public abstract class AbstractScan implements Runnable {
         if (this.render.isCancelled()) {
             cleanup();
             return;
+        }
+
+        while (this.mapWorld.isPaused()) {
+            ThreadManager.sleep(500);
         }
 
         chunk = this.chunkHelper.getChunk(level, chunkX, chunkZ);

@@ -29,6 +29,7 @@ public class MapWorld {
     private final long biomeSeed;
 
     private AbstractRender activeRender = null;
+    private boolean paused;
 
     /**
      * Constructs a MapWorld for given world
@@ -88,6 +89,14 @@ public class MapWorld {
 
     public long getBiomeSeed() {
         return this.biomeSeed;
+    }
+
+    public boolean isPaused() {
+        return this.paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     /**

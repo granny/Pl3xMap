@@ -6,7 +6,6 @@ import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.command.CommandHelper;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Lang;

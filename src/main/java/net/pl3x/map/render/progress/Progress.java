@@ -89,6 +89,10 @@ public class Progress extends BukkitRunnable {
 
     @Override
     public void run() {
+        if (this.render.getWorld().isPaused()) {
+            return;
+        }
+
         long processedChunks = getProcessedChunks().get();
         this.cpsTracker.add(processedChunks - this.prevProcessedChunks);
         this.prevProcessedChunks = processedChunks;

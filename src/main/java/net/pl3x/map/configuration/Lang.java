@@ -62,6 +62,13 @@ public class Lang extends AbstractConfig {
     @Key("command.hide.success")
     public static String COMMAND_HIDE_SUCCESS = "<green><player> is now hidden from map";
 
+    @Key("command.pauserender.description")
+    public static String COMMAND_PAUSERENDER_DESCRIPTION = "Pauses all renders for the specified world";
+    @Key("command.pauserender.paused")
+    public static String COMMAND_PAUSERENDER_PAUSED = "<green>Paused renders for <world>";
+    @Key("command.pauserender.resumed")
+    public static String COMMAND_PAUSERENDER_RESUMED = "<green>Resumed renders for <world>";
+
     @Key("command.radiusrender.description")
     public static String COMMAND_RADIUSRENDER_DESCRIPTION = "Render a section of a world";
     @Key("command.radiusrender.already-rendering")

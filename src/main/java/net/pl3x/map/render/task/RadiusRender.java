@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.minecraft.world.level.ChunkPos;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.iterator.ChunkSpiralIterator;
 import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;

@@ -11,37 +11,33 @@ import net.pl3x.map.command.arguments.MapWorldArgument;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class CancelRenderCommand extends Pl3xMapCommand {
-    public CancelRenderCommand(Pl3xMap plugin, CommandManager commandManager) {
+public class PauseRenderCommand extends Pl3xMapCommand {
+    public PauseRenderCommand(Pl3xMap plugin, CommandManager commandManager) {
         super(plugin, commandManager);
     }
 
     @Override
     public void register() {
-        getCommandManager().registerSubcommand(builder -> builder.literal("cancelrender")
+        getCommandManager().registerSubcommand(builder -> builder.literal("pauserender")
                 .argument(MapWorldArgument.optional("world"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION))
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_CANCELRENDER_DESCRIPTION))
-                .permission("pl3xmap.command.cancelrender")
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_PAUSERENDER_DESCRIPTION))
+                .permission("pl3xmap.command.pauserender")
                 .handler(this::execute));
     }
 
     public void execute(CommandContext<CommandSender> context) {
         CommandSender sender = context.getSender();
-        MapWorld mapWorld = resolveWorld(context);
+        MapWorld world = resolveWorld(context);
 
-        if (!mapWorld.hasActiveRender()) {
-            Lang.send(sender, Lang.COMMAND_CANCELRENDER_NOT_RENDERING,
-                    Placeholder.unparsed("world", mapWorld.getName()));
-            return;
-        }
+        world.setPaused(!world.isPaused());
 
-        mapWorld.cancelRender();
-
-        if (sender instanceof Player) {
-            Lang.send(sender, Lang.COMMAND_CANCELRENDER_SUCCESS,
-                    Placeholder.unparsed("world", mapWorld.getName()));
+        if (world.isPaused()) {
+            Lang.send(sender, Lang.COMMAND_PAUSERENDER_PAUSED,
+                    Placeholder.unparsed("world", world.getName()));
+        } else {
+            Lang.send(sender, Lang.COMMAND_PAUSERENDER_RESUMED,
+                    Placeholder.unparsed("world", world.getName()));
         }
     }
 }
