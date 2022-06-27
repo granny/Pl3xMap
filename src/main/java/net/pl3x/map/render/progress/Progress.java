@@ -33,11 +33,11 @@ public class Progress extends BukkitRunnable {
         this.bossbar = new ProgressBossbar(render.getWorld());
     }
 
-    public void show(Audience audience) {
+    public void showChat(Audience audience) {
         this.audience.add(audience);
     }
 
-    public boolean hide(Audience audience) {
+    public boolean hideChat(Audience audience) {
         return this.audience.remove(audience);
     }
 

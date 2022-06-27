@@ -42,7 +42,10 @@ public class FullRenderCommand extends Pl3xMapCommand {
 
         if (sender instanceof Player player) {
             render.getProgress().getBossbar().show(player);
+        } else {
+            render.getProgress().showChat(sender);
         }
+
         mapWorld.startRender(render);
     }
 }

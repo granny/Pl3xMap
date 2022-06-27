@@ -121,13 +121,15 @@ public class Lang extends AbstractConfig {
             <gold>Map status of <world>
             Background: <green>Running
             Active: <red>Not Running""";
-    @Key("command.status.success")
-    public static String COMMAND_STATUS_RENDERING = """
-            <gold>Map status of <world>
-            Background: <red>Paused
-            Active: <green><status>
-              <grey>- Chunks Rendered <chunk_done>/<chunks_total> (<gold><percent>%</gold>)
-              <grey>- Time Remaining: <remaining> (<gold><cps> cps</gold>)""";
+    @Key("command.status.render")
+    public static String COMMAND_STATUS_RENDER = """
+            <green>Map status of <gold><world>
+            <white>  Background: <i><background>
+            <white>  Foreground: <i><foreground>""";
+    @Key("command.status.render-details")
+    public static String COMMAND_STATUS_RENDER_DETAILS = """
+            <grey>    Chunks: <chunks_done>/<chunks_total> (<gold><percent>%</gold>)
+            <grey>    Remaining: <remaining> (<gold><cps> cps</gold>)""";
     @Key("command.status.player-only-feature")
     public static String COMMAND_STATUS_PLAYER_ONLY_FEATURE = "<red>That is a player only feature";
 

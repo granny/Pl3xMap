@@ -25,7 +25,7 @@ public class PlayerListener implements Listener {
             if (!mapWorld.hasActiveRender()) {
                 return;
             }
-            mapWorld.getActiveRender().getProgress().hide(player);
+            mapWorld.getActiveRender().getProgress().hideChat(player);
         });
     }
 }

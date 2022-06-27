@@ -52,23 +52,23 @@ public class StatusCommand extends Pl3xMapCommand {
         MapWorld mapWorld = resolveWorld(context);
         String type = context.getOrDefault("type", null);
 
-        // if we're not actively rendering anything, background is working
-        if (!mapWorld.hasActiveRender()) {
-            Lang.send(sender, Lang.COMMAND_STATUS_NOT_RENDERING,
-                    Placeholder.unparsed("world", mapWorld.getName())
-            );
-            return;
-        }
-
         AbstractRender render = mapWorld.getActiveRender();
-        Progress progress = render.getProgress();
+        Progress progress = render != null ? render.getProgress() : null;
 
         // toggle it
         if (type != null) {
+            // if we're not actively rendering anything there is nothing to show
+            if (progress == null) {
+                Lang.send(sender, Lang.COMMAND_STATUS_NOT_RENDERING,
+                        Placeholder.unparsed("world", mapWorld.getName())
+                );
+                return;
+            }
+
             String arg = type.toLowerCase(Locale.ROOT);
             if (arg.equals("chat")) {
-                if (!progress.hide(sender)) {
-                    progress.show(sender);
+                if (!progress.hideChat(sender)) {
+                    progress.showChat(sender);
                 }
                 return;
             } else if (arg.equals("bossbar")) {
@@ -85,15 +85,20 @@ public class StatusCommand extends Pl3xMapCommand {
         }
 
         // no toggle? fine, show current status
-        Lang.send(sender, Lang.COMMAND_STATUS_RENDERING,
+        Lang.send(sender, Lang.COMMAND_STATUS_RENDER,
                 Placeholder.unparsed("world", mapWorld.getName()),
-                Placeholder.unparsed("type", render.getType()),
-                Placeholder.parsed("status", "<green>Running"),
-                Placeholder.unparsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
-                Placeholder.unparsed("chunks_total", Long.toString(progress.getTotalChunks())),
-                Placeholder.unparsed("percent", String.format("%.2f", progress.getPercent())),
-                Placeholder.unparsed("remaining", "1:23:45"),
-                Placeholder.unparsed("cps", String.format("<gold>%.2f", progress.getCPS()))
+                Placeholder.parsed("background", mapWorld.isPaused() ? "<red>Paused" : "<green>Running"),
+                Placeholder.parsed("foreground", mapWorld.hasActiveRender() ? (mapWorld.isPaused() ? "<red>Paused" : "<green>Running") : "<red>Not Running")
         );
+
+        if (progress != null && !mapWorld.isPaused()) {
+            Lang.send(sender, Lang.COMMAND_STATUS_RENDER_DETAILS,
+                    Placeholder.unparsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
+                    Placeholder.unparsed("chunks_total", Long.toString(progress.getTotalChunks())),
+                    Placeholder.unparsed("percent", String.format("%.2f", progress.getPercent())),
+                    Placeholder.unparsed("remaining", "1:23:45"),
+                    Placeholder.unparsed("cps", String.format("%.2f", progress.getCPS()))
+            );
+        }
     }
 }
