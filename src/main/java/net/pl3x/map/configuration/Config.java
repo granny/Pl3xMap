@@ -48,11 +48,6 @@ public class Config extends AbstractConfig {
             The number of threads to use for loading and scanning chunks.
             Value of -1 will use 50% of the available cores.""")
     public static int RENDER_THREADS = -1;
-    @Key("settings.threading.image-threads")
-    @Comment("""
-            The number of threads to use for reading and saving the PNG tile images.
-            Value of -1 will use 50% of the available cores.""")
-    public static int IMAGE_THREADS = -1;
 
     private static final Config CONFIG = new Config();
 

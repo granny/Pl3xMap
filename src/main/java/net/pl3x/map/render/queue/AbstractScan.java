@@ -12,7 +12,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.Image;
-import net.pl3x.map.render.ThreadManager;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.ChunkHelper;
@@ -62,7 +61,7 @@ public abstract class AbstractScan implements Runnable {
         }
 
         while (this.mapWorld.isPaused()) {
-            ThreadManager.sleep(500);
+            this.render.sleep(500);
         }
 
         chunk = this.chunkHelper.getChunk(level, chunkX, chunkZ);

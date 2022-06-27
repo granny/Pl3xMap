@@ -5,14 +5,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.render.AbstractRender;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Progress extends BukkitRunnable {
+public class Progress implements Runnable {
     private final AbstractRender render;
     private final CPSTracker cpsTracker = new CPSTracker();
 
@@ -24,7 +23,7 @@ public class Progress extends BukkitRunnable {
     private long totalRegions;
     private float percent;
     private double cps;
-    private String eta;
+    private String eta = Lang.PROGRESS_ETA_UNKNOWN;
 
     private final Set<Audience> audience = new HashSet<>();
     private final ProgressBossbar bossbar;
@@ -87,7 +86,7 @@ public class Progress extends BukkitRunnable {
     }
 
     public void finish() {
-        cancel();
+        getRender().getScheduledProgress().cancel(false);
         if (this.render.getWorld().hasActiveRender()) {
             this.render.getWorld().finishRender();
             getBossbar().finish();
@@ -116,6 +115,7 @@ public class Progress extends BukkitRunnable {
 
         // show progress to listeners
         Component component = Lang.parse(Lang.PROGRESS_CHAT,
+                Placeholder.unparsed("world", this.render.getWorld().getName()),
                 Placeholder.unparsed("processed_chunks", Long.toString(processedChunks)),
                 Placeholder.unparsed("total_chunks", Long.toString(getTotalChunks())),
                 Placeholder.unparsed("percent", String.format("%.2f", getPercent())),

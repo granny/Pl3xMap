@@ -3,7 +3,6 @@ package net.pl3x.map.render.queue;
 import net.minecraft.world.level.ChunkPos;
 import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.Image;
-import net.pl3x.map.render.ThreadManager;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 
 import java.util.Collection;
@@ -55,7 +54,7 @@ public class ScanRegion extends AbstractScan {
 
         // save images to disk
         if (!this.render.isCancelled()) {
-            ThreadManager.INSTANCE.getSaveExecutor().submit(() -> {
+            this.render.getImageExecutor().submit(() -> {
                 try {
                     imageSet.save();
                 } catch (Throwable t) {

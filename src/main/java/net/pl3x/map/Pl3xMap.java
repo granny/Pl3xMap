@@ -9,7 +9,6 @@ import net.pl3x.map.logger.LogFilter;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.logger.Pl3xLogger;
 import net.pl3x.map.player.PlayerListener;
-import net.pl3x.map.render.ThreadManager;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import net.pl3x.map.world.WorldListener;
@@ -112,9 +111,6 @@ public class Pl3xMap extends JavaPlugin {
     }
 
     public void disable() {
-        // stop all running threads
-        ThreadManager.INSTANCE.shutdown();
-
         // stop integrated server
         IntegratedServer.INSTANCE.stopServer();
 

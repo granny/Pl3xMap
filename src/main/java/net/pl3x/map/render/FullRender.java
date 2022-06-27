@@ -16,16 +16,14 @@ import org.bukkit.Bukkit;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FullRender extends AbstractRender {
     private int maxRadius = 0;
     private long timeStarted;
 
     public FullRender(MapWorld mapWorld, Audience starter) {
-        super(mapWorld, "FullRender", starter);
+        super(mapWorld, starter);
     }
 
     @Override
@@ -70,7 +68,7 @@ public class FullRender extends AbstractRender {
                 Coordinate.blockToRegion(getCenterZ()),
                 this.maxRadius);
 
-        Map<RegionCoordinate, ScanRegion> tasks = new LinkedHashMap<>();
+        List<ScanRegion> tasks = new ArrayList<>();
 
         int failsafe = 0;
         while (spiral.hasNext()) {
@@ -81,13 +79,13 @@ public class FullRender extends AbstractRender {
             if (failsafe > 500000) {
                 // we scanned over half a million non-existent regions straight
                 // quit the spiral and add the remaining regions to the end
-                regionFiles.forEach(region -> tasks.put(region, new ScanRegion(this, region)));
+                regionFiles.forEach(region -> tasks.add(new ScanRegion(this, region)));
                 break;
             }
 
             RegionCoordinate region = spiral.next();
             if (regionFiles.remove(region)) {
-                tasks.put(region, new ScanRegion(this, region));
+                tasks.add(new ScanRegion(this, region));
                 failsafe = 0;
             } else {
                 failsafe++;
@@ -102,7 +100,7 @@ public class FullRender extends AbstractRender {
 
         Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
-        tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
+        tasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override

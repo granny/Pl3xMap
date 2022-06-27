@@ -26,7 +26,7 @@ public class RadiusRender extends AbstractRender {
     private long timeStarted;
 
     public RadiusRender(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
-        super(mapWorld, "RadiusRender", starter, centerX, centerZ);
+        super(mapWorld, starter, centerX, centerZ);
         this.radius = Coordinate.blockToChunk(radius);
     }
 
@@ -99,7 +99,7 @@ public class RadiusRender extends AbstractRender {
 
         Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
 
-        tasks.forEach(task -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
+        tasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override

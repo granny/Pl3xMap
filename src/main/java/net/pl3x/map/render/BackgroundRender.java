@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 
 public class BackgroundRender extends AbstractRender {
     public BackgroundRender(MapWorld mapWorld) {
-        super(mapWorld, "Background", Bukkit.getConsoleSender());
+        super(mapWorld, Bukkit.getConsoleSender());
     }
 
     @Override
