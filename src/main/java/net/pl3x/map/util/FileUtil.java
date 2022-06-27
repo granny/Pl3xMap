@@ -5,6 +5,7 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.logger.Logger;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Stream;
@@ -98,6 +100,27 @@ public class FileUtil {
             return stream.filter(MCA_MATCHER::matches).toList();
         } catch (IOException e) {
             throw new RuntimeException("Failed to list region files in directory '" + regionDir.toAbsolutePath() + "'", e);
+        }
+    }
+
+    public static void deleteSubdirectories(Path dir) throws IOException {
+        try (Stream<Path> files = Files.list(dir)) {
+            files.forEach(path -> {
+                try {
+                    deleteDirectory(path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
+    public static void deleteDirectory(Path dir) throws IOException {
+        try (Stream<Path> walk = Files.walk(dir)) {
+            //noinspection ResultOfMethodCallIgnored
+            walk.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
         }
     }
 }

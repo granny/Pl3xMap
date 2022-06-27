@@ -6,6 +6,7 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.render.task.BackgroundRender;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
@@ -28,7 +29,10 @@ public class MapWorld {
     private final BiomeColors biomeColors;
     private final long biomeSeed;
 
+    private final BackgroundRender backgroundRender;
+
     private AbstractRender activeRender = null;
+
     private boolean paused;
 
     /**
@@ -41,6 +45,8 @@ public class MapWorld {
 
         this.biomeColors = new BiomeColors(this);
         this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
+
+        this.backgroundRender = new BackgroundRender(this);
     }
 
     /**
@@ -97,6 +103,10 @@ public class MapWorld {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public BackgroundRender getBackgroundRender() {
+        return this.backgroundRender;
     }
 
     /**

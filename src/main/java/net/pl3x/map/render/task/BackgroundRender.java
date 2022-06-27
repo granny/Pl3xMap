@@ -1,11 +1,11 @@
 package net.pl3x.map.render.task;
 
-import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.world.MapWorld;
+import org.bukkit.Bukkit;
 
 public class BackgroundRender extends AbstractRender {
-    public BackgroundRender(MapWorld mapWorld, Audience starter) {
-        super(mapWorld, "Background", starter);
+    public BackgroundRender(MapWorld mapWorld) {
+        super(mapWorld, "Background", Bukkit.getConsoleSender());
     }
 
     @Override
@@ -22,5 +22,11 @@ public class BackgroundRender extends AbstractRender {
 
     @Override
     public void onCancel() {
+    }
+
+    public void reset() {
+        // todo - cancel all current jobs
+        // todo - cancel all pending jobs
+        // todo - wipe dirty_chunks.yml
     }
 }

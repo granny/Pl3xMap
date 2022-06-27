@@ -31,15 +31,16 @@ public class StatusCommand extends Pl3xMapCommand {
     public void register() {
         getCommandManager().registerSubcommand(builder -> builder.literal("status")
                 .argument(MapWorldArgument.of("world"))
-                .argument(StringArgument.<CommandSender>newBuilder("type").withSuggestionsProvider(this::suggest).asOptional().build())
+                .argument(StringArgument.<CommandSender>newBuilder("type").withSuggestionsProvider(this::suggestType).asOptional().build())
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_STATUS_DESCRIPTION))
                 .permission("pl3xmap.command.status")
                 .handler(this::execute));
     }
 
-    private List<String> suggest(CommandContext<CommandSender> context, String arg) {
+    private List<String> suggestType(CommandContext<CommandSender> context, String arg) {
         if (arg != null) {
-            return Stream.of("chat", "bossbar")
+            // only players can use bossbar
+            return (context.getSender() instanceof Player ? Stream.of("chat", "bossbar") : Stream.of("chat"))
                     .filter(s -> s.startsWith(arg.toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }

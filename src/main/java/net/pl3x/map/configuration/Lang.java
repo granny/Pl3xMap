@@ -33,6 +33,13 @@ public class Lang extends AbstractConfig {
     @Key("command.cancelrender.success")
     public static String COMMAND_CANCELRENDER_SUCCESS = "<green>Render on <world> has been cancelled";
 
+    @Key("command.confirm.description")
+    public static String COMMAND_CONFIRM_DESCRIPTION = "Confirm a pending command";
+    @Key("command.confirm.not-rendering")
+    public static String COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE = "<red>Confirmation required. Confirm using /<command> confirm";
+    @Key("command.confirm.success")
+    public static String COMMAND_CONFIRM_NO_PENDING_MESSAGE = "<red>You don't have any pending confirmations";
+
     @Key("command.fullrender.description")
     public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
     @Key("command.fullrender.already-rendering")
@@ -90,6 +97,15 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";
     @Key("command.reload.success")
     public static String COMMAND_RELOAD_SUCCESS = "<green>Pl3xMap v<version> reloaded";
+
+    @Key("command.resetmap.description")
+    public static String COMMAND_RESETMAP_DESCRIPTION = "Cancel active render of a world";
+    @Key("command.resetmap.active-render")
+    public static String COMMAND_RESETMAP_ACTIVE_RENDER = "<red>There is an active render for <world>";
+    @Key("command.resetmap.success")
+    public static String COMMAND_RESETMAP_SUCCESS = "<green>Successfully reset map for <world>";
+    @Key("command.resetmap.failed")
+    public static String COMMAND_RESETMAP_FAILED = "<red>Could not reset map for <world>";
 
     @Key("command.show.description")
     public static String COMMAND_SHOW_DESCRIPTION = "Show a player on the map";

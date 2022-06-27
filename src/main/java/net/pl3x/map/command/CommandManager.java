@@ -15,12 +15,14 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.command.commands.CancelRenderCommand;
+import net.pl3x.map.command.commands.ConfirmCommand;
 import net.pl3x.map.command.commands.FullRenderCommand;
 import net.pl3x.map.command.commands.HelpCommand;
 import net.pl3x.map.command.commands.HideCommand;
 import net.pl3x.map.command.commands.PauseRenderCommand;
 import net.pl3x.map.command.commands.RadiusRenderCommand;
 import net.pl3x.map.command.commands.ReloadCommand;
+import net.pl3x.map.command.commands.ResetMapCommand;
 import net.pl3x.map.command.commands.ShowCommand;
 import net.pl3x.map.command.commands.StatusCommand;
 import net.pl3x.map.command.exception.CompletedSuccessfullyException;
@@ -50,12 +52,14 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
 
         ImmutableList.of(
                 new CancelRenderCommand(plugin, this),
+                new ConfirmCommand(plugin, this),
                 new FullRenderCommand(plugin, this),
                 new HelpCommand(plugin, this),
                 new HideCommand(plugin, this),
                 new PauseRenderCommand(plugin, this),
                 new RadiusRenderCommand(plugin, this),
                 new ReloadCommand(plugin, this),
+                new ResetMapCommand(plugin, this),
                 new ShowCommand(plugin, this),
                 new StatusCommand(plugin, this)
         ).forEach(Pl3xMapCommand::register);
