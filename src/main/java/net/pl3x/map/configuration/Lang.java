@@ -145,7 +145,7 @@ public class Lang extends AbstractConfig {
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled in config.yml";
 
     @Key("progress.chat")
-    public static String PROGRESS_CHAT = "Progress: <processed_chunks>/<total_chunks> (<percent>) <gold><cps> cps</gold> eta: <eta>";
+    public static String PROGRESS_CHAT = "Progress: <processed_chunks>/<total_chunks> (<percent>%) <gold><cps> cps</gold> eta: <eta>";
     @Key("progress.bossbar")
     public static String PROGRESS_BOSSBAR = "<gold>Map Render of <grey><world></grey>: <red><percent></red>% ETA: <eta>";
     @Key("progress.eta.unknown")

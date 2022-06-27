@@ -118,7 +118,7 @@ public class Progress extends BukkitRunnable {
         Component component = Lang.parse(Lang.PROGRESS_CHAT,
                 Placeholder.unparsed("processed_chunks", Long.toString(processedChunks)),
                 Placeholder.unparsed("total_chunks", Long.toString(getTotalChunks())),
-                Placeholder.unparsed("percent", String.format("%.2f%%", getPercent())),
+                Placeholder.unparsed("percent", String.format("%.2f", getPercent())),
                 Placeholder.unparsed("cps", String.format("%.2f", getCPS())),
                 Placeholder.unparsed("eta", getETA())
         );
