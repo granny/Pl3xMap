@@ -2,9 +2,9 @@ package net.pl3x.map.render;
 
 import net.minecraft.util.Mth;
 import net.pl3x.map.configuration.Config;
+import net.pl3x.map.render.io.IO;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.Colors;
-import net.pl3x.map.util.io.IO;
 import net.pl3x.map.world.MapWorld;
 
 import java.awt.image.BufferedImage;

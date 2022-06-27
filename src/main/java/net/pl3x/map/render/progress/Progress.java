@@ -4,7 +4,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.render.AbstractRender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;

@@ -30,7 +30,7 @@ import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
-import net.pl3x.map.render.task.AbstractRender;
+import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.world.MapWorld;
 
 import java.util.EnumSet;

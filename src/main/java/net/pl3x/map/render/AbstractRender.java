@@ -1,4 +1,4 @@
-package net.pl3x.map.render.task;
+package net.pl3x.map.render;
 
 import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.Pl3xMap;

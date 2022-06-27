@@ -1,4 +1,4 @@
-package net.pl3x.map.render.task;
+package net.pl3x.map.render;
 
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;

@@ -1,10 +1,10 @@
 package net.pl3x.map.render.queue;
 
 import net.minecraft.world.level.ChunkPos;
+import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.Image;
+import net.pl3x.map.render.ThreadManager;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.task.AbstractRender;
-import net.pl3x.map.render.task.ThreadManager;
 
 import java.util.Collection;
 import java.util.Collections;

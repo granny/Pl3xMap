@@ -1,4 +1,4 @@
-package net.pl3x.map.util.io;
+package net.pl3x.map.render.io;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.metadata.ImageMetadata;

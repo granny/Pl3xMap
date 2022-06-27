@@ -1,4 +1,4 @@
-package net.pl3x.map.util.io;
+package net.pl3x.map.render.io;
 
 import net.pl3x.map.logger.Logger;
 

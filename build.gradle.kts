@@ -24,6 +24,13 @@ dependencies {
 
 tasks {
     shadowJar {
+        // we'll provide our own up-to-date webp binaries, thanks
+        exclude(
+            "dist_webp_binaries/*",
+            "dist_webp_binaries/linux/*",
+            "dist_webp_binaries/mac/*",
+            "dist_webp_binaries/window/*"
+        )
         from(rootProject.projectDir.resolve("LICENSE"))
         minimize {
             // does not like being minimized _or_ relocated (xnio errors)

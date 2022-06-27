@@ -1,4 +1,4 @@
-package net.pl3x.map.render.task;
+package net.pl3x.map.render;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.pl3x.map.configuration.Config;

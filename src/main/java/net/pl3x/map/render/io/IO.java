@@ -1,4 +1,4 @@
-package net.pl3x.map.util.io;
+package net.pl3x.map.render.io;
 
 import net.pl3x.map.render.Image;
 
@@ -10,7 +10,7 @@ public abstract class IO {
     private static final Png PNG = new Png();
     private static final Webp WEBP = new Webp();
 
-    public static Type get(String format) {
+    public static IO.Type get(String format) {
         return switch (format.toLowerCase(Locale.ROOT)) {
             case "png" -> PNG;
             case "webp" -> WEBP;

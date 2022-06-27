@@ -1,11 +1,12 @@
-package net.pl3x.map.render.task;
+package net.pl3x.map.render;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.minecraft.world.level.ChunkPos;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.logger.Logger;
-import net.pl3x.map.render.iterator.RegionSpiralIterator;
+import net.pl3x.map.render.iterator.ChunkSpiralIterator;
+import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.render.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.progress.Progress;
@@ -20,19 +21,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FullRender extends AbstractRender {
-    private int maxRadius = 0;
+public class RadiusRender extends AbstractRender {
+    private final int radius;
     private long timeStarted;
 
-    public FullRender(MapWorld mapWorld, Audience starter) {
-        super(mapWorld, "FullRender", starter);
+    public RadiusRender(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
+        super(mapWorld, "RadiusRender", starter, centerX, centerZ);
+        this.radius = Coordinate.blockToChunk(radius);
     }
 
     @Override
     public void render() {
         this.timeStarted = System.currentTimeMillis();
 
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
+        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
 
         List<RegionCoordinate> regionFiles = new ArrayList<>();
         List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
@@ -52,62 +54,57 @@ public class FullRender extends AbstractRender {
                 x = Integer.parseInt(split[1]);
                 z = Integer.parseInt(split[2]);
             } catch (NumberFormatException e) {
-                Logger.warn(Lang.COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE
-                        .replace("<path>", path.toString())
-                        .replace("<filename>", filename));
-                e.printStackTrace();
                 continue;
             }
 
-            RegionCoordinate region = new RegionCoordinate(x, z);
-            regionFiles.add(region);
-
-            this.maxRadius = Math.max(Math.max(this.maxRadius, Math.abs(x)), Math.abs(z));
+            regionFiles.add(new RegionCoordinate(x, z));
         }
 
-        RegionSpiralIterator spiral = new RegionSpiralIterator(
-                Coordinate.blockToRegion(getCenterX()),
-                Coordinate.blockToRegion(getCenterZ()),
-                this.maxRadius);
+        ChunkSpiralIterator spiral = new ChunkSpiralIterator(
+                Coordinate.blockToChunk(getCenterX()),
+                Coordinate.blockToChunk(getCenterZ()),
+                this.radius);
 
-        Map<RegionCoordinate, ScanRegion> tasks = new LinkedHashMap<>();
+        Map<RegionCoordinate, List<Long>> regions = new LinkedHashMap<>();
 
-        int failsafe = 0;
+        long totalChunks = 0;
+
         while (spiral.hasNext()) {
             if (isCancelled()) {
                 return;
             }
 
-            if (failsafe > 500000) {
-                // we scanned over half a million non-existent regions straight
-                // quit the spiral and add the remaining regions to the end
-                regionFiles.forEach(region -> tasks.put(region, new ScanRegion(this, region)));
-                break;
+            ChunkCoordinate chunk = spiral.next();
+            RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
+
+            if (!regionFiles.contains(region)) {
+                continue;
             }
 
-            RegionCoordinate region = spiral.next();
-            if (regionFiles.remove(region)) {
-                tasks.put(region, new ScanRegion(this, region));
-                failsafe = 0;
-            } else {
-                failsafe++;
-            }
+            List<Long> list = regions.computeIfAbsent(region, k -> new ArrayList<>());
+            list.add(ChunkPos.asLong(chunk.getChunkX(), chunk.getChunkZ()));
+
+            totalChunks++;
         }
 
-        getProgress().setTotalRegions(tasks.size());
-        getProgress().setTotalChunks(getProgress().getTotalRegions() * 32L * 32L);
+        List<ScanRegion> tasks = new ArrayList<>();
 
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
-                .replace("<total>", Long.toString(getProgress().getTotalRegions())));
+        regions.forEach((region, list) -> tasks.add(new ScanRegion(this, region, list)));
 
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
+        getProgress().setTotalRegions(regions.size());
+        getProgress().setTotalChunks(totalChunks);
 
-        tasks.forEach((region, task) -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
+        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS
+                .replace("<total>", Long.toString(getProgress().getTotalChunks())));
+
+        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
+
+        tasks.forEach(task -> ThreadManager.INSTANCE.getRenderExecutor().submit(task));
     }
 
     @Override
     public void onStart() {
-        Component component = Lang.parse(Lang.COMMAND_FULLRENDER_STARTING,
+        Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_STARTING,
                 Placeholder.unparsed("world", getWorld().getName()));
         Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
@@ -119,7 +116,7 @@ public class FullRender extends AbstractRender {
     public void onFinish() {
         long timeEnded = System.currentTimeMillis();
         String elapsed = Progress.formatMilliseconds(timeEnded - this.timeStarted);
-        Component component = Lang.parse(Lang.COMMAND_FULLRENDER_FINISHED,
+        Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_FINISHED,
                 Placeholder.unparsed("world", getWorld().getName()),
                 Placeholder.parsed("elapsed", elapsed));
         Lang.send(getStarter(), component);
@@ -130,7 +127,7 @@ public class FullRender extends AbstractRender {
 
     @Override
     public void onCancel() {
-        Component component = Lang.parse(Lang.COMMAND_FULLRENDER_CANCELLED,
+        Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_CANCELLED,
                 Placeholder.unparsed("world", getWorld().getName()));
         Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
