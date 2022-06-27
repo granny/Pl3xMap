@@ -144,6 +144,13 @@ public class Lang extends AbstractConfig {
     @Key("httpd.disabled")
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled in config.yml";
 
+    @Key("progress.chat")
+    public static String PROGRESS_CHAT = "Progress: <processed_chunks>/<total_chunks> (<percent>) <gold><cps> cps</gold> eta: <eta>";
+    @Key("progress.bossbar")
+    public static String PROGRESS_BOSSBAR = "<gold>Map Render of <grey><world></grey>: <red><percent></red>% ETA: <eta>";
+    @Key("progress.eta.unknown")
+    public static String PROGRESS_ETA_UNKNOWN = "Unknown";
+
     @Key("error.must-specify-player")
     public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
     @Key("error.no-such-player")

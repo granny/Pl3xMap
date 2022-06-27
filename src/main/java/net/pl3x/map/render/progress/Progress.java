@@ -24,13 +24,18 @@ public class Progress extends BukkitRunnable {
     private long totalRegions;
     private float percent;
     private double cps;
+    private String eta;
 
     private final Set<Audience> audience = new HashSet<>();
     private final ProgressBossbar bossbar;
 
     public Progress(AbstractRender render) {
         this.render = render;
-        this.bossbar = new ProgressBossbar(render.getWorld());
+        this.bossbar = new ProgressBossbar(this);
+    }
+
+    public AbstractRender getRender() {
+        return this.render;
     }
 
     public void showChat(Audience audience) {
@@ -51,6 +56,10 @@ public class Progress extends BukkitRunnable {
 
     public double getCPS() {
         return this.cps;
+    }
+
+    public String getETA() {
+        return this.eta;
     }
 
     public long getTotalChunks() {
@@ -98,21 +107,27 @@ public class Progress extends BukkitRunnable {
         this.prevProcessedChunks = processedChunks;
         this.percent = ((float) processedChunks / (float) getTotalChunks()) * 100.0F;
         this.cps = this.cpsTracker.average();
+        if (this.cps > 0) {
+            long timeLeft = (this.totalChunks - processedChunks) / (long) this.cps * 1000;
+            this.eta = formatMilliseconds(timeLeft);
+        } else {
+            this.eta = Lang.PROGRESS_ETA_UNKNOWN;
+        }
 
         // show progress to listeners
-        Component component = Lang.parse(
-                "Progress: <processed_chunks>/<total_chunks> (<percent>) <gold><cps> cps</gold>",
+        Component component = Lang.parse(Lang.PROGRESS_CHAT,
                 Placeholder.unparsed("processed_chunks", Long.toString(processedChunks)),
                 Placeholder.unparsed("total_chunks", Long.toString(getTotalChunks())),
                 Placeholder.unparsed("percent", String.format("%.2f%%", getPercent())),
-                Placeholder.unparsed("cps", String.format("%.2f", getCPS()))
+                Placeholder.unparsed("cps", String.format("%.2f", getCPS())),
+                Placeholder.unparsed("eta", getETA())
         );
         for (Audience audience : this.audience) {
             Lang.send(audience, component);
         }
 
         // show to player bossbars
-        getBossbar().update(this.percent);
+        getBossbar().update();
 
         // check if finished
         if (this.processedRegions.get() >= this.totalRegions) {

@@ -7,7 +7,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.Mathf;
-import net.pl3x.map.world.MapWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,18 +15,16 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProgressBossbar {
-    private static final String NAME = "<gold>Map Render of <grey><world></grey>: <red><percent></red>%";
-
-    private final MapWorld mapWorld;
+    private final Progress progress;
     private final BossBar bossbar;
 
     private final Set<Audience> players = new HashSet<>();
 
-    public ProgressBossbar(MapWorld mapWorld) {
-        this.mapWorld = mapWorld;
+    public ProgressBossbar(Progress progress) {
+        this.progress = progress;
         this.bossbar = BossBar.bossBar(Component.empty(), 0F, BossBar.Color.RED, BossBar.Overlay.NOTCHED_20);
 
-        update(0F);
+        update();
     }
 
     // called for progress starter and any player that uses /status command
@@ -51,11 +48,12 @@ public class ProgressBossbar {
     }
 
     // called every 20 ticks to update progress bar and name
-    public void update(float percent) {
-        this.bossbar.progress(Math.min(Math.max(Mathf.inverseLerp(0F, 100F, percent), 0), 1));
-        this.bossbar.name(Lang.parse(NAME,
-                Placeholder.unparsed("world", this.mapWorld.getName()),
-                Placeholder.unparsed("percent", String.format("%.2f", percent))
+    public void update() {
+        this.bossbar.progress(Math.min(Math.max(Mathf.inverseLerp(0F, 100F, this.progress.getPercent()), 0), 1));
+        this.bossbar.name(Lang.parse(Lang.PROGRESS_BOSSBAR,
+                Placeholder.unparsed("world", this.progress.getRender().getWorld().getName()),
+                Placeholder.unparsed("percent", String.format("%.2f", this.progress.getPercent())),
+                Placeholder.unparsed("eta", this.progress.getETA())
         ));
     }
 
