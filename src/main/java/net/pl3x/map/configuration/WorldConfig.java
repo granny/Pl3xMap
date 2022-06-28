@@ -50,6 +50,10 @@ public class WorldConfig extends AbstractConfig {
             Each color represents a biome in game.""")
     public boolean RENDER_LAYER_BIOMES = true;
 
+    public boolean RENDER_LAYER_TEMPS = false;
+    public boolean RENDER_LAYER_RAIN = false;
+    public boolean RENDER_LAYER_INHABITED = false;
+
     @Key("render.layer.heights.enabled")
     @Comment("""
             Enable the heightmap layer.

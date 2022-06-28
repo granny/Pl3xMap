@@ -102,6 +102,21 @@ public abstract class AbstractScan implements Runnable {
                     scanBiome();
                 }
 
+                // temperatures layer
+                if (config.RENDER_LAYER_TEMPS) {
+                    scanTemps();
+                }
+
+                // rain layer
+                if (config.RENDER_LAYER_RAIN) {
+                    scanRain();
+                }
+
+                // inhabited layer
+                if (config.RENDER_LAYER_INHABITED) {
+                    scanInhabited();
+                }
+
                 // blocks layers
                 if (config.RENDER_LAYER_BLOCKS) {
                     scanBlock();
@@ -165,6 +180,28 @@ public abstract class AbstractScan implements Runnable {
         }
         biome = biomeHolder.value();
         imageSet.getBiomes().setPixel(pixelX, pixelZ, Colors.biomeColors.getOrDefault(biomeHolder.unwrapKey().orElse(null), 0));
+    }
+
+    protected void scanTemps() {
+        //noinspection deprecation
+        float temp = biome.getTemperature(pos);
+        int rgb = Colors.mix(0xFF0000FF, 0xFFFF0000, Mathf.inverseLerp(-1F, 2F, temp));
+        imageSet.getTemps().setPixel(pixelX, pixelZ, rgb);
+    }
+
+    protected void scanRain() {
+        float rain = biome.getDownfall();
+        int rgb = Colors.mix(0xFFFFFFFF, 0xFF0000FF, Mathf.inverseLerp(0F, 1F, rain));
+        imageSet.getRain().setPixel(pixelX, pixelZ, rgb);
+    }
+
+    protected void scanInhabited() {
+        long inhabited = chunk.getInhabitedTime();
+        if (inhabited > mapWorld.highestInhabitedTime) {
+            mapWorld.highestInhabitedTime = inhabited;
+        }
+        int rgb = Colors.mix(0xFF888888, 0xFF00FF00, Mathf.inverseLerp(0F, mapWorld.highestInhabitedTime, inhabited));
+        imageSet.getInhabited().setPixel(pixelX, pixelZ, rgb);
     }
 
     protected void scanBlock() {

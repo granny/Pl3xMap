@@ -154,13 +154,16 @@ public class Image {
     }
 
     public static class Set {
-        private final Image blocks, biomes, heights, fluids;
+        private final Image blocks, biomes, temps, rain, inhabited, heights, fluids;
 
         public Set(MapWorld mapWorld, RegionCoordinate region) {
             int regionX = region.getRegionX();
             int regionZ = region.getRegionZ();
             this.blocks = new Image(mapWorld, "blocks", regionX, regionZ);
             this.biomes = new Image(mapWorld, "biomes", regionX, regionZ);
+            this.temps = new Image(mapWorld, "temps", regionX, regionZ);
+            this.rain = new Image(mapWorld, "rain", regionX, regionZ);
+            this.inhabited = new Image(mapWorld, "inhabited", regionX, regionZ);
             this.heights = new Image(mapWorld, "heights", regionX, regionZ);
             this.fluids = new Image(mapWorld, "fluids", regionX, regionZ);
         }
@@ -171,6 +174,18 @@ public class Image {
 
         public Image getBiomes() {
             return this.biomes;
+        }
+
+        public Image getTemps() {
+            return this.temps;
+        }
+
+        public Image getRain() {
+            return this.rain;
+        }
+
+        public Image getInhabited() {
+            return this.inhabited;
         }
 
         public Image getHeights() {
@@ -184,6 +199,9 @@ public class Image {
         public void save() {
             this.blocks.saveToDisk();
             this.biomes.saveToDisk();
+            this.temps.saveToDisk();
+            this.rain.saveToDisk();
+            this.inhabited.saveToDisk();
             this.heights.saveToDisk();
             this.fluids.saveToDisk();
         }

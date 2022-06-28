@@ -45,6 +45,8 @@ public class MapWorld {
 
     private final Set<ChunkCoordinate> modifiedChunks = ConcurrentHashMap.newKeySet();
 
+    public long highestInhabitedTime = 0;
+
     private boolean paused;
 
     /**
