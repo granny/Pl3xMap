@@ -14,6 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 
 public class AbstractConfig {
     public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
@@ -61,7 +62,7 @@ public class AbstractConfig {
             if (comment == null) {
                 return;
             }
-            getConfig().setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
+            setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
         });
 
         try {
@@ -79,6 +80,10 @@ public class AbstractConfig {
     protected Object getValue(String path, Object def) {
         getConfig().addDefault(path, def);
         return getConfig().get(path);
+    }
+
+    protected void setComments(String path, List<String> comments) {
+        getConfig().setComments(path, comments);
     }
 
     @Target(ElementType.FIELD)

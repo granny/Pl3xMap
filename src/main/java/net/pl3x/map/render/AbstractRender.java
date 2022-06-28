@@ -7,7 +7,6 @@ import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,7 +14,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractRender extends BukkitRunnable {
+public abstract class AbstractRender implements Runnable {
     private final MapWorld mapWorld;
     private final Audience starter;
 
@@ -84,7 +83,7 @@ public abstract class AbstractRender extends BukkitRunnable {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         while (Bukkit.getCurrentTick() < 20) {
             // server is not running yet
             sleep(1000);
@@ -119,24 +118,26 @@ public abstract class AbstractRender extends BukkitRunnable {
     public final void cancel() {
         this.cancelled = true;
 
-        getScheduledProgress().cancel(false);
+        if (this.scheduledProgress != null) {
+            this.scheduledProgress.cancel(false);
+        }
 
-        getRenderExecutor().shutdown();
-        getImageExecutor().shutdown();
+        this.renderExecutor.shutdown();
+        this.imageExecutor.shutdown();
 
         onCancel();
     }
 
     public abstract void onCancel();
 
-    private int getThreads(int threads) {
+    public static int getThreads(int threads) {
         if (threads < 1) {
             threads = Runtime.getRuntime().availableProcessors() / 2;
         }
         return Math.max(1, threads);
     }
 
-    public void sleep(int ms) {
+    public static void sleep(int ms) {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException ignore) {

@@ -12,6 +12,7 @@ import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.command.arguments.MapWorldArgument;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.RadiusRender;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
@@ -49,7 +50,7 @@ public class RadiusRenderCommand extends Pl3xMapCommand {
             return;
         }
 
-        RadiusRender render = new RadiusRender(mapWorld, sender, radius, center.getBlockX(), center.getBlockZ());
+        AbstractRender render = new RadiusRender(mapWorld, sender, radius, center.getBlockX(), center.getBlockZ());
 
         if (sender instanceof Player player) {
             render.getProgress().getBossbar().show(player);

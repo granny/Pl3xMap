@@ -59,7 +59,8 @@ public class ResetMapCommand extends Pl3xMapCommand {
         }
 
         // reset background render
-        mapWorld.getBackgroundRender().reset();
+        mapWorld.stopBackgroundRender();
+        mapWorld.startBackgroundRender();
 
         // resume background render
         mapWorld.setPaused(false);

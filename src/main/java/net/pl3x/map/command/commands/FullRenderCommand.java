@@ -9,6 +9,7 @@ import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.command.arguments.MapWorldArgument;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.FullRender;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class FullRenderCommand extends Pl3xMapCommand {
             return;
         }
 
-        FullRender render = new FullRender(mapWorld, sender);
+        AbstractRender render = new FullRender(mapWorld, sender);
 
         if (sender instanceof Player player) {
             render.getProgress().getBossbar().show(player);

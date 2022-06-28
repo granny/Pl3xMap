@@ -1,8 +1,8 @@
 package net.pl3x.map.world;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.BiomeManager;
-import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.AbstractRender;
@@ -14,6 +14,10 @@ import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a world which is mapped by Pl3xMap
@@ -29,8 +33,10 @@ public class MapWorld {
     private final BiomeColors biomeColors;
     private final long biomeSeed;
 
-    private final BackgroundRender backgroundRender;
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1,
+            new ThreadFactoryBuilder().setNameFormat("Pl3xMap").build());
 
+    private ScheduledFuture<?> backgroundRender;
     private AbstractRender activeRender = null;
 
     private boolean paused;
@@ -46,7 +52,7 @@ public class MapWorld {
         this.biomeColors = new BiomeColors(this);
         this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
 
-        this.backgroundRender = new BackgroundRender(this);
+        startBackgroundRender();
     }
 
     /**
@@ -105,8 +111,35 @@ public class MapWorld {
         this.paused = paused;
     }
 
-    public BackgroundRender getBackgroundRender() {
+    public boolean hasBackgroundRender() {
+        return getBackgroundRender() != null;
+    }
+
+    public ScheduledFuture<?> getBackgroundRender() {
         return this.backgroundRender;
+    }
+
+    public void startBackgroundRender() {
+        if (hasBackgroundRender() || hasActiveRender()) {
+            throw new IllegalStateException("Already rendering");
+        }
+
+        int interval = getConfig().RENDER_BACKGROUND_INTERVAL;
+
+        if (interval < 1) {
+            return;
+        }
+
+        this.backgroundRender = this.executor.scheduleAtFixedRate(new BackgroundRender(this), interval, interval, TimeUnit.SECONDS);
+    }
+
+    public void stopBackgroundRender() {
+        if (!hasBackgroundRender()) {
+            throw new IllegalStateException("Not background rendering");
+        }
+
+        this.backgroundRender.cancel(false);
+        this.backgroundRender = null;
     }
 
     /**
@@ -126,29 +159,40 @@ public class MapWorld {
         if (hasActiveRender()) {
             throw new IllegalStateException("Already rendering");
         }
+
+        stopBackgroundRender();
+
         this.activeRender = render;
-        this.activeRender.runTaskAsynchronously(Pl3xMap.getInstance());
+        this.executor.submit(render);
     }
 
-    public void cancelRender() {
+    public void cancelRender(boolean startBackgroundRender) {
         if (!hasActiveRender()) {
             throw new IllegalStateException("No render to cancel");
         }
+
         this.activeRender.cancel();
         this.activeRender = null;
+
+        if (startBackgroundRender) {
+            startBackgroundRender();
+        }
     }
 
     public void finishRender() {
         if (!hasActiveRender()) {
             throw new IllegalStateException("No render to finish");
         }
+
         this.activeRender.finish();
         this.activeRender = null;
+
+        startBackgroundRender();
     }
 
     public void unload() {
         if (hasActiveRender()) {
-            cancelRender();
+            cancelRender(false);
         }
     }
 }

@@ -1,5 +1,6 @@
 package net.pl3x.map.render;
 
+import net.pl3x.map.logger.Logger;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
@@ -9,7 +10,18 @@ public class BackgroundRender extends AbstractRender {
     }
 
     @Override
+    public void run() {
+        while (Bukkit.getCurrentTick() < 20) {
+            // server is not running yet
+            sleep(1000);
+        }
+        render();
+    }
+
+    @Override
     public void render() {
+        // just some temp output to make sure things are ticking right
+        Logger.debug("Test Background Render... " + getWorld().getName() + " - " + System.currentTimeMillis());
     }
 
     @Override
@@ -22,11 +34,5 @@ public class BackgroundRender extends AbstractRender {
 
     @Override
     public void onCancel() {
-    }
-
-    public void reset() {
-        // todo - cancel all current jobs
-        // todo - cancel all pending jobs
-        // todo - wipe dirty_chunks.yml
     }
 }
