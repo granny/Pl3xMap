@@ -38,16 +38,22 @@ public abstract class AbstractRender implements Runnable {
     }
 
     public AbstractRender(MapWorld mapWorld, Audience starter, int centerX, int centerZ) {
+        this(mapWorld, starter, centerX, centerZ,
+                Executors.newFixedThreadPool(getThreads(Config.RENDER_THREADS),
+                        new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build()),
+                Executors.newFixedThreadPool(getThreads(Config.RENDER_THREADS),
+                        new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build())
+        );
+    }
+
+    public AbstractRender(MapWorld mapWorld, Audience starter, int centerX, int centerZ, ExecutorService renderExecutor, ExecutorService imageExecutor) {
         this.mapWorld = mapWorld;
         this.starter = starter;
         this.progress = new Progress(this);
         this.centerX = centerX;
         this.centerZ = centerZ;
-
-        this.renderExecutor = Executors.newFixedThreadPool(getThreads(Config.RENDER_THREADS),
-                new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build());
-        this.imageExecutor = Executors.newFixedThreadPool(Math.max(1, getThreads(Config.RENDER_THREADS)),
-                new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build());
+        this.renderExecutor = renderExecutor;
+        this.imageExecutor = imageExecutor;
     }
 
     public ExecutorService getRenderExecutor() {

@@ -1,12 +1,29 @@
 package net.pl3x.map.render;
 
-import net.pl3x.map.logger.Logger;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import net.minecraft.world.level.ChunkPos;
+import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.queue.ScanRegion;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+
 public class BackgroundRender extends AbstractRender {
     public BackgroundRender(MapWorld mapWorld) {
-        super(mapWorld, Bukkit.getConsoleSender());
+        super(mapWorld, Bukkit.getConsoleSender(), 0, 0,
+                Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_BACKGROUND_RENDER_THREADS),
+                        new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Background-%d").build()),
+                Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_BACKGROUND_RENDER_THREADS),
+                        new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build())
+        );
     }
 
     @Override
@@ -20,8 +37,24 @@ public class BackgroundRender extends AbstractRender {
 
     @Override
     public void render() {
-        // just some temp output to make sure things are ticking right
-        Logger.debug("Test Background Render... " + getWorld().getName() + " - " + System.currentTimeMillis());
+        Set<ChunkCoordinate> chunks = new HashSet<>();
+        while (getWorld().hasModifiedChunks() && chunks.size() < getWorld().getConfig().RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL) {
+            chunks.add(getWorld().getNextModifiedChunk());
+        }
+
+        Map<RegionCoordinate, List<Long>> regions = new LinkedHashMap<>();
+
+        chunks.forEach(chunk -> {
+            RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
+            List<Long> list = regions.computeIfAbsent(region, k -> new ArrayList<>());
+            list.add(ChunkPos.asLong(chunk.getChunkX(), chunk.getChunkZ()));
+        });
+
+        List<ScanRegion> tasks = new ArrayList<>();
+
+        regions.forEach((region, list) -> tasks.add(new ScanRegion(this, region, list)));
+
+        tasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override

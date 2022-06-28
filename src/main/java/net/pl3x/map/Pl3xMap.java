@@ -2,6 +2,7 @@ package net.pl3x.map;
 
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.configuration.AbstractConfig;
+import net.pl3x.map.configuration.Advanced;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.httpd.IntegratedServer;
@@ -24,6 +25,8 @@ import java.lang.reflect.Field;
 
 public class Pl3xMap extends JavaPlugin {
     private static Pl3xMap instance;
+
+    private WorldListener worldListener;
 
     public static Pl3xMap getInstance() {
         return instance;
@@ -66,11 +69,14 @@ public class Pl3xMap extends JavaPlugin {
 
         // register bukkit listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new WorldListener(), this);
+        this.worldListener = new WorldListener(this);
+        getServer().getPluginManager().registerEvents(this.worldListener, this);
 
         // load up configs (load twice to fix no comments on first load bug)
         Config.reload();
         Config.reload();
+        Advanced.reload();
+        Advanced.reload();
         Lang.reload();
         Lang.reload();
 
@@ -108,9 +114,19 @@ public class Pl3xMap extends JavaPlugin {
 
         // load up worlds already loaded in bukkit
         Bukkit.getWorlds().forEach(WorldManager.INSTANCE::loadWorld);
+
+        // register events
+        if (this.worldListener != null) {
+            this.worldListener.registerEvents();
+        }
     }
 
     public void disable() {
+        // unregister events
+        if (this.worldListener != null) {
+            this.worldListener.unregisterEvents();
+        }
+
         // stop integrated server
         IntegratedServer.INSTANCE.stopServer();
 

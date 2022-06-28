@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Image {
-    private static final Map<String, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+    private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     public static final int SIZE = 512;
     public static final String DIR_PATH = "%d/%s/";
@@ -72,11 +72,11 @@ public class Image {
                     Mth.floor((double) this.regionZ / step),
                     this.io.extension()));
 
-            ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath.toString(), k -> new ReentrantReadWriteLock(true));
+            ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));
             lock.writeLock().lock();
 
-            // read existing image from disk, except original zoom
-            BufferedImage buffer = makeBuffer(filePath, zoom);
+            // read existing image from disk
+            BufferedImage buffer = getBuffer(filePath);
 
             // write new pixels
             writePixels(buffer, size, step);
@@ -85,7 +85,6 @@ public class Image {
             this.io.write(filePath, buffer);
 
             lock.writeLock().unlock();
-
         }
     }
 
@@ -99,10 +98,10 @@ public class Image {
         }
     }
 
-    private BufferedImage makeBuffer(Path path, int zoom) {
+    private BufferedImage getBuffer(Path path) {
         BufferedImage buffer = null;
         try {
-            if (zoom != 0 && Files.exists(path) && Files.size(path) > 0) {
+            if (Files.exists(path) && Files.size(path) > 0) {
                 buffer = this.io.read(path);
             }
         } catch (IOException e) {
@@ -125,7 +124,7 @@ public class Image {
                 int rgb = getPixel(x, z);
                 if (rgb == 0) {
                     // skipping 0 prevents overwrite existing
-                    // parts of the buffer on higher zooms
+                    // parts of the buffer of existing images
                     continue;
                 }
                 if (step > 1) {

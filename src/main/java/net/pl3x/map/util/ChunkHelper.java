@@ -73,6 +73,12 @@ public class ChunkHelper {
 
     // ChunkSerializer#loadChunk
     public ChunkAccess getChunkFast(ServerLevel level, int chunkX, int chunkZ) {
+        // try to get chunk if its already loaded
+        ChunkAccess chunk = level.getChunkIfLoadedImmediately(chunkX, chunkZ);
+        if (chunk != null) {
+            return chunk;
+        }
+
         // load chunk NBT from region file
         CompoundTag nbt = PaperFileIOThread.Holder.INSTANCE.loadChunkData(level, chunkX, chunkZ, PrioritizedTaskQueue.HIGHEST_PRIORITY, false, true).chunkData;
 
@@ -108,7 +114,7 @@ public class ChunkHelper {
         }
 
         // create our chunk
-        LevelChunk chunk = new LevelChunk(level.getLevel(), new ChunkPos(chunkX, chunkZ), UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), 0, levelChunkSections, o -> {
+        chunk = new LevelChunk(level.getLevel(), new ChunkPos(chunkX, chunkZ), UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), 0, levelChunkSections, o -> {
         }, null);
 
         // populate the heightmap from NBT

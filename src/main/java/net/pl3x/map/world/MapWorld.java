@@ -7,13 +7,17 @@ import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.BackgroundRender;
+import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -38,6 +42,8 @@ public class MapWorld {
 
     private ScheduledFuture<?> backgroundRender;
     private AbstractRender activeRender = null;
+
+    private final Set<ChunkCoordinate> modifiedChunks = ConcurrentHashMap.newKeySet();
 
     private boolean paused;
 
@@ -109,6 +115,24 @@ public class MapWorld {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public void addModifiedChunk(ChunkCoordinate chunk) {
+        this.modifiedChunks.add(chunk);
+    }
+
+    public boolean hasModifiedChunks() {
+        return !this.modifiedChunks.isEmpty();
+    }
+
+    public ChunkCoordinate getNextModifiedChunk() {
+        if (!hasModifiedChunks()) {
+            return null;
+        }
+        Iterator<ChunkCoordinate> it = this.modifiedChunks.iterator();
+        ChunkCoordinate chunk = it.next();
+        it.remove();
+        return chunk;
     }
 
     public boolean hasBackgroundRender() {
