@@ -107,9 +107,9 @@ public abstract class AbstractScan implements Runnable {
                     scanTemps();
                 }
 
-                // rain layer
-                if (config.RENDER_LAYER_RAIN) {
-                    scanRain();
+                // humidity layer
+                if (config.RENDER_LAYER_HUMIDITY) {
+                    scanHumidity();
                 }
 
                 // inhabited layer
@@ -189,10 +189,10 @@ public abstract class AbstractScan implements Runnable {
         imageSet.getTemps().setPixel(pixelX, pixelZ, rgb);
     }
 
-    protected void scanRain() {
-        float rain = biome.getDownfall();
-        int rgb = Colors.mix(0xFFFFFFFF, 0xFF0000FF, Mathf.inverseLerp(0F, 1F, rain));
-        imageSet.getRain().setPixel(pixelX, pixelZ, rgb);
+    protected void scanHumidity() {
+        float humidity = biome.getDownfall();
+        int rgb = Colors.mix(0xFFFFFFFF, 0xFF0000FF, Mathf.inverseLerp(0F, 1F, humidity));
+        imageSet.getHumidity().setPixel(pixelX, pixelZ, rgb);
     }
 
     protected void scanInhabited() {

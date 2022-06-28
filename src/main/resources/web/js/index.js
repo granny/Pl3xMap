@@ -35,21 +35,19 @@ window.onload = function () {
     // create layers
     let blocks = L.tileLayer.reversedZoom(`tiles/${world}/{z}/blocks/{x}_{y}.${format}`).setZIndex(0);
     let biomes = L.tileLayer.reversedZoom(`tiles/${world}/{z}/biomes/{x}_{y}.${format}`).setZIndex(0);
-
     let temps = L.tileLayer.reversedZoom(`tiles/${world}/{z}/temps/{x}_{y}.${format}`).setZIndex(0);
-    let rain = L.tileLayer.reversedZoom(`tiles/${world}/{z}/rain/{x}_{y}.${format}`).setZIndex(1);
-    let inhabited = L.tileLayer.reversedZoom(`tiles/${world}/{z}/inhabited/{x}_{y}.${format}`).setZIndex(2);
+    let humidity = L.tileLayer.reversedZoom(`tiles/${world}/{z}/humidity/{x}_{y}.${format}`).setZIndex(0);
+    let inhabited = L.tileLayer.reversedZoom(`tiles/${world}/{z}/inhabited/{x}_{y}.${format}`).setZIndex(0);
 
-    let heights = L.tileLayer.reversedZoom(`tiles/${world}/{z}/heights/{x}_{y}.${format}`).setZIndex(3);
-    let fluids = L.tileLayer.reversedZoom(`tiles/${world}/{z}/fluids/{x}_{y}.${format}`).setZIndex(4);
+    let heights = L.tileLayer.reversedZoom(`tiles/${world}/{z}/heights/{x}_{y}.${format}`).setZIndex(1);
+    let fluids = L.tileLayer.reversedZoom(`tiles/${world}/{z}/fluids/{x}_{y}.${format}`).setZIndex(2);
     let players = new L.layerGroup().setZIndex(100);
 
     // add layers
     layerControls.addBaseLayer(blocks, "Blocks");
     layerControls.addBaseLayer(biomes, "Biomes");
-
     layerControls.addBaseLayer(temps, "Temps");
-    layerControls.addBaseLayer(rain, "Rain");
+    layerControls.addBaseLayer(humidity, "Humidity");
     layerControls.addBaseLayer(inhabited, "Inhabited");
 
     layerControls.addOverlay(heights, "Heightmap");
