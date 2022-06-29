@@ -17,123 +17,123 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 
 public class Advanced extends AbstractConfig {
-    @Key(get = "settings.event-listeners.BlockBreakEvent")
-    @Comment(get = "Triggers when a player breaks a block")
+    @Key("settings.event-listeners.BlockBreakEvent")
+    @Comment("Triggers when a player breaks a block")
     public static boolean BLOCK_BREAK_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockPlaceEvent")
-    @Comment(get = "Triggers when a player breaks a block")
+    @Key("settings.event-listeners.BlockPlaceEvent")
+    @Comment("Triggers when a player breaks a block")
     public static boolean BLOCK_PLACE_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockFadeEvent")
-    @Comment(get = "Triggers when a block fades, melts or disappears based on world conditions")
+    @Key("settings.event-listeners.BlockFadeEvent")
+    @Comment("Triggers when a block fades, melts or disappears based on world conditions")
     public static boolean BLOCK_FADE_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockBurnEvent")
-    @Comment(get = "Triggers when a block is destroyed by fire")
+    @Key("settings.event-listeners.BlockBurnEvent")
+    @Comment("Triggers when a block is destroyed by fire")
     public static boolean BLOCK_BURN_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockExplodeEvent")
-    @Comment(get = "Triggers when a block is destroyed by an explosion")
+    @Key("settings.event-listeners.BlockExplodeEvent")
+    @Comment("Triggers when a block is destroyed by an explosion")
     public static boolean BLOCK_EXPLODE_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockFormEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.BlockFormEvent")
+    @Comment("""
             Triggers when a block forms from world conditions
             (snow forming from snowfall, ice forming from cold,
             obsidian/cobblestone forming from contact with water,
             concrete forming from contact with water)""")
     public static boolean BLOCK_FORM_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockFromToEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.BlockFromToEvent")
+    @Comment("""
             Triggers when a block moves/spreads from block to
             another(water / lava flowing, teleporting dragon eggs)""")
     public static boolean BLOCK_FROM_TO_EVENT = false;
 
-    @Key(get = "settings.event-listeners.BlockGrowEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.BlockGrowEvent")
+    @Comment("""
             Triggers when a growable block grows
             (wheat, sugar cane, cactus, watermelon, pumpkin, turtle egg)""")
     public static boolean BLOCK_GROW_EVENT = true;
 
-    @Key(get = "settings.event-listeners.BlockPhysicsEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.BlockPhysicsEvent")
+    @Comment("""
             Triggers when a block physics check is called. This
             event is a high frequency event, it may be called thousands
             of times per a second on a busy server.It is advised to
             enable the event with caution.""")
     public static boolean BLOCK_PHYSICS_EVENT = false;
 
-    @Key(get = "settings.event-listeners.BlockPistonExtendEvent")
-    @Comment(get = "Triggers when a piston head extends (pushes)")
+    @Key("settings.event-listeners.BlockPistonExtendEvent")
+    @Comment("Triggers when a piston head extends (pushes)")
     public static boolean BLOCK_PISTON_EXTEND_EVENT = false;
 
-    @Key(get = "settings.event-listeners.BlockPistonRetractEvent")
-    @Comment(get = "Triggers when a piston head retracts (pulls)")
+    @Key("settings.event-listeners.BlockPistonRetractEvent")
+    @Comment("Triggers when a piston head retracts (pulls)")
     public static boolean BLOCK_PISTON_RETRACT_EVENT = false;
 
-    @Key(get = "settings.event-listeners.BlockSpreadEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.BlockSpreadEvent")
+    @Comment("""
             Triggers when a block spreads to a new block
             (mushrooms spreading, fire spreading)""")
     public static boolean BLOCK_SPREAD_EVENT = true;
 
-    @Key(get = "settings.event-listeners.ChunkLoadEvent")
-    @Comment(get = "Triggers when a chunk loads")
+    @Key("settings.event-listeners.ChunkLoadEvent")
+    @Comment("Triggers when a chunk loads")
     public static boolean CHUNK_LOAD_EVENT = false;
 
-    @Key(get = "settings.event-listeners.ChunkPopulateEvent")
-    @Comment(get = "Triggers when a chunk generates")
+    @Key("settings.event-listeners.ChunkPopulateEvent")
+    @Comment("Triggers when a chunk generates")
     public static boolean CHUNK_POPULATE_EVENT = true;
 
-    @Key(get = "settings.event-listeners.EntityBlockFormEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.EntityBlockFormEvent")
+    @Comment("""
             Triggers when a block forms from entities
             (snowman leaving snow trail, frostwalker enchant forming ice)""")
     public static boolean ENTITY_BLOCK_FORM_EVENT = true;
 
-    @Key(get = "settings.event-listeners.EntityChangeBlockEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.EntityChangeBlockEvent")
+    @Comment("""
             Triggers when an entity changes a block and a more
             specific event is not available""")
     public static boolean ENTITY_CHANGE_BLOCK_EVENT = true;
 
-    @Key(get = "settings.event-listeners.EntityExplodeEvent")
-    @Comment(get = "Triggers when an entity explodes")
+    @Key("settings.event-listeners.EntityExplodeEvent")
+    @Comment("Triggers when an entity explodes")
     public static boolean ENTITY_EXPLODE_EVENT = true;
 
-    @Key(get = "settings.event-listeners.FluidLevelChangeEvent")
-    @Comment(get = "Triggers when a fluid's level changes")
+    @Key("settings.event-listeners.FluidLevelChangeEvent")
+    @Comment("Triggers when a fluid's level changes")
     public static boolean FLUID_LEVEL_CHANGE_EVENT = true;
 
-    @Key(get = "settings.event-listeners.LeavesDecayEvent")
-    @Comment(get = "Triggers when leaves decay naturally")
+    @Key("settings.event-listeners.LeavesDecayEvent")
+    @Comment("Triggers when leaves decay naturally")
     public static boolean LEAVES_DECAY_EVENT = true;
 
-    @Key(get = "settings.event-listeners.PlayerJoinEvent")
-    @Comment(get = "Triggers when a player joins the server")
+    @Key("settings.event-listeners.PlayerJoinEvent")
+    @Comment("Triggers when a player joins the server")
     public static boolean PLAYER_JOIN_EVENT = false;
 
-    @Key(get = "settings.event-listeners.PlayerMoveEvent")
-    @Comment(get = "Triggers when a player moves or looks around")
+    @Key("settings.event-listeners.PlayerMoveEvent")
+    @Comment("Triggers when a player moves or looks around")
     public static boolean PLAYER_MOVE_EVENT = false;
 
-    @Key(get = "settings.event-listeners.PlayerQuitEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.PlayerQuitEvent")
+    @Comment("""
             Triggers when a player leaves the server
             (quit, kicked, timed out, etc)""")
     public static boolean PLAYER_QUIT_EVENT = false;
 
-    @Key(get = "settings.event-listeners.StructureGrowEvent")
-    @Comment(get = """
+    @Key("settings.event-listeners.StructureGrowEvent")
+    @Comment("""
             Triggers when an organic structure attempts to
             grow naturally or using bonemeal
             (sapling -> tree, mushroom->huge mushroom)""")
     public static boolean STRUCTURE_GROW_EVENT = true;
 
-    @Key(get = "settings.colors.blocks")
-    @Comment(get = """
+    @Key("settings.colors.blocks")
+    @Comment("""
             Each block has a specific color assigned to it. You can
             pick your own color here for any blocks you want to change.
             Any blocks _not_ in this list will use Mojang's color.""")
@@ -272,8 +272,8 @@ public class Advanced extends AbstractConfig {
         put(Blocks.SPRUCE_LEAVES, 0x4e7a4e); // 25% darker than normal
     }};
 
-    @Key(get = "settings.colors.biomes")
-    @Comment(get = """
+    @Key("settings.colors.biomes")
+    @Comment("""
             Each biome has a specific color assigned to it. You can
             pick your own color here for any biomes you want to change.""")
     public static Map<ResourceKey<Biome>, Integer> BIOME_COLORS = new LinkedHashMap<>() {{
@@ -341,6 +341,22 @@ public class Advanced extends AbstractConfig {
         put(Biomes.SMALL_END_ISLANDS, 0x8080FF);
         put(Biomes.END_BARRENS, 0x8080FF);
     }};
+    @Key("settings.color-overrides.biomes.grass")
+    @Comment("Override grass colors per biome")
+    public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_GRASS = new LinkedHashMap<>();
+
+    @Key("settings.color-overrides.biomes.foliage")
+    @Comment("Override foliage (plant) colors per biome")
+    public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_FOLIAGE = new LinkedHashMap<>() {{
+        put(Biomes.DARK_FOREST, 0x1c7b07);
+        put(Biomes.JUNGLE, 0x1f8907);
+        put(Biomes.BAMBOO_JUNGLE, 0x1f8907);
+        put(Biomes.SPARSE_JUNGLE, 0x1f8907);
+    }};
+
+    @Key("settings.color-overrides.biomes.water")
+    @Comment("Override water colors per biome")
+    public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_WATER = new LinkedHashMap<>();
 
     private static final Advanced CONFIG = new Advanced();
 
@@ -351,7 +367,7 @@ public class Advanced extends AbstractConfig {
     protected Object getValue(String path, Object def) {
         if (getConfig().get(path) == null) {
             // only set if this path is empty
-            if (def instanceof Map<?, ?> map) {
+            if (def instanceof Map<?, ?> map && !map.isEmpty()) {
                 // turn into strings
                 map.forEach((k, v) -> {
                     String key, hex = Colors.toHex((int) v);
@@ -372,10 +388,10 @@ public class Advanced extends AbstractConfig {
 
         if (value instanceof MemorySection) {
             // convert back to objects
-            Registry<Biome> registry = BiomeColors.getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
             Map<Object, Object> sanitized = new LinkedHashMap<>();
             ConfigurationSection section = getConfig().getConfigurationSection(path);
             if (section != null) {
+                Registry<Biome> registry = BiomeColors.getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
                 for (String key : section.getKeys(false)) {
                     String hex = section.getString(key);
                     if (hex == null) {
@@ -383,7 +399,8 @@ public class Advanced extends AbstractConfig {
                     }
                     ResourceLocation resource = new ResourceLocation(key);
                     Biome biome = registry.get(resource);
-                    sanitized.put(biome != null ? biome : Registry.BLOCK.get(resource), Colors.fromHex(hex));
+                    ResourceKey<Biome> resourceKey = biome == null ? null : registry.getResourceKey(biome).orElse(null);
+                    sanitized.put(resourceKey != null ? resourceKey : Registry.BLOCK.get(resource), Colors.fromHex(hex));
                 }
             }
             value = sanitized;

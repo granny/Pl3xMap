@@ -53,14 +53,14 @@ public class AbstractConfig {
             }
             try {
                 Object classObj = getClassObject();
-                Object value = getValue(key.get(), field.get(classObj));
+                Object value = getValue(key.value(), field.get(classObj));
                 field.set(classObj, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
             } catch (IllegalAccessException e) {
                 Logger.warn("Failed to load " + filename);
                 e.printStackTrace();
             }
             if (comment != null) {
-                setComments(key.get(), Arrays.stream(comment.get().split("\n")).toList());
+                setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
             }
         });
 
@@ -90,12 +90,12 @@ public class AbstractConfig {
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Key {
-        String get();
+        String value();
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Comment {
-        String get();
+        String value();
     }
 }

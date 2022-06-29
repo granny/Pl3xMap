@@ -1,6 +1,14 @@
 package net.pl3x.map.util;
 
 import com.google.common.collect.ImmutableSet;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+import javax.imageio.ImageIO;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
@@ -10,16 +18,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.pl3x.map.configuration.Advanced;
 import net.pl3x.map.world.MapWorld;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiFunction;
 
 public class BiomeColors {
     private static final Set<Block> grassColorBlocks = ImmutableSet.of(
@@ -85,6 +85,19 @@ public class BiomeColors {
             foliageColors.put(biome, getDefaultFoliageColor(temperature, humidity));
             waterColors.put(biome, biome.getSpecialEffects().getWaterColor());
         }
+
+        Advanced.COLOR_OVERRIDES_BIOME_GRASS.forEach((resourceKey, rgb) -> {
+            Biome biome = biomeRegistry.get(resourceKey);
+            grassColors.put(biome, rgb);
+        });
+        Advanced.COLOR_OVERRIDES_BIOME_FOLIAGE.forEach((resourceKey, rgb) -> {
+            Biome biome = biomeRegistry.get(resourceKey);
+            foliageColors.put(biome, rgb);
+        });
+        Advanced.COLOR_OVERRIDES_BIOME_WATER.forEach((resourceKey, rgb) -> {
+            Biome biome = biomeRegistry.get(resourceKey);
+            waterColors.put(biome, rgb);
+        });
     }
 
     public static Registry<Biome> getBiomeRegistry(ServerLevel world) {
