@@ -1,5 +1,7 @@
 package net.pl3x.map.configuration;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -13,9 +15,6 @@ import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Advanced extends AbstractConfig {
     @Key(get = "settings.event-listeners.BlockBreakEvent")
@@ -388,8 +387,6 @@ public class Advanced extends AbstractConfig {
                 }
             }
             value = sanitized;
-
-            sanitized.forEach((k, v) -> System.out.println(k + ": " + v));
         }
 
         return value;

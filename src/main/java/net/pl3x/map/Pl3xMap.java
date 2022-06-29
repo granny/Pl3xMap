@@ -72,17 +72,17 @@ public class Pl3xMap extends JavaPlugin {
         this.worldListener = new WorldListener(this);
         getServer().getPluginManager().registerEvents(this.worldListener, this);
 
-        // load up config
+        // load up configs
         Config.reload();
+        Lang.reload();
 
         // this has to load after configs in order to know
         // what web dir is and if it should be overwritten
-        // but before advanced config for biome colors
+        // but before advanced config to load biome colors
         FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
 
         // load remaining configs
         Advanced.reload();
-        Lang.reload();
 
         // enable the plugin
         enable();
