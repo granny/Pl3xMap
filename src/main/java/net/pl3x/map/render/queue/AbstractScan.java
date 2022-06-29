@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.pl3x.map.configuration.Advanced;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.Image;
@@ -147,7 +148,7 @@ public abstract class AbstractScan implements Runnable {
                 do {
                     pos.move(Direction.DOWN);
                     state = northChunk.getBlockState(pos);
-                    blockColor = Colors.getBlockColor(this.mapWorld, state, pos);
+                    blockColor = Colors.getBlockColor(state);
                     isFluid = config.RENDER_FLUIDS_TRANSLUCENT && !state.getFluidState().isEmpty();
                 } while (pos.getY() > minY && (blockColor <= 0 || isFluid));
                 lastY[x] = pos.getY();
@@ -166,7 +167,7 @@ public abstract class AbstractScan implements Runnable {
                 }
                 depth += 0.025F;
             } else {
-                blockColor = Colors.getBlockColor(this.mapWorld, state, pos);
+                blockColor = Colors.getBlockColor(state);
             }
         } while (pos.getY() > minY && (blockColor <= 0 || (isFluid && config.RENDER_FLUIDS_TRANSLUCENT)));
     }
@@ -179,11 +180,11 @@ public abstract class AbstractScan implements Runnable {
             biomeHolder = this.chunkHelper.getBiome(this.mapWorld, pos);
         }
         biome = biomeHolder.value();
-        imageSet.getBiomes().setPixel(pixelX, pixelZ, Colors.biomeColors.getOrDefault(biomeHolder.unwrapKey().orElse(null), 0));
+        imageSet.getBiomes().setPixel(pixelX, pixelZ, Advanced.BIOME_COLORS.getOrDefault(biomeHolder.unwrapKey().orElse(null), 0));
     }
 
     protected void scanTemps() {
-        //noinspection deprecation
+        @SuppressWarnings("deprecation")
         float temp = biome.getTemperature(pos);
         int rgb = Colors.mix(0xFF0000FF, 0xFFFF0000, Mathf.inverseLerp(-1F, 2F, temp));
         imageSet.getTemps().setPixel(pixelX, pixelZ, rgb);
@@ -214,7 +215,7 @@ public abstract class AbstractScan implements Runnable {
 
     protected void scanFluid() {
         lava = BooleanUtils.isTrue(lava);
-        int fluidColor = lava ? Colors.blockColors.get(Blocks.LAVA) : biomeColors.getWaterColor(this.chunkHelper, biome, new BlockPos(pos.getX(), pos.getY() + (depth / 0.025F), pos.getZ()), config.RENDER_BLOCKS_BIOME_BLEND);
+        int fluidColor = lava ? Colors.getBlockColor(Blocks.LAVA.defaultBlockState()) : biomeColors.getWaterColor(this.chunkHelper, biome, new BlockPos(pos.getX(), pos.getY() + (depth / 0.025F), pos.getZ()), config.RENDER_BLOCKS_BIOME_BLEND);
         // let's do some maths to get pretty fluid colors based on depth
         fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, lava ? 0.3F : 0.45F, Easing.cubicOut(depth / 1.5F)));
         fluidColor = Colors.setAlpha(lava ? 0xFF : (int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);

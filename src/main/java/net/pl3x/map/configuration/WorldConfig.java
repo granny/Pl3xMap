@@ -6,37 +6,37 @@ import org.bukkit.World;
 import java.util.List;
 
 public class WorldConfig extends AbstractConfig {
-    @Key("enabled")
-    @Comment("Enables this world to be rendered on the map.")
+    @Key(get = "enabled")
+    @Comment(get = "Enables this world to be rendered on the map.")
     public boolean ENABLED = false;
 
-    @Key("render.background.interval")
-    @Comment("""
+    @Key(get = "render.background.interval")
+    @Comment(get = """
             How often to check the queue for any chunks needing updates.
             This is what updates your map as changes happen in the world.
             Use 0 or negative value to disable this feature""")
     public int RENDER_BACKGROUND_INTERVAL = 5;
-    @Key("render.background.max-chunks-per-interval")
-    @Comment("""
+    @Key(get = "render.background.max-chunks-per-interval")
+    @Comment(get = """
             The maximum amount of chunks to render from the queue at
             time. Setting this too high may cause lag on your main
             thread if the queue gets too large""")
     public int RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL = 1024;
-    @Key("render.background.render-threads")
-    @Comment("""
+    @Key(get = "render.background.render-threads")
+    @Comment(get = """
             This number of threads to use for background rendering.
             Value of -1 will use 50% of the available cores.""")
     public int RENDER_BACKGROUND_RENDER_THREADS = -1;
 
-    @Key("render.layer.blocks.enabled")
-    @Comment("""
+    @Key(get = "render.layer.blocks.enabled")
+    @Comment(get = """
             Render and show the block layer on the map.
             Each pixel/color represents a block in game.
             Note: You must have at blocks and/or biome layers
             at a minimum for the map to work correctly""")
     public boolean RENDER_LAYER_BLOCKS = true;
-    @Key("render.layer.blocks.biome-blend")
-    @Comment("""
+    @Key(get = "render.layer.blocks.biome-blend")
+    @Comment(get = """
             Enables blending of biome grass/foliage/water colors
             similar to the client's biome blending option.
             Use 0 or negative value to disable this feature.
@@ -44,8 +44,8 @@ public class WorldConfig extends AbstractConfig {
             drastically if enabled""")
     public int RENDER_BLOCKS_BIOME_BLEND = 0;
 
-    @Key("render.layer.biomes.enabled")
-    @Comment("""
+    @Key(get = "render.layer.biomes.enabled")
+    @Comment(get = """
             Render and show the biomes layer on the map.
             Each color represents a biome in game.""")
     public boolean RENDER_LAYER_BIOMES = true;
@@ -54,39 +54,39 @@ public class WorldConfig extends AbstractConfig {
     public boolean RENDER_LAYER_HUMIDITY = false;
     public boolean RENDER_LAYER_INHABITED = false;
 
-    @Key("render.layer.heights.enabled")
-    @Comment("""
+    @Key(get = "render.layer.heights.enabled")
+    @Comment(get = """
             Enable the heightmap layer.
             This adds a transparent layer of darkened pixels
             that represent the elevation of the land.""")
     public boolean RENDER_LAYER_HEIGHTS = true;
 
-    @Key("render.layer.fluids.enabled")
-    @Comment("""
+    @Key(get = "render.layer.fluids.enabled")
+    @Comment(get = """
             Enable the fluid layer.
             This adds a transparent layer of water/lava in your world""")
     public boolean RENDER_LAYER_FLUIDS = true;
-    @Key("render.layer.fluids.translucent")
-    @Comment("""
+    @Key(get = "render.layer.fluids.translucent")
+    @Comment(get = """
             Enable translucent water.
             This will make the water look fancier and translucent
             so you can see the ground below in shallow waters.""")
     public boolean RENDER_FLUIDS_TRANSLUCENT = true;
 
-    @Key("zoom.default")
-    @Comment("""
+    @Key(get = "zoom.default")
+    @Comment(get = """
             The default zoom when loading the map in browser.
             Normal sized tiles (1 pixel = 1 block) are
             always at zoom level 0.""")
     public int ZOOM_DEFAULT = 0;
-    @Key("zoom.max-out")
-    @Comment("""
+    @Key(get = "zoom.max-out")
+    @Comment(get = """
             The maximum zoom out you can do on the map.
             Each additional level requires a new set of tiles
             to be rendered, so don't go wild here.""")
     public int ZOOM_MAX_OUT = 3;
-    @Key("zoom.max-in")
-    @Comment("""
+    @Key(get = "zoom.max-in")
+    @Comment(get = """
             Extra zoom in layers will stretch the original
             tile images so you can zoom in further without
             the extra cost of rendering more tiles.""")
@@ -109,7 +109,9 @@ public class WorldConfig extends AbstractConfig {
 
     @Override
     protected Object getValue(String path, Object def) {
-        getConfig().addDefault("world-settings.default." + path, def);
+        if (getConfig().get("world-settings.default." + path) == null) {
+            getConfig().set("world-settings.default." + path, def);
+        }
         return getConfig().get("world-settings." + this.world.getName() + "." + path,
                 getConfig().get("world-settings.default." + path));
     }

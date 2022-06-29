@@ -29,6 +29,10 @@ public class AbstractConfig {
     public void reload(Path path, Class<? extends AbstractConfig> clazz) {
         this.config = new YamlConfiguration();
 
+        getConfig().options().copyDefaults(true);
+        getConfig().options().parseComments(true);
+        getConfig().options().width(9999);
+
         File file = path.toFile();
         String filename = path.getFileName().toString();
 
@@ -41,28 +45,23 @@ public class AbstractConfig {
             throw new RuntimeException(e);
         }
 
-        getConfig().options().copyDefaults(true);
-        getConfig().options().parseComments(true);
-        getConfig().options().width(9999);
-
         Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             Key key = field.getDeclaredAnnotation(Key.class);
+            Comment comment = field.getDeclaredAnnotation(Comment.class);
             if (key == null) {
                 return;
             }
             try {
                 Object classObj = getClassObject();
-                Object value = getValue(key.value(), field.get(classObj));
+                Object value = getValue(key.get(), field.get(classObj));
                 field.set(classObj, value instanceof String str ? StringEscapeUtils.unescapeJava(str) : value);
             } catch (IllegalAccessException e) {
                 Logger.warn("Failed to load " + filename);
                 e.printStackTrace();
             }
-            Comment comment = field.getDeclaredAnnotation(Comment.class);
-            if (comment == null) {
-                return;
+            if (comment != null) {
+                setComments(key.get(), Arrays.stream(comment.get().split("\n")).toList());
             }
-            setComments(key.value(), Arrays.stream(comment.value().split("\n")).toList());
         });
 
         try {
@@ -78,7 +77,9 @@ public class AbstractConfig {
     }
 
     protected Object getValue(String path, Object def) {
-        getConfig().addDefault(path, def);
+        if (getConfig().get(path) == null) {
+            getConfig().set(path, def);
+        }
         return getConfig().get(path);
     }
 
@@ -89,12 +90,12 @@ public class AbstractConfig {
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Key {
-        String value();
+        String get();
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Comment {
-        String value();
+        String get();
     }
 }

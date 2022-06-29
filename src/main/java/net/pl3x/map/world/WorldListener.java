@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -70,6 +71,7 @@ public class WorldListener implements Listener {
     public void registerEvents() {
         if (Advanced.BLOCK_BREAK_EVENT) registerEvent(BlockBreakEvent.class, this::handleBlockEvent);
         if (Advanced.BLOCK_BURN_EVENT) registerEvent(BlockBurnEvent.class, this::handleBlockEvent);
+        if (Advanced.BLOCK_FADE_EVENT) registerEvent(BlockFadeEvent.class, this::handleBlockEvent);
         if (Advanced.BLOCK_FORM_EVENT) registerEvent(BlockFormEvent.class, this::handleBlockEvent);
         if (Advanced.BLOCK_GROW_EVENT) registerEvent(BlockGrowEvent.class, this::handleBlockEvent);
         if (Advanced.BLOCK_PHYSICS_EVENT) registerEvent(BlockPhysicsEvent.class, this::handleBlockEvent);
