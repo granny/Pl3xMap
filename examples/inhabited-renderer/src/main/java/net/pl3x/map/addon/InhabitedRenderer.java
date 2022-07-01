@@ -22,6 +22,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class InhabitedRenderer extends JavaPlugin {
+    // the most difficult part of this example is determining what is the
+    // highest inhabited time in the entire world so we know what our "hottest"
+    // value on the heatmap actually is. the best we can do is compare each
+    // chunk as we see them. i'm open to suggestions for a better method.
     private static final Map<UUID, Long> highestInhabitedTime = new HashMap<>();
 
     @Override
@@ -62,7 +66,11 @@ public class InhabitedRenderer extends JavaPlugin {
 
         public InhabitedScanner(Renderer render, RegionCoordinate region, Collection<Long> chunks) {
             super(render, region, chunks);
+
+            // setup a "fake" basic renderer that we can overlay with our heatmap
             this.basic = Scanners.INSTANCE.createScanner("basic", render, region, chunks);
+
+            // we need to give it a image holder since it's not passing through a scan job
             this.basic.setImageHolder(new Image.Holder(getWorld(), getRegion()));
         }
 
@@ -76,6 +84,7 @@ public class InhabitedRenderer extends JavaPlugin {
                 return;
             }
 
+            // do a basic render scan
             this.basic.scanChunk(chunkX, chunkZ);
 
             // world coordinates of northwest block of chunk
@@ -83,6 +92,7 @@ public class InhabitedRenderer extends JavaPlugin {
             int blockZ = Coordinate.chunkToBlock(chunkZ);
 
             // get the color of this chunk to use
+            // set a low enoug alpha so we can see the basic map underneath
             int rgb = Colors.setAlpha(0x88, getInhabitedColor(chunk));
 
             // put the color on the tile image
@@ -92,9 +102,10 @@ public class InhabitedRenderer extends JavaPlugin {
                     int pixelX = (blockX + x) & Image.SIZE - 1;
                     int pixelZ = (blockZ + z) & Image.SIZE - 1;
 
+                    // get the color from the basic scan of this pixel
                     int basicRGB = this.basic.getImageHolder().getImage().getPixel(pixelX, pixelZ);
 
-                    // set the color at this pixel
+                    // set the color at this pixel, mixing our heatmap on top
                     getImageHolder().getImage().setPixel(pixelX, pixelZ, Colors.mix(basicRGB, rgb));
                 }
             }
