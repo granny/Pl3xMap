@@ -28,7 +28,7 @@ public class PlayerManager {
      * @return True if player is hidden from the map
      */
     public boolean isHidden(Player player) {
-        return this.hidden.contains(player.getUniqueId()) || getByte(player, this.hiddenPDC) != (byte) 0;
+        return this.hidden.contains(player.getUniqueId()) || getByte(player) != (byte) 0;
     }
 
     /**
@@ -45,15 +45,15 @@ public class PlayerManager {
             this.hidden.remove(player.getUniqueId());
         }
         if (persistent) {
-            setByte(player, this.hiddenPDC, (byte) (hidden ? 1 : 0));
+            setByte(player, (byte) (hidden ? 1 : 0));
         }
     }
 
-    private byte getByte(Player player, NamespacedKey key) {
-        return player.getPersistentDataContainer().getOrDefault(key, PersistentDataType.BYTE, (byte) 0);
+    private byte getByte(Player player) {
+        return player.getPersistentDataContainer().getOrDefault(this.hiddenPDC, PersistentDataType.BYTE, (byte) 0);
     }
 
-    private void setByte(Player player, NamespacedKey key, byte value) {
-        player.getPersistentDataContainer().set(key, PersistentDataType.BYTE, value);
+    private void setByte(Player player, byte value) {
+        player.getPersistentDataContainer().set(this.hiddenPDC, PersistentDataType.BYTE, value);
     }
 }

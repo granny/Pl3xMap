@@ -1,5 +1,6 @@
 package net.pl3x.map.addon;
 
+import java.util.Collection;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.renderer.Renderer;
@@ -9,17 +10,7 @@ import net.pl3x.map.render.scanner.Scanner;
 import net.pl3x.map.render.scanner.Scanners;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.Mathf;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class InhabitedRenderer extends JavaPlugin {
     @Override
@@ -52,6 +43,7 @@ public class InhabitedRenderer extends JavaPlugin {
             }
 
             // do a basic render scan
+            // TODO - maybe do our own _more_ basic render here instead.. for speed...
             this.basic.scanChunk(chunkX, chunkZ);
 
             // world coordinates of northwest block of chunk
@@ -79,12 +71,9 @@ public class InhabitedRenderer extends JavaPlugin {
         }
 
         private int getInhabitedColor(ChunkAccess chunk) {
-            UUID uuid = getWorld().getUUID();
-            long inhabited = chunk.getInhabitedTime();
-
             // we hsb lerp between blue and red with ratio being the
             // percent inhabited time is of the maxed out inhabited time
-            float ratio = Mathf.inverseLerp(0F, 3600000, inhabited);
+            float ratio = Mathf.inverseLerp(0F, 3600000, chunk.getInhabitedTime());
             return Colors.lerpHSB(0xFF0000FF, 0xFFFF0000, ratio, false);
         }
     }
