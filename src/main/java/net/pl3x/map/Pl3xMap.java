@@ -1,7 +1,7 @@
 package net.pl3x.map;
 
+import java.lang.reflect.Field;
 import net.pl3x.map.command.CommandManager;
-import net.pl3x.map.configuration.AbstractConfig;
 import net.pl3x.map.configuration.Advanced;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
@@ -20,8 +20,6 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.lang.reflect.Field;
 
 public class Pl3xMap extends JavaPlugin {
     private static Pl3xMap instance;
@@ -63,9 +61,8 @@ public class Pl3xMap extends JavaPlugin {
         // extract default worlds.yml file for nether and end default stuff
         FileUtil.extract("worlds.yml", false);
 
-        // extract folders from jar
-        FileUtil.extract("/data/", AbstractConfig.DATA_DIR, false);
-        FileUtil.extract("/locale/", AbstractConfig.LOCALE_DIR, false);
+        // extract locale from jar
+        FileUtil.extract("/locale/", FileUtil.LOCALE_DIR, false);
 
         // register bukkit listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

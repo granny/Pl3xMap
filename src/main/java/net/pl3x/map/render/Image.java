@@ -1,12 +1,5 @@
 package net.pl3x.map.render;
 
-import net.minecraft.util.Mth;
-import net.pl3x.map.configuration.Config;
-import net.pl3x.map.render.io.IO;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.util.Colors;
-import net.pl3x.map.world.MapWorld;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +8,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import net.minecraft.util.Mth;
+import net.pl3x.map.configuration.Config;
+import net.pl3x.map.render.io.IO;
+import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.util.Colors;
+import net.pl3x.map.world.MapWorld;
 
 public class Image {
     private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
@@ -154,11 +153,15 @@ public class Image {
     }
 
     public static class Set {
+        private final MapWorld mapWorld;
+        private final RegionCoordinate region;
         private final Image blocks, biomes, temps, humidity, inhabited, heights, fluids;
 
         public Set(MapWorld mapWorld, RegionCoordinate region) {
+            this.mapWorld = mapWorld;
             int regionX = region.getRegionX();
             int regionZ = region.getRegionZ();
+            this.region = new RegionCoordinate(regionX, regionZ);
             this.blocks = new Image(mapWorld, "blocks", regionX, regionZ);
             this.biomes = new Image(mapWorld, "biomes", regionX, regionZ);
             this.temps = new Image(mapWorld, "temps", regionX, regionZ);
@@ -204,6 +207,9 @@ public class Image {
             this.inhabited.saveToDisk();
             this.heights.saveToDisk();
             this.fluids.saveToDisk();
+
+            // mark this region as done
+            this.mapWorld.setScannedRegion(this.region);
         }
     }
 }

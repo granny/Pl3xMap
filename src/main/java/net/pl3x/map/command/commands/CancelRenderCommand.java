@@ -37,7 +37,7 @@ public class CancelRenderCommand extends Pl3xMapCommand {
             return;
         }
 
-        mapWorld.cancelRender(true);
+        mapWorld.cancelRender(false);
 
         if (sender instanceof Player) {
             Lang.send(sender, Lang.COMMAND_CANCELRENDER_SUCCESS,

@@ -126,7 +126,7 @@ public class RadiusRender extends AbstractRender {
     }
 
     @Override
-    public void onCancel() {
+    public void onCancel(boolean unloading) {
         Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_CANCELLED,
                 Placeholder.unparsed("world", getWorld().getName()));
         Lang.send(getStarter(), component);

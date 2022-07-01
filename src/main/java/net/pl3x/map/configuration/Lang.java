@@ -4,6 +4,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.pl3x.map.util.FileUtil;
 import org.bukkit.command.ConsoleCommandSender;
 
 public class Lang extends AbstractConfig {
@@ -50,10 +51,14 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_FULLRENDER_FINISHED = "<green>Finished full render on <world> in <elapsed>";
     @Key("command.fullrender.cancelled")
     public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled full render on <world>";
+    @Key("command.fullrender.resumed-rendering")
+    public static String COMMAND_FULLRENDER_RESUMED_RENDERING = "<yellow>Previously incomplete full render for <world> has resumed where it left off";
     @Key("command.fullrender.obtaining-regions")
     public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining regions from files... (this may take a moment)";
     @Key("command.fullrender.found-total-regions")
     public static String COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS = "<green>Found <grey><total></grey> region files";
+    @Key("command.fullrender.resumed-total-regions")
+    public static String COMMAND_FULLRENDER_RESUMED_TOTAL_REGIONS = "<green>Resumed scanning <grey><done></grey>/<grey><total></grey> regions (<gold><percent>%</gold>)";
     @Key("command.fullrender.use-status-for-progress")
     public static String COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/map status</grey> command to view progress";
     @Key("command.fullrender.error-parsing-region-file")
@@ -165,7 +170,7 @@ public class Lang extends AbstractConfig {
     private static final Lang CONFIG = new Lang();
 
     public static void reload() {
-        CONFIG.reload(LOCALE_DIR.resolve(Config.LANGUAGE_FILE), Lang.class);
+        CONFIG.reload(FileUtil.LOCALE_DIR.resolve(Config.LANGUAGE_FILE), Lang.class);
     }
 
     public static void send(Audience recipient, String msg, TagResolver.Single... placeholders) {

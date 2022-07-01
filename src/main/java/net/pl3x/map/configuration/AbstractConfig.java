@@ -1,11 +1,5 @@
 package net.pl3x.map.configuration;
 
-import net.pl3x.map.logger.Logger;
-import net.pl3x.map.util.FileUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
@@ -15,11 +9,12 @@ import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import net.pl3x.map.logger.Logger;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class AbstractConfig {
-    public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
-    public static final Path LOCALE_DIR = FileUtil.PLUGIN_DIR.resolve("locale");
-
     private YamlConfiguration config;
 
     public YamlConfiguration getConfig() {

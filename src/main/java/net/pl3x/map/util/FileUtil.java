@@ -25,6 +25,8 @@ import java.util.zip.ZipFile;
 
 public class FileUtil {
     public static final Path PLUGIN_DIR = Pl3xMap.getInstance().getDataFolder().toPath();
+    public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
+    public static final Path LOCALE_DIR = FileUtil.PLUGIN_DIR.resolve("locale");
 
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.mca");
 

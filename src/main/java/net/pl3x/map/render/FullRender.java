@@ -1,5 +1,9 @@
 package net.pl3x.map.render;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -14,12 +18,7 @@ import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-
 public class FullRender extends AbstractRender {
-    private int maxRadius = 0;
     private long timeStarted;
 
     public FullRender(MapWorld mapWorld, Audience starter) {
@@ -30,76 +29,136 @@ public class FullRender extends AbstractRender {
     public void render() {
         this.timeStarted = System.currentTimeMillis();
 
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
+        // order preserved map of regions with boolean to signify if it was already scanned
+        LinkedHashMap<RegionCoordinate, Boolean> regionsToScan = new LinkedHashMap<>();
 
-        List<RegionCoordinate> regionFiles = new ArrayList<>();
-        List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
-        for (Path path : files) {
-            if (isCancelled()) {
-                return;
+        // check if we have any data to resume
+        LinkedHashMap<RegionCoordinate, Boolean> resumedMap = getWorld().getScannedRegions();
+        if (!resumedMap.isEmpty()) {
+            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_RESUMED_RENDERING,
+                    Placeholder.unparsed("world", getWorld().getName()));
+
+            // add regions from previous run
+            regionsToScan.putAll(resumedMap);
+
+            // start the progress output
+            getProgress().showChat(getStarter());
+        } else {
+            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
+
+            // max radius for spiral iterator will be determined by the farthest region file found
+            int maxRadius = 0;
+
+            // scan region folder for existing region files
+            List<RegionCoordinate> regionFiles = new ArrayList<>();
+            List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
+            for (Path path : files) {
+                if (isCancelled()) {
+                    return;
+                }
+
+                // ignore empty region files
+                if (path.toFile().length() == 0) {
+                    continue;
+                }
+
+                // get region coords from filename
+                String filename = path.getFileName().toString();
+                String[] split = filename.split("\\.");
+                int x, z;
+                try {
+                    x = Integer.parseInt(split[1]);
+                    z = Integer.parseInt(split[2]);
+                } catch (NumberFormatException e) {
+                    Logger.warn(Lang.COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE
+                            .replace("<path>", path.toString())
+                            .replace("<filename>", filename));
+                    e.printStackTrace();
+                    continue;
+                }
+
+                // add known region
+                regionFiles.add(new RegionCoordinate(x, z));
+
+                // update max radius for spiral iterator
+                maxRadius = Math.max(Math.max(maxRadius, Math.abs(x)), Math.abs(z));
             }
 
-            if (path.toFile().length() == 0) {
-                continue;
+            // create spiral iterator to order region scanning
+            RegionSpiralIterator spiral = new RegionSpiralIterator(
+                    Coordinate.blockToRegion(getCenterX()),
+                    Coordinate.blockToRegion(getCenterZ()),
+                    maxRadius);
+
+            // iterate the spiral
+            int failsafe = 0;
+            while (spiral.hasNext()) {
+                if (isCancelled()) {
+                    return;
+                }
+
+                // let us not get stuck in an endless loop
+                if (failsafe > 500000) {
+                    // we scanned over half a million non-existent regions straight
+                    // quit the spiral and add the remaining regions to the end
+                    regionFiles.forEach(region -> regionsToScan.put(region, false));
+                    break;
+                }
+
+                // get region from spiral and ensure a region file exists for it
+                RegionCoordinate region = spiral.next();
+                if (regionFiles.remove(region)) {
+                    // file exists, add region to scan
+                    regionsToScan.put(region, false);
+                    failsafe = 0;
+                } else {
+                    failsafe++;
+                }
             }
 
-            String filename = path.getFileName().toString();
-            String[] split = filename.split("\\.");
-            int x, z;
-            try {
-                x = Integer.parseInt(split[1]);
-                z = Integer.parseInt(split[2]);
-            } catch (NumberFormatException e) {
-                Logger.warn(Lang.COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE
-                        .replace("<path>", path.toString())
-                        .replace("<filename>", filename));
-                e.printStackTrace();
-                continue;
-            }
-
-            RegionCoordinate region = new RegionCoordinate(x, z);
-            regionFiles.add(region);
-
-            this.maxRadius = Math.max(Math.max(this.maxRadius, Math.abs(x)), Math.abs(z));
+            // store all regions we're scanning in case we have to resume after restart
+            getWorld().setScannedRegions(regionsToScan);
         }
 
-        RegionSpiralIterator spiral = new RegionSpiralIterator(
-                Coordinate.blockToRegion(getCenterX()),
-                Coordinate.blockToRegion(getCenterZ()),
-                this.maxRadius);
+        if (isCancelled()) {
+            return;
+        }
 
+        // add regions to executor tasks that will do the heavy lifting
         List<ScanRegion> tasks = new ArrayList<>();
-
-        int failsafe = 0;
-        while (spiral.hasNext()) {
-            if (isCancelled()) {
-                return;
-            }
-
-            if (failsafe > 500000) {
-                // we scanned over half a million non-existent regions straight
-                // quit the spiral and add the remaining regions to the end
-                regionFiles.forEach(region -> tasks.add(new ScanRegion(this, region)));
-                break;
-            }
-
-            RegionCoordinate region = spiral.next();
-            if (regionFiles.remove(region)) {
+        regionsToScan.forEach((region, done) -> {
+            // only create a task for regions not already scanned
+            if (!done) {
                 tasks.add(new ScanRegion(this, region));
-                failsafe = 0;
-            } else {
-                failsafe++;
             }
-        }
+        });
 
+        // set our total progress values
         getProgress().setTotalRegions(tasks.size());
         getProgress().setTotalChunks(getProgress().getTotalRegions() * 32L * 32L);
 
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS
-                .replace("<total>", Long.toString(getProgress().getTotalRegions())));
+        // set our processed (done) progress values
+        int done = (int) regionsToScan.values().stream().filter(bool -> bool).count();
+        if (done > 0) {
+            getProgress().setProcessedRegions(done);
+            getProgress().setProcessedChunks(done * 32L * 32L);
+        }
 
+        // notify what we found
+        if (done < 1) {
+            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS,
+                    Placeholder.unparsed("total", Long.toString(getProgress().getTotalRegions())));
+        } else {
+            float percent = ((float) getProgress().getProcessedChunks().get() / (float) getProgress().getTotalChunks()) * 100.0F;
+            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_RESUMED_TOTAL_REGIONS,
+                    Placeholder.unparsed("total", Long.toString(getProgress().getTotalRegions())),
+                    Placeholder.unparsed("done", Long.toString(done)),
+                    Placeholder.unparsed("percent", String.format("%.2f", percent))
+            );
+        }
         Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
+        // send the tasks to executor to run
         tasks.forEach(getRenderExecutor()::submit);
     }
 
@@ -124,15 +183,21 @@ public class FullRender extends AbstractRender {
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
             Lang.send(Bukkit.getConsoleSender(), component);
         }
+        getWorld().clearScannedRegions();
     }
 
     @Override
-    public void onCancel() {
+    public void onCancel(boolean unloading) {
+        if (unloading) {
+            // don't do anything if we're unloading
+            return;
+        }
         Component component = Lang.parse(Lang.COMMAND_FULLRENDER_CANCELLED,
                 Placeholder.unparsed("world", getWorld().getName()));
         Lang.send(getStarter(), component);
         if (!getStarter().equals(Bukkit.getConsoleSender())) {
             Lang.send(Bukkit.getConsoleSender(), component);
         }
+        getWorld().clearScannedRegions();
     }
 }

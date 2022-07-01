@@ -66,6 +66,6 @@ public class BackgroundRender extends AbstractRender {
     }
 
     @Override
-    public void onCancel() {
+    public void onCancel(boolean unloading) {
     }
 }

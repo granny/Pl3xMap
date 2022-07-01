@@ -1,20 +1,18 @@
 package net.pl3x.map.world;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.pl3x.map.configuration.Config;
-import net.pl3x.map.configuration.WorldConfig;
-import net.pl3x.map.render.AbstractRender;
-import net.pl3x.map.render.BackgroundRender;
-import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.util.BiomeColors;
-import net.pl3x.map.util.FileUtil;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +20,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.pl3x.map.configuration.Config;
+import net.pl3x.map.configuration.WorldConfig;
+import net.pl3x.map.logger.Logger;
+import net.pl3x.map.render.AbstractRender;
+import net.pl3x.map.render.BackgroundRender;
+import net.pl3x.map.render.FullRender;
+import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.util.BiomeColors;
+import net.pl3x.map.util.FileUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
 /**
  * Represents a world which is mapped by Pl3xMap
@@ -30,9 +43,15 @@ public class MapWorld {
     public static final Path WEB_DIR = FileUtil.PLUGIN_DIR.resolve(Config.WEB_DIR);
     public static final Path TILES_DIR = WEB_DIR.resolve("tiles");
 
+    private static final String DIRTY_CHUNKS = "dirty_chunks.json";
+    private static final String SCANNED_REGIONS = "resume_render.json";
+    private static final Gson GSON = new GsonBuilder().enableComplexMapKeySerialization().create();
+
     private final World world;
     private final ServerLevel level;
     private final WorldConfig config;
+
+    private final Path dataPath;
 
     private final BiomeColors biomeColors;
     private final long biomeSeed;
@@ -44,6 +63,7 @@ public class MapWorld {
     private AbstractRender activeRender = null;
 
     private final Set<ChunkCoordinate> modifiedChunks = ConcurrentHashMap.newKeySet();
+    private final LinkedHashMap<RegionCoordinate, Boolean> scannedRegions = new LinkedHashMap<>();
 
     public long highestInhabitedTime = 0;
 
@@ -60,7 +80,23 @@ public class MapWorld {
         this.biomeColors = new BiomeColors(this);
         this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
 
+        this.dataPath = FileUtil.DATA_DIR.resolve(world.getName());
+        try {
+            if (!Files.exists(this.dataPath)) {
+                Files.createDirectories(this.dataPath);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(String.format("Failed to create data directory for world '%s'", getName()), e);
+        }
+
         startBackgroundRender();
+
+        deserializeDirtyChunks();
+        deserializeScannedRegions();
+
+        if (!getScannedRegions().isEmpty()) {
+            startRender(new FullRender(this, Bukkit.getConsoleSender()));
+        }
     }
 
     /**
@@ -119,6 +155,54 @@ public class MapWorld {
         this.paused = paused;
     }
 
+    public void deserializeScannedRegions() {
+        try {
+            final Path file = this.dataPath.resolve(SCANNED_REGIONS);
+            if (Files.exists(file)) {
+                String json = String.join("", Files.readAllLines(file));
+                TypeToken<LinkedHashMap<RegionCoordinate, Boolean>> token = new TypeToken<>() {
+                };
+                setScannedRegions(GSON.fromJson(json, token.getType()));
+            }
+        } catch (JsonIOException | JsonSyntaxException | IOException e) {
+            Logger.warn(String.format("Failed to deserialize render progress for world '%s'", getName()));
+            e.printStackTrace();
+        }
+    }
+
+    public void serializeScannedRegions() {
+        try {
+            Files.writeString(this.dataPath.resolve(SCANNED_REGIONS), GSON.toJson(getScannedRegions()));
+        } catch (IOException e) {
+            Logger.warn(String.format("Failed to serialize render progress for world '%s'", getName()));
+            e.printStackTrace();
+        }
+    }
+
+    private void deserializeDirtyChunks() {
+        try {
+            final Path file = this.dataPath.resolve(DIRTY_CHUNKS);
+            if (Files.exists(file)) {
+                this.modifiedChunks.addAll(GSON.fromJson(
+                        new FileReader(file.toFile()),
+                        TypeToken.getParameterized(List.class, ChunkCoordinate.class).getType()
+                ));
+            }
+        } catch (JsonIOException | JsonSyntaxException | IOException e) {
+            Logger.warn(String.format("Failed to deserialize dirty chunks for world '%s'", getName()));
+            e.printStackTrace();
+        }
+    }
+
+    private void serializeDirtyChunks() {
+        try {
+            Files.writeString(this.dataPath.resolve(DIRTY_CHUNKS), GSON.toJson(this.modifiedChunks));
+        } catch (IOException e) {
+            Logger.warn(String.format("Failed to serialize dirty chunks for world '%s'", getName()));
+            e.printStackTrace();
+        }
+    }
+
     public void addModifiedChunk(ChunkCoordinate chunk) {
         this.modifiedChunks.add(chunk);
     }
@@ -135,6 +219,33 @@ public class MapWorld {
         ChunkCoordinate chunk = it.next();
         it.remove();
         return chunk;
+    }
+
+    public void clearScannedRegions() {
+        synchronized (this.scannedRegions) {
+            this.scannedRegions.clear();
+        }
+    }
+
+    public void setScannedRegions(LinkedHashMap<RegionCoordinate, Boolean> scannedRegions) {
+        synchronized (this.scannedRegions) {
+            this.scannedRegions.clear();
+            this.scannedRegions.putAll(scannedRegions);
+        }
+    }
+
+    public void setScannedRegion(RegionCoordinate region) {
+        synchronized (this.scannedRegions) {
+            if (this.scannedRegions.containsKey(region)) {
+                this.scannedRegions.put(region, true);
+            }
+        }
+    }
+
+    public LinkedHashMap<RegionCoordinate, Boolean> getScannedRegions() {
+        synchronized (this.scannedRegions) {
+            return this.scannedRegions;
+        }
     }
 
     public boolean hasBackgroundRender() {
@@ -192,15 +303,15 @@ public class MapWorld {
         this.executor.submit(render);
     }
 
-    public void cancelRender(boolean startBackgroundRender) {
+    public void cancelRender(boolean unloading) {
         if (!hasActiveRender()) {
             throw new IllegalStateException("No render to cancel");
         }
 
-        this.activeRender.cancel();
+        this.activeRender.cancel(unloading);
         this.activeRender = null;
 
-        if (startBackgroundRender) {
+        if (!unloading) {
             startBackgroundRender();
         }
     }
@@ -218,7 +329,10 @@ public class MapWorld {
 
     public void unload() {
         if (hasActiveRender()) {
-            cancelRender(false);
+            cancelRender(true);
         }
+
+        serializeDirtyChunks();
+        serializeScannedRegions();
     }
 }

@@ -1,15 +1,14 @@
 package net.pl3x.map.render.progress;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.render.AbstractRender;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Progress implements Runnable {
     private final AbstractRender render;
@@ -77,12 +76,21 @@ public class Progress implements Runnable {
         this.totalRegions = totalRegions;
     }
 
-    public final AtomicLong getProcessedChunks() {
+    public AtomicLong getProcessedChunks() {
         return this.processedChunks;
     }
 
-    public final AtomicLong getProcessedRegions() {
+    public void setProcessedChunks(long processedChunks) {
+        getProcessedChunks().set(processedChunks);
+        this.prevProcessedChunks = processedChunks;
+    }
+
+    public AtomicLong getProcessedRegions() {
         return this.processedRegions;
+    }
+
+    public void setProcessedRegions(long processedRegions) {
+        getProcessedRegions().set(processedRegions);
     }
 
     public void finish() {

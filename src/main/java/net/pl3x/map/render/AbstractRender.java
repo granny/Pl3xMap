@@ -121,20 +121,20 @@ public abstract class AbstractRender implements Runnable {
         return this.cancelled;
     }
 
-    public final void cancel() {
+    public final void cancel(boolean unloading) {
         this.cancelled = true;
 
         if (this.scheduledProgress != null) {
-            this.scheduledProgress.cancel(false);
+            this.scheduledProgress.cancel(unloading);
         }
 
         this.renderExecutor.shutdown();
         this.imageExecutor.shutdown();
 
-        onCancel();
+        onCancel(unloading);
     }
 
-    public abstract void onCancel();
+    public abstract void onCancel(boolean unloading);
 
     public static int getThreads(int threads) {
         if (threads < 1) {
