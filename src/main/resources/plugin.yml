@@ -9,6 +9,16 @@ permissions:
   pl3xmap.command.map:
     default: op
 
+  pl3xmap.command.cancelrender:
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.confirm:
+    default: op
+    children:
+      pl3xmap.command.map: true
+
   pl3xmap.command.fullrender:
     default: op
     children:
@@ -28,10 +38,26 @@ permissions:
     children:
       pl3xmap.command.hide: true
 
+  pl3xmap.command.pauserender:
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.radiusrender:
+    default: op
+    children:
+      pl3xmap.command.map: true
+
   pl3xmap.command.reload:
     default: op
     children:
       pl3xmap.command.map: true
+
+  pl3xmap.command.resetmap:
+    default: op
+    children:
+      pl3xmap.command.map: true
+      pl3xmap.command.confirm: true
 
   pl3xmap.command.show:
     default: op
