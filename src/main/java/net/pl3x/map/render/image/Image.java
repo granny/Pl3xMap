@@ -1,4 +1,4 @@
-package net.pl3x.map.render;
+package net.pl3x.map.render.image;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.minecraft.util.Mth;
 import net.pl3x.map.configuration.Config;
-import net.pl3x.map.render.io.IO;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.image.io.IO;
+import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.world.MapWorld;
 
@@ -19,11 +19,10 @@ public class Image {
     private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     public static final int SIZE = 512;
-    public static final String DIR_PATH = "%d/%s/";
+    public static final String DIR_PATH = "%d/";
     public static final String FILE_PATH = "%d_%d.%s";
 
     private final MapWorld mapWorld;
-    private final String type;
     private final int regionX;
     private final int regionZ;
 
@@ -32,9 +31,8 @@ public class Image {
 
     private final IO.Type io;
 
-    public Image(MapWorld mapWorld, String type, int regionX, int regionZ) {
+    public Image(MapWorld mapWorld, int regionX, int regionZ) {
         this.mapWorld = mapWorld;
-        this.type = type;
         this.regionX = regionX;
         this.regionZ = regionZ;
 
@@ -57,7 +55,7 @@ public class Image {
 
     public void saveToDisk() {
         for (int zoom = 0; zoom <= this.mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
-            Path dirPath = this.worldDir.resolve(String.format(DIR_PATH, zoom, this.type));
+            Path dirPath = this.worldDir.resolve(String.format(DIR_PATH, zoom));
 
             // create directories if they don't exist
             createDirs(dirPath);
@@ -152,61 +150,25 @@ public class Image {
         return Colors.argb(a / count, r / count, g / count, b / count);
     }
 
-    public static class Set {
+    public static class Holder {
         private final MapWorld mapWorld;
         private final RegionCoordinate region;
-        private final Image blocks, biomes, temps, humidity, inhabited, heights, fluids;
+        private final Image image;
 
-        public Set(MapWorld mapWorld, RegionCoordinate region) {
+        public Holder(MapWorld mapWorld, RegionCoordinate region) {
             this.mapWorld = mapWorld;
             int regionX = region.getRegionX();
             int regionZ = region.getRegionZ();
             this.region = new RegionCoordinate(regionX, regionZ);
-            this.blocks = new Image(mapWorld, "blocks", regionX, regionZ);
-            this.biomes = new Image(mapWorld, "biomes", regionX, regionZ);
-            this.temps = new Image(mapWorld, "temps", regionX, regionZ);
-            this.humidity = new Image(mapWorld, "humidity", regionX, regionZ);
-            this.inhabited = new Image(mapWorld, "inhabited", regionX, regionZ);
-            this.heights = new Image(mapWorld, "heights", regionX, regionZ);
-            this.fluids = new Image(mapWorld, "fluids", regionX, regionZ);
+            this.image = new Image(mapWorld, regionX, regionZ);
         }
 
-        public Image getBlocks() {
-            return this.blocks;
-        }
-
-        public Image getBiomes() {
-            return this.biomes;
-        }
-
-        public Image getTemps() {
-            return this.temps;
-        }
-
-        public Image getHumidity() {
-            return this.humidity;
-        }
-
-        public Image getInhabited() {
-            return this.inhabited;
-        }
-
-        public Image getHeights() {
-            return this.heights;
-        }
-
-        public Image getFluids() {
-            return this.fluids;
+        public Image getImage() {
+            return this.image;
         }
 
         public void save() {
-            this.blocks.saveToDisk();
-            this.biomes.saveToDisk();
-            this.temps.saveToDisk();
-            this.humidity.saveToDisk();
-            this.inhabited.saveToDisk();
-            this.heights.saveToDisk();
-            this.fluids.saveToDisk();
+            getImage().saveToDisk();
 
             // mark this region as done
             this.mapWorld.setScannedRegion(this.region);

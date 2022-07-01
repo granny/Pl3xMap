@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    id("maven-publish")
     id("io.papermc.paperweight.userdev") version "1.3.7"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
@@ -44,6 +45,9 @@ tasks {
     reobfJar {
         outputJar.set(project.layout.buildDirectory.file("libs/${rootProject.name}-${rootProject.version}.jar"))
     }
+    publishToMavenLocal {
+        dependsOn(reobfJar)
+    }
     assemble {
         dependsOn(reobfJar)
     }
@@ -63,6 +67,14 @@ tasks {
                 "version" to project.version,
                 "description" to project.description
             )
+        }
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
         }
     }
 }

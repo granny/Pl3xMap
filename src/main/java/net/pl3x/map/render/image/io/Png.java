@@ -1,4 +1,4 @@
-package net.pl3x.map.render.io;
+package net.pl3x.map.render.image.io;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

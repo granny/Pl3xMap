@@ -25,11 +25,11 @@ import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
-import net.pl3x.map.render.AbstractRender;
-import net.pl3x.map.render.BackgroundRender;
-import net.pl3x.map.render.FullRender;
-import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.renderer.BackgroundRenderer;
+import net.pl3x.map.render.renderer.FullRenderer;
+import net.pl3x.map.render.renderer.Renderer;
+import net.pl3x.map.render.renderer.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.Bukkit;
@@ -60,12 +60,10 @@ public class MapWorld {
             new ThreadFactoryBuilder().setNameFormat("Pl3xMap").build());
 
     private ScheduledFuture<?> backgroundRender;
-    private AbstractRender activeRender = null;
+    private Renderer activeRender = null;
 
     private final Set<ChunkCoordinate> modifiedChunks = ConcurrentHashMap.newKeySet();
     private final LinkedHashMap<RegionCoordinate, Boolean> scannedRegions = new LinkedHashMap<>();
-
-    public long highestInhabitedTime = 0;
 
     private boolean paused;
 
@@ -95,7 +93,7 @@ public class MapWorld {
         deserializeScannedRegions();
 
         if (!getScannedRegions().isEmpty()) {
-            startRender(new FullRender(this, Bukkit.getConsoleSender()));
+            startRender(new FullRenderer(this, Bukkit.getConsoleSender()));
         }
     }
 
@@ -267,7 +265,7 @@ public class MapWorld {
             return;
         }
 
-        this.backgroundRender = this.executor.scheduleAtFixedRate(new BackgroundRender(this), interval, interval, TimeUnit.SECONDS);
+        this.backgroundRender = this.executor.scheduleAtFixedRate(new BackgroundRenderer(this), interval, interval, TimeUnit.SECONDS);
     }
 
     public void stopBackgroundRender() {
@@ -288,11 +286,11 @@ public class MapWorld {
         return getActiveRender() != null;
     }
 
-    public AbstractRender getActiveRender() {
+    public Renderer getActiveRender() {
         return this.activeRender;
     }
 
-    public void startRender(AbstractRender render) {
+    public void startRender(Renderer render) {
         if (hasActiveRender()) {
             throw new IllegalStateException("Already rendering");
         }

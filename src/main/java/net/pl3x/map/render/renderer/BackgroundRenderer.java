@@ -1,4 +1,4 @@
-package net.pl3x.map.render;
+package net.pl3x.map.render.renderer;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.ArrayList;
@@ -9,14 +9,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import net.minecraft.world.level.ChunkPos;
-import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.queue.ScanRegion;
+import net.pl3x.map.render.renderer.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.scanner.Scanner;
+import net.pl3x.map.render.scanner.Scanners;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
-public class BackgroundRender extends AbstractRender {
-    public BackgroundRender(MapWorld mapWorld) {
+public class BackgroundRenderer extends Renderer {
+    public BackgroundRenderer(MapWorld mapWorld) {
         super(mapWorld, Bukkit.getConsoleSender(), 0, 0,
                 Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_BACKGROUND_RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Background-%d").build()),
@@ -49,11 +50,13 @@ public class BackgroundRender extends AbstractRender {
             list.add(ChunkPos.asLong(chunk.getChunkX(), chunk.getChunkZ()));
         });
 
-        List<ScanRegion> tasks = new ArrayList<>();
+        List<Scanner> scannerTasks = new ArrayList<>();
 
-        regions.forEach((region, list) -> tasks.add(new ScanRegion(this, region, list)));
+        regions.forEach((region, list) -> {
+            scannerTasks.add(Scanners.INSTANCE.createScanner("basic", this, region, list));
+        });
 
-        tasks.forEach(getRenderExecutor()::submit);
+        scannerTasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override

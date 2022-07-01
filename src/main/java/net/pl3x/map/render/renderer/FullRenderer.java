@@ -1,7 +1,8 @@
-package net.pl3x.map.render;
+package net.pl3x.map.render.renderer;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import net.kyori.adventure.audience.Audience;
@@ -9,19 +10,20 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
-import net.pl3x.map.render.iterator.RegionSpiralIterator;
-import net.pl3x.map.render.iterator.coordinate.Coordinate;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.progress.Progress;
-import net.pl3x.map.render.queue.ScanRegion;
+import net.pl3x.map.render.renderer.iterator.RegionSpiralIterator;
+import net.pl3x.map.render.renderer.iterator.coordinate.Coordinate;
+import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.renderer.progress.Progress;
+import net.pl3x.map.render.scanner.Scanner;
+import net.pl3x.map.render.scanner.Scanners;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
-public class FullRender extends AbstractRender {
+public class FullRenderer extends Renderer {
     private long timeStarted;
 
-    public FullRender(MapWorld mapWorld, Audience starter) {
+    public FullRenderer(MapWorld mapWorld, Audience starter) {
         super(mapWorld, starter);
     }
 
@@ -125,16 +127,16 @@ public class FullRender extends AbstractRender {
         }
 
         // add regions to executor tasks that will do the heavy lifting
-        List<ScanRegion> tasks = new ArrayList<>();
+        List<Scanner> scannerTasks = new ArrayList<>();
         regionsToScan.forEach((region, done) -> {
             // only create a task for regions not already scanned
             if (!done) {
-                tasks.add(new ScanRegion(this, region));
+                scannerTasks.add(Scanners.INSTANCE.createScanner("basic", this, region, Collections.emptySet()));
             }
         });
 
         // set our total progress values
-        getProgress().setTotalRegions(tasks.size());
+        getProgress().setTotalRegions(scannerTasks.size());
         getProgress().setTotalChunks(getProgress().getTotalRegions() * 32L * 32L);
 
         // set our processed (done) progress values
@@ -159,7 +161,7 @@ public class FullRender extends AbstractRender {
         Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
         // send the tasks to executor to run
-        tasks.forEach(getRenderExecutor()::submit);
+        scannerTasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override

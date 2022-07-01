@@ -1,4 +1,4 @@
-package net.pl3x.map.render;
+package net.pl3x.map.render.renderer;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.ExecutorService;
@@ -8,12 +8,12 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.configuration.Config;
-import net.pl3x.map.render.progress.Progress;
+import net.pl3x.map.render.renderer.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public abstract class AbstractRender implements Runnable {
+public abstract class Renderer implements Runnable {
     private final MapWorld mapWorld;
     private final Audience starter;
 
@@ -28,15 +28,15 @@ public abstract class AbstractRender implements Runnable {
 
     private boolean cancelled;
 
-    public AbstractRender(MapWorld mapWorld, Audience starter) {
+    public Renderer(MapWorld mapWorld, Audience starter) {
         this(mapWorld, starter, mapWorld.getWorld().getSpawnLocation());
     }
 
-    public AbstractRender(MapWorld mapWorld, Audience starter, Location loc) {
+    public Renderer(MapWorld mapWorld, Audience starter, Location loc) {
         this(mapWorld, starter, loc.getBlockX(), loc.getBlockZ());
     }
 
-    public AbstractRender(MapWorld mapWorld, Audience starter, int centerX, int centerZ) {
+    public Renderer(MapWorld mapWorld, Audience starter, int centerX, int centerZ) {
         this(mapWorld, starter, centerX, centerZ,
                 Executors.newFixedThreadPool(getThreads(Config.RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build()),
@@ -45,7 +45,7 @@ public abstract class AbstractRender implements Runnable {
         );
     }
 
-    public AbstractRender(MapWorld mapWorld, Audience starter, int centerX, int centerZ, ExecutorService renderExecutor, ExecutorService imageExecutor) {
+    public Renderer(MapWorld mapWorld, Audience starter, int centerX, int centerZ, ExecutorService renderExecutor, ExecutorService imageExecutor) {
         this.mapWorld = mapWorld;
         this.starter = starter;
         this.progress = new Progress(this);

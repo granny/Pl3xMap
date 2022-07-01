@@ -1,5 +1,6 @@
 package net.pl3x.map.configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
@@ -8,6 +9,15 @@ public class WorldConfig extends AbstractConfig {
     @Key("enabled")
     @Comment("Enables this world to be rendered on the map.")
     public boolean ENABLED = false;
+
+    @Key("render.scanners")
+    @Comment("""
+            Scanner types to use. Each scanner will render a different
+            type of map. The built in scanners include:
+            basic, biome, nether""")
+    public List<String> RENDER_SCANNERS = new ArrayList<>() {{
+        add("basic");
+    }};
 
     @Key("render.background.interval")
     @Comment("""
@@ -27,50 +37,21 @@ public class WorldConfig extends AbstractConfig {
             Value of -1 will use 50% of the available cores.""")
     public int RENDER_BACKGROUND_RENDER_THREADS = -1;
 
-    @Key("render.layer.blocks.enabled")
-    @Comment("""
-            Render and show the block layer on the map.
-            Each pixel/color represents a block in game.
-            Note: You must have at blocks and/or biome layers
-            at a minimum for the map to work correctly""")
-    public boolean RENDER_LAYER_BLOCKS = true;
-    @Key("render.layer.blocks.biome-blend")
+    @Key("render.biome-blend")
     @Comment("""
             Enables blending of biome grass/foliage/water colors
             similar to the client's biome blending option.
             Use 0 or negative value to disable this feature.
             Note: This may slow down your renders quite
             drastically if enabled""")
-    public int RENDER_BLOCKS_BIOME_BLEND = 0;
+    public int RENDER_BIOME_BLEND = 0;
 
-    @Key("render.layer.biomes.enabled")
-    @Comment("""
-            Render and show the biomes layer on the map.
-            Each color represents a biome in game.""")
-    public boolean RENDER_LAYER_BIOMES = true;
-
-    public boolean RENDER_LAYER_TEMPS = false;
-    public boolean RENDER_LAYER_HUMIDITY = false;
-    public boolean RENDER_LAYER_INHABITED = false;
-
-    @Key("render.layer.heights.enabled")
-    @Comment("""
-            Enable the heightmap layer.
-            This adds a transparent layer of darkened pixels
-            that represent the elevation of the land.""")
-    public boolean RENDER_LAYER_HEIGHTS = true;
-
-    @Key("render.layer.fluids.enabled")
-    @Comment("""
-            Enable the fluid layer.
-            This adds a transparent layer of water/lava in your world""")
-    public boolean RENDER_LAYER_FLUIDS = true;
-    @Key("render.layer.fluids.translucent")
+    @Key("render.translucent-fluids")
     @Comment("""
             Enable translucent water.
             This will make the water look fancier and translucent
             so you can see the ground below in shallow waters.""")
-    public boolean RENDER_FLUIDS_TRANSLUCENT = true;
+    public boolean RENDER_TRANSLUCENT_FLUIDS = true;
 
     @Key("zoom.default")
     @Comment("""

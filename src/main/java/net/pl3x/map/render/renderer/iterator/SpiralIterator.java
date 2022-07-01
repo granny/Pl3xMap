@@ -1,4 +1,4 @@
-package net.pl3x.map.render.iterator;
+package net.pl3x.map.render.renderer.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

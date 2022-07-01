@@ -1,4 +1,4 @@
-package net.pl3x.map.render.progress;
+package net.pl3x.map.render.renderer.progress;
 
 import java.util.Arrays;
 

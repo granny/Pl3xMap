@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.world.ChunkHelper;
 import net.pl3x.map.world.MapWorld;
 
 public class BiomeColors {
@@ -177,8 +178,8 @@ public class BiomeColors {
     }
 
     public int fixBiomeColor(ChunkHelper chunkHelper, Biome biome, BlockState state, BlockPos pos, int color) {
-        int blend = this.mapWorld.getConfig().RENDER_BLOCKS_BIOME_BLEND;
-        boolean translucentFluids = this.mapWorld.getConfig().RENDER_FLUIDS_TRANSLUCENT;
+        int blend = this.mapWorld.getConfig().RENDER_BIOME_BLEND;
+        boolean translucentFluids = this.mapWorld.getConfig().RENDER_TRANSLUCENT_FLUIDS;
 
         if (grassColorBlocks.contains(state.getBlock())) {
             color = getGrassColor(chunkHelper, biome, pos, blend);

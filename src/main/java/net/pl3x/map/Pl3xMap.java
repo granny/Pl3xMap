@@ -10,6 +10,8 @@ import net.pl3x.map.logger.LogFilter;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.logger.Pl3xLogger;
 import net.pl3x.map.player.PlayerListener;
+import net.pl3x.map.render.scanner.Scanner;
+import net.pl3x.map.render.scanner.Scanners;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import net.pl3x.map.world.WorldListener;
@@ -80,6 +82,10 @@ public class Pl3xMap extends JavaPlugin {
 
         // load remaining configs
         Advanced.reload();
+
+        // start up built in scanners
+        //noinspection unused
+        Class<? extends Scanner> basic = Scanners.BASIC;
 
         // enable the plugin
         enable();

@@ -1,4 +1,4 @@
-package net.pl3x.map.render.io;
+package net.pl3x.map.render.image.io;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.metadata.ImageMetadata;
@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import net.pl3x.map.logger.Logger;
-import net.pl3x.map.render.Image;
+import net.pl3x.map.render.image.Image;
 
 public class Webp extends IO.Type {
     private static final String EXTENSION = "webp";

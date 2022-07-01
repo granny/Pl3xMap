@@ -15,8 +15,8 @@ import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.command.arguments.MapWorldArgument;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.render.AbstractRender;
-import net.pl3x.map.render.progress.Progress;
+import net.pl3x.map.render.renderer.Renderer;
+import net.pl3x.map.render.renderer.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,7 +51,7 @@ public class StatusCommand extends Pl3xMapCommand {
         MapWorld mapWorld = resolveWorld(context);
         String type = context.getOrDefault("type", null);
 
-        AbstractRender render = mapWorld.getActiveRender();
+        Renderer render = mapWorld.getActiveRender();
         Progress progress = render != null ? render.getProgress() : null;
 
         // toggle it

@@ -43,6 +43,10 @@ public class Colors {
         return setAlpha(0xFF, rgb(r, g, b));
     }
 
+    public static int mix(int color0, int color1) {
+        return setAlpha(0xFF, mix(color0, color1, alpha(color1) / (float) 0xFF));
+    }
+
     public static int rgb(int red, int green, int blue) {
         return red << 16 | green << 8 | blue;
     }

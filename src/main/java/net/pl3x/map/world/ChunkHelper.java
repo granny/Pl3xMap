@@ -1,4 +1,4 @@
-package net.pl3x.map.util;
+package net.pl3x.map.world;
 
 import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
@@ -35,18 +35,17 @@ import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
-import net.pl3x.map.render.AbstractRender;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.render.renderer.Renderer;
 
 public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
     private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
-    private final AbstractRender render;
+    private final Renderer render;
 
     private final Consumer<String> onError = s -> {
     };
 
-    public ChunkHelper(AbstractRender render) {
+    public ChunkHelper(Renderer render) {
         this.render = render;
     }
 
@@ -96,13 +95,13 @@ public class ChunkHelper {
             int index = level.getSectionIndexFromSectionY(chunkYPos);
             if (index >= 0 && index < levelChunkSections.length) {
                 PalettedContainer<BlockState> states;
-                if ((this.render.getWorld().getConfig().RENDER_LAYER_BLOCKS || this.render.getWorld().getConfig().RENDER_LAYER_FLUIDS) && chunkSectionNBT.contains("block_states", 10)) {
+                if (chunkSectionNBT.contains("block_states", 10)) {
                     states = ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError);
                 } else {
                     states = new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, null);
                 }
                 PalettedContainer<Holder<Biome>> biomes;
-                if (this.render.getWorld().getConfig().RENDER_LAYER_BIOMES && chunkSectionNBT.contains("biomes", 10)) {
+                if (chunkSectionNBT.contains("biomes", 10)) {
                     Codec<PalettedContainer<Holder<Biome>>> biomeCodec = PalettedContainer.codecRW(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS), null);
                     biomes = biomeCodec.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError);
                 } else {
@@ -117,14 +116,12 @@ public class ChunkHelper {
         }, null);
 
         // populate the heightmap from NBT
-        if (this.render.getWorld().getConfig().RENDER_LAYER_HEIGHTS) {
-            CompoundTag heightmaps = nbt.getCompound("Heightmaps");
-            String key = Heightmap.Types.WORLD_SURFACE.getSerializationKey();
-            if (heightmaps.contains(key, 12)) {
-                chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, heightmaps.getLongArray(key));
-            }
-            Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
+        CompoundTag heightmaps = nbt.getCompound("Heightmaps");
+        String key = Heightmap.Types.WORLD_SURFACE.getSerializationKey();
+        if (heightmaps.contains(key, 12)) {
+            chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, heightmaps.getLongArray(key));
         }
+        Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
 
         // rejoice
         return chunk;

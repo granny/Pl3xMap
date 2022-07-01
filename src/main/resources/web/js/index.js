@@ -26,38 +26,21 @@ window.onload = function () {
     map.setView(toLatLng(0, 0), zoom);
     //map.setView(toLatLng(18880, 6321), zoom); // earth world spawn
 
+    // create layers
+    let base = L.tileLayer.reversedZoom(`tiles/${world}/{z}/{x}_{y}.${format}`).setZIndex(0);
+    let players = new L.layerGroup().setZIndex(100);
+
     // set up layer controls
     let layerControls = L.control.layers({}, {}, {position: 'topleft'});
 
     // add layer controls to map
     layerControls.addTo(map);
 
-    // create layers
-    let blocks = L.tileLayer.reversedZoom(`tiles/${world}/{z}/blocks/{x}_{y}.${format}`).setZIndex(0);
-    let biomes = L.tileLayer.reversedZoom(`tiles/${world}/{z}/biomes/{x}_{y}.${format}`).setZIndex(0);
-    let temps = L.tileLayer.reversedZoom(`tiles/${world}/{z}/temps/{x}_{y}.${format}`).setZIndex(0);
-    let humidity = L.tileLayer.reversedZoom(`tiles/${world}/{z}/humidity/{x}_{y}.${format}`).setZIndex(0);
-    let inhabited = L.tileLayer.reversedZoom(`tiles/${world}/{z}/inhabited/{x}_{y}.${format}`).setZIndex(0);
-
-    let heights = L.tileLayer.reversedZoom(`tiles/${world}/{z}/heights/{x}_{y}.${format}`).setZIndex(1);
-    let fluids = L.tileLayer.reversedZoom(`tiles/${world}/{z}/fluids/{x}_{y}.${format}`).setZIndex(2);
-    let players = new L.layerGroup().setZIndex(100);
-
     // add layers
-    layerControls.addBaseLayer(blocks, "Blocks");
-    layerControls.addBaseLayer(biomes, "Biomes");
-    layerControls.addBaseLayer(temps, "Temps");
-    layerControls.addBaseLayer(humidity, "Humidity");
-    layerControls.addBaseLayer(inhabited, "Inhabited");
-
-    layerControls.addOverlay(heights, "Heightmap");
-    layerControls.addOverlay(fluids, "Fluids");
     layerControls.addOverlay(players, "Players");
 
     // select default layers to show
-    blocks.addTo(map);
-    heights.addTo(map);
-    fluids.addTo(map);
+    base.addTo(map);
     players.addTo(map);
 };
 

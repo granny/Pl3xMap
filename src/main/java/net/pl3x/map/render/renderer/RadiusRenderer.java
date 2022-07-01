@@ -1,4 +1,4 @@
-package net.pl3x.map.render;
+package net.pl3x.map.render.renderer;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -10,21 +10,22 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.minecraft.world.level.ChunkPos;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.render.iterator.ChunkSpiralIterator;
-import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.iterator.coordinate.Coordinate;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.progress.Progress;
-import net.pl3x.map.render.queue.ScanRegion;
+import net.pl3x.map.render.renderer.iterator.ChunkSpiralIterator;
+import net.pl3x.map.render.renderer.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.renderer.iterator.coordinate.Coordinate;
+import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.renderer.progress.Progress;
+import net.pl3x.map.render.scanner.Scanner;
+import net.pl3x.map.render.scanner.Scanners;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
-public class RadiusRender extends AbstractRender {
+public class RadiusRenderer extends Renderer {
     private final int radius;
     private long timeStarted;
 
-    public RadiusRender(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
+    public RadiusRenderer(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
         super(mapWorld, starter, centerX, centerZ);
         this.radius = Coordinate.blockToChunk(radius);
     }
@@ -86,9 +87,9 @@ public class RadiusRender extends AbstractRender {
             totalChunks++;
         }
 
-        List<ScanRegion> tasks = new ArrayList<>();
+        List<Scanner> scannerTasks = new ArrayList<>();
 
-        regions.forEach((region, list) -> tasks.add(new ScanRegion(this, region, list)));
+        regions.forEach((region, list) -> scannerTasks.add(Scanners.INSTANCE.createScanner("basic", this, region, list)));
 
         getProgress().setTotalRegions(regions.size());
         getProgress().setTotalChunks(totalChunks);
@@ -98,7 +99,7 @@ public class RadiusRender extends AbstractRender {
 
         Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
 
-        tasks.forEach(getRenderExecutor()::submit);
+        scannerTasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override
