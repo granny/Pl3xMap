@@ -3,6 +3,11 @@ package net.pl3x.map.command.commands;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
@@ -15,12 +20,6 @@ import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class StatusCommand extends Pl3xMapCommand {
     public StatusCommand(Pl3xMap plugin, CommandManager commandManager) {

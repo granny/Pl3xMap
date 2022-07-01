@@ -2,6 +2,7 @@ package net.pl3x.map.command.commands;
 
 import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
+import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -11,8 +12,6 @@ import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.command.CommandSender;
-
-import java.util.concurrent.TimeUnit;
 
 public class ConfirmCommand extends Pl3xMapCommand {
     private final CommandConfirmationManager<CommandSender> confirmationManager = new CommandConfirmationManager<>(

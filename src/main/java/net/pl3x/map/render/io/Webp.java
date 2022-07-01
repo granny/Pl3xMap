@@ -5,9 +5,6 @@ import com.sksamuel.scrimage.metadata.ImageMetadata;
 import com.sksamuel.scrimage.nio.ImmutableImageLoader;
 import com.sksamuel.scrimage.webp.WebpImageReader;
 import com.sksamuel.scrimage.webp.WebpWriter;
-import net.pl3x.map.logger.Logger;
-import net.pl3x.map.render.Image;
-
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,6 +12,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import net.pl3x.map.logger.Logger;
+import net.pl3x.map.render.Image;
 
 public class Webp extends IO.Type {
     private static final String EXTENSION = "webp";

@@ -1,5 +1,8 @@
 package net.pl3x.map.render.progress;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -9,10 +12,6 @@ import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.Mathf;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProgressBossbar {
     private final Progress progress;

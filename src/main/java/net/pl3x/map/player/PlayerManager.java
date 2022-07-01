@@ -1,13 +1,12 @@
 package net.pl3x.map.player;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import net.pl3x.map.Pl3xMap;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Manages player specific data

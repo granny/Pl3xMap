@@ -10,6 +10,8 @@ import cloud.commandframework.minecraft.extras.AudienceProvider;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -28,9 +30,6 @@ import net.pl3x.map.command.commands.StatusCommand;
 import net.pl3x.map.command.exception.CompletedSuccessfullyException;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.command.CommandSender;
-
-import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
     public CommandManager(Pl3xMap plugin) throws Exception {

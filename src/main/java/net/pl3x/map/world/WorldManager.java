@@ -1,15 +1,14 @@
 package net.pl3x.map.world;
 
-import net.pl3x.map.configuration.WorldConfig;
-import net.pl3x.map.logger.Logger;
-import org.bukkit.World;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.pl3x.map.configuration.WorldConfig;
+import net.pl3x.map.logger.Logger;
+import org.bukkit.World;
 
 /**
  * Manages mapped worlds

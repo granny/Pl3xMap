@@ -4,6 +4,11 @@ import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
@@ -32,12 +37,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.world.MapWorld;
-
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();

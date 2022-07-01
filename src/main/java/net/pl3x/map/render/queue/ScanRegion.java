@@ -1,12 +1,11 @@
 package net.pl3x.map.render.queue;
 
+import java.util.Collection;
+import java.util.Collections;
 import net.minecraft.world.level.ChunkPos;
 import net.pl3x.map.render.AbstractRender;
 import net.pl3x.map.render.Image;
 import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public class ScanRegion extends AbstractScan {
     private final RegionCoordinate region;

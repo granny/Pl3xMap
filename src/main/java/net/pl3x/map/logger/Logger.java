@@ -1,11 +1,10 @@
 package net.pl3x.map.logger;
 
+import java.util.logging.Level;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.Bukkit;
-
-import java.util.logging.Level;
 
 public class Logger {
     public static void debug(String message) {

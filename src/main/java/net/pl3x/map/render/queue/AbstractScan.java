@@ -1,5 +1,6 @@
 package net.pl3x.map.render.queue;
 
+import java.util.Arrays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -20,8 +21,6 @@ import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.MapWorld;
 import org.apache.commons.lang3.BooleanUtils;
-
-import java.util.Arrays;
 
 public abstract class AbstractScan implements Runnable {
     protected final AbstractRender render;

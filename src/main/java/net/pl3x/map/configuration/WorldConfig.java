@@ -1,9 +1,8 @@
 package net.pl3x.map.configuration;
 
+import java.util.List;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
-
-import java.util.List;
 
 public class WorldConfig extends AbstractConfig {
     @Key("enabled")

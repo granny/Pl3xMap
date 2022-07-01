@@ -1,16 +1,15 @@
 package net.pl3x.map.logger;
 
 import io.papermc.paper.console.HexFormattingConverter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.pl3x.map.configuration.Lang;
-import org.bukkit.Bukkit;
-
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.pl3x.map.configuration.Lang;
+import org.bukkit.Bukkit;
 
 public class Pl3xLogger extends Logger {
     public Pl3xLogger() {

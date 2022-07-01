@@ -1,5 +1,9 @@
 package net.pl3x.map.world;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Advanced;
 import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
@@ -44,11 +48,6 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.EventExecutor;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class WorldListener implements Listener {
     private final Pl3xMap plugin;

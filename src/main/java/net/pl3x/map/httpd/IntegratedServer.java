@@ -8,16 +8,15 @@ import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.handlers.resource.ResourceManager;
 import io.undertow.util.ETag;
 import io.undertow.util.Headers;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.LogFilter;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.world.MapWorld;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 
 public class IntegratedServer {
     public static final IntegratedServer INSTANCE = new IntegratedServer();

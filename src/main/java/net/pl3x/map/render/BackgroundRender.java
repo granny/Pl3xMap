@@ -1,13 +1,6 @@
 package net.pl3x.map.render;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.minecraft.world.level.ChunkPos;
-import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.queue.ScanRegion;
-import net.pl3x.map.world.MapWorld;
-import org.bukkit.Bukkit;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -15,6 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
+import net.minecraft.world.level.ChunkPos;
+import net.pl3x.map.render.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.queue.ScanRegion;
+import net.pl3x.map.world.MapWorld;
+import org.bukkit.Bukkit;
 
 public class BackgroundRender extends AbstractRender {
     public BackgroundRender(MapWorld mapWorld) {

@@ -1,9 +1,5 @@
 package net.pl3x.map.util;
 
-import net.minecraft.server.level.ServerLevel;
-import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.logger.Logger;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +18,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import net.minecraft.server.level.ServerLevel;
+import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.logger.Logger;
 
 public class FileUtil {
     public static final Path PLUGIN_DIR = Pl3xMap.getInstance().getDataFolder().toPath();

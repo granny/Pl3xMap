@@ -6,6 +6,10 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.world.MapWorld;
@@ -13,11 +17,6 @@ import net.pl3x.map.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public class MapWorldArgument<C> extends CommandArgument<C, MapWorld> {
     protected MapWorldArgument(boolean required, String name, String defaultValue, BiFunction<CommandContext<C>, String, List<String>> suggestionsProvider, ArgumentDescription defaultDescription) {

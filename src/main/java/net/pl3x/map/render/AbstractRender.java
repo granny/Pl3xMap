@@ -1,18 +1,17 @@
 package net.pl3x.map.render;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.render.progress.Progress;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractRender implements Runnable {
     private final MapWorld mapWorld;

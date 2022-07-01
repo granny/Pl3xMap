@@ -1,10 +1,9 @@
 package net.pl3x.map.render.io;
 
-import net.pl3x.map.render.Image;
-
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.Locale;
+import net.pl3x.map.render.Image;
 
 public abstract class IO {
     private static final Png PNG = new Png();

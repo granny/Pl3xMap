@@ -1,17 +1,16 @@
 package net.pl3x.map.render.io;
 
-import net.pl3x.map.logger.Logger;
-
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import net.pl3x.map.logger.Logger;
 
 public class Png extends IO.Type {
     private static final String EXTENSION = "png";
