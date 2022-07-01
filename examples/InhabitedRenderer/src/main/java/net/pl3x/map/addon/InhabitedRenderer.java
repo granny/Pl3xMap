@@ -22,43 +22,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class InhabitedRenderer extends JavaPlugin {
-    // the most difficult part of this example is determining what is the
-    // highest inhabited time in the entire world so we know what our "hottest"
-    // value on the heatmap actually is. the best we can do is compare each
-    // chunk as we see them. i'm open to suggestions for a better method.
-    private static final Map<UUID, Long> highestInhabitedTime = new HashMap<>();
-
     @Override
     public void onEnable() {
         // register our custom renderer with Pl3xMap
         Scanners.INSTANCE.register("inhabited", InhabitedScanner.class);
-
-        // check chunks already loaded before plugin started
-        Bukkit.getWorlds().forEach(world -> {
-            UUID uuid = world.getUID();
-            for (Chunk chunk : world.getLoadedChunks()) {
-                long inhabited = chunk.getInhabitedTime();
-                checkHighestTime(uuid, inhabited);
-            }
-        });
-
-        // check inhabited times on chunk load
-        getServer().getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onChunkLoad(ChunkLoadEvent event) {
-                UUID uuid = event.getWorld().getUID();
-                long inhabited = event.getChunk().getInhabitedTime();
-                checkHighestTime(uuid, inhabited);
-            }
-        }, this);
-    }
-
-    // try our best to know the world's highest inhabited time
-    private static void checkHighestTime(UUID uuid, long inhabited) {
-        long highestKnown = highestInhabitedTime.computeIfAbsent(uuid, k -> inhabited);
-        if (inhabited > highestKnown) {
-            highestInhabitedTime.put(uuid, inhabited);
-        }
     }
 
     public static class InhabitedScanner extends Scanner {
@@ -115,16 +82,9 @@ public class InhabitedRenderer extends JavaPlugin {
             UUID uuid = getWorld().getUUID();
             long inhabited = chunk.getInhabitedTime();
 
-            // check highest time because we loaded this
-            // chunk ourselves with chunk helper
-            checkHighestTime(uuid, inhabited);
-
-            // get the current highest known inhabited time
-            long highestKnown = highestInhabitedTime.get(uuid);
-
             // we hsb lerp between blue and red with ratio being the
-            // percent inhabited time is of the highest known inhabited time
-            float ratio = Mathf.inverseLerp(0F, highestKnown, inhabited);
+            // percent inhabited time is of the maxed out inhabited time
+            float ratio = Mathf.inverseLerp(0F, 3600000, inhabited);
             return Colors.lerpHSB(0xFF0000FF, 0xFFFF0000, ratio, false);
         }
     }

@@ -6,3 +6,5 @@ pluginManagement {
 }
 
 rootProject.name = "Pl3xMap"
+
+include(":examples:InhabitedRenderer")
