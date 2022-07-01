@@ -47,8 +47,12 @@ public abstract class Scanner implements Runnable {
         return this.chunkHelper;
     }
 
-    public Image.Holder getImageSet() {
+    public Image.Holder getImageHolder() {
         return this.imageHolder;
+    }
+
+    public void setImageHolder(Image.Holder imageHolder) {
+        this.imageHolder = imageHolder;
     }
 
     @Override

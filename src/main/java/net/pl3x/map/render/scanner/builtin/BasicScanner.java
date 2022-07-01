@@ -112,7 +112,7 @@ public class BasicScanner extends Scanner {
                     pixelColor = Colors.mix(pixelColor, fluidColor);
                 }
 
-                getImageSet().getImage().setPixel(pixelX, pixelZ, pixelColor);
+                getImageHolder().getImage().setPixel(pixelX, pixelZ, pixelColor);
 
             }
         }
