@@ -173,17 +173,14 @@ public abstract class AbstractScan implements Runnable {
     }
 
     protected void scanBiome() {
-        Holder<Biome> biomeHolder;
-        if (config.RENDER_BLOCKS_BIOME_BLEND > 0) {
-            biomeHolder = this.chunkHelper.getBiomeWithCaching(this.mapWorld, pos);
-        } else {
-            biomeHolder = this.chunkHelper.getBiome(this.mapWorld, pos);
-        }
-        biome = biomeHolder.value();
+        Holder<Biome> biomeHolder = getBiome();
         imageSet.getBiomes().setPixel(pixelX, pixelZ, Advanced.BIOME_COLORS.getOrDefault(biomeHolder.unwrapKey().orElse(null), 0));
     }
 
     protected void scanTemps() {
+        if (biome == null) {
+            getBiome();
+        }
         @SuppressWarnings("deprecation")
         float temp = biome.getTemperature(pos);
         int rgb = Colors.mix(0xFF0000FF, 0xFFFF0000, Mathf.inverseLerp(-1F, 2F, temp));
@@ -191,6 +188,9 @@ public abstract class AbstractScan implements Runnable {
     }
 
     protected void scanHumidity() {
+        if (biome == null) {
+            getBiome();
+        }
         float humidity = biome.getDownfall();
         int rgb = Colors.mix(0xFFFFFFFF, 0xFF0000FF, Mathf.inverseLerp(0F, 1F, humidity));
         imageSet.getHumidity().setPixel(pixelX, pixelZ, rgb);
@@ -238,6 +238,17 @@ public abstract class AbstractScan implements Runnable {
     protected void cleanup() {
         this.chunkHelper.clear();
         this.render.getProgress().getProcessedRegions().getAndIncrement();
+    }
+
+    private Holder<Biome> getBiome() {
+        Holder<Biome> biomeHolder;
+        if (config.RENDER_BLOCKS_BIOME_BLEND > 0) {
+            biomeHolder = this.chunkHelper.getBiomeWithCaching(this.mapWorld, pos);
+        } else {
+            biomeHolder = this.chunkHelper.getBiome(this.mapWorld, pos);
+        }
+        biome = biomeHolder.value();
+        return biomeHolder;
     }
 
     public static class Easing {
