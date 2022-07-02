@@ -131,7 +131,7 @@ public class FullRenderer extends Renderer {
         regionsToScan.forEach((region, done) -> {
             // only create a task for regions not already scanned
             if (!done) {
-                scannerTasks.add(Scanners.INSTANCE.createScanner("basic", this, region, Collections.emptySet()));
+                scannerTasks.add(Scanners.INSTANCE.createScanner("inhabited", this, region, Collections.emptySet()));
             }
         });
 

@@ -50,75 +50,17 @@ public class BasicScanner extends Scanner {
                 pos.set(blockX + x, 0, blockZ + z);
                 pos.setY(chunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) + 1);
 
-                // setup data
+                int pixelColor = scanBlock(chunk, pos, lastY, x);
+
                 int pixelX = pos.getX() & Image.SIZE - 1;
                 int pixelZ = pos.getZ() & Image.SIZE - 1;
-                BlockState state;
-                int blockColor = 0;
-                float depth = 0F;
-                boolean isFluid;
-                Boolean lava = null;
-
-                // let's find the right block to work with
-                do {
-                    pos.move(Direction.DOWN);
-                    state = chunk.getBlockState(pos);
-                    isFluid = !state.getFluidState().isEmpty();
-                    if (isFluid && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
-                        if (lava == null) {
-                            lava = chunk.getBlockState(pos).is(Blocks.LAVA);
-                        }
-                        depth += 0.025F;
-                    } else {
-                        blockColor = Colors.getBlockColor(state);
-                    }
-                } while (pos.getY() > getWorld().getLevel().getMinBuildHeight() && (blockColor <= 0 || (isFluid && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS)));
-
-                Biome biome;
-                if (getWorld().getConfig().RENDER_BIOME_BLEND > 0) {
-                    biome = getChunkHelper().getBiomeWithCaching(getWorld(), pos).value();
-                } else {
-                    biome = getChunkHelper().getBiome(getWorld(), pos).value();
-                }
-
-                // update color for correct biome
-                blockColor = getWorld().getBiomeColors().fixBiomeColor(getChunkHelper(), biome, state, pos, blockColor);
-                int pixelColor = blockColor == 0 ? blockColor : (0xFF << 24) | blockColor;
-
-                int heightColor = 0x22;
-                if (lastY[x] != Integer.MAX_VALUE) {
-                    if (pos.getY() > lastY[x]) {
-                        heightColor = 0x00;
-                    } else if (pos.getY() < lastY[x]) {
-                        heightColor = 0x44;
-                    }
-                }
-                pixelColor = Colors.mix(pixelColor, heightColor << 24);
-                lastY[x] = pos.getY();
-
-                if (getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
-                    // let's do some maths to get pretty fluid colors based on depth
-                    int fluidColor;
-                    if (BooleanUtils.isTrue(lava)) {
-                        fluidColor = Colors.getBlockColor(Blocks.LAVA.defaultBlockState());
-                        fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.3F, Easing.cubicOut(depth / 1.5F)));
-                        fluidColor = Colors.setAlpha(0xFF, fluidColor);
-                    } else {
-                        BlockPos pos1 = new BlockPos(pos.getX(), pos.getY() + (depth / 0.025F), pos.getZ());
-                        fluidColor = getWorld().getBiomeColors().getWaterColor(getChunkHelper(), biome, pos1, getWorld().getConfig().RENDER_BIOME_BLEND);
-                        fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.45F, Easing.cubicOut(depth / 1.5F)));
-                        fluidColor = Colors.setAlpha((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
-                    }
-                    pixelColor = Colors.mix(pixelColor, fluidColor);
-                }
 
                 getImageHolder().getImage().setPixel(pixelX, pixelZ, pixelColor);
-
             }
         }
     }
 
-    private void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos pos, int[] lastY) {
+    public void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos pos, int[] lastY) {
         ChunkAccess northChunk = getChunkHelper().getChunk(getWorld().getLevel(), chunkX, chunkZ - 1);
         if (northChunk == null) {
             Arrays.fill(lastY, Integer.MAX_VALUE);
@@ -138,6 +80,70 @@ public class BasicScanner extends Scanner {
                 lastY[x] = pos.getY();
             }
         }
+    }
+
+    public int scanBlock(ChunkAccess chunk, BlockPos.MutableBlockPos pos, int[] lastY, int x) {
+        // setup data
+        BlockState state;
+        int blockColor = 0;
+        float depth = 0F;
+        boolean isFluid;
+        Boolean lava = null;
+
+        // let's find the right block to work with
+        do {
+            pos.move(Direction.DOWN);
+            state = chunk.getBlockState(pos);
+            isFluid = !state.getFluidState().isEmpty();
+            if (isFluid && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
+                if (lava == null) {
+                    lava = chunk.getBlockState(pos).is(Blocks.LAVA);
+                }
+                depth += 0.025F;
+            } else {
+                blockColor = Colors.getBlockColor(state);
+            }
+        } while (pos.getY() > getWorld().getLevel().getMinBuildHeight() && (blockColor <= 0 || (isFluid && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS)));
+
+        Biome biome;
+        if (getWorld().getConfig().RENDER_BIOME_BLEND > 0) {
+            biome = getChunkHelper().getBiomeWithCaching(getWorld(), pos).value();
+        } else {
+            biome = getChunkHelper().getBiome(getWorld(), pos).value();
+        }
+
+        // update color for correct biome
+        blockColor = getWorld().getBiomeColors().fixBiomeColor(getChunkHelper(), biome, state, pos, blockColor);
+        int pixelColor = blockColor == 0 ? blockColor : (0xFF << 24) | blockColor;
+
+        int heightColor = 0x22;
+        if (lastY[x] != Integer.MAX_VALUE) {
+            if (pos.getY() > lastY[x]) {
+                heightColor = 0x00;
+            } else if (pos.getY() < lastY[x]) {
+                heightColor = 0x44;
+            }
+        }
+        pixelColor = Colors.mix(pixelColor, heightColor << 24);
+        lastY[x] = pos.getY();
+
+        if (getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
+            // let's do some maths to get pretty fluid colors based on depth
+            int fluidColor;
+            if (BooleanUtils.isTrue(lava)) {
+                fluidColor = Colors.getBlockColor(Blocks.LAVA.defaultBlockState());
+                fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.3F, Easing.cubicOut(depth / 1.5F)));
+                fluidColor = Colors.setAlpha(0xFF, fluidColor);
+            } else {
+                BlockPos pos1 = new BlockPos(pos.getX(), pos.getY() + (depth / 0.025F), pos.getZ());
+                fluidColor = getWorld().getBiomeColors().getWaterColor(getChunkHelper(), biome, pos1, getWorld().getConfig().RENDER_BIOME_BLEND);
+                fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.45F, Easing.cubicOut(depth / 1.5F)));
+                fluidColor = Colors.setAlpha((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
+            }
+            pixelColor = Colors.mix(pixelColor, fluidColor);
+        }
+
+        return pixelColor;
     }
 
     public static class Easing {
