@@ -7,4 +7,14 @@ pluginManagement {
 
 rootProject.name = "Pl3xMap"
 
-include(":examples:InhabitedRenderer")
+setupSubproject("Pl3xMap") {
+    projectDir = file("plugin")
+}
+setupSubproject("InhabitedRenderer") {
+    projectDir = file("examples/inhabited")
+}
+
+inline fun setupSubproject(name: String, block: ProjectDescriptor.() -> Unit) {
+    include(name)
+    project(":$name").apply(block)
+}

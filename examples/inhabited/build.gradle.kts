@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "1.3.7"
 }
 
 group = "net.pl3x.map.addon"
@@ -11,20 +10,18 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-repositories {
-    mavenLocal()
-}
-
 dependencies {
     paperDevBundle("1.19-R0.1-SNAPSHOT")
-    compileOnly("net.pl3x.map:Pl3xMap:2.0.0-SNAPSHOT")
+    compileOnly(project(":Pl3xMap"))
 }
 
 tasks {
+    reobfJar {
+        outputJar.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
+    }
     assemble {
         dependsOn(reobfJar)
     }
-
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -36,7 +33,7 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
         filesMatching("plugin.yml") {
             expand(
-                "name" to rootProject.name,
+                "name" to project.name,
                 "group" to project.group,
                 "version" to project.version,
                 "description" to project.description
