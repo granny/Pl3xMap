@@ -1,4 +1,4 @@
-package net.pl3x.map.render.renderer.progress;
+package net.pl3x.map.render.job.progress;
 
 import java.util.HashSet;
 import java.util.Set;

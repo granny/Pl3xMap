@@ -97,6 +97,8 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS = "<green>Found <grey><total></grey> chunks in radius";
     @Key("command.radiusrender.use-status-for-progress")
     public static String COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/map status</grey> command to view progress";
+    @Key("command.radiusrender.error-parsing-region-file")
+    public static String COMMAND_RADIUSRENDER_ERROR_PARSING_REGION_FILE = "Failed to parse coordinates for region file '<path>' (<filename>)";
 
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";

@@ -1,31 +1,30 @@
-package net.pl3x.map.render.renderer;
+package net.pl3x.map.render.job;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.minecraft.world.level.ChunkPos;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.render.renderer.iterator.ChunkSpiralIterator;
-import net.pl3x.map.render.renderer.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.renderer.iterator.coordinate.Coordinate;
-import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.renderer.progress.Progress;
-import net.pl3x.map.render.scanner.Scanner;
-import net.pl3x.map.render.scanner.Scanners;
+import net.pl3x.map.logger.Logger;
+import net.pl3x.map.render.Area;
+import net.pl3x.map.render.job.iterator.ChunkSpiralIterator;
+import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.job.iterator.coordinate.Coordinate;
+import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.job.progress.Progress;
+import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
-public class RadiusRenderer extends Renderer {
+public class RadiusRender extends Render {
     private final int radius;
     private long timeStarted;
 
-    public RadiusRenderer(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
+    public RadiusRender(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
         super(mapWorld, starter, centerX, centerZ);
         this.radius = Coordinate.blockToChunk(radius);
     }
@@ -34,19 +33,24 @@ public class RadiusRenderer extends Renderer {
     public void render() {
         this.timeStarted = System.currentTimeMillis();
 
+        // notify we're getting things set up
         Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
 
+        // get a list of all existing regions
         List<RegionCoordinate> regionFiles = new ArrayList<>();
         List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
         for (Path path : files) {
+            // exit if cancelled
             if (isCancelled()) {
                 return;
             }
 
+            // ignore empty region files
             if (path.toFile().length() == 0) {
                 continue;
             }
 
+            // get region coords from filename
             String filename = path.getFileName().toString();
             String[] split = filename.split("\\.");
             int x, z;
@@ -54,52 +58,68 @@ public class RadiusRenderer extends Renderer {
                 x = Integer.parseInt(split[1]);
                 z = Integer.parseInt(split[2]);
             } catch (NumberFormatException e) {
+                Logger.warn(Lang.COMMAND_RADIUSRENDER_ERROR_PARSING_REGION_FILE
+                        .replace("<path>", path.toString())
+                        .replace("<filename>", filename));
+                e.printStackTrace();
                 continue;
             }
 
+            // add known region
             regionFiles.add(new RegionCoordinate(x, z));
         }
 
-        ChunkSpiralIterator spiral = new ChunkSpiralIterator(
-                Coordinate.blockToChunk(getCenterX()),
-                Coordinate.blockToChunk(getCenterZ()),
-                this.radius);
+        int chunkCenterX = Coordinate.blockToChunk(getCenterX());
+        int chunkCenterZ = Coordinate.blockToChunk(getCenterZ());
 
-        Map<RegionCoordinate, List<Long>> regions = new LinkedHashMap<>();
+        // create spiral iterator to order chunk scanning
+        ChunkSpiralIterator chunkSpiral = new ChunkSpiralIterator(chunkCenterX, chunkCenterZ, this.radius);
 
+        // use a LinkedHashSet in order to keep regions in spiral order
+        LinkedHashSet<RegionCoordinate> regions = new LinkedHashSet<>();
+
+        // iterate chunks to add them to regions list
         long totalChunks = 0;
-
-        while (spiral.hasNext()) {
+        while (chunkSpiral.hasNext()) {
+            // exit if cancelled
             if (isCancelled()) {
                 return;
             }
 
-            ChunkCoordinate chunk = spiral.next();
+            // get region for chunk
+            ChunkCoordinate chunk = chunkSpiral.next();
             RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
 
+            // this region does not exist, ignore
             if (!regionFiles.contains(region)) {
                 continue;
             }
 
-            List<Long> list = regions.computeIfAbsent(region, k -> new ArrayList<>());
-            list.add(ChunkPos.asLong(chunk.getChunkX(), chunk.getChunkZ()));
+            // we'll use this region
+            regions.add(region);
 
+            // increment chunks count for progress
             totalChunks++;
         }
 
-        List<Scanner> scannerTasks = new ArrayList<>();
+        // set our scannable area from radius around center
+        Area scannableArea = new Area(chunkCenterX - radius, chunkCenterZ - radius, chunkCenterX + radius, chunkCenterZ + radius);
 
-        regions.forEach((region, list) -> scannerTasks.add(Scanners.INSTANCE.createScanner("basic", this, region, list)));
+        // create list of render tasks
+        List<ScanTask> rendererTasks = new ArrayList<>();
+        regions.forEach(region -> rendererTasks.add(new ScanTask(this, region, scannableArea)));
 
+        // set progress totals
         getProgress().setTotalRegions(regions.size());
         getProgress().setTotalChunks(totalChunks);
 
+        // notify what we found
         Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS
                 .replace("<total>", Long.toString(getProgress().getTotalChunks())));
-
         Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
 
-        scannerTasks.forEach(getRenderExecutor()::submit);
+        // send the tasks to executor to run
+        rendererTasks.forEach(getRenderExecutor()::submit);
     }
 
     @Override

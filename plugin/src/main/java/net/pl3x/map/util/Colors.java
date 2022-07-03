@@ -1,7 +1,8 @@
 package net.pl3x.map.util;
 
 import java.awt.Color;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
@@ -9,6 +10,8 @@ import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
 import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.world.ChunkHelper;
+import net.pl3x.map.world.MapWorld;
 
 public class Colors {
     public static int lerpRGB(int color0, int color1, float delta) {
@@ -152,26 +155,35 @@ public class Colors {
         return String.format("#%06X", (0xFFFFFF & rgb));
     }
 
-    public static int getBlockColor(BlockState state) {
-        Block block = state.getBlock();
-        int color = Advanced.BLOCK_COLORS.getOrDefault(block, -1);
-
-        if (color != 0) {
-            if (block == Blocks.MELON_STEM || block == Blocks.PUMPKIN_STEM) {
-                int age = state.getValue(StemBlock.AGE);
-                color = rgb(age * 32, 0xFF - age * 8, age * 4);
-            } else if (block == Blocks.WHEAT) {
-                color = Colors.lerpRGB(MaterialColor.PLANT.col, color, (state.getValue(CropBlock.AGE) + 1) / 8F);
-            } else if (block == Blocks.REDSTONE_WIRE) {
-                color = RedStoneWireBlock.getColorForPower(state.getValue(RedStoneWireBlock.POWER));
-            }
-        }
-
+    public static int getRawBlockColor(BlockState state) {
+        int color = Advanced.BLOCK_COLORS.getOrDefault(state.getBlock(), -1);
         if (color < 0) {
             //noinspection ConstantConditions
             return state.getMapColor(null, null).col;
         }
+        return color;
+    }
 
+    public static int fixBlockColor(MapWorld mapWorld, ChunkHelper chunkHelper, Biome biome, BlockState state, BlockPos pos, int color) {
+        if (mapWorld.getBiomeColors().isGrassBlock(state)) {
+            return mapWorld.getBiomeColors().getGrassColor(chunkHelper, biome, pos);
+        }
+        if (mapWorld.getBiomeColors().isFoliageBlock(state)) {
+            return mapWorld.getBiomeColors().getFoliageColor(chunkHelper, biome, pos);
+        }
+        if (!mapWorld.getConfig().RENDER_TRANSLUCENT_FLUIDS && mapWorld.getBiomeColors().isWaterBlock(state)) {
+            return mapWorld.getBiomeColors().getWaterColor(chunkHelper, biome, pos);
+        }
+        if (state.is(Blocks.MELON_STEM) || state.is(Blocks.PUMPKIN_STEM)) {
+            int age = state.getValue(StemBlock.AGE);
+            return Colors.rgb(age * 32, 0xFF - age * 8, age * 4);
+        }
+        if (state.is(Blocks.WHEAT)) {
+            return Colors.lerpRGB(MaterialColor.PLANT.col, color, (state.getValue(CropBlock.AGE) + 1) / 8F);
+        }
+        if (state.is(Blocks.REDSTONE_WIRE)) {
+            return RedStoneWireBlock.getColorForPower(state.getValue(RedStoneWireBlock.POWER));
+        }
         return color;
     }
 }

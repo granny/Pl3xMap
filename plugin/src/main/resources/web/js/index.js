@@ -5,6 +5,7 @@ let zoom = 3; // current zoom
 let maxZoom = 3;
 let extraZoomIn = 2;
 let scale = (1 / Math.pow(2, zoom));
+let renderer = "basic";
 
 window.onload = function () {
     map = L.map(`map`, {
@@ -27,7 +28,7 @@ window.onload = function () {
     //map.setView(toLatLng(18880, 6321), zoom); // earth world spawn
 
     // create layers
-    let base = L.tileLayer.reversedZoom(`tiles/${world}/{z}/{x}_{y}.${format}`).setZIndex(0);
+    let base = L.tileLayer.reversedZoom(`tiles/${world}/{z}/${renderer}/{x}_{y}.${format}`).setZIndex(0);
     let players = new L.layerGroup().setZIndex(100);
 
     // set up layer controls

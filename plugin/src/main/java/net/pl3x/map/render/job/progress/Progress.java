@@ -1,4 +1,4 @@
-package net.pl3x.map.render.renderer.progress;
+package net.pl3x.map.render.job.progress;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,10 +8,10 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.render.renderer.Renderer;
+import net.pl3x.map.render.job.Render;
 
 public class Progress implements Runnable {
-    private final Renderer render;
+    private final Render render;
     private final CPSTracker cpsTracker = new CPSTracker();
 
     private final AtomicLong processedChunks = new AtomicLong(0);
@@ -27,12 +27,12 @@ public class Progress implements Runnable {
     private final Set<Audience> audience = new HashSet<>();
     private final ProgressBossbar bossbar;
 
-    public Progress(Renderer render) {
+    public Progress(Render render) {
         this.render = render;
         this.bossbar = new ProgressBossbar(this);
     }
 
-    public Renderer getRender() {
+    public Render getRender() {
         return this.render;
     }
 

@@ -35,22 +35,18 @@ import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
-import net.pl3x.map.render.renderer.Renderer;
+import net.pl3x.map.render.job.Render;
 
 public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
     private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
-    private final Renderer render;
+    private final Render render;
 
     private final Consumer<String> onError = s -> {
     };
 
-    public ChunkHelper(Renderer render) {
+    public ChunkHelper(Render render) {
         this.render = render;
-    }
-
-    public void clear() {
-        this.chunkCache.clear();
     }
 
     public ChunkAccess getChunk(ServerLevel level, int chunkX, int chunkZ) {
@@ -112,7 +108,7 @@ public class ChunkHelper {
         }
 
         // create our chunk
-        chunk = new LevelChunk(level.getLevel(), new ChunkPos(chunkX, chunkZ), UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), 0, levelChunkSections, o -> {
+        chunk = new LevelChunk(level.getLevel(), new ChunkPos(chunkX, chunkZ), UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), nbt.getLong("InhabitedTime"), levelChunkSections, o -> {
         }, null);
 
         // populate the heightmap from NBT

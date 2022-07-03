@@ -1,23 +1,18 @@
-package net.pl3x.map.render.renderer;
+package net.pl3x.map.render.job;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import net.minecraft.world.level.ChunkPos;
-import net.pl3x.map.render.renderer.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.render.scanner.Scanner;
-import net.pl3x.map.render.scanner.Scanners;
+import net.pl3x.map.render.Area;
+import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 
-public class BackgroundRenderer extends Renderer {
-    public BackgroundRenderer(MapWorld mapWorld) {
+public class BackgroundRender extends Render {
+    public BackgroundRender(MapWorld mapWorld) {
         super(mapWorld, Bukkit.getConsoleSender(), 0, 0,
                 Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_BACKGROUND_RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Background-%d").build()),
@@ -38,25 +33,21 @@ public class BackgroundRenderer extends Renderer {
     @Override
     public void render() {
         Set<ChunkCoordinate> chunks = new HashSet<>();
+
+        // get modified chunks to render this interval
         while (getWorld().hasModifiedChunks() && chunks.size() < getWorld().getConfig().RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL) {
             chunks.add(getWorld().getNextModifiedChunk());
         }
 
-        Map<RegionCoordinate, List<Long>> regions = new LinkedHashMap<>();
+        // don't scan any chunks outside the world border
+        Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
 
-        chunks.forEach(chunk -> {
-            RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
-            List<Long> list = regions.computeIfAbsent(region, k -> new ArrayList<>());
-            list.add(ChunkPos.asLong(chunk.getChunkX(), chunk.getChunkZ()));
-        });
+        // create set of regions from all the modified chunks
+        Set<RegionCoordinate> regions = new HashSet<>();
+        chunks.forEach(chunk -> regions.add(new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ())));
 
-        List<Scanner> scannerTasks = new ArrayList<>();
-
-        regions.forEach((region, list) -> {
-            scannerTasks.add(Scanners.INSTANCE.createScanner("basic", this, region, list));
-        });
-
-        scannerTasks.forEach(getRenderExecutor()::submit);
+        // send regions to executor to scan
+        regions.forEach(region -> getRenderExecutor().submit(new ScanTask(this, region, scannableArea)));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package net.pl3x.map.render.renderer.iterator.coordinate;
+package net.pl3x.map.render.job.iterator.coordinate;
 
 /**
  * Represents chunk coordinates

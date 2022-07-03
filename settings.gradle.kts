@@ -10,6 +10,9 @@ rootProject.name = "Pl3xMap"
 setupSubproject("Pl3xMap") {
     projectDir = file("plugin")
 }
+setupSubproject("BiomeRenderer") {
+    projectDir = file("examples/biomes")
+}
 setupSubproject("InhabitedRenderer") {
     projectDir = file("examples/inhabited")
 }

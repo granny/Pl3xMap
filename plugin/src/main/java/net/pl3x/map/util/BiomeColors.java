@@ -119,6 +119,18 @@ public class BiomeColors {
         return map;
     }
 
+    public boolean isGrassBlock(BlockState state) {
+        return grassColorBlocks.contains(state.getBlock());
+    }
+
+    public boolean isFoliageBlock(BlockState state) {
+        return foliageColorBlocks.contains(state.getBlock());
+    }
+
+    public boolean isWaterBlock(BlockState state) {
+        return waterColorBlocks.contains(state.getBlock()) || waterColorMaterials.contains(state.getMaterial());
+    }
+
     private int getDefaultGrassColor(double temperature, double humidity) {
         int j = (int) ((1.0 - (humidity * temperature)) * 255.0);
         int i = (int) ((1.0 - temperature) * 255.0);
@@ -139,23 +151,23 @@ public class BiomeColors {
         return biome.getSpecialEffects().getGrassColorModifier().modifyColor(pos.getX(), pos.getZ(), this.grassColors.get(biome));
     }
 
-    public int getGrassColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos, int blend) {
-        if (blend > 0) {
-            return sampleNeighbors(chunkHelper, pos, blend, this::grassColorSampler);
+    public int getGrassColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos) {
+        if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
+            return sampleNeighbors(chunkHelper, pos, this.mapWorld.getConfig().RENDER_BIOME_BLEND, this::grassColorSampler);
         }
         return grassColorSampler(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value(), pos);
     }
 
-    public int getFoliageColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos, int blend) {
-        if (blend > 0) {
-            return sampleNeighbors(chunkHelper, pos, blend, (biome1, pos1) -> this.foliageColors.get(biome1));
+    public int getFoliageColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos) {
+        if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
+            return sampleNeighbors(chunkHelper, pos, this.mapWorld.getConfig().RENDER_BIOME_BLEND, (biome1, pos1) -> this.foliageColors.get(biome1));
         }
         return this.foliageColors.get(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value());
     }
 
-    public int getWaterColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos, int blend) {
-        if (blend > 0) {
-            return this.sampleNeighbors(chunkHelper, pos, blend, (biome1, pos1) -> this.waterColors.get(biome1));
+    public int getWaterColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos) {
+        if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
+            return this.sampleNeighbors(chunkHelper, pos, this.mapWorld.getConfig().RENDER_BIOME_BLEND, (biome1, pos1) -> this.waterColors.get(biome1));
         }
         return this.waterColors.get(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value());
     }
@@ -175,20 +187,5 @@ public class BiomeColors {
             }
         }
         return Colors.rgb(r / count, g / count, b / count);
-    }
-
-    public int fixBiomeColor(ChunkHelper chunkHelper, Biome biome, BlockState state, BlockPos pos, int color) {
-        int blend = this.mapWorld.getConfig().RENDER_BIOME_BLEND;
-        boolean translucentFluids = this.mapWorld.getConfig().RENDER_TRANSLUCENT_FLUIDS;
-
-        if (grassColorBlocks.contains(state.getBlock())) {
-            color = getGrassColor(chunkHelper, biome, pos, blend);
-        } else if (foliageColorBlocks.contains(state.getBlock())) {
-            color = getFoliageColor(chunkHelper, biome, pos, blend);
-        } else if (!translucentFluids && waterColorBlocks.contains(state.getBlock()) || waterColorMaterials.contains(state.getMaterial())) {
-            color = getWaterColor(chunkHelper, biome, pos, blend);
-        }
-
-        return color;
     }
 }

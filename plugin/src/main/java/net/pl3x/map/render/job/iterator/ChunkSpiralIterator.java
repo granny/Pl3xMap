@@ -1,6 +1,6 @@
-package net.pl3x.map.render.renderer.iterator;
+package net.pl3x.map.render.job.iterator;
 
-import net.pl3x.map.render.renderer.iterator.coordinate.ChunkCoordinate;
+import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
 
 /**
  * In iterator that spirals around center chunk coordinates in a clockwise pattern

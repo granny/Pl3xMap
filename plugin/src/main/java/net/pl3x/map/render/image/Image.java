@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.minecraft.util.Mth;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.render.image.io.IO;
-import net.pl3x.map.render.renderer.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.world.MapWorld;
 
@@ -19,9 +19,10 @@ public class Image {
     private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     public static final int SIZE = 512;
-    public static final String DIR_PATH = "%d/";
+    public static final String DIR_PATH = "%d/%s/";
     public static final String FILE_PATH = "%d_%d.%s";
 
+    private final String name;
     private final MapWorld mapWorld;
     private final int regionX;
     private final int regionZ;
@@ -31,7 +32,8 @@ public class Image {
 
     private final IO.Type io;
 
-    public Image(MapWorld mapWorld, int regionX, int regionZ) {
+    public Image(String name, MapWorld mapWorld, int regionX, int regionZ) {
+        this.name = name;
         this.mapWorld = mapWorld;
         this.regionX = regionX;
         this.regionZ = regionZ;
@@ -55,7 +57,7 @@ public class Image {
 
     public void saveToDisk() {
         for (int zoom = 0; zoom <= this.mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
-            Path dirPath = this.worldDir.resolve(String.format(DIR_PATH, zoom));
+            Path dirPath = this.worldDir.resolve(String.format(DIR_PATH, zoom, this.name));
 
             // create directories if they don't exist
             createDirs(dirPath);
@@ -155,12 +157,12 @@ public class Image {
         private final RegionCoordinate region;
         private final Image image;
 
-        public Holder(MapWorld mapWorld, RegionCoordinate region) {
+        public Holder(String name, MapWorld mapWorld, RegionCoordinate region) {
             this.mapWorld = mapWorld;
             int regionX = region.getRegionX();
             int regionZ = region.getRegionZ();
             this.region = new RegionCoordinate(regionX, regionZ);
-            this.image = new Image(mapWorld, regionX, regionZ);
+            this.image = new Image(name, mapWorld, regionX, regionZ);
         }
 
         public Image getImage() {
