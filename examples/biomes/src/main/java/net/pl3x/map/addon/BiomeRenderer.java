@@ -44,7 +44,7 @@ public class BiomeRenderer extends JavaPlugin {
             int pixelColor = biomeKey == null ? 0 : Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0);
 
             // work out the heightmap
-            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, lastY, x) << 24);
+            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, lastY, x));
 
             int pixelX = blockPos.getX() & Image.SIZE - 1;
             int pixelZ = blockPos.getZ() & Image.SIZE - 1;
