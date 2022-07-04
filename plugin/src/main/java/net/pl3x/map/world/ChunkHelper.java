@@ -1,9 +1,12 @@
 package net.pl3x.map.world;
 
+import ca.spottedleaf.starlight.common.light.SWMRNibbleArray;
+import ca.spottedleaf.starlight.common.light.StarLightEngine;
 import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import io.papermc.paper.util.WorldUtil;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +37,11 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.pl3x.map.render.job.Render;
+
+import static net.minecraft.server.MinecraftServer.LOGGER;
 
 public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
@@ -81,6 +87,17 @@ public class ChunkHelper {
             return null;
         }
 
+        ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
+
+        java.util.ArrayDeque<Runnable> tasksToExecuteOnMain = new java.util.ArrayDeque<>();
+        boolean isLightOn = nbt.get("isLightOn") != null && nbt.getInt("starlight.light_version") == 8;
+        boolean dimensionHasSkyLight = level.dimensionType().hasSkyLight();
+        LevelLightEngine lightengine = level.getChunkSource().getLightEngine();
+        SWMRNibbleArray[] blockNibbles = StarLightEngine.getFilledEmptyLight(level);
+        SWMRNibbleArray[] skyNibbles = StarLightEngine.getFilledEmptyLight(level);
+        final int minSection = WorldUtil.getMinLightSection(level);
+        boolean queuedTasksToMain = false;
+
         // build only the required palettes from chunk sections
         ListTag sectionsNBT = nbt.getList("sections", 10);
         LevelChunkSection[] levelChunkSections = new LevelChunkSection[level.getSectionsCount()];
@@ -105,11 +122,41 @@ public class ChunkHelper {
                 }
                 levelChunkSections[index] = new LevelChunkSection(chunkYPos, states, biomes);
             }
+
+            boolean hasBlockLight = chunkSectionNBT.contains("BlockLight", 7);
+            boolean hasSkyLight = dimensionHasSkyLight && chunkSectionNBT.contains("SkyLight", 7);
+
+            if (isLightOn) {
+                try {
+                    if ((hasBlockLight || hasSkyLight) && !queuedTasksToMain) {
+                        tasksToExecuteOnMain.add(() -> lightengine.retainData(chunkPos, true));
+                        queuedTasksToMain = true;
+                    }
+
+                    if (hasBlockLight) {
+                        blockNibbles[chunkYPos - minSection] = new SWMRNibbleArray(chunkSectionNBT.getByteArray("BlockLight").clone(), chunkSectionNBT.getInt("starlight.blocklight_state"));
+                    } else {
+                        blockNibbles[chunkYPos - minSection] = new SWMRNibbleArray(null, chunkSectionNBT.getInt("starlight.blocklight_state"));
+                    }
+
+                    if (hasSkyLight) {
+                        skyNibbles[chunkYPos - minSection] = new SWMRNibbleArray(chunkSectionNBT.getByteArray("SkyLight").clone(), chunkSectionNBT.getInt("starlight.skylight_state"));
+                    } else if (dimensionHasSkyLight) {
+                        skyNibbles[chunkYPos - minSection] = new SWMRNibbleArray(null, chunkSectionNBT.getInt("starlight.skylight_state"));
+                    }
+                } catch (Exception ex) {
+                    LOGGER.warn("Failed to load light data for chunk " + chunkPos + " in world '" + level.getWorld().getName() + "', light will be regenerated", ex);
+                    isLightOn = false;
+                }
+            }
         }
 
         // create our chunk
-        chunk = new LevelChunk(level.getLevel(), new ChunkPos(chunkX, chunkZ), UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), nbt.getLong("InhabitedTime"), levelChunkSections, o -> {
+        chunk = new LevelChunk(level.getLevel(), chunkPos, UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), nbt.getLong("InhabitedTime"), levelChunkSections, o -> {
         }, null);
+
+        chunk.setBlockNibbles(blockNibbles);
+        chunk.setSkyNibbles(skyNibbles);
 
         // populate the heightmap from NBT
         CompoundTag heightmaps = nbt.getCompound("Heightmaps");
@@ -118,6 +165,8 @@ public class ChunkHelper {
             chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, heightmaps.getLongArray(key));
         }
         Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
+
+        tasksToExecuteOnMain.forEach(Runnable::run);
 
         // rejoice
         return chunk;
