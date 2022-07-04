@@ -23,6 +23,7 @@ public class Progress implements Runnable {
     private float percent;
     private double cps;
     private String eta = Lang.PROGRESS_ETA_UNKNOWN;
+    private int stallCounter = 0;
 
     private final Set<Audience> audience = new HashSet<>();
     private final ProgressBossbar bossbar;
@@ -117,8 +118,17 @@ public class Progress implements Runnable {
         if (this.cps > 0) {
             long timeLeft = (this.totalChunks - processedChunks) / (long) this.cps * 1000;
             this.eta = formatMilliseconds(timeLeft);
+            this.stallCounter = 0;
         } else {
             this.eta = Lang.PROGRESS_ETA_UNKNOWN;
+            this.stallCounter++;
+        }
+
+        // check for stalled tasks
+        if (this.stallCounter > 10) {
+            Lang.send(getRender().getStarter(), Lang.ERROR_RENDER_STALLED);
+            getRender().getWorld().cancelRender(false);
+            return;
         }
 
         // show progress to listeners

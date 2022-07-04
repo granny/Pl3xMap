@@ -130,6 +130,8 @@ public abstract class Render implements Runnable {
         this.renderExecutor.shutdown();
         this.imageExecutor.shutdown();
 
+        getProgress().getBossbar().hideAll();
+
         onCancel(unloading);
     }
 

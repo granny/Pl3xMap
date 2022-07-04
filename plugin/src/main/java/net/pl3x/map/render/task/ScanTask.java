@@ -87,12 +87,15 @@ public class ScanTask implements Runnable {
             for (int chunkZ = getRegion().getChunkZ(); chunkZ < getRegion().getChunkZ() + 32; chunkZ++) {
                 // make sure render task is still running
                 if (getRender().isCancelled()) {
-                    // don't forget to clean up before exiting
+                    // don't forget to increment chunk counter
+                    getRender().getProgress().getProcessedChunks().getAndIncrement();
                     return;
                 }
 
                 // make sure we're allowed to scan this chunk
-                if (!getScannableArea().contains(chunkX, chunkZ)) {
+                if (!getScannableArea().containsChunk(chunkX, chunkZ)) {
+                    // don't forget to increment chunk counter
+                    getRender().getProgress().getProcessedChunks().getAndIncrement();
                     return;
                 }
 

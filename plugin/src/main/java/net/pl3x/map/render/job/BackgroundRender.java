@@ -34,13 +34,16 @@ public class BackgroundRender extends Render {
     public void render() {
         Set<ChunkCoordinate> chunks = new HashSet<>();
 
-        // get modified chunks to render this interval
-        while (getWorld().hasModifiedChunks() && chunks.size() < getWorld().getConfig().RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL) {
-            chunks.add(getWorld().getNextModifiedChunk());
-        }
-
         // don't scan any chunks outside the world border
         Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
+
+        // get modified chunks to render this interval
+        while (getWorld().hasModifiedChunks() && chunks.size() < getWorld().getConfig().RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL) {
+            ChunkCoordinate chunk = getWorld().getNextModifiedChunk();
+            if (scannableArea.containsChunk(chunk.getChunkX(), chunk.getChunkZ())) {
+                chunks.add(chunk);
+            }
+        }
 
         // create set of regions from all the modified chunks
         Set<RegionCoordinate> regions = new HashSet<>();

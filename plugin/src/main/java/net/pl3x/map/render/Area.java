@@ -39,7 +39,14 @@ public class Area {
         return this.maxZ;
     }
 
-    public boolean contains(int chunkX, int chunkZ) {
+    public boolean containsChunk(int chunkX, int chunkZ) {
         return !(chunkX < getMinX() || chunkX > getMaxX() || chunkZ < getMinZ() || chunkZ > getMaxZ());
+    }
+
+    public boolean containsRegion(int regionX, int regionZ) {
+        return !(regionX < Coordinate.chunkToRegion(getMinX()) ||
+                regionX > Coordinate.chunkToRegion(getMaxX()) ||
+                regionZ < Coordinate.chunkToRegion(getMinZ()) ||
+                regionZ > Coordinate.chunkToRegion(getMaxZ()));
     }
 }

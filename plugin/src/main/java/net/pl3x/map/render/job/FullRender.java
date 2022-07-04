@@ -33,6 +33,9 @@ public class FullRender extends Render {
         // order preserved map of regions with boolean to signify if it was already scanned
         LinkedHashMap<RegionCoordinate, Boolean> regionsToScan = new LinkedHashMap<>();
 
+        // don't scan any chunks outside the world border
+        Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
+
         // check if we have any data to resume
         LinkedHashMap<RegionCoordinate, Boolean> resumedMap = getWorld().getScannedRegions();
         if (!resumedMap.isEmpty()) {
@@ -75,6 +78,11 @@ public class FullRender extends Render {
                             .replace("<path>", path.toString())
                             .replace("<filename>", filename));
                     e.printStackTrace();
+                    continue;
+                }
+
+                // check if region is inside scannable area
+                if (!scannableArea.containsRegion(x, z)) {
                     continue;
                 }
 
@@ -124,9 +132,6 @@ public class FullRender extends Render {
         if (isCancelled()) {
             return;
         }
-
-        // don't scan any chunks outside the world border
-        Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
 
         // add regions to executor tasks that will do the heavy lifting
         List<ScanTask> rendererTasks = new ArrayList<>();

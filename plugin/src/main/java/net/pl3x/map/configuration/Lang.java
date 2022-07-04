@@ -168,6 +168,8 @@ public class Lang extends AbstractConfig {
     public static String ERROR_NO_SUCH_WORLD = "<red>No such world <world>";
     @Key("error.world-disabled")
     public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <world>";
+    @Key("error.render-stalled")
+    public static String ERROR_RENDER_STALLED = "<red>Render has stalled! Cancelling.";
 
     private static final Lang CONFIG = new Lang();
 

@@ -36,6 +36,13 @@ public class RadiusRender extends Render {
         // notify we're getting things set up
         Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
 
+        // find center chunk
+        int chunkCenterX = Coordinate.blockToChunk(getCenterX());
+        int chunkCenterZ = Coordinate.blockToChunk(getCenterZ());
+
+        // set our scannable area from radius around center
+        Area scannableArea = new Area(chunkCenterX - radius, chunkCenterZ - radius, chunkCenterX + radius, chunkCenterZ + radius);
+
         // get a list of all existing regions
         List<RegionCoordinate> regionFiles = new ArrayList<>();
         List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
@@ -65,12 +72,13 @@ public class RadiusRender extends Render {
                 continue;
             }
 
+            if (!scannableArea.containsRegion(x, z)) {
+                continue;
+            }
+
             // add known region
             regionFiles.add(new RegionCoordinate(x, z));
         }
-
-        int chunkCenterX = Coordinate.blockToChunk(getCenterX());
-        int chunkCenterZ = Coordinate.blockToChunk(getCenterZ());
 
         // create spiral iterator to order chunk scanning
         ChunkSpiralIterator chunkSpiral = new ChunkSpiralIterator(chunkCenterX, chunkCenterZ, this.radius);
@@ -101,9 +109,6 @@ public class RadiusRender extends Render {
             // increment chunks count for progress
             totalChunks++;
         }
-
-        // set our scannable area from radius around center
-        Area scannableArea = new Area(chunkCenterX - radius, chunkCenterZ - radius, chunkCenterX + radius, chunkCenterZ + radius);
 
         // create list of render tasks
         List<ScanTask> rendererTasks = new ArrayList<>();
