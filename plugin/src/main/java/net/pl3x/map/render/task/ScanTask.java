@@ -7,6 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -159,6 +162,7 @@ public class ScanTask implements Runnable {
         Biome biome = scanBiome(blockPos).value();
 
         // iterate down until we find a renderable block
+        List<Integer> glass = new ArrayList<>();
         BlockPos fluidPos = null;
         BlockState state;
         int blockColor = 0;
@@ -173,10 +177,17 @@ public class ScanTask implements Runnable {
             }
             // just get a quick color for now
             blockColor = Colors.getRawBlockColor(state);
-        } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && blockColor <= 0);
+            if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
+                glass.add(blockColor);
+                continue;
+            }
+            if (blockColor > 0) {
+                break;
+            }
+        } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
 
         for (Renderer renderer : this.renderers) {
-            renderer.doIt(getWorld(), chunk, state, blockPos, fluidPos, biome, x, z, lastY, blockColor);
+            renderer.doIt(getWorld(), chunk, state, blockPos, fluidPos, biome, x, z, glass, lastY, blockColor);
         }
     }
 
@@ -193,21 +204,30 @@ public class ScanTask implements Runnable {
         if (northChunk == null) {
             Arrays.fill(lastY, Integer.MAX_VALUE);
         } else {
-            BlockState state;
-            int blockColor = 0;
             for (int x = 0; x < 16; x++) {
                 blockPos.set(blockX + x, 0, blockZ + 15);
                 blockPos.setY(northChunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
                 do {
                     blockPos.move(Direction.DOWN);
-                    state = northChunk.getBlockState(blockPos);
+                    BlockState state = northChunk.getBlockState(blockPos);
                     if (!state.getFluidState().isEmpty()) {
                         continue;
                     }
-                    blockColor = Colors.getRawBlockColor(state);
-                } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && blockColor <= 0);
+                    if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
+                        continue;
+                    }
+                    if (Colors.getRawBlockColor(state) > 0) {
+                        break;
+                    }
+                } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
                 lastY[x] = blockPos.getY();
             }
         }
+    }
+
+    public static boolean isGlass(BlockState state) {
+        return state.is(Blocks.GLASS) || state.is(Blocks.GLASS_PANE) ||
+                state.getBlock() instanceof StainedGlassBlock ||
+                state.getBlock() instanceof StainedGlassPaneBlock;
     }
 }

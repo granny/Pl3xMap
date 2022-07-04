@@ -1,5 +1,6 @@
 package net.pl3x.map.render.task;
 
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -60,7 +61,7 @@ public abstract class Renderer {
         this.imageHolder = imageHolder;
     }
 
-    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, int[] lastY, int color);
+    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color);
 
     public int scanHeightMap(BlockPos pos, int[] lastY, int x) {
         // TODO - also check lastY to the left (on z) for better heightmaps

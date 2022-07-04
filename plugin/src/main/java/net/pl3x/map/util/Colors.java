@@ -1,6 +1,7 @@
 package net.pl3x.map.util;
 
 import java.awt.Color;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -112,11 +113,22 @@ public class Colors {
         int r = (int) ((red(color0) * iRatio) + (red(color1) * ratio));
         int g = (int) ((green(color0) * iRatio) + (green(color1) * ratio));
         int b = (int) ((blue(color0) * iRatio) + (blue(color1) * ratio));
-        return setAlpha(0xFF, rgb(r, g, b));
+        return argb(0xFF, r, g, b);
     }
 
     public static int mix(int color0, int color1) {
-        return setAlpha(0xFF, mix(color0, color1, alpha(color1) / (float) 0xFF));
+        return mix(color0, color1, alpha(color1) / (float) 0xFF);
+    }
+
+    public static int merge(List<Integer> colors) {
+        int r = 0, g = 0, b = 0, count = 0;
+        for (int rgb : colors) {
+            r += Colors.red(rgb);
+            g += Colors.green(rgb);
+            b += Colors.blue(rgb);
+            count++;
+        }
+        return Colors.rgb(r / count, g / count, b / count);
     }
 
     public static int rgb(int red, int green, int blue) {

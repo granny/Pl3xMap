@@ -53,6 +53,13 @@ public class WorldConfig extends AbstractConfig {
             so you can see the ground below in shallow waters.""")
     public boolean RENDER_TRANSLUCENT_FLUIDS = true;
 
+    @Key("render.translucent-glass")
+    @Comment("""
+            Enable translucent glass.
+            This will make the glass look fancier and translucent
+            so you can see the ground below.""")
+    public boolean RENDER_TRANSLUCENT_GLASS = true;
+
     @Key("zoom.default")
     @Comment("""
             The default zoom when loading the map in browser.

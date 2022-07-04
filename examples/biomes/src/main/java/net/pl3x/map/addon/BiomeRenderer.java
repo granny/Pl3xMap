@@ -1,5 +1,6 @@
 package net.pl3x.map.addon;
 
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -35,7 +36,7 @@ public class BiomeRenderer extends JavaPlugin {
         }
 
         @Override
-        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, int[] lastY, int color) {
+        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color) {
             // simplified from BasicRenderer
 
             // determine the biome

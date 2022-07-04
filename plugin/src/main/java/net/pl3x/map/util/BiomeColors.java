@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -174,18 +176,14 @@ public class BiomeColors {
 
     private int sampleNeighbors(ChunkHelper chunkHelper, BlockPos pos, int radius, BiFunction<Biome, BlockPos, Integer> colorSampler) {
         BlockPos.MutableBlockPos pos1 = new BlockPos.MutableBlockPos();
-        int rgb, r = 0, g = 0, b = 0, count = 0;
+        List<Integer> colors = new ArrayList<>();
         for (int x = pos.getX() - radius; x < pos.getX() + radius; x++) {
             for (int z = pos.getZ() - radius; z < pos.getZ() + radius; z++) {
                 pos1.set(x, pos.getY(), z);
                 Biome biome1 = chunkHelper.getBiomeWithCaching(this.mapWorld, pos1).value();
-                rgb = colorSampler.apply(biome1, pos1);
-                r += Colors.red(rgb);
-                g += Colors.green(rgb);
-                b += Colors.blue(rgb);
-                count++;
+                colors.add(colorSampler.apply(biome1, pos1));
             }
         }
-        return Colors.rgb(r / count, g / count, b / count);
+        return Colors.merge(colors);
     }
 }

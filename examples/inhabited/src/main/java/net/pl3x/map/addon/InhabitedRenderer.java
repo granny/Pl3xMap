@@ -1,5 +1,6 @@
 package net.pl3x.map.addon;
 
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,7 +34,7 @@ public class InhabitedRenderer extends JavaPlugin {
         }
 
         @Override
-        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, int[] lastY, int color) {
+        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color) {
             // copied from BasicRenderer
 
             // fix true block color
@@ -41,7 +42,8 @@ public class InhabitedRenderer extends JavaPlugin {
             int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
             // work out the heightmap
-            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, lastY, x));
+            int heightmapColor = scanHeightMap(blockPos, lastY, x);
+            pixelColor = Colors.mix(pixelColor, heightmapColor);
 
             // fancy water, yum
             if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {

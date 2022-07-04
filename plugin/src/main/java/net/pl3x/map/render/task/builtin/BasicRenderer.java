@@ -1,5 +1,6 @@
 package net.pl3x.map.render.task.builtin;
 
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +18,7 @@ public class BasicRenderer extends Renderer {
     }
 
     @Override
-    public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, int[] lastY, int color) {
+    public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color) {
         // fix true block color
         int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), biome, state, blockPos, color);
         int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
@@ -29,6 +30,11 @@ public class BasicRenderer extends Renderer {
         if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
             int fluidColor = fancyWater(blockPos, state, biome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
             pixelColor = Colors.mix(pixelColor, fluidColor);
+        }
+
+        // if there was translucent glass, mix it in here
+        if (!glass.isEmpty()) {
+            pixelColor = Colors.mix(pixelColor, Colors.merge(glass), 0.75F);
         }
 
         int pixelX = blockPos.getX() & Image.SIZE - 1;
