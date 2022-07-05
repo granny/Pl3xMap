@@ -144,13 +144,18 @@ public class ScanTask implements Runnable {
         // iterate each block in this chunk
         for (int z = 0; z < 16; z++) {
 
-            // we need the edge rows of the chunks to the north and west to get heightmap correct
+            // we need the bottom row of the chunk to the north to get heightmap correct
             if (z == 0) {
                 scanNorthChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
-                scanWestChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
             }
 
             for (int x = 0; x < 16; x++) {
+
+                // we need the right row of the chunk to the west to get heightmap correct
+                if (x == 0 && z == 0) {
+                    scanWestChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
+                }
+
                 // find our starting point
                 blockPos.set(blockX + x, 0, blockZ + z);
                 blockPos.setY(chunk.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
