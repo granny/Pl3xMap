@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.StainedGlassBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.pl3x.map.render.Area;
+import net.pl3x.map.render.Heightmap;
 import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.Coordinate;
@@ -135,32 +135,39 @@ public class ScanTask implements Runnable {
             return;
         }
 
+        // world coordinates for most northwest block in chunk
         int blockX = Coordinate.chunkToBlock(chunkX);
         int blockZ = Coordinate.chunkToBlock(chunkZ);
 
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
-        int[] lastY = new int[16];
+        Heightmap heightmap = new Heightmap();
 
         // iterate each block in this chunk
         for (int z = 0; z < 16; z++) {
 
             // we need the bottom row of the chunk to the north to get heightmap correct
             if (z == 0) {
-                scanNorthChunk(chunkX, chunkZ, blockX, blockZ, blockPos, lastY);
+                scanNorthChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
             }
 
             for (int x = 0; x < 16; x++) {
 
+                // we need the right row of the chunk to the west to get heightmap correct
+                if (x == 0) {
+                    scanWestChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
+                }
+
                 // find our starting point
                 blockPos.set(blockX + x, 0, blockZ + z);
-                blockPos.setY(chunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
+                blockPos.setY(chunk.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
 
-                scanBlock(chunk, blockPos, lastY, x, z);
+                // scan the block
+                scanBlock(chunk, blockPos, heightmap, x, z);
             }
         }
     }
 
-    public void scanBlock(ChunkAccess chunk, BlockPos.MutableBlockPos blockPos, int[] lastY, int x, int z) {
+    public void scanBlock(ChunkAccess chunk, BlockPos.MutableBlockPos blockPos, Heightmap heightmap, int x, int z) {
         // determine the biome
         Biome blockBiome = scanBiome(blockPos).value();
 
@@ -205,50 +212,63 @@ public class ScanTask implements Runnable {
         }
 
         for (Renderer renderer : this.renderers) {
-            renderer.doIt(getWorld(), chunk, blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, lastY, blockColor);
+            renderer.doIt(getWorld(), chunk, blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, heightmap, blockColor);
         }
     }
 
-    public Holder<Biome> scanBiome(BlockPos pos) {
-        //if (getWorld().getConfig().RENDER_BIOME_BLEND > 0) {
-        return getChunkHelper().getBiomeWithCaching(getWorld(), pos);
-        //} else {
-        //    return getChunkHelper().getBiome(getWorld(), pos);
-        //}
-    }
-
-    public void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, int[] lastY) {
+    public void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, Heightmap heightmap) {
         ChunkAccess northChunk = getChunkHelper().getChunk(getWorld().getLevel(), chunkX, chunkZ - 1);
         if (northChunk == null) {
-            Arrays.fill(lastY, Integer.MAX_VALUE);
+            Arrays.fill(heightmap.x, Integer.MAX_VALUE);
         } else {
             for (int x = 0; x < 16; x++) {
                 blockPos.set(blockX + x, 0, blockZ + 15);
-                blockPos.setY(northChunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
-                // if world has ceiling iterate down until we find air
-                BlockState state;
-                if (getWorld().getLevel().dimensionType().hasCeiling()) {
-                    do {
-                        blockPos.move(Direction.DOWN);
-                        state = northChunk.getBlockState(blockPos);
-                    } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !state.isAir());
-                }
-                do {
-                    blockPos.move(Direction.DOWN);
-                    state = northChunk.getBlockState(blockPos);
-                    if (!state.getFluidState().isEmpty()) {
-                        continue;
-                    }
-                    if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
-                        continue;
-                    }
-                    if (Colors.getRawBlockColor(state) > 0) {
-                        break;
-                    }
-                } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
-                lastY[x] = blockPos.getY();
+                scanHeightmap(northChunk, blockPos);
+                heightmap.x[x] = blockPos.getY();
             }
         }
+    }
+
+    public void scanWestChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, Heightmap heightmap) {
+        ChunkAccess westChunk = getChunkHelper().getChunk(getWorld().getLevel(), chunkX - 1, chunkZ);
+        if (westChunk == null) {
+            Arrays.fill(heightmap.z, Integer.MAX_VALUE);
+        } else {
+            for (int z = 0; z < 16; z++) {
+                blockPos.set(blockX + 15, 0, blockZ + z);
+                scanHeightmap(westChunk, blockPos);
+                heightmap.z[z] = blockPos.getY();
+            }
+        }
+    }
+
+    public void scanHeightmap(ChunkAccess chunkAccess, BlockPos.MutableBlockPos blockPos) {
+        blockPos.setY(chunkAccess.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
+        // if world has ceiling iterate down until we find air
+        BlockState state;
+        if (getWorld().getLevel().dimensionType().hasCeiling()) {
+            do {
+                blockPos.move(Direction.DOWN);
+                state = chunkAccess.getBlockState(blockPos);
+            } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !state.isAir());
+        }
+        do {
+            blockPos.move(Direction.DOWN);
+            state = chunkAccess.getBlockState(blockPos);
+            if (!state.getFluidState().isEmpty()) {
+                continue;
+            }
+            if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
+                continue;
+            }
+            if (Colors.getRawBlockColor(state) > 0) {
+                break;
+            }
+        } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
+    }
+
+    public Holder<Biome> scanBiome(BlockPos pos) {
+        return getChunkHelper().getBiomeWithCaching(getWorld(), pos);
     }
 
     public static boolean isGlass(BlockState state) {

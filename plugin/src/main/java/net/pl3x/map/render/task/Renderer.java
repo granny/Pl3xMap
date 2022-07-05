@@ -6,6 +6,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.pl3x.map.render.Heightmap;
 import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
@@ -61,19 +62,26 @@ public abstract class Renderer {
         this.imageHolder = imageHolder;
     }
 
-    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color);
+    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color);
 
-    public int scanHeightMap(BlockPos pos, int[] lastY, int x) {
-        // TODO - also check lastY to the left (on z) for better heightmaps
+    public int scanHeightMap(BlockPos pos, Heightmap heightmap, int x, int z) {
         int heightColor = 0x22;
-        if (lastY[x] != Integer.MAX_VALUE) {
-            if (pos.getY() > lastY[x]) {
+        if (heightmap.x[x] != Integer.MAX_VALUE) {
+            if (pos.getY() > heightmap.x[x]) {
                 heightColor = 0x00;
-            } else if (pos.getY() < lastY[x]) {
+            } else if (pos.getY() < heightmap.x[x]) {
                 heightColor = 0x44;
             }
         }
-        lastY[x] = pos.getY();
+        if (heightmap.z[z] != Integer.MAX_VALUE) {
+            if (pos.getY() > heightmap.z[z]) {
+                heightColor = 0x00;
+            } else if (pos.getY() < heightmap.z[z]) {
+                heightColor = 0x44;
+            }
+        }
+        heightmap.x[x] = pos.getY();
+        heightmap.z[z] = pos.getY();
         return Colors.setAlpha(heightColor, 0x000000);
     }
 

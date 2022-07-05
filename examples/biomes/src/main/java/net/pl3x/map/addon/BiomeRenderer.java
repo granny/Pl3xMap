@@ -7,6 +7,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.render.Heightmap;
 import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
@@ -36,7 +37,7 @@ public class BiomeRenderer extends JavaPlugin {
         }
 
         @Override
-        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color) {
+        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color) {
             // simplified from BasicRenderer
 
             // determine the biome
@@ -44,7 +45,7 @@ public class BiomeRenderer extends JavaPlugin {
             int pixelColor = biomeKey == null ? 0 : Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0);
 
             // work out the heightmap
-            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, lastY, x));
+            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, heightmap, x, z));
 
             int pixelX = blockPos.getX() & Image.SIZE - 1;
             int pixelZ = blockPos.getZ() & Image.SIZE - 1;

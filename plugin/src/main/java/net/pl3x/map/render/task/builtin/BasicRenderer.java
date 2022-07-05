@@ -6,6 +6,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.pl3x.map.render.Heightmap;
 import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
@@ -21,13 +22,13 @@ public class BasicRenderer extends Renderer {
     }
 
     @Override
-    public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color) {
+    public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color) {
         // fix true block color
         int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), blockBiome, blockState, blockPos, color);
         int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
         // work out the heightmap
-        pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, lastY, x));
+        pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, heightmap, x, z));
 
         // fancy fluids, yum
         if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
@@ -43,7 +44,7 @@ public class BasicRenderer extends Renderer {
         if (getWorld().getConfig().RENDER_SKYLIGHT > -1 && getWorld().getConfig().RENDER_SKYLIGHT < 15) {
             // get light level right above this block
             int blockLight;
-            if (fluidState.is(Blocks.LAVA)) {
+            if (fluidState != null && fluidState.is(Blocks.LAVA)) {
                 // not sure why lava isn't returning
                 // the correct light levels in the nether..
                 // maybe a starlight optimization?
