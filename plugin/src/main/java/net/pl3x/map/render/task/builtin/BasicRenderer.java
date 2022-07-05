@@ -17,8 +17,22 @@ import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.MapWorld;
 
 public class BasicRenderer extends Renderer {
+    private Image.Holder lightImageHolder;
+
     public BasicRenderer(String name, Render render, RegionCoordinate region) {
         super(name, render, region);
+    }
+
+    @Override
+    public void allocateImages() {
+        super.allocateImages();
+        this.lightImageHolder = new Image.Holder("light", getWorld(), getRegion());
+    }
+
+    @Override
+    public void saveImages() {
+        super.saveImages();
+        this.lightImageHolder.save();
     }
 
     @Override
@@ -41,6 +55,7 @@ public class BasicRenderer extends Renderer {
             pixelColor = Colors.mix(pixelColor, Colors.merge(glass), Math.min(1.0F, 0.70F + (0.05F * glass.size())));
         }
 
+        int lightPixel = pixelColor;
         if (getWorld().getConfig().RENDER_SKYLIGHT > -1 && getWorld().getConfig().RENDER_SKYLIGHT < 15) {
             // get light level right above this block
             int blockLight;
@@ -61,12 +76,13 @@ public class BasicRenderer extends Renderer {
             // how much darkness to draw in 0-255 range
             int darkness = (int) Mathf.clamp(0, 0xFF, (0xFF * inverseSkylight) - alpha);
             // mix it into the pixel
-            pixelColor = Colors.mix(pixelColor, Colors.setAlpha(darkness, 0x00));
+            lightPixel = Colors.mix(pixelColor, Colors.setAlpha(darkness, 0x00));
         }
 
         int pixelX = blockPos.getX() & Image.SIZE - 1;
         int pixelZ = blockPos.getZ() & Image.SIZE - 1;
 
         getImageHolder().getImage().setPixel(pixelX, pixelZ, pixelColor);
+        this.lightImageHolder.getImage().setPixel(pixelX, pixelZ, lightPixel);
     }
 }

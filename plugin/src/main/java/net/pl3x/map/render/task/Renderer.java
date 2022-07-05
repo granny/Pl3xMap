@@ -58,8 +58,12 @@ public abstract class Renderer {
         return this.imageHolder;
     }
 
-    public void setImageHolder(Image.Holder imageHolder) {
-        this.imageHolder = imageHolder;
+    public void allocateImages() {
+        this.imageHolder = new Image.Holder(getName(), getWorld(), getRegion());
+    }
+
+    public void saveImages() {
+        this.imageHolder.save();
     }
 
     public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color);
@@ -68,21 +72,21 @@ public abstract class Renderer {
         int heightColor = 0x22;
         if (heightmap.x[x] != Integer.MAX_VALUE) {
             if (pos.getY() > heightmap.x[x]) {
-                heightColor = 0x00;
+                heightColor -= 0x22;
             } else if (pos.getY() < heightmap.x[x]) {
-                heightColor = 0x44;
+                heightColor += 0x22;
             }
         }
         if (heightmap.z[z] != Integer.MAX_VALUE) {
             if (pos.getY() > heightmap.z[z]) {
-                heightColor = 0x00;
+                heightColor -= 0x22;
             } else if (pos.getY() < heightmap.z[z]) {
-                heightColor = 0x44;
+                heightColor += 0x22;
             }
         }
         heightmap.x[x] = pos.getY();
         heightmap.z[z] = pos.getY();
-        return Colors.setAlpha(heightColor, 0x000000);
+        return Colors.setAlpha((int) Mathf.clamp(0x00, 0xFF, heightColor), 0x000000);
     }
 
     public int fancyFluids(BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, float depth) {

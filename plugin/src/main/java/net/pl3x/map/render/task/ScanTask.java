@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.render.Area;
 import net.pl3x.map.render.Heightmap;
-import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
@@ -80,7 +79,7 @@ public class ScanTask implements Runnable {
 
     public void scanRegion() {
         // allocate images
-        this.renderers.forEach(renderer -> renderer.setImageHolder(new Image.Holder(renderer.getName(), getWorld(), getRegion())));
+        this.renderers.forEach(Renderer::allocateImages);
 
         // scan chunks in region
         for (int chunkX = getRegion().getChunkX(); chunkX < getRegion().getChunkX() + 32; chunkX++) {
@@ -118,7 +117,7 @@ public class ScanTask implements Runnable {
             getRender().getImageExecutor().submit(() -> {
                 // surround in try/catch because executor eats exceptions
                 try {
-                    this.renderers.forEach(renderer -> renderer.getImageHolder().save());
+                    this.renderers.forEach(Renderer::saveImages);
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
