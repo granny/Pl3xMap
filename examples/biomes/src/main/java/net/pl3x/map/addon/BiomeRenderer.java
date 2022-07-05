@@ -36,11 +36,11 @@ public class BiomeRenderer extends JavaPlugin {
         }
 
         @Override
-        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color) {
+        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color) {
             // simplified from BasicRenderer
 
             // determine the biome
-            ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(mapWorld.getLevel()).getResourceKey(biome).orElse(null);
+            ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(mapWorld.getLevel()).getResourceKey(blockBiome).orElse(null);
             int pixelColor = biomeKey == null ? 0 : Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0);
 
             // work out the heightmap

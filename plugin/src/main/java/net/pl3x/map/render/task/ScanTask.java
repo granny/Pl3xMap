@@ -162,25 +162,33 @@ public class ScanTask implements Runnable {
 
     public void scanBlock(ChunkAccess chunk, BlockPos.MutableBlockPos blockPos, int[] lastY, int x, int z) {
         // determine the biome
-        Biome biome = scanBiome(blockPos).value();
+        Biome blockBiome = scanBiome(blockPos).value();
+
+        // if world has ceiling iterate down until we find air
+        BlockState blockState;
+        if (getWorld().getLevel().dimensionType().hasCeiling()) {
+            do {
+                blockPos.move(Direction.DOWN);
+                blockState = chunk.getBlockState(blockPos);
+            } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !blockState.isAir());
+        }
 
         // iterate down until we find a renderable block
         List<Integer> glass = new ArrayList<>();
         BlockPos fluidPos = null;
-        BlockState state;
         int blockColor = 0;
         do {
             blockPos.move(Direction.DOWN);
-            state = chunk.getBlockState(blockPos);
-            if (!state.getFluidState().isEmpty()) {
+            blockState = chunk.getBlockState(blockPos);
+            if (!blockState.getFluidState().isEmpty()) {
                 if (fluidPos == null) {
                     fluidPos = blockPos.mutable();
                 }
                 continue;
             }
             // just get a quick color for now
-            blockColor = Colors.getRawBlockColor(state);
-            if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
+            blockColor = Colors.getRawBlockColor(blockState);
+            if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(blockState)) {
                 glass.add(blockColor);
                 continue;
             }
@@ -189,17 +197,24 @@ public class ScanTask implements Runnable {
             }
         } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
 
+        BlockState fluidState = null;
+        Biome fluidBiome = null;
+        if (fluidPos != null) {
+            fluidState = chunk.getBlockState(fluidPos);
+            fluidBiome = getChunkHelper().getBiomeWithCaching(getWorld(), fluidPos).value();
+        }
+
         for (Renderer renderer : this.renderers) {
-            renderer.doIt(getWorld(), chunk, state, blockPos, fluidPos, biome, x, z, glass, lastY, blockColor);
+            renderer.doIt(getWorld(), chunk, blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, lastY, blockColor);
         }
     }
 
     public Holder<Biome> scanBiome(BlockPos pos) {
-        if (getWorld().getConfig().RENDER_BIOME_BLEND > 0) {
-            return getChunkHelper().getBiomeWithCaching(getWorld(), pos);
-        } else {
-            return getChunkHelper().getBiome(getWorld(), pos);
-        }
+        //if (getWorld().getConfig().RENDER_BIOME_BLEND > 0) {
+        return getChunkHelper().getBiomeWithCaching(getWorld(), pos);
+        //} else {
+        //    return getChunkHelper().getBiome(getWorld(), pos);
+        //}
     }
 
     public void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, int[] lastY) {
@@ -210,9 +225,17 @@ public class ScanTask implements Runnable {
             for (int x = 0; x < 16; x++) {
                 blockPos.set(blockX + x, 0, blockZ + 15);
                 blockPos.setY(northChunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
+                // if world has ceiling iterate down until we find air
+                BlockState state;
+                if (getWorld().getLevel().dimensionType().hasCeiling()) {
+                    do {
+                        blockPos.move(Direction.DOWN);
+                        state = northChunk.getBlockState(blockPos);
+                    } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !state.isAir());
+                }
                 do {
                     blockPos.move(Direction.DOWN);
-                    BlockState state = northChunk.getBlockState(blockPos);
+                    state = northChunk.getBlockState(blockPos);
                     if (!state.getFluidState().isEmpty()) {
                         continue;
                     }

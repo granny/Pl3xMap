@@ -46,6 +46,13 @@ public class WorldConfig extends AbstractConfig {
             drastically if enabled""")
     public int RENDER_BIOME_BLEND = 0;
 
+    @Key("render.skylight")
+    @Comment("""
+            Skylight value for world.
+            Values are 0-15 with 1 being darkest and 15 being full bright.
+            Negative values disable skylight (same as full bright).""")
+    public int RENDER_SKYLIGHT = 5;
+
     @Key("render.translucent-fluids")
     @Comment("""
             Enable translucent water.

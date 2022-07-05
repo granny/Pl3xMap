@@ -61,7 +61,7 @@ public abstract class Renderer {
         this.imageHolder = imageHolder;
     }
 
-    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color);
+    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color);
 
     public int scanHeightMap(BlockPos pos, int[] lastY, int x) {
         // TODO - also check lastY to the left (on z) for better heightmaps
@@ -77,15 +77,15 @@ public abstract class Renderer {
         return Colors.setAlpha(heightColor, 0x000000);
     }
 
-    public int fancyWater(BlockPos fluidPos, BlockState state, Biome biome, float depth) {
+    public int fancyFluids(BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, float depth) {
         // let's do some maths to get pretty fluid colors based on depth
         int fluidColor;
-        if (state.is(Blocks.LAVA)) {
-            fluidColor = Colors.getRawBlockColor(state);
+        if (fluidState.is(Blocks.LAVA)) {
+            fluidColor = Colors.getRawBlockColor(fluidState);
             fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.3F, Easing.cubicOut(depth / 1.5F)));
             fluidColor = Colors.setAlpha(0xFF, fluidColor);
         } else {
-            fluidColor = getWorld().getBiomeColors().getWaterColor(getChunkHelper(), biome, fluidPos);
+            fluidColor = getWorld().getBiomeColors().getWaterColor(getChunkHelper(), fluidBiome, fluidPos);
             fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.45F, Easing.cubicOut(depth / 1.5F)));
             fluidColor = Colors.setAlpha((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
         }

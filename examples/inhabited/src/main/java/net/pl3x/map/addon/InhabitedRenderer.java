@@ -34,20 +34,20 @@ public class InhabitedRenderer extends JavaPlugin {
         }
 
         @Override
-        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color) {
+        public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color) {
             // copied from BasicRenderer
 
             // fix true block color
-            int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), biome, state, blockPos, color);
+            int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), blockBiome, blockState, blockPos, color);
             int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
             // work out the heightmap
             int heightmapColor = scanHeightMap(blockPos, lastY, x);
             pixelColor = Colors.mix(pixelColor, heightmapColor);
 
-            // fancy water, yum
+            // fancy fluids, yum
             if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
-                int fluidColor = fancyWater(blockPos, state, biome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
+                int fluidColor = fancyFluids(fluidState, fluidPos, fluidBiome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
                 pixelColor = Colors.mix(pixelColor, fluidColor);
             }
 

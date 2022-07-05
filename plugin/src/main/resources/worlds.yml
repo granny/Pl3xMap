@@ -3,3 +3,9 @@ world-settings:
     enabled: false
   world:
     enabled: true
+  world_nether:
+    render:
+      skylight: 10
+  world_the_end:
+    render:
+      skylight: 10

@@ -3,6 +3,7 @@ package net.pl3x.map.render.task.builtin;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.render.image.Image;
@@ -20,17 +21,17 @@ public class BasicRenderer extends Renderer {
     }
 
     @Override
-    public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState state, BlockPos blockPos, BlockPos fluidPos, Biome biome, int x, int z, List<Integer> glass, int[] lastY, int color) {
+    public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, int[] lastY, int color) {
         // fix true block color
-        int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), biome, state, blockPos, color);
+        int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), blockBiome, blockState, blockPos, color);
         int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
         // work out the heightmap
         pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, lastY, x));
 
-        // fancy water, yum
+        // fancy fluids, yum
         if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
-            int fluidColor = fancyWater(blockPos, state, biome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
+            int fluidColor = fancyFluids(fluidState, fluidPos, fluidBiome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
             pixelColor = Colors.mix(pixelColor, fluidColor);
         }
 
@@ -39,16 +40,28 @@ public class BasicRenderer extends Renderer {
             pixelColor = Colors.mix(pixelColor, Colors.merge(glass), Math.min(1.0F, 0.70F + (0.05F * glass.size())));
         }
 
-        // get light level right above this block
-        int blockLight = LightEngine.getBlockLightValue((fluidPos == null ? blockPos : fluidPos).above(), chunk);
-        // blocklight in 0-255 range
-        int alpha = (int) (Mathf.inverseLerp(0, 15, blockLight) * 0xFF);
-        // inverse of the skylight level in 0-1 range
-        float skyLight = Mathf.inverseLerp(0, 15, 15 - 3); // here 3 represents a skylight level of 3 (pretty dark)
-        // how much darkness to draw in 0-255 range
-        int darkness = (int) Mathf.clamp(0, 0xFF, (0xFF * skyLight) - alpha);
-        // mix it into the pixel
-        pixelColor = Colors.mix(pixelColor, Colors.setAlpha(darkness, 0x00));
+        if (getWorld().getConfig().RENDER_SKYLIGHT > -1 && getWorld().getConfig().RENDER_SKYLIGHT < 15) {
+            // get light level right above this block
+            int blockLight;
+            if (fluidState.is(Blocks.LAVA)) {
+                // not sure why lava isn't returning
+                // the correct light levels in the nether..
+                // maybe a starlight optimization?
+                blockLight = 15;
+            } else {
+                blockLight = LightEngine.getBlockLightValue(chunk, (fluidPos == null ? blockPos : fluidPos).above());
+            }
+            // blocklight in 0-255 range
+            int alpha = (int) (Mathf.inverseLerp(0, 15, blockLight) * 0xFF);
+            // skylight level in 0-15 range
+            int skylight = (int) Mathf.clamp(0, 15, getWorld().getConfig().RENDER_SKYLIGHT);
+            // inverse of the skylight level in 0-1 range
+            float inverseSkylight = Mathf.inverseLerp(0, 15, 15 - skylight);
+            // how much darkness to draw in 0-255 range
+            int darkness = (int) Mathf.clamp(0, 0xFF, (0xFF * inverseSkylight) - alpha);
+            // mix it into the pixel
+            pixelColor = Colors.mix(pixelColor, Colors.setAlpha(darkness, 0x00));
+        }
 
         int pixelX = blockPos.getX() & Image.SIZE - 1;
         int pixelZ = blockPos.getZ() & Image.SIZE - 1;
