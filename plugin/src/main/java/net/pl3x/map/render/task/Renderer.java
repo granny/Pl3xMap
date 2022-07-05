@@ -70,18 +70,18 @@ public abstract class Renderer {
 
     public int scanHeightMap(BlockPos pos, Heightmap heightmap, int x, int z) {
         int heightColor = 0x22;
-        if (heightmap.x[x] != Integer.MAX_VALUE) {
-            if (pos.getY() > heightmap.x[x]) {
-                heightColor -= 0x22;
-            } else if (pos.getY() < heightmap.x[x]) {
-                heightColor += 0x22;
-            }
-        }
         if (heightmap.z[z] != Integer.MAX_VALUE) {
             if (pos.getY() > heightmap.z[z]) {
-                heightColor -= 0x22;
+                heightColor -= 0x11;
             } else if (pos.getY() < heightmap.z[z]) {
-                heightColor += 0x22;
+                heightColor += 0x11;
+            }
+        }
+        if (heightmap.x[x] != Integer.MAX_VALUE) {
+            if (pos.getY() > heightmap.x[x]) {
+                heightColor -= 0x11;
+            } else if (pos.getY() < heightmap.x[x]) {
+                heightColor += 0x11;
             }
         }
         heightmap.x[x] = pos.getY();
