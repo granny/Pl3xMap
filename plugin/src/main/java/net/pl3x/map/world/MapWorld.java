@@ -333,4 +333,8 @@ public class MapWorld {
         serializeDirtyChunks();
         serializeScannedRegions();
     }
+
+    public Path getWorldTilesDir() {
+        return TILES_DIR.resolve(getName());
+    }
 }

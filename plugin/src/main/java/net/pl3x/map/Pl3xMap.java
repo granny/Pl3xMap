@@ -13,6 +13,7 @@ import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.render.image.io.IO;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.Renderers;
+import net.pl3x.map.task.UpdateWorldData;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.LightEngine;
 import net.pl3x.map.world.MapWorld;
@@ -28,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Pl3xMap extends JavaPlugin {
     private static Pl3xMap instance;
 
+    private UpdateWorldData updateWorldDataTask;
     private WorldListener worldListener;
 
     public static Pl3xMap getInstance() {
@@ -130,12 +132,24 @@ public class Pl3xMap extends JavaPlugin {
         if (this.worldListener != null) {
             this.worldListener.registerEvents();
         }
+
+        // start updating world data
+        this.updateWorldDataTask = new UpdateWorldData();
+        this.updateWorldDataTask.runTaskTimer(this, 0, 20 * 5);
     }
 
     public void disable() {
         // unregister events
         if (this.worldListener != null) {
             this.worldListener.unregisterEvents();
+        }
+
+        // stop updating world data
+        if (this.updateWorldDataTask != null) {
+            if (!this.updateWorldDataTask.isCancelled()) {
+                this.updateWorldDataTask.cancel();
+            }
+            this.updateWorldDataTask = null;
         }
 
         // stop integrated server

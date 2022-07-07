@@ -24,3 +24,14 @@ div.leaflet-control-layers.coordinates {
   line-height: 14px;
   height: 30px;
 }
+
+div.leaflet-control-layers.link img {
+  width: 34px;
+  height: 34px;
+  vertical-align: bottom;
+  bottom: 0;
+  background-image: url("../images/link.png");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}

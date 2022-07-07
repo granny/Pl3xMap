@@ -171,6 +171,15 @@ public class Lang extends AbstractConfig {
     @Key("error.render-stalled")
     public static String ERROR_RENDER_STALLED = "<red>Render has stalled! Cancelling.";
 
+    @Key("ui.title")
+    public static String UI_TITLE = "Pl3xMap";
+    @Key("ui.coords")
+    public static String UI_COORDS = "Coordinates<br/><x>, <z>";
+    @Key("ui.players")
+    public static String UI_PLAYERS = "Players (<online>/<max>)";
+    @Key("ui.worlds")
+    public static String UI_WORLDS = "Worlds";
+
     private static final Lang CONFIG = new Lang();
 
     public static void reload() {

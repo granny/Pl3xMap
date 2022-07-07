@@ -10,6 +10,10 @@ public class WorldConfig extends AbstractConfig {
     @Comment("Enables this world to be rendered on the map.")
     public boolean ENABLED = false;
 
+    public String DISPLAY_NAME = "<world>";
+    public String ICON = "";
+    public int ORDER = 0;
+
     @Key("render.scanners")
     @Comment("""
             Scanner types to use. Each scanner will render a different

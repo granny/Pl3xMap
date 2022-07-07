@@ -4,24 +4,46 @@ let P = {
     format: `png`,
     world: `world`,
     options: {
-        zoom: 3, // current zoom
+        defZoom: 0,
         maxZoom: 3,
         extraZoomIn: 2,
+        link: false,
+        coords: false
     },
-    scale: function () {
-        return 1 / Math.pow(2, this.options.zoom)
+    lang: {
+        coords: `Coordinates<br/><x>, <z>`,
+        players: `Players (<online>/<max>)`,
+        worlds: `Worlds`
     },
     toLatLng: function (x, z) {
-        return L.latLng(this.pixelsToMeters(z), this.pixelsToMeters(x));
-    },
-    pixelsToMeters: function (num) {
-        return num * this.scale();
-    },
-    metersToPixels(num) {
-        return num / this.scale();
+        return L.latLng(P.pixelsToMeters(z), P.pixelsToMeters(x));
     },
     toPoint: function (latlng) {
-        return L.point(this.metersToPixels(latlng.lng), this.metersToPixels(-latlng.lat));
+        return L.point(P.metersToPixels(latlng.lng), P.metersToPixels(-latlng.lat));
+    },
+    pixelsToMeters: function (num) {
+        return num * P.scale();
+    },
+    metersToPixels(num) {
+        return num / P.scale();
+    },
+    scale: function () {
+        return 1 / Math.pow(2, P.options.maxZoom)
+    },
+    getUrlFromView() {
+        const center = P.toPoint(P.map.getCenter());
+        const zoom = P.options.maxZoom - P.map.getZoom();
+        const x = Math.floor(center.x);
+        const z = Math.floor(center.y);
+        return `?world=${P.world}&zoom=${zoom}&x=${x}&z=${z}`;
+    },
+    getJSON(url, fn) {
+        fetch(url, {cache: "no-store"})
+            .then(async res => {
+                if (res.ok) {
+                    fn(await res.json());
+                }
+            });
     }
 }
 
@@ -41,15 +63,33 @@ window.onload = function () {
         preferCanvas: true
     });
 
+    P.getJSON("tiles/settings.json", (json) => init(json));
+}
+
+/**
+ * @param json.ui
+ * @param json.worlds
+ */
+function init(json) {
+    document.title = json.ui.title;
+
+    P.options.link = json.ui.link;
+    P.options.coords = json.ui.coords;
+
+    P.lang.coords = json.ui.lang.coords;
+    P.lang.players = json.ui.lang.players;
+    P.lang.worlds = json.ui.lang.worlds;
+
     // start at spawn point with default zoom
-    P.map.setView(P.toLatLng(0, 0), P.options.zoom);
+    P.map.setView(P.toLatLng(0, 0), P.options.maxZoom - P.options.defZoom);
     //map.setView(toLatLng(18880, 6321), zoom); // earth world spawn
 
     // the base layer for tiles
     L.tileLayer.reversedZoom(`tiles/${P.world}/{z}/${P.renderer}/{x}_{y}.${P.format}`).setZIndex(0).addTo(P.map);
 
     // player tracker layer
-    let players = new L.layerGroup().setZIndex(100);
+    let players = new L.layerGroup();
+    players.setZIndex(100);
     players.addTo(P.map);
 
     // set up layer controls
@@ -57,8 +97,16 @@ window.onload = function () {
     layerControls.addOverlay(players, `Players`);
     layerControls.addTo(P.map);
 
-    L.control.coords().addTo(P.map);
-};
+    // add the coords ui control box
+    if (P.options.coords) {
+        L.control.coords().addTo(P.map);
+    }
+
+    // add the link ui control box
+    if (P.options.link) {
+        L.control.link().addTo(P.map);
+    }
+}
 
 L.TileLayer.ReversedZoom = L.TileLayer.extend({
     // <https://github.com/Leaflet/Leaflet/blob/main/src/layer/tile/TileLayer.js#L220-L231>
@@ -91,26 +139,46 @@ L.tileLayer.reversedZoom = function (url) {
 L.Control.Coords = L.Control.extend({
     _container: null,
     options: {
-        position: `bottomleft`,
-        html: `Coordinates<br/>{x}, {z}`
+        position: `bottomleft`
     },
     onAdd: function () {
         this._coords = L.DomUtil.create(`div`, `leaflet-control-layers coordinates`);
-        P.map.addEventListener(`mousemove`, (event) => {
-            this.update(P.toPoint(event.latlng));
-        });
+        P.map.addEventListener(`mousemove`, (event) => this.update(P.toPoint(event.latlng)));
         this.update(null);
         return this._coords;
     },
     update: function (point) {
         this.x = point == null ? `---` : Math.round(point.x);
         this.z = point == null ? `---` : Math.round(point.y);
-        this._coords.innerHTML = this.options.html
-            .replace(/{x}/g, this.x)
-            .replace(/{z}/g, this.z);
+        this._coords.innerHTML = P.lang.coords
+            .replace(/<x>/g, this.x)
+            .replace(/<z>/g, this.z);
     }
 });
 
 L.control.coords = function () {
     return new L.Control.Coords();
+};
+
+L.Control.Link = L.Control.extend({
+    _container: null,
+    options: {
+        position: `bottomleft`
+    },
+    onAdd: function () {
+        this._link = L.DomUtil.create(`div`, `leaflet-control-layers link`);
+        P.map.addEventListener(`move`, () => this.update());
+        P.map.addEventListener(`zoom`, () => this.update());
+        this.update();
+        return this._link;
+    },
+    update: function () {
+        const url = P.world == null ? `` : P.getUrlFromView();
+        //P.updateBrowserUrl(url); // this spams browser history
+        this._link.innerHTML = `<a href='${url}'><img src='images/clear.png' alt=''/></a>`;
+    }
+});
+
+L.control.link = function () {
+    return new L.Control.Link();
 };

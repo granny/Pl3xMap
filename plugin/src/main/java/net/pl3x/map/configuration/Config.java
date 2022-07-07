@@ -49,6 +49,13 @@ public class Config extends AbstractConfig {
             Value of -1 will use 50% of the available cores.""")
     public static int RENDER_THREADS = -1;
 
+    @Key("settings.ui.coords")
+    @Comment("Shows the coordinates box on the map")
+    public static boolean UI_COORDS_ENABLED = true;
+    @Key("settings.ui.link")
+    @Comment("Shows the link box on the map")
+    public static boolean UI_LINK_ENABLED = true;
+
     private static final Config CONFIG = new Config();
 
     public static void reload() {

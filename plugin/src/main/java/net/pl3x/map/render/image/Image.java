@@ -28,7 +28,6 @@ public class Image {
     private final int regionZ;
 
     private final int[] pixels = new int[SIZE * SIZE];
-    private final Path worldDir;
 
     private final IO.Type io;
 
@@ -37,8 +36,6 @@ public class Image {
         this.mapWorld = mapWorld;
         this.regionX = regionX;
         this.regionZ = regionZ;
-
-        this.worldDir = MapWorld.TILES_DIR.resolve(mapWorld.getName());
 
         this.io = IO.get(Config.WEB_TILE_FORMAT);
     }
@@ -56,8 +53,9 @@ public class Image {
     }
 
     public void saveToDisk() {
+        Path worldDir = mapWorld.getWorldTilesDir();
         for (int zoom = 0; zoom <= this.mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
-            Path dirPath = this.worldDir.resolve(String.format(DIR_PATH, zoom, this.name));
+            Path dirPath = worldDir.resolve(String.format(DIR_PATH, zoom, this.name));
 
             // create directories if they don't exist
             createDirs(dirPath);
