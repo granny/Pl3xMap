@@ -1,11 +1,9 @@
 package net.pl3x.map.world;
 
 import ca.spottedleaf.starlight.common.light.SWMRNibbleArray;
-import ca.spottedleaf.starlight.common.light.StarLightEngine;
 import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
 import io.papermc.paper.util.WorldUtil;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -28,7 +26,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -37,11 +34,8 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.pl3x.map.render.job.Render;
-
-import static net.minecraft.server.MinecraftServer.LOGGER;
 
 public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
@@ -87,89 +81,66 @@ public class ChunkHelper {
             return null;
         }
 
-        ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
-
-        java.util.ArrayDeque<Runnable> tasksToExecuteOnMain = new java.util.ArrayDeque<>();
-        boolean isLightOn = nbt.get("isLightOn") != null && nbt.getInt("starlight.light_version") == 8;
-        boolean dimensionHasSkyLight = level.dimensionType().hasSkyLight();
-        LevelLightEngine lightengine = level.getChunkSource().getLightEngine();
-        SWMRNibbleArray[] blockNibbles = StarLightEngine.getFilledEmptyLight(level);
-        SWMRNibbleArray[] skyNibbles = StarLightEngine.getFilledEmptyLight(level);
         final int minSection = WorldUtil.getMinLightSection(level);
-        boolean queuedTasksToMain = false;
-
-        // build only the required palettes from chunk sections
+        final int totalLightSections = WorldUtil.getMaxLightSection(level) - minSection + 1;
+        SWMRNibbleArray[] blockNibbles = new SWMRNibbleArray[totalLightSections];
+        SWMRNibbleArray[] skyNibbles = new SWMRNibbleArray[totalLightSections];
         ListTag sectionsNBT = nbt.getList("sections", 10);
         LevelChunkSection[] levelChunkSections = new LevelChunkSection[level.getSectionsCount()];
         Registry<Biome> biomeRegistry = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY);
+
+        // build only the required palettes from chunk sections
         for (int j = 0; j < sectionsNBT.size(); ++j) {
-            CompoundTag chunkSectionNBT = sectionsNBT.getCompound(j);
-            byte chunkYPos = chunkSectionNBT.getByte("Y");
-            int index = level.getSectionIndexFromSectionY(chunkYPos);
-            if (index >= 0 && index < levelChunkSections.length) {
-                PalettedContainer<BlockState> states;
-                if (chunkSectionNBT.contains("block_states", 10)) {
-                    states = ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError);
-                } else {
-                    states = new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, null);
-                }
-                PalettedContainer<Holder<Biome>> biomes;
-                if (chunkSectionNBT.contains("biomes", 10)) {
-                    Codec<PalettedContainer<Holder<Biome>>> biomeCodec = PalettedContainer.codecRW(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS), null);
-                    biomes = biomeCodec.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError);
-                } else {
-                    biomes = new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(Biomes.PLAINS), PalettedContainer.Strategy.SECTION_BIOMES, null);
-                }
-                levelChunkSections[index] = new LevelChunkSection(chunkYPos, states, biomes);
-            }
-
-            boolean hasBlockLight = chunkSectionNBT.contains("BlockLight", 7);
-            boolean hasSkyLight = dimensionHasSkyLight && chunkSectionNBT.contains("SkyLight", 7);
-
-            if (isLightOn) {
-                try {
-                    if ((hasBlockLight || hasSkyLight) && !queuedTasksToMain) {
-                        tasksToExecuteOnMain.add(() -> lightengine.retainData(chunkPos, true));
-                        queuedTasksToMain = true;
-                    }
-
-                    if (hasBlockLight) {
-                        blockNibbles[chunkYPos - minSection] = new SWMRNibbleArray(chunkSectionNBT.getByteArray("BlockLight").clone(), chunkSectionNBT.getInt("starlight.blocklight_state"));
-                    } else {
-                        blockNibbles[chunkYPos - minSection] = new SWMRNibbleArray(null, chunkSectionNBT.getInt("starlight.blocklight_state"));
-                    }
-
-                    if (hasSkyLight) {
-                        skyNibbles[chunkYPos - minSection] = new SWMRNibbleArray(chunkSectionNBT.getByteArray("SkyLight").clone(), chunkSectionNBT.getInt("starlight.skylight_state"));
-                    } else if (dimensionHasSkyLight) {
-                        skyNibbles[chunkYPos - minSection] = new SWMRNibbleArray(null, chunkSectionNBT.getInt("starlight.skylight_state"));
-                    }
-                } catch (Exception ex) {
-                    LOGGER.warn("Failed to load light data for chunk " + chunkPos + " in world '" + level.getWorld().getName() + "', light will be regenerated", ex);
-                    isLightOn = false;
-                }
-            }
+            populatePalettesAndLight(level, sectionsNBT, levelChunkSections, j, blockNibbles, skyNibbles, biomeRegistry, minSection);
         }
 
         // create our chunk
-        chunk = new LevelChunk(level.getLevel(), chunkPos, UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), nbt.getLong("InhabitedTime"), levelChunkSections, o -> {
-        }, null);
+        ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
+        chunk = new LevelChunk(level.getLevel(), chunkPos, UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), nbt.getLong("InhabitedTime"), levelChunkSections, null, null);
 
+        // finish up
         chunk.setBlockNibbles(blockNibbles);
         chunk.setSkyNibbles(skyNibbles);
+        populateHeightmaps(chunk, nbt);
+        level.getChunkSource().getLightEngine().retainData(chunkPos, true);
 
-        // populate the heightmap from NBT
+        // rejoice
+        return chunk;
+    }
+
+    private void populatePalettesAndLight(ServerLevel level, ListTag sectionsNBT, LevelChunkSection[] levelChunkSections, int j, SWMRNibbleArray[] blockNibbles, SWMRNibbleArray[] skyNibbles, Registry<Biome> biomeRegistry, int minSection) {
+        CompoundTag chunkSectionNBT = sectionsNBT.getCompound(j);
+        byte chunkYPos = chunkSectionNBT.getByte("Y");
+        int index = level.getSectionIndexFromSectionY(chunkYPos);
+        if (index >= 0 && index < levelChunkSections.length) {
+            levelChunkSections[index] = new LevelChunkSection(chunkYPos,
+                    chunkSectionNBT.contains("block_states", 10) ?
+                            ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError) :
+                            new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, null),
+                    chunkSectionNBT.contains("biomes", 10) ?
+                            PalettedContainer.codecRW(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS), null)
+                                    .parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError) :
+                            new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(Biomes.PLAINS), PalettedContainer.Strategy.SECTION_BIOMES, null)
+            );
+        }
+        try {
+            byte[] blockBytes = chunkSectionNBT.contains("BlockLight", 7) ? chunkSectionNBT.getByteArray("BlockLight").clone() : null;
+            blockNibbles[chunkYPos - minSection] = new SWMRNibbleArray(blockBytes, chunkSectionNBT.getInt("starlight.blocklight_state"));
+            if (level.dimensionType().hasSkyLight()) {
+                byte[] lightBytes = chunkSectionNBT.contains("SkyLight", 7) ? chunkSectionNBT.getByteArray("SkyLight").clone() : null;
+                skyNibbles[chunkYPos - minSection] = new SWMRNibbleArray(lightBytes, chunkSectionNBT.getInt("starlight.skylight_state"));
+            }
+        } catch (Exception ignore) {
+        }
+    }
+
+    private void populateHeightmaps(ChunkAccess chunk, CompoundTag nbt) {
         CompoundTag heightmaps = nbt.getCompound("Heightmaps");
         String key = Heightmap.Types.WORLD_SURFACE.getSerializationKey();
         if (heightmaps.contains(key, 12)) {
             chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, heightmaps.getLongArray(key));
         }
         Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
-
-        tasksToExecuteOnMain.forEach(Runnable::run);
-
-        // rejoice
-        return chunk;
     }
 
     public Holder<Biome> getBiomeWithCaching(MapWorld mapWorld, BlockPos pos) {

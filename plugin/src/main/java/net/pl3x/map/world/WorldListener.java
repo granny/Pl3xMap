@@ -68,6 +68,12 @@ public class WorldListener implements Listener {
     }
 
     public void registerEvents() {
+        // split this up because apparently it's a complex method?
+        registerBasicEventHandlers();
+        registerSlightlyMoreComplexEventHandlers();
+    }
+
+    private void registerBasicEventHandlers() {
         if (Advanced.BLOCK_BREAK_EVENT) registerEvent(BlockBreakEvent.class, this::handleBlockEvent);
         if (Advanced.BLOCK_BURN_EVENT) registerEvent(BlockBurnEvent.class, this::handleBlockEvent);
         if (Advanced.BLOCK_FADE_EVENT) registerEvent(BlockFadeEvent.class, this::handleBlockEvent);
@@ -83,7 +89,9 @@ public class WorldListener implements Listener {
         if (Advanced.PLAYER_JOIN_EVENT) registerEvent(PlayerJoinEvent.class, this::handlePlayerEvent);
         if (Advanced.PLAYER_MOVE_EVENT) registerEvent(PlayerMoveEvent.class, this::handlePlayerEvent);
         if (Advanced.PLAYER_QUIT_EVENT) registerEvent(PlayerQuitEvent.class, this::handlePlayerEvent);
+    }
 
+    private void registerSlightlyMoreComplexEventHandlers() {
         if (Advanced.BLOCK_EXPLODE_EVENT) registerEvent(BlockExplodeEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.blockList()));
         if (Advanced.BLOCK_FROM_TO_EVENT) registerEvent(BlockFromToEvent.class,

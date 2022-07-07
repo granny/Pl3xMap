@@ -53,7 +53,7 @@ public class Image {
     }
 
     public void saveToDisk() {
-        Path worldDir = mapWorld.getWorldTilesDir();
+        Path worldDir = this.mapWorld.getWorldTilesDir();
         for (int zoom = 0; zoom <= this.mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
             Path dirPath = worldDir.resolve(String.format(DIR_PATH, zoom, this.name));
 
