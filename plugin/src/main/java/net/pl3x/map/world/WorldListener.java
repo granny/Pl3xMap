@@ -68,53 +68,45 @@ public class WorldListener implements Listener {
     }
 
     public void registerEvents() {
-        // split this up because apparently it's a complex method?
-        registerBasicEventHandlers();
-        registerSlightlyMoreComplexEventHandlers();
-    }
+        registerEvent(Advanced.BLOCK_BREAK_EVENT, BlockBreakEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_BURN_EVENT, BlockBurnEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_FADE_EVENT, BlockFadeEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_FORM_EVENT, BlockFormEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_GROW_EVENT, BlockGrowEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_PHYSICS_EVENT, BlockPhysicsEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_PLACE_EVENT, BlockPlaceEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.BLOCK_SPREAD_EVENT, BlockSpreadEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.ENTITY_BLOCK_FORM_EVENT, EntityBlockFormEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.LEAVES_DECAY_EVENT, LeavesDecayEvent.class, this::handleBlockEvent);
+        registerEvent(Advanced.CHUNK_LOAD_EVENT, ChunkLoadEvent.class, this::handleChunkEvent);
+        registerEvent(Advanced.CHUNK_POPULATE_EVENT, ChunkPopulateEvent.class, this::handleChunkEvent);
+        registerEvent(Advanced.PLAYER_JOIN_EVENT, PlayerJoinEvent.class, this::handlePlayerEvent);
+        registerEvent(Advanced.PLAYER_MOVE_EVENT, PlayerMoveEvent.class, this::handlePlayerEvent);
+        registerEvent(Advanced.PLAYER_QUIT_EVENT, PlayerQuitEvent.class, this::handlePlayerEvent);
 
-    private void registerBasicEventHandlers() {
-        if (Advanced.BLOCK_BREAK_EVENT) registerEvent(BlockBreakEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_BURN_EVENT) registerEvent(BlockBurnEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_FADE_EVENT) registerEvent(BlockFadeEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_FORM_EVENT) registerEvent(BlockFormEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_GROW_EVENT) registerEvent(BlockGrowEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_PHYSICS_EVENT) registerEvent(BlockPhysicsEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_PLACE_EVENT) registerEvent(BlockPlaceEvent.class, this::handleBlockEvent);
-        if (Advanced.BLOCK_SPREAD_EVENT) registerEvent(BlockSpreadEvent.class, this::handleBlockEvent);
-        if (Advanced.CHUNK_LOAD_EVENT) registerEvent(ChunkLoadEvent.class, this::handleChunkEvent);
-        if (Advanced.CHUNK_POPULATE_EVENT) registerEvent(ChunkPopulateEvent.class, this::handleChunkEvent);
-        if (Advanced.ENTITY_BLOCK_FORM_EVENT) registerEvent(EntityBlockFormEvent.class, this::handleBlockEvent);
-        if (Advanced.LEAVES_DECAY_EVENT) registerEvent(LeavesDecayEvent.class, this::handleBlockEvent);
-        if (Advanced.PLAYER_JOIN_EVENT) registerEvent(PlayerJoinEvent.class, this::handlePlayerEvent);
-        if (Advanced.PLAYER_MOVE_EVENT) registerEvent(PlayerMoveEvent.class, this::handlePlayerEvent);
-        if (Advanced.PLAYER_QUIT_EVENT) registerEvent(PlayerQuitEvent.class, this::handlePlayerEvent);
-    }
-
-    private void registerSlightlyMoreComplexEventHandlers() {
-        if (Advanced.BLOCK_EXPLODE_EVENT) registerEvent(BlockExplodeEvent.class,
+        registerEvent(Advanced.BLOCK_EXPLODE_EVENT, BlockExplodeEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.blockList()));
-        if (Advanced.BLOCK_FROM_TO_EVENT) registerEvent(BlockFromToEvent.class,
+        registerEvent(Advanced.BLOCK_FROM_TO_EVENT, BlockFromToEvent.class,
                 // this event gets spammed really hard, to the point
                 // where checking the highest Y becomes quite expensive.
                 // it's better to queue some unnecessary map updates
                 // than to cause tps lag if this listener is enabled.
                 e -> markChunk(e.getBlock().getLocation(), true));
-        if (Advanced.BLOCK_PISTON_EXTEND_EVENT) registerEvent(BlockPistonExtendEvent.class,
+        registerEvent(Advanced.BLOCK_PISTON_EXTEND_EVENT, BlockPistonExtendEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.getBlocks()));
-        if (Advanced.BLOCK_PISTON_RETRACT_EVENT) registerEvent(BlockPistonRetractEvent.class,
+        registerEvent(Advanced.BLOCK_PISTON_RETRACT_EVENT, BlockPistonRetractEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.getBlocks()));
-        if (Advanced.ENTITY_CHANGE_BLOCK_EVENT) registerEvent(EntityChangeBlockEvent.class,
+        registerEvent(Advanced.ENTITY_CHANGE_BLOCK_EVENT, EntityChangeBlockEvent.class,
                 e -> markChunk(e.getBlock().getLocation()));
-        if (Advanced.ENTITY_EXPLODE_EVENT) registerEvent(EntityExplodeEvent.class,
+        registerEvent(Advanced.ENTITY_EXPLODE_EVENT, EntityExplodeEvent.class,
                 e -> markChunk(e.getEntity().getWorld(), e.blockList()));
-        if (Advanced.FLUID_LEVEL_CHANGE_EVENT) registerEvent(FluidLevelChangeEvent.class,
+        registerEvent(Advanced.FLUID_LEVEL_CHANGE_EVENT, FluidLevelChangeEvent.class,
                 e -> {
                     if (e.getBlock().getBlockData().getMaterial() != e.getNewData().getMaterial()) {
                         markChunk(e.getBlock().getLocation());
                     }
                 });
-        if (Advanced.STRUCTURE_GROW_EVENT) registerEvent(StructureGrowEvent.class,
+        registerEvent(Advanced.STRUCTURE_GROW_EVENT, StructureGrowEvent.class,
                 e -> markChunk(e.getWorld(), e.getBlocks()));
     }
 
@@ -123,7 +115,10 @@ public class WorldListener implements Listener {
         this.registeredListeners.clear();
     }
 
-    private <E extends Event> void registerEvent(Class<E> clazz, Consumer<E> consumer) {
+    private <E extends Event> void registerEvent(boolean enabled, Class<E> clazz, Consumer<E> consumer) {
+        if (!enabled) {
+            return;
+        }
         Listener listener = new BlankListener();
         this.registeredListeners.add(listener);
         Bukkit.getPluginManager().registerEvent(clazz, listener, EventPriority.MONITOR, createExecutor(clazz, consumer), this.plugin, true);
