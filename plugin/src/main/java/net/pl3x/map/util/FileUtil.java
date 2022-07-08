@@ -137,6 +137,10 @@ public class FileUtil {
     }
 
     private static void writeFile(Path path, String str) throws IOException {
+        if (!Files.exists(path)) {
+            Files.createDirectories(path.getParent());
+            Files.createFile(path);
+        }
         try (OutputStream out = Files.newOutputStream(path)) {
             out.write(str.getBytes());
             out.flush();
