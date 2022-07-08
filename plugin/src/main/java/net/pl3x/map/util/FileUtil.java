@@ -8,14 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -134,34 +130,18 @@ public class FileUtil {
     public static void write(String str, Path file) {
         ForkJoinPool.commonPool().execute(() -> {
             try {
-                replaceFile(file, str);
+                writeFile(file, str);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    private static void replaceFile(Path path, String str) throws IOException {
-        final Path tmp = path.resolveSibling("." + path.getFileName().toString() + ".tmp");
-
+    private static void writeFile(Path path, String str) throws IOException {
         try {
-            Files.writeString(tmp, str, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            Files.writeString(path, str, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
-            try {
-                Files.deleteIfExists(tmp);
-            } catch (IOException ignored) {
-            }
-            throw e;
-        }
-
-        try {
-            Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-        } catch (AccessDeniedException | AtomicMoveNotSupportedException e) {
-            try {
-                Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING);
-            } catch (NoSuchFileException | AccessDeniedException ignore) {
-            }
-        } catch (NoSuchFileException ignore) {
+            throw new RuntimeException(e);
         }
     }
 }
