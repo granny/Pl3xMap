@@ -71,14 +71,14 @@ window.onload = function () {
  * @param json.worlds
  */
 function init(json) {
-    document.title = json.ui.title;
-
-    P.options.link = json.ui.link;
-    P.options.coords = json.ui.coords;
+    document.title = json.ui.lang.title;
 
     P.lang.coords = json.ui.lang.coords;
     P.lang.players = json.ui.lang.players;
     P.lang.worlds = json.ui.lang.worlds;
+
+    P.options.link = json.ui.link;
+    P.options.coords = json.ui.coords;
 
     // start at spawn point with default zoom
     P.map.setView(P.toLatLng(0, 0), P.options.maxZoom - P.options.defZoom);
