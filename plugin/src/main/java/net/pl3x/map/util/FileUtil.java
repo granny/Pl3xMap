@@ -12,7 +12,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.StandardOpenOption;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
@@ -138,8 +137,9 @@ public class FileUtil {
     }
 
     private static void writeFile(Path path, String str) throws IOException {
-        try {
-            Files.writeString(path, str, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        try (OutputStream out = Files.newOutputStream(path)) {
+            out.write(str.getBytes());
+            out.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

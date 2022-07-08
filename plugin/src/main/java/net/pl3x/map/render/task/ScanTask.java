@@ -20,7 +20,6 @@ import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.world.ChunkHelper;
 import net.pl3x.map.world.MapWorld;
-import org.bukkit.ChatColor;
 
 public class ScanTask implements Runnable {
     private final Render render;
