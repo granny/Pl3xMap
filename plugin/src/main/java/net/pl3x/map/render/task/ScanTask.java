@@ -39,32 +39,12 @@ public class ScanTask implements Runnable {
         this.mapWorld = render.getWorld();
         this.chunkHelper = new ChunkHelper(render);
 
-        getWorld().getConfig().RENDER_SCANNERS.forEach(name -> {
-            Renderer renderer = Renderers.INSTANCE.createRenderer(name, getRender(), getRegion());
+        this.mapWorld.getConfig().RENDER_SCANNERS.forEach(name -> {
+            Renderer renderer = Renderers.INSTANCE.createRenderer(name, this.render, this.region);
             if (renderer != null) {
                 this.renderers.add(renderer);
             }
         });
-    }
-
-    public Render getRender() {
-        return this.render;
-    }
-
-    public RegionCoordinate getRegion() {
-        return this.region;
-    }
-
-    public Area getScannableArea() {
-        return this.area;
-    }
-
-    public MapWorld getWorld() {
-        return this.mapWorld;
-    }
-
-    public ChunkHelper getChunkHelper() {
-        return this.chunkHelper;
     }
 
     @Override
@@ -82,39 +62,40 @@ public class ScanTask implements Runnable {
         this.renderers.forEach(Renderer::allocateImages);
 
         // scan chunks in region
-        for (int chunkX = getRegion().getChunkX(); chunkX < getRegion().getChunkX() + 32; chunkX++) {
-            for (int chunkZ = getRegion().getChunkZ(); chunkZ < getRegion().getChunkZ() + 32; chunkZ++) {
+        for (int chunkX = this.region.getChunkX(); chunkX < this.region.getChunkX() + 32; chunkX++) {
+            for (int chunkZ = this.region.getChunkZ(); chunkZ < this.region.getChunkZ() + 32; chunkZ++) {
                 // make sure render task is still running
-                if (getRender().isCancelled()) {
+                if (this.render.isCancelled()) {
                     // don't forget to increment chunk counter
-                    getRender().getProgress().getProcessedChunks().getAndIncrement();
+                    this.render.getProgress().getProcessedChunks().getAndIncrement();
+                    this.chunkHelper.clear();
                     return;
                 }
 
                 // make sure we're allowed to scan this chunk
-                if (!getScannableArea().containsChunk(chunkX, chunkZ)) {
+                if (!this.area.containsChunk(chunkX, chunkZ)) {
                     // don't forget to increment chunk counter
-                    getRender().getProgress().getProcessedChunks().getAndIncrement();
-                    return;
+                    this.render.getProgress().getProcessedChunks().getAndIncrement();
+                    continue;
                 }
 
                 // pause here if we have to
-                while (getWorld().isPaused()) {
-                    getRender().sleep(500);
+                while (this.mapWorld.isPaused()) {
+                    this.render.sleep(500);
                 }
 
                 // scan the chunk
                 scanChunk(chunkX, chunkZ);
 
                 // we're done with this chunk \o/
-                getRender().getProgress().getProcessedChunks().incrementAndGet();
+                this.render.getProgress().getProcessedChunks().incrementAndGet();
             }
         }
 
         // save images to disk
-        if (!getRender().isCancelled()) {
+        if (!this.render.isCancelled()) {
             // submit to IO executor, so we can move on to next region without waiting
-            getRender().getImageExecutor().submit(() -> {
+            this.render.getImageExecutor().submit(() -> {
                 // surround in try/catch because executor eats exceptions
                 try {
                     this.renderers.forEach(Renderer::saveImages);
@@ -125,11 +106,12 @@ public class ScanTask implements Runnable {
         }
 
         // we're done with this region \o/
-        getRender().getProgress().getProcessedRegions().getAndIncrement();
+        this.render.getProgress().getProcessedRegions().getAndIncrement();
+        this.chunkHelper.clear();
     }
 
     public void scanChunk(int chunkX, int chunkZ) {
-        ChunkAccess chunk = getChunkHelper().getChunk(getWorld().getLevel(), chunkX, chunkZ);
+        ChunkAccess chunk = this.chunkHelper.getChunk(this.mapWorld.getLevel(), chunkX, chunkZ);
         if (chunk == null) {
             return;
         }
@@ -145,14 +127,14 @@ public class ScanTask implements Runnable {
         for (int z = 0; z < 16; z++) {
 
             // we need the bottom row of the chunk to the north to get heightmap correct
-            if (z == 0) {
+            if (z == 0 && this.mapWorld.getConfig().RENDER_HEIGHTMAP_TYPE != Heightmap.Type.DYNMAP) {
                 scanNorthChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
             }
 
             for (int x = 0; x < 16; x++) {
 
                 // we need the right row of the chunk to the west to get heightmap correct
-                if (x == 0 && z == 0) {
+                if (x == 0 && z == 0 && this.mapWorld.getConfig().RENDER_HEIGHTMAP_TYPE == Heightmap.Type.MODERN) {
                     scanWestChunk(chunkX, chunkZ, blockX, blockZ, blockPos, heightmap);
                 }
 
@@ -172,11 +154,11 @@ public class ScanTask implements Runnable {
 
         // if world has ceiling iterate down until we find air
         BlockState blockState;
-        if (getWorld().getLevel().dimensionType().hasCeiling()) {
+        if (this.mapWorld.getLevel().dimensionType().hasCeiling()) {
             do {
                 blockPos.move(Direction.DOWN);
                 blockState = chunk.getBlockState(blockPos);
-            } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !blockState.isAir());
+            } while (blockPos.getY() > this.mapWorld.getLevel().getMinBuildHeight() && !blockState.isAir());
         }
 
         // iterate down until we find a renderable block
@@ -194,29 +176,29 @@ public class ScanTask implements Runnable {
             }
             // just get a quick color for now
             blockColor = Colors.getRawBlockColor(blockState);
-            if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(blockState)) {
+            if (this.mapWorld.getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(blockState)) {
                 glass.add(blockColor);
                 continue;
             }
             if (blockColor > 0) {
                 break;
             }
-        } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
+        } while (blockPos.getY() > this.mapWorld.getLevel().getMinBuildHeight());
 
         BlockState fluidState = null;
         Biome fluidBiome = null;
         if (fluidPos != null) {
             fluidState = chunk.getBlockState(fluidPos);
-            fluidBiome = getChunkHelper().getBiomeWithCaching(getWorld(), fluidPos).value();
+            fluidBiome = this.chunkHelper.getBiomeWithCaching(this.mapWorld, fluidPos).value();
         }
 
         for (Renderer renderer : this.renderers) {
-            renderer.doIt(getWorld(), chunk, blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, heightmap, blockColor);
+            renderer.doIt(this.mapWorld, chunk, blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, heightmap, blockColor);
         }
     }
 
     public void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, Heightmap heightmap) {
-        ChunkAccess northChunk = getChunkHelper().getChunk(getWorld().getLevel(), chunkX, chunkZ - 1);
+        ChunkAccess northChunk = this.chunkHelper.getChunk(this.mapWorld.getLevel(), chunkX, chunkZ - 1);
         if (northChunk == null) {
             Arrays.fill(heightmap.x, Integer.MAX_VALUE);
         } else {
@@ -229,7 +211,7 @@ public class ScanTask implements Runnable {
     }
 
     public void scanWestChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, Heightmap heightmap) {
-        ChunkAccess westChunk = getChunkHelper().getChunk(getWorld().getLevel(), chunkX - 1, chunkZ);
+        ChunkAccess westChunk = this.chunkHelper.getChunk(this.mapWorld.getLevel(), chunkX - 1, chunkZ);
         if (westChunk == null) {
             Arrays.fill(heightmap.z, Integer.MAX_VALUE);
         } else {
@@ -245,11 +227,11 @@ public class ScanTask implements Runnable {
         blockPos.setY(chunkAccess.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ()) + 1);
         // if world has ceiling iterate down until we find air
         BlockState state;
-        if (getWorld().getLevel().dimensionType().hasCeiling()) {
+        if (this.mapWorld.getLevel().dimensionType().hasCeiling()) {
             do {
                 blockPos.move(Direction.DOWN);
                 state = chunkAccess.getBlockState(blockPos);
-            } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !state.isAir());
+            } while (blockPos.getY() > this.mapWorld.getLevel().getMinBuildHeight() && !state.isAir());
         }
         do {
             blockPos.move(Direction.DOWN);
@@ -257,17 +239,17 @@ public class ScanTask implements Runnable {
             if (!state.getFluidState().isEmpty()) {
                 continue;
             }
-            if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
+            if (this.mapWorld.getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(state)) {
                 continue;
             }
             if (Colors.getRawBlockColor(state) > 0) {
                 break;
             }
-        } while (blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
+        } while (blockPos.getY() > this.mapWorld.getLevel().getMinBuildHeight());
     }
 
     public Holder<Biome> scanBiome(BlockPos pos) {
-        return getChunkHelper().getBiomeWithCaching(getWorld(), pos);
+        return this.chunkHelper.getBiomeWithCaching(this.mapWorld, pos);
     }
 
     public static boolean isGlass(BlockState state) {

@@ -2,6 +2,7 @@ package net.pl3x.map.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.pl3x.map.render.Heightmap;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 
@@ -71,6 +72,14 @@ public class WorldConfig extends AbstractConfig {
             so you can see the ground below.""")
     public boolean RENDER_TRANSLUCENT_GLASS = true;
 
+    @Key("render.heightmap-type")
+    @Comment("""
+            Type of heightmap to render.
+            MODERN is a clearer, more detailed view.
+            OLD_SCHOOL is the type from V1.
+            DYNMAP makes every other Y layer darker.""")
+    public Heightmap.Type RENDER_HEIGHTMAP_TYPE = Heightmap.Type.MODERN;
+
     @Key("zoom.default")
     @Comment("""
             The default zoom when loading the map in browser.
@@ -107,11 +116,23 @@ public class WorldConfig extends AbstractConfig {
 
     @Override
     protected Object getValue(String path, Object def) {
+        boolean heightmap = def instanceof Heightmap.Type;
+        if (heightmap) {
+            def = ((Heightmap.Type) def).name();
+        }
+
         if (getConfig().get("world-settings.default." + path) == null) {
             getConfig().set("world-settings.default." + path, def);
         }
-        return getConfig().get("world-settings." + this.world.getName() + "." + path,
+
+        Object value = getConfig().get("world-settings." + this.world.getName() + "." + path,
                 getConfig().get("world-settings.default." + path));
+
+        if (value instanceof String && heightmap) {
+            value = Heightmap.Type.get((String) value);
+        }
+
+        return value;
     }
 
     @Override

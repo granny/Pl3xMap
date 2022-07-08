@@ -41,11 +41,12 @@ public class BiomeRenderer extends JavaPlugin {
             // simplified from BasicRenderer
 
             // determine the biome
-            ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(mapWorld.getLevel()).getResourceKey(blockBiome).orElse(null);
+            boolean flatWater = fluidPos != null && !getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
+            ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(mapWorld.getLevel()).getResourceKey(flatWater ? fluidBiome : blockBiome).orElse(null);
             int pixelColor = biomeKey == null ? 0 : Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0);
 
             // work out the heightmap
-            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, heightmap, x, z));
+            pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, heightmap, x, z, flatWater));
 
             int pixelX = blockPos.getX() & Image.SIZE - 1;
             int pixelZ = blockPos.getZ() & Image.SIZE - 1;

@@ -49,6 +49,11 @@ public class ChunkHelper {
         this.render = render;
     }
 
+    public void clear() {
+        this.biomeCache.clear();
+        this.chunkCache.clear();
+    }
+
     public ChunkAccess getChunk(ServerLevel level, int chunkX, int chunkZ) {
         return this.chunkCache.computeIfAbsent(ChunkPos.asLong(chunkX, chunkZ), k -> getChunkFast(level, chunkX, chunkZ));
     }

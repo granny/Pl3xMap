@@ -68,24 +68,35 @@ public abstract class Renderer {
 
     public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color);
 
-    public int scanHeightMap(BlockPos pos, Heightmap heightmap, int x, int z) {
+    public int scanHeightMap(BlockPos pos, Heightmap heightmap, int x, int z, boolean flat) {
         int heightColor = 0x22;
-        if (heightmap.z[z] != Integer.MAX_VALUE) {
-            if (pos.getY() > heightmap.z[z]) {
-                heightColor -= 0x11;
-            } else if (pos.getY() < heightmap.z[z]) {
-                heightColor += 0x11;
+        Heightmap.Type type = this.mapWorld.getConfig().RENDER_HEIGHTMAP_TYPE;
+        if (type == Heightmap.Type.DYNMAP) {
+            if (!flat && pos.getY() % 2 == 1) {
+                heightColor = 0x33;
             }
-        }
-        if (heightmap.x[x] != Integer.MAX_VALUE) {
-            if (pos.getY() > heightmap.x[x]) {
-                heightColor -= 0x11;
-            } else if (pos.getY() < heightmap.x[x]) {
-                heightColor += 0x11;
+        } else {
+            if (!flat) {
+                if (heightmap.x[x] != Integer.MAX_VALUE) {
+                    if (pos.getY() > heightmap.x[x]) {
+                        heightColor = 0x00;
+                    } else if (pos.getY() < heightmap.x[x]) {
+                        heightColor = 0x44;
+                    }
+                }
+                if (type == Heightmap.Type.MODERN) {
+                    if (heightmap.z[z] != Integer.MAX_VALUE) {
+                        if (pos.getY() > heightmap.z[z]) {
+                            heightColor = 0x00;
+                        } else if (pos.getY() < heightmap.z[z]) {
+                            heightColor = 0x44;
+                        }
+                    }
+                }
             }
+            heightmap.x[x] = pos.getY();
+            heightmap.z[z] = pos.getY();
         }
-        heightmap.x[x] = pos.getY();
-        heightmap.z[z] = pos.getY();
         return Colors.setAlpha((int) Mathf.clamp(0x00, 0xFF, heightColor), 0x000000);
     }
 

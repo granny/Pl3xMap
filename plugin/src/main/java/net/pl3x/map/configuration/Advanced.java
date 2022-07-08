@@ -263,6 +263,8 @@ public class Advanced extends AbstractConfig {
 
         put(Blocks.GRASS, 0x000000);
         put(Blocks.TALL_GRASS, 0x000000);
+        put(Blocks.FERN, 0x000000);
+        put(Blocks.LARGE_FERN, 0x000000);
 
         put(Blocks.GLASS, 0xFFFFFF);
         put(Blocks.MYCELIUM, 0x6F6265);

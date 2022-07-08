@@ -38,11 +38,17 @@ public class BasicRenderer extends Renderer {
     @Override
     public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color) {
         // fix true block color
-        int blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), blockBiome, blockState, blockPos, color);
+        boolean flatWater = fluidPos != null && !getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
+        int blockColor;
+        if (flatWater) {
+            blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), fluidBiome, fluidState, fluidPos, color);
+        } else {
+            blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), blockBiome, blockState, blockPos, color);
+        }
         int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
         // work out the heightmap
-        pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, heightmap, x, z));
+        pixelColor = Colors.mix(pixelColor, scanHeightMap(blockPos, heightmap, x, z, flatWater));
 
         // fancy fluids, yum
         if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
