@@ -3,12 +3,12 @@
 
 # Pl3xMap
 
-[![Github Actions Build](https://img.shields.io/github/workflow/status/BillyGalbreath/Pl3xMap/Build?event=push&logo=github)](https://github.com/BillyGalbreath/Pl3xMap/releases)
-[![CodeFactor](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap/badge)](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap)
+[![Build Status](https://img.shields.io/github/workflow/status/BillyGalbreath/Pl3xMap/Build?event=push&logo=github)](https://github.com/BillyGalbreath/Pl3xMap/releases)
+[![CodeFactor Score](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap/badge)](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap)
 [![Join us on Discord](https://img.shields.io/discord/944144133054931025.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/nhGzEkwXQX)
 [![wakatime](https://wakatime.com/badge/github/BillyGalbreath/Pl3xMap.svg)](https://wakatime.com/badge/github/BillyGalbreath/Pl3xMap)
 
-Pl3xMap is the original minimalistic and lightweight world map viewer<br/>
+Pl3xMap is the original minimalistic and lightweight world map viewer  
 for Paper servers using the vanilla Minecraft rendering style.
 
 </div>
@@ -16,17 +16,22 @@ for Paper servers using the vanilla Minecraft rendering style.
 ## Downloads
 Downloads can be obtained from the [releases](https://github.com/BillyGalbreath/Pl3xMap/releases) section.
 
-## License
-
-This project is licensed under the [MIT license](https://github.com/BillyGalbreath/Pl3xMap/blob/master/LICENSE)
-
-Leaflet (the web ui frontend) is licensed under [2-clause BSD License](https://github.com/Leaflet/Leaflet/blob/master/LICENSE)
+## Licenses
+**Pl3xMap** (_this project_) is licensed under the [MIT License](https://github.com/BillyGalbreath/Pl3xMap/blob/v2/LICENSE)  
+**Leaflet** (_web ui frontend_) is licensed under the [BSD 2-Clause License](https://github.com/Leaflet/Leaflet/blob/master/LICENSE)  
+**Undertow** (_internal web server_) is licensed under the [Apache License, Version 2.0](https://github.com/undertow-io/undertow/blob/master/LICENSE.txt)  
+**Scrimage** (_webp wrapper_) is licensed under the [Apache License, Version 2.0](https://github.com/sksamuel/scrimage/blob/master/LICENSE)  
+**Libwebp** (_webp binaries_) is licensed under the [BSD 3-Clause License](https://www.webmproject.org/license/software/)  
+**CLOUD** (_command framework_) is licensed under the [MIT License](https://github.com/Incendo/cloud/blob/master/LICENSE)  
+**bStats** (_usage metrics_) is licensed under the [MIT License](https://github.com/Bastian/bStats-Metrics/blob/master/LICENSE)
 
 ## bStats
 
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/Pl3xMap.svg)](https://bstats.org/plugin/bukkit/Pl3xMap/10133)
 
 ## Building from source
+To build this project just issue the following command:
 ```
 ./gradlew build
 ```
+The compiled jars will be in `build/libs/`
