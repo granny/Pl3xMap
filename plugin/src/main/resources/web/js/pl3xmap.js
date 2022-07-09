@@ -30,11 +30,27 @@ let P = {
     scale: function () {
         return 1 / Math.pow(2, P.options.maxZoom)
     },
+    centerOn(x, z, zoom) {
+        P.map.setView(P.toLatLng(x, z), P.options.maxZoom - zoom);
+        return P.map;
+    },
+    getUrlParam(query, def) {
+        const url = window.location.search.substring(1);
+        const vars = url.split('&');
+        for (let i = 0; i < vars.length; i++) {
+            const param = vars[i].split('=');
+            if (param[0] === query) {
+                const value = param[1] === undefined ? '' : decodeURIComponent(param[1]);
+                return value === '' ? def : value;
+            }
+        }
+        return def;
+    },
     getUrlFromView() {
         const center = P.toPoint(P.map.getCenter());
         const zoom = P.options.maxZoom - P.map.getZoom();
         const x = Math.floor(center.x);
-        const z = Math.floor(center.y);
+        const z = Math.floor(-center.y);
         return `?world=${P.world}&zoom=${zoom}&x=${x}&z=${z}`;
     },
     getJSON(url, fn) {
@@ -80,9 +96,23 @@ function init(json) {
     P.options.link = json.ui.link;
     P.options.coords = json.ui.coords;
 
-    // start at spawn point with default zoom
-    P.map.setView(P.toLatLng(0, 0), P.options.maxZoom - P.options.defZoom);
-    //map.setView(toLatLng(18880, 6321), zoom); // earth world spawn
+    // get world from url, or first world from json
+    P.world = P.getUrlParam("world", json.worlds[0].name)
+
+    // center map on coords at zoom from url, or from json
+    P.getJSON(`tiles/${P.world}/settings.json`,
+        /**
+         * @param world
+         * @param world.spawn
+         * @param world.zoom
+         */
+        (world) => {
+            P.centerOn(
+                P.getUrlParam("x", world.spawn.x),
+                P.getUrlParam("z", world.spawn.z),
+                P.getUrlParam("zoom", world.zoom.default)
+            );
+        });
 
     // the base layer for tiles
     L.tileLayer.reversedZoom(`tiles/${P.world}/{z}/${P.renderer}/{x}_{y}.${P.format}`).setZIndex(0).addTo(P.map);
