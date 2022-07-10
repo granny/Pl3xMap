@@ -63,6 +63,7 @@ public class FullRender extends Render {
 
                 // ignore empty region files
                 if (path.toFile().length() == 0) {
+                    Logger.debug(String.format("Ignoring region file (empty region) %s", path.getFileName()));
                     continue;
                 }
 
@@ -83,6 +84,7 @@ public class FullRender extends Render {
 
                 // check if region is inside scannable area
                 if (!scannableArea.containsRegion(x, z)) {
+                    Logger.debug(String.format("Ignoring region file (outside scannable area) %s", path.getFileName()));
                     continue;
                 }
 
@@ -108,6 +110,7 @@ public class FullRender extends Render {
 
                 // let us not get stuck in an endless loop
                 if (failsafe > 500000) {
+                    Logger.debug("Failsafe triggered.");
                     // we scanned over half a million non-existent regions straight
                     // quit the spiral and add the remaining regions to the end
                     regionFiles.forEach(region -> regionsToScan.put(region, false));

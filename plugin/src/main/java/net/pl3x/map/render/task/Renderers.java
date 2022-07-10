@@ -7,11 +7,13 @@ import java.util.Map;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.task.builtin.BasicRenderer;
+import net.pl3x.map.render.task.builtin.BiomeRenderer;
 
 public class Renderers {
     public static final Renderers INSTANCE = new Renderers();
 
     public static final Class<? extends Renderer> BASIC = INSTANCE.register("basic", BasicRenderer.class);
+    public static final Class<? extends Renderer> BIOMES = INSTANCE.register("biomes", BiomeRenderer.class);
 
     private final Map<String, Class<? extends Renderer>> renderers = new HashMap<>();
 

@@ -47,7 +47,7 @@ let P = {
         return def;
     },
     getUrlFromView() {
-        const center = P.toPoint(P.map.getCenter());
+        const center = P.map._loaded ? P.toPoint(P.map.getCenter()) : [0, 0];
         const zoom = P.options.maxZoom - P.map.getZoom();
         const x = Math.floor(center.x);
         const z = Math.floor(-center.y);

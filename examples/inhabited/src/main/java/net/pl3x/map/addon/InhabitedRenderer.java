@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.pl3x.map.render.Heightmap;
+import net.pl3x.map.render.heightmap.Heightmap;
 import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
@@ -49,7 +49,7 @@ public class InhabitedRenderer extends JavaPlugin {
             int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
             // work out the heightmap
-            int heightmapColor = scanHeightMap(blockPos, heightmap, x, z, flatWater);
+            int heightmapColor = heightmap.scan(blockPos, x, z, flatWater);
             pixelColor = Colors.mix(pixelColor, heightmapColor);
 
             // fancy fluids, yum

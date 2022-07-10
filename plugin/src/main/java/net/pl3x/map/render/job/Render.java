@@ -94,8 +94,13 @@ public abstract class Render implements Runnable {
             sleep(1000);
         }
 
-        start();
-        render();
+        try {
+            start();
+            render();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            cancel(false);
+        }
 
         ThreadFactory thread = new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Progress").build();
         this.scheduledProgress = Executors.newScheduledThreadPool(1, thread)

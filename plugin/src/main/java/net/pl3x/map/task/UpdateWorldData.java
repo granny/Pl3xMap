@@ -2,6 +2,7 @@ package net.pl3x.map.task;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class UpdateWorldData extends BukkitRunnable {
 
     @Override
     public void run() {
-        List<Object> worlds = new ArrayList<>();
+        List<Map<String, Object>> worlds = new ArrayList<>();
 
         WorldManager.INSTANCE.getMapWorlds().forEach(mapWorld -> {
             WorldConfig config = mapWorld.getConfig();
@@ -59,6 +60,9 @@ public class UpdateWorldData extends BukkitRunnable {
             worldsList.put("order", config.ORDER);
             worlds.add(worldsList);
         });
+
+        // sort worlds by order, then by name
+        worlds.sort(Comparator.<Map<String, Object>>comparingInt(w -> (int) w.get("order")).thenComparing(w -> (String) w.get("name")));
 
         Map<String, Object> ui = new HashMap<>();
         ui.put("coords", Config.UI_COORDS_ENABLED);

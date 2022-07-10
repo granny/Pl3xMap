@@ -2,7 +2,7 @@ package net.pl3x.map.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.pl3x.map.render.Heightmap;
+import net.pl3x.map.render.heightmap.Heightmap;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.World;
 
@@ -22,6 +22,7 @@ public class WorldConfig extends AbstractConfig {
             basic, biome, nether""")
     public List<String> RENDER_SCANNERS = new ArrayList<>() {{
         add("basic");
+        add("biomes");
     }};
 
     @Key("render.background.interval")

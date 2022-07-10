@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.render.Area;
-import net.pl3x.map.render.Heightmap;
+import net.pl3x.map.render.heightmap.Heightmap;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.Coordinate;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
@@ -121,7 +121,7 @@ public class ScanTask implements Runnable {
         int blockZ = Coordinate.chunkToBlock(chunkZ);
 
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
-        Heightmap heightmap = new Heightmap();
+        Heightmap heightmap = this.mapWorld.getConfig().RENDER_HEIGHTMAP_TYPE.createHeightmap();
 
         // iterate each block in this chunk
         for (int z = 0; z < 16; z++) {
