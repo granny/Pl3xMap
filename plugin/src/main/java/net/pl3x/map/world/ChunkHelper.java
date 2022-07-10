@@ -5,6 +5,7 @@ import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import io.papermc.paper.util.WorldUtil;
+import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -118,6 +119,28 @@ public class ChunkHelper {
         byte chunkYPos = chunkSectionNBT.getByte("Y");
         int index = level.getSectionIndexFromSectionY(chunkYPos);
         if (index >= 0 && index < levelChunkSections.length) {
+            levelChunkSections[index] = new LevelChunkSection(chunkYPos, biomeRegistry, null, null);
+            try {
+                Field statesField = LevelChunkSection.class.getDeclaredField("i");
+                statesField.setAccessible(true);
+                statesField.set(levelChunkSections[index], chunkSectionNBT.contains("block_states", 10) ?
+                        ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError) :
+                        new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, null));
+
+                Field biomesField = LevelChunkSection.class.getDeclaredField("biomes");
+                biomesField.setAccessible(true);
+                biomesField.set(levelChunkSections[index], chunkSectionNBT.contains("biomes", 10) ?
+                        PalettedContainer.codecRW(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS), null)
+                                .parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError) :
+                        new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(Biomes.PLAINS), PalettedContainer.Strategy.SECTION_BIOMES, null));
+
+                Field nonEmptyBlockCountField = LevelChunkSection.class.getDeclaredField("f");
+                nonEmptyBlockCountField.setAccessible(true);
+                nonEmptyBlockCountField.set(levelChunkSections[index], Short.MAX_VALUE);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            /* this triggers recalcBlockCounts() which is slow
             levelChunkSections[index] = new LevelChunkSection(chunkYPos,
                     chunkSectionNBT.contains("block_states", 10) ?
                             ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError) :
@@ -127,6 +150,7 @@ public class ChunkHelper {
                                     .parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError) :
                             new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(Biomes.PLAINS), PalettedContainer.Strategy.SECTION_BIOMES, null)
             );
+            */
         }
         try {
             byte[] blockBytes = chunkSectionNBT.contains("BlockLight", 7) ? chunkSectionNBT.getByteArray("BlockLight").clone() : null;
