@@ -84,8 +84,10 @@ public class BiomeColors {
         for (Biome biome : biomeRegistry) {
             float temperature = Mth.clamp(biome.getBaseTemperature(), 0.0F, 1.0F);
             float humidity = Mth.clamp(biome.getDownfall(), 0.0F, 1.0F);
-            grassColors.put(biome, getDefaultGrassColor(temperature, humidity));
-            foliageColors.put(biome, getDefaultFoliageColor(temperature, humidity));
+            grassColors.put(biome, biome.getSpecialEffects().getGrassColorOverride()
+                    .orElse(getDefaultGrassColor(temperature, humidity)));
+            foliageColors.put(biome, biome.getSpecialEffects().getFoliageColorOverride()
+                    .orElse(getDefaultFoliageColor(temperature, humidity)));
             waterColors.put(biome, biome.getSpecialEffects().getWaterColor());
         }
 
