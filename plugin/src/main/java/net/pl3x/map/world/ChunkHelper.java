@@ -5,7 +5,6 @@ import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import io.papermc.paper.util.WorldUtil;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +35,17 @@ public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
     private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
     private final Render render;
+    private final Registry<Biome> biomeRegistry;
+
+    private final int minSection;
+    private final int totalLightSections;
 
     public ChunkHelper(Render render) {
         this.render = render;
+        ServerLevel level = render.getWorld().getLevel();
+        this.biomeRegistry = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY);
+        this.minSection = WorldUtil.getMinLightSection(level);
+        this.totalLightSections = WorldUtil.getMaxLightSection(level) - minSection + 1;
     }
 
     public void clear() {
@@ -78,17 +85,14 @@ public class ChunkHelper {
             return null;
         }
 
-        final int minSection = WorldUtil.getMinLightSection(level);
-        final int totalLightSections = WorldUtil.getMaxLightSection(level) - minSection + 1;
-        SWMRNibbleArray[] blockNibbles = new SWMRNibbleArray[totalLightSections];
-        SWMRNibbleArray[] skyNibbles = new SWMRNibbleArray[totalLightSections];
+        SWMRNibbleArray[] blockNibbles = new SWMRNibbleArray[this.totalLightSections];
+        SWMRNibbleArray[] skyNibbles = new SWMRNibbleArray[this.totalLightSections];
         ListTag sectionsNBT = nbt.getList("sections", 10);
         LevelChunkSection[] levelChunkSections = new LevelChunkSection[level.getSectionsCount()];
-        Registry<Biome> biomeRegistry = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY);
 
         // build only the required palettes from chunk sections
         for (int j = 0; j < sectionsNBT.size(); ++j) {
-            populatePalettesAndLight(level, sectionsNBT, levelChunkSections, j, blockNibbles, skyNibbles, biomeRegistry, minSection);
+            populatePalettesAndLight(level, sectionsNBT, levelChunkSections, j, blockNibbles, skyNibbles, this.minSection);
         }
 
         // create our chunk
@@ -105,12 +109,12 @@ public class ChunkHelper {
         return chunk;
     }
 
-    private void populatePalettesAndLight(ServerLevel level, ListTag sectionsNBT, LevelChunkSection[] levelChunkSections, int j, SWMRNibbleArray[] blockNibbles, SWMRNibbleArray[] skyNibbles, Registry<Biome> biomeRegistry, int minSection) {
+    private void populatePalettesAndLight(ServerLevel level, ListTag sectionsNBT, LevelChunkSection[] levelChunkSections, int j, SWMRNibbleArray[] blockNibbles, SWMRNibbleArray[] skyNibbles, int minSection) {
         CompoundTag chunkSectionNBT = sectionsNBT.getCompound(j);
         byte chunkYPos = chunkSectionNBT.getByte("Y");
         int index = level.getSectionIndexFromSectionY(chunkYPos);
         if (index >= 0 && index < levelChunkSections.length) {
-            levelChunkSections[index] = ReflectionHelper.createLevelChunkSection(minSection, chunkSectionNBT, biomeRegistry);
+            levelChunkSections[index] = ReflectionHelper.createLevelChunkSection(minSection, chunkSectionNBT, this.biomeRegistry);
         }
         try {
             byte[] blockBytes = chunkSectionNBT.contains("BlockLight", 7) ? chunkSectionNBT.getByteArray("BlockLight").clone() : null;
@@ -129,7 +133,7 @@ public class ChunkHelper {
         if (heightmaps.contains(key, 12)) {
             chunk.setHeightmap(Heightmap.Types.WORLD_SURFACE, heightmaps.getLongArray(key));
         }
-        Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
+        //Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
     }
 
     public Holder<Biome> getBiomeWithCaching(MapWorld mapWorld, BlockPos pos) {
