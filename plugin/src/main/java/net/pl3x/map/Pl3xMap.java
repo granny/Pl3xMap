@@ -15,7 +15,6 @@ import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.Renderers;
 import net.pl3x.map.task.UpdateWorldData;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.util.LightEngine;
 import net.pl3x.map.world.MapWorld;
 import net.pl3x.map.world.WorldListener;
 import net.pl3x.map.world.WorldManager;
@@ -63,8 +62,6 @@ public class Pl3xMap extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
-        LightEngine.init();
 
         // extract default worlds.yml file for nether and end default stuff
         FileUtil.extract("worlds.yml", false);

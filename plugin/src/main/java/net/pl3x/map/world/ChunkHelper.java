@@ -5,46 +5,37 @@ import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import io.papermc.paper.util.WorldUtil;
-import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.LinearCongruentialGenerator;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.pl3x.map.render.job.Render;
+import net.pl3x.map.util.ReflectionHelper;
 
 public class ChunkHelper {
     private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
     private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
     private final Render render;
-
-    private final Consumer<String> onError = s -> {
-    };
 
     public ChunkHelper(Render render) {
         this.render = render;
@@ -119,38 +110,7 @@ public class ChunkHelper {
         byte chunkYPos = chunkSectionNBT.getByte("Y");
         int index = level.getSectionIndexFromSectionY(chunkYPos);
         if (index >= 0 && index < levelChunkSections.length) {
-            levelChunkSections[index] = new LevelChunkSection(chunkYPos, biomeRegistry, null, null);
-            try {
-                Field statesField = LevelChunkSection.class.getDeclaredField("i");
-                statesField.setAccessible(true);
-                statesField.set(levelChunkSections[index], chunkSectionNBT.contains("block_states", 10) ?
-                        ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError) :
-                        new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, null));
-
-                Field biomesField = LevelChunkSection.class.getDeclaredField("biomes");
-                biomesField.setAccessible(true);
-                biomesField.set(levelChunkSections[index], chunkSectionNBT.contains("biomes", 10) ?
-                        PalettedContainer.codecRW(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS), null)
-                                .parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError) :
-                        new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(Biomes.PLAINS), PalettedContainer.Strategy.SECTION_BIOMES, null));
-
-                Field nonEmptyBlockCountField = LevelChunkSection.class.getDeclaredField("f");
-                nonEmptyBlockCountField.setAccessible(true);
-                nonEmptyBlockCountField.set(levelChunkSections[index], Short.MAX_VALUE);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-            /* this triggers recalcBlockCounts() which is slow
-            levelChunkSections[index] = new LevelChunkSection(chunkYPos,
-                    chunkSectionNBT.contains("block_states", 10) ?
-                            ChunkSerializer.BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("block_states")).getOrThrow(false, onError) :
-                            new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, null),
-                    chunkSectionNBT.contains("biomes", 10) ?
-                            PalettedContainer.codecRW(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS), null)
-                                    .parse(NbtOps.INSTANCE, chunkSectionNBT.getCompound("biomes")).getOrThrow(false, onError) :
-                            new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(Biomes.PLAINS), PalettedContainer.Strategy.SECTION_BIOMES, null)
-            );
-            */
+            levelChunkSections[index] = ReflectionHelper.createLevelChunkSection(minSection, chunkSectionNBT, biomeRegistry);
         }
         try {
             byte[] blockBytes = chunkSectionNBT.contains("BlockLight", 7) ? chunkSectionNBT.getByteArray("BlockLight").clone() : null;

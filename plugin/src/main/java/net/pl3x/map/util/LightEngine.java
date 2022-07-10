@@ -11,10 +11,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
 public class LightEngine {
-    private static StarLightInterface starLightInterface;
-    private static Field minLightSection;
+    private static final StarLightInterface starLightInterface;
+    private static final Field minLightSection;
 
-    public static void init() {
+    static {
         try {
             ServerLevel level = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
 
