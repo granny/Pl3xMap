@@ -76,7 +76,7 @@ public abstract class Renderer {
             fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.3F, Easing.cubicOut(depth / 1.5F)));
             fluidColor = Colors.setAlpha(0xFF, fluidColor);
         } else {
-            fluidColor = getWorld().getBiomeColors().getWaterColor(getChunkHelper(), fluidBiome, fluidPos);
+            fluidColor = getRender().getBiomeColors().getWaterColor(getChunkHelper(), fluidBiome, fluidPos);
             fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.45F, Easing.cubicOut(depth / 1.5F)));
             fluidColor = Colors.setAlpha((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
         }

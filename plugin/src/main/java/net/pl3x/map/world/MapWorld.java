@@ -53,7 +53,6 @@ public class MapWorld {
 
     private final Path dataPath;
 
-    private final BiomeColors biomeColors;
     private final long biomeSeed;
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1,
@@ -75,7 +74,6 @@ public class MapWorld {
         this.level = ((CraftWorld) world).getHandle();
         this.config = config;
 
-        this.biomeColors = new BiomeColors(this);
         this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
 
         this.dataPath = FileUtil.DATA_DIR.resolve(world.getName());
@@ -135,10 +133,6 @@ public class MapWorld {
 
     public WorldConfig getConfig() {
         return this.config;
-    }
-
-    public BiomeColors getBiomeColors() {
-        return this.biomeColors;
     }
 
     public long getBiomeSeed() {

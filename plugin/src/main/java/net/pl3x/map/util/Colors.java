@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
 import net.pl3x.map.configuration.Advanced;
 import net.pl3x.map.world.ChunkHelper;
-import net.pl3x.map.world.MapWorld;
 
 public class Colors {
     public static int lerpRGB(int color0, int color1, float delta) {
@@ -176,15 +175,15 @@ public class Colors {
         return color;
     }
 
-    public static int fixBlockColor(MapWorld mapWorld, ChunkHelper chunkHelper, Biome biome, BlockState state, BlockPos pos, int color) {
-        if (mapWorld.getBiomeColors().isGrassBlock(state)) {
-            return mapWorld.getBiomeColors().getGrassColor(chunkHelper, biome, pos);
+    public static int fixBlockColor(BiomeColors biomeColors, ChunkHelper chunkHelper, Biome biome, BlockState state, BlockPos pos, int color) {
+        if (biomeColors.isGrassBlock(state)) {
+            return biomeColors.getGrassColor(chunkHelper, biome, pos);
         }
-        if (mapWorld.getBiomeColors().isFoliageBlock(state)) {
-            return mapWorld.getBiomeColors().getFoliageColor(chunkHelper, biome, pos);
+        if (biomeColors.isFoliageBlock(state)) {
+            return biomeColors.getFoliageColor(chunkHelper, biome, pos);
         }
-        if (!mapWorld.getConfig().RENDER_TRANSLUCENT_FLUIDS && mapWorld.getBiomeColors().isWaterBlock(state)) {
-            return mapWorld.getBiomeColors().getWaterColor(chunkHelper, biome, pos);
+        if (biomeColors.isWaterBlock(state)) {
+            return biomeColors.getWaterColor(chunkHelper, biome, pos);
         }
         if (state.is(Blocks.MELON_STEM) || state.is(Blocks.PUMPKIN_STEM)) {
             int age = state.getValue(StemBlock.AGE);

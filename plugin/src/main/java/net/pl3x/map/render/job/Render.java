@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.render.job.progress.Progress;
+import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,6 +26,8 @@ public abstract class Render implements Runnable {
 
     private final int centerX;
     private final int centerZ;
+
+    private final BiomeColors biomeColors;
 
     private boolean cancelled;
 
@@ -53,6 +56,7 @@ public abstract class Render implements Runnable {
         this.centerZ = centerZ;
         this.renderExecutor = renderExecutor;
         this.imageExecutor = imageExecutor;
+        this.biomeColors = new BiomeColors(mapWorld);
     }
 
     public ExecutorService getRenderExecutor() {
@@ -85,6 +89,10 @@ public abstract class Render implements Runnable {
 
     public int getCenterZ() {
         return this.centerZ;
+    }
+
+    public BiomeColors getBiomeColors() {
+        return this.biomeColors;
     }
 
     @Override

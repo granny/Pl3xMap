@@ -42,9 +42,9 @@ public class InhabitedRenderer extends JavaPlugin {
             boolean flatWater = fluidPos != null && !getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
             int blockColor;
             if (flatWater) {
-                blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), fluidBiome, fluidState, fluidPos, color);
+                blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), getChunkHelper(), fluidBiome, fluidState, fluidPos, color);
             } else {
-                blockColor = Colors.fixBlockColor(getWorld(), getChunkHelper(), blockBiome, blockState, blockPos, color);
+                blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), getChunkHelper(), blockBiome, blockState, blockPos, color);
             }
             int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
