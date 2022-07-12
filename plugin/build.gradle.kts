@@ -1,22 +1,8 @@
-plugins {
-    `java-library`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-}
-
 group = "net.pl3x.map"
-version = "2.0.0-SNAPSHOT"
+version = rootProject.version
 description = "Minimalistic and lightweight world map viewer for Paper servers"
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
     implementation("io.undertow:undertow-core:2.2.17.Final")
     implementation("com.sksamuel.scrimage:scrimage-core:4.0.31")
     implementation("com.sksamuel.scrimage:scrimage-webp:4.0.31")
@@ -49,23 +35,5 @@ tasks {
     }
     assemble {
         dependsOn(reobfJar)
-    }
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
-    }
-    javadoc {
-        options.encoding = Charsets.UTF_8.name()
-    }
-    processResources {
-        filteringCharset = Charsets.UTF_8.name()
-        filesMatching("plugin.yml") {
-            expand(
-                "name" to project.name,
-                "group" to project.group,
-                "version" to project.version,
-                "description" to project.description
-            )
-        }
     }
 }

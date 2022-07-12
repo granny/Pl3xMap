@@ -12,6 +12,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install npm modules
+        run: cd webmap && npm install && cd ../
       - name: Build
         run: ./gradlew build --stacktrace
       - name: Store artifacts

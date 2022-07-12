@@ -272,6 +272,36 @@ public class Advanced extends AbstractConfig {
 
         put(Blocks.BIRCH_LEAVES, 0x668644); // 25% darker than normal
         put(Blocks.SPRUCE_LEAVES, 0x4e7a4e); // 25% darker than normal
+
+        put(Blocks.DIORITE, 0xC1C1C2);
+        put(Blocks.POLISHED_DIORITE, 0xC7C7C8);
+        put(Blocks.CALCITE, 0xE1E2DE);
+        put(Blocks.BONE_BLOCK, 0xE7E3D1);
+        put(Blocks.NETHER_BRICKS, 0x30181C);
+        put(Blocks.CRACKED_NETHER_BRICKS, 0x30181C);
+        put(Blocks.CHISELED_NETHER_BRICKS, 0x30181C);
+        put(Blocks.NETHER_BRICK_FENCE, 0x30181C);
+        put(Blocks.NETHER_BRICK_SLAB, 0x30181C);
+        put(Blocks.NETHER_BRICK_STAIRS, 0x30181C);
+        put(Blocks.NETHER_BRICK_WALL, 0x30181C);
+        put(Blocks.RED_NETHER_BRICKS, 0x49080A);
+        put(Blocks.RED_NETHER_BRICK_SLAB, 0x49080A);
+        put(Blocks.RED_NETHER_BRICK_STAIRS, 0x49080A);
+        put(Blocks.RED_NETHER_BRICK_WALL, 0x49080A);
+        put(Blocks.BLACKSTONE, 0x37333D);
+        put(Blocks.BLACKSTONE_SLAB, 0x37333D);
+        put(Blocks.BLACKSTONE_STAIRS, 0x37333D);
+        put(Blocks.BLACKSTONE_WALL, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_SLAB, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_STAIRS, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_WALL, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_BRICKS, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_BRICK_SLAB, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS, 0x37333D);
+        put(Blocks.POLISHED_BLACKSTONE_BRICK_WALL, 0x37333D);
+        put(Blocks.CHISELED_POLISHED_BLACKSTONE, 0x37333D);
+        put(Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS, 0x37333D);
     }};
 
     @Key("settings.colors.biomes")

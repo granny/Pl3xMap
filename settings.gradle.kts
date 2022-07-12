@@ -13,6 +13,9 @@ setupSubproject("Pl3xMap") {
 setupSubproject("InhabitedRenderer") {
     projectDir = file("examples/inhabited")
 }
+setupSubproject("WebMap") {
+    projectDir = file("webmap")
+}
 
 inline fun setupSubproject(name: String, block: ProjectDescriptor.() -> Unit) {
     include(name)

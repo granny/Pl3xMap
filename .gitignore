@@ -120,3 +120,8 @@ run/
 build
 .gradle
 /*.jar
+
+# webmap crap
+*/node_modules/
+*/public/
+*pl3xmap.js*

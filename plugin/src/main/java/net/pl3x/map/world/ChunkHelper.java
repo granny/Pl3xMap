@@ -5,6 +5,7 @@ import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import io.papermc.paper.util.WorldUtil;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -141,7 +142,7 @@ public class ChunkHelper {
     }
 
     // BiomeManager#getBiome
-    public Holder<Biome> getBiome(MapWorld mapWorld, BlockPos pos) {
+    private Holder<Biome> getBiome(MapWorld mapWorld, BlockPos pos) {
         int i = pos.getX() - 2;
         int j = pos.getY() - 2;
         int k = pos.getZ() - 2;
