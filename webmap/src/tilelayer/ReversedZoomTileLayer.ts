@@ -26,7 +26,7 @@ export class ReversedZoomTileLayer extends TileLayer {
     }
 
     _getZoomForUrl(): number {
-        let zoom = this._tileZoom!,
+        const zoom = this._tileZoom!,
             maxZoom = this.options.maxZoom!,
             offset = this.options.zoomOffset!;
         return (maxZoom - zoom) + offset;

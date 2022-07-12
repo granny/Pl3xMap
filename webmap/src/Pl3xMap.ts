@@ -7,6 +7,7 @@ import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
 import {World} from "./module/World";
 import {Lang} from "./module/Lang";
 import {Options} from "./module/Options";
+import {JSON, RootJSON, WorldJSON} from "./module/Json";
 
 window.onload = function () {
     new Pl3xMap();
@@ -37,10 +38,10 @@ export class Pl3xMap {
         // set center and zoom first
         this.map.setView([0, 0], 0);
 
-        this.getJSON('tiles/settings.json', (json: any) => this.init(json));
+        this.getJSON('tiles/settings.json', (json: RootJSON) => this.init(json));
     }
 
-    init(json: any): void {
+    init(json: RootJSON): void {
         document.title = json.ui.lang.title;
 
         this.lang.coords = json.ui.lang.coords;
@@ -55,11 +56,11 @@ export class Pl3xMap {
 
         // center map on coords at zoom from url, or from json
         this.getJSON(`tiles/${this.world.name}/settings.json`,
-            (world: any) => {
+            (json: WorldJSON) => {
                 this.centerOn(
-                    Number(this.getUrlParam('x', world.spawn.x)),
-                    Number(this.getUrlParam('z', world.spawn.z)),
-                    Number(this.getUrlParam('zoom', world.zoom.default))
+                    Number(this.getUrlParam('x', json.spawn.x)),
+                    Number(this.getUrlParam('z', json.spawn.z)),
+                    Number(this.getUrlParam('zoom', json.zoom.default))
                 );
             });
 
@@ -67,12 +68,12 @@ export class Pl3xMap {
         ReversedZoomTileLayer.create(this).setZIndex(0).addTo(this.map);
 
         // player tracker layer
-        let players = PlayerLayerGroup.create();
+        const players = PlayerLayerGroup.create();
         players.setZIndex(100);
         players.addTo(this.map);
 
         // set up layer controls
-        let layerControls = L.control.layers({}, {}, {position: 'topleft'});
+        const layerControls = L.control.layers({}, {}, {position: 'topleft'});
         layerControls.addOverlay(players, 'Players');
         layerControls.addTo(this.map);
 
@@ -133,7 +134,7 @@ export class Pl3xMap {
         return `?world=${this.world?.name}&zoom=${zoom}&x=${x}&z=${z}`;
     }
 
-    getJSON(url: string, fn: any) {
+    getJSON(url: string, fn: (json: JSON) => void) {
         fetch(url, {cache: "no-store"})
             .then(async res => {
                 if (res.ok) {

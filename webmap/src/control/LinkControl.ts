@@ -4,7 +4,7 @@ import {Pl3xMap} from "../Pl3xMap";
 
 export class LinkControl extends Control {
     private pl3xmap: Pl3xMap;
-    private _dom: any;
+    private _dom: HTMLDivElement = L.DomUtil.create('div');
 
     constructor(pl3xmap: Pl3xMap) {
         super();
@@ -14,7 +14,7 @@ export class LinkControl extends Control {
         };
     }
 
-    onAdd(): any {
+    onAdd(): HTMLDivElement {
         this._dom = L.DomUtil.create('div', 'leaflet-control-layers link');
         this.pl3xmap.map.addEventListener('move', () => this.update());
         this.pl3xmap.map.addEventListener('zoom', () => this.update());

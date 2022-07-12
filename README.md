@@ -8,15 +8,17 @@
 [![Join us on Discord](https://img.shields.io/discord/944144133054931025.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/nhGzEkwXQX)
 [![wakatime](https://wakatime.com/badge/github/BillyGalbreath/Pl3xMap.svg)](https://wakatime.com/badge/github/BillyGalbreath/Pl3xMap)
 
-Pl3xMap is the original minimalistic and lightweight world map viewer  
-for Paper servers using the vanilla Minecraft rendering style.
+<big><b>Pl3xMap is the <u>original</u> minimalistic and lightweight world map viewer  
+for Paper servers using the vanilla Minecraft rendering style.</b></big>
 
 </div>
 
 ## Downloads
+
 Downloads can be obtained from the [releases](https://github.com/BillyGalbreath/Pl3xMap/releases) section.
 
 ## Licenses
+
 **Pl3xMap** (_this project_) is licensed under the [MIT License](https://github.com/BillyGalbreath/Pl3xMap/blob/v2/LICENSE)  
 **Leaflet** (_web ui frontend_) is licensed under the [BSD 2-Clause License](https://github.com/Leaflet/Leaflet/blob/master/LICENSE)  
 **Undertow** (_internal web server_) is licensed under the [Apache License, Version 2.0](https://github.com/undertow-io/undertow/blob/master/LICENSE.txt)  
@@ -30,8 +32,11 @@ Downloads can be obtained from the [releases](https://github.com/BillyGalbreath/
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/Pl3xMap.svg)](https://bstats.org/plugin/bukkit/Pl3xMap/10133)
 
 ## Building from source
+
 To build this project just issue the following command:
+
 ```
 ./gradlew build
 ```
+
 The compiled jars will be in `build/libs/`
