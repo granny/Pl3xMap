@@ -6,7 +6,7 @@ export type RootJSON = {
         link: boolean;
         coords: boolean;
     };
-    worlds: any[];
+    worlds: WorldJSON[];
 };
 
 export type WorldJSON = {
