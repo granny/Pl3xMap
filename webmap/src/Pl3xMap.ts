@@ -58,7 +58,7 @@ export class Pl3xMap {
         this._options.format = json.format;
 
         // load world from url, or first world from json
-        this._world = new World(this, this.getUrlParam('world', json.worlds[0].name));
+        this._world = new World(this, this.getUrlParam('world', json.worlds[0]?.name ?? 'world'));
 
         // player tracker layer
         this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
