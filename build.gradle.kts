@@ -14,21 +14,22 @@ tasks {
     // disable building jar for root project
     jar { enabled = false }
     build {
-        dependsOn(named("webmap"))
+        dependsOn(named("copyWebmap"))
     }
 }
 
-tasks.register<Copy>("webmap") {
-    println("Building webmap...")
-    val process = ProcessBuilder()
-        .command("npm", "run", "build")
-        .directory(projectDir.resolve("webmap"))
-        .start()
-    process.waitFor(60, TimeUnit.SECONDS)
+tasks.register<Copy>("copyWebmap") {
+    dependsOn(tasks.named("npmBuild"))
     println("Copying webmap...")
     from("$rootDir/webmap/public")
     include("*.js*")
     into("$rootDir/plugin/src/main/resources/web")
+}
+
+tasks.register<Exec>("npmBuild") {
+    println("Building webmap...")
+    workingDir(projectDir.resolve("webmap"))
+    commandLine("npm", "run", "build")
 }
 
 subprojects {

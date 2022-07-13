@@ -1,11 +1,9 @@
 import {TileLayer} from "leaflet";
-import {Pl3xMap} from "../Pl3xMap";
+import {World} from "../module/World";
 
 export class ReversedZoomTileLayer extends TileLayer {
-    private pl3xmap: Pl3xMap;
-
-    constructor(pl3xmap: Pl3xMap) {
-        super(`tiles/${pl3xmap.world?.name}/{z}/${pl3xmap.world?.renderer}/{x}_{y}.${pl3xmap.options.format}`, {
+    constructor(world: World) {
+        super(`tiles/${world.name}/{z}/${world.renderer}/{x}_{y}.${world.format}`, {
             // tile sizes match regions sizes (512 blocks x 512 blocks)
             tileSize: 512,
             // dont wrap tiles at edges
@@ -14,15 +12,14 @@ export class ReversedZoomTileLayer extends TileLayer {
             // this is always 0. no exceptions!
             minNativeZoom: 0,
             // the farthest possible out possible
-            maxNativeZoom: pl3xmap.options.zoom.maxZoom,
+            maxNativeZoom: world.zoom.maxOut,
             // for extra zoom in, make higher than maxNativeZoom
             // this is the stretched tiles to zoom in further
-            maxZoom: pl3xmap.options.zoom.maxZoom + pl3xmap.options.zoom.extraZoomIn,
+            maxZoom: world.zoom.maxOut + world.zoom.maxIn,
             // we need to counter effect the higher maxZoom here
             // maxZoom + zoomOffset = maxNativeZoom
-            zoomOffset: -pl3xmap.options.zoom.extraZoomIn
+            zoomOffset: -world.zoom.maxIn
         });
-        this.pl3xmap = pl3xmap;
     }
 
     _getZoomForUrl(): number {
@@ -30,9 +27,5 @@ export class ReversedZoomTileLayer extends TileLayer {
             maxZoom = this.options.maxZoom!,
             offset = this.options.zoomOffset!;
         return (maxZoom - zoom) + offset;
-    }
-
-    static create(pl3xmap: Pl3xMap): ReversedZoomTileLayer {
-        return new ReversedZoomTileLayer(pl3xmap);
     }
 }

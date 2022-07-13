@@ -45,9 +45,11 @@ public class UpdateWorldData extends BukkitRunnable {
             zoom.put("max_in", config.ZOOM_MAX_IN);
 
             Map<String, Object> settings = new HashMap<>();
+            settings.put("name", mapWorld.getName());
+            settings.put("renderers", config.RENDER_SCANNERS);
+            settings.put("tiles_update_interval", config.RENDER_BACKGROUND_INTERVAL);
             settings.put("spawn", spawn);
             settings.put("zoom", zoom);
-            settings.put("tiles_update_interval", config.RENDER_BACKGROUND_INTERVAL);
 
             FileUtil.write(gson.toJson(settings), mapWorld.getWorldTilesDir().resolve("settings.json"));
 
@@ -78,6 +80,7 @@ public class UpdateWorldData extends BukkitRunnable {
         Map<String, Object> map = new HashMap<>();
         map.put("worlds", worlds);
         map.put("ui", ui);
+        map.put("format", Config.WEB_TILE_FORMAT);
 
         FileUtil.write(gson.toJson(map), MapWorld.TILES_DIR.resolve("settings.json"));
     }

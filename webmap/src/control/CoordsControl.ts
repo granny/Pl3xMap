@@ -3,14 +3,14 @@ import {Control, LeafletMouseEvent, Point} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 
 export class CoordsControl extends Control {
-    private pl3xmap: Pl3xMap;
+    private _pl3xmap: Pl3xMap;
     private _dom: HTMLDivElement = L.DomUtil.create('div');
-    private x: string = '---';
-    private z: string = '---';
+    private _x: string | number = '---';
+    private _z: string | number = '---';
 
     constructor(pl3xmap: Pl3xMap) {
         super();
-        this.pl3xmap = pl3xmap;
+        this._pl3xmap = pl3xmap;
         super.options = {
             position: 'bottomleft'
         };
@@ -18,20 +18,44 @@ export class CoordsControl extends Control {
 
     onAdd(): HTMLDivElement {
         this._dom = L.DomUtil.create('div', 'leaflet-control-layers coordinates');
-        this.pl3xmap.map.addEventListener('mousemove', (event: LeafletMouseEvent) => this.update(this.pl3xmap.toPoint(event.latlng)));
-        this.update(null);
+        this._pl3xmap.map.addEventListener('mousemove', (event: LeafletMouseEvent) => this.update(this._pl3xmap.toPoint(event.latlng)));
+        this.clear();
         return this._dom;
     }
 
-    update(point: Point | null): void {
-        this.x = point == null ? '---' : Math.round(point.x).toString();
-        this.z = point == null ? '---' : Math.round(-point.y).toString();
-        this._dom.innerHTML = this.pl3xmap.lang.coords
-            .replace(/<x>/g, this.x)
-            .replace(/<z>/g, this.z);
+    private clear(): void {
+        this._x = '---';
+        this._z = '---';
+        this.updateDom();
     }
 
-    static create(pl3xmap: Pl3xMap): CoordsControl {
-        return new CoordsControl(pl3xmap);
+    private update(point: Point): void {
+        this._x = Math.round(point.x);
+        this._z = Math.round(point.y);
+        this.updateDom();
+    }
+
+    private updateDom() {
+        this._dom.innerHTML = this._pl3xmap.lang.coords
+            .replace(/<x>/g, this._x.toString())
+            .replace(/<z>/g, this._z.toString());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

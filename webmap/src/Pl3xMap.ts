@@ -1,26 +1,30 @@
 import * as L from "leaflet";
-import {LatLng, Point} from "leaflet";
+import {Control, LatLng, Point, TileLayer} from "leaflet";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
-import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
 import {World} from "./module/World";
-import {Lang} from "./module/Lang";
-import {Options} from "./module/Options";
-import {JSON, RootJSON, WorldJSON} from "./module/Json";
+import {Lang} from "./options/Lang";
+import {Options} from "./options/Options";
+import {JSON, RootJSON} from "./types/Json";
 
 window.onload = function () {
     new Pl3xMap();
 };
 
 export class Pl3xMap {
-    map: L.Map;
-    options: Options = new Options();
-    lang: Lang = new Lang();
-    world: World = new World(this, null);
+    private readonly _map: L.Map;
+    private _options: Options = new Options();
+    private _lang: Lang = new Lang();
+    private _world: World | null = null;
+    private _tileLayer: TileLayer | null = null;
+    private _playersLayer: PlayerLayerGroup | null = null;
+    private _layerControls: Control.Layers | null = null;
+    private _coordsControl: CoordsControl | null = null;
+    private _linkControl: LinkControl | null = null;
 
     constructor() {
-        this.map = L.map('map', {
+        this._map = L.map('map', {
             // simple crs for custom map tiles
             crs: L.Util.extend(L.CRS.Simple, {
                 // we need to flip the y-axis correctly
@@ -36,7 +40,7 @@ export class Pl3xMap {
         });
 
         // set center and zoom first
-        this.map.setView([0, 0], 0);
+        this._map.setView([0, 0], 0);
 
         this.getJSON('tiles/settings.json', (json: RootJSON) => this.init(json));
     }
@@ -44,47 +48,34 @@ export class Pl3xMap {
     init(json: RootJSON): void {
         document.title = json.ui.lang.title;
 
-        this.lang.coords = json.ui.lang.coords;
-        this.lang.players = json.ui.lang.players;
-        this.lang.worlds = json.ui.lang.worlds;
+        this._lang.coords = json.ui.lang.coords;
+        this._lang.players = json.ui.lang.players;
+        this._lang.worlds = json.ui.lang.worlds;
 
-        this.options.ui.link = json.ui.link;
-        this.options.ui.coords = json.ui.coords;
+        this._options.ui.link = json.ui.link;
+        this._options.ui.coords = json.ui.coords;
 
-        // get world from url, or first world from json
-        this.world = new World(this, json.worlds[0]);
+        this._options.format = json.format;
 
-        // center map on coords at zoom from url, or from json
-        this.getJSON(`tiles/${this.world.name}/settings.json`,
-            (json: WorldJSON) => {
-                this.centerOn(
-                    Number(this.getUrlParam('x', json.spawn.x)),
-                    Number(this.getUrlParam('z', json.spawn.z)),
-                    Number(this.getUrlParam('zoom', json.zoom.default))
-                );
-            });
-
-        // the base layer for tiles
-        ReversedZoomTileLayer.create(this).setZIndex(0).addTo(this.map);
+        // load world from url, or first world from json
+        this._world = new World(this, this.getUrlParam('world', json.worlds[0].name));
 
         // player tracker layer
-        const players = PlayerLayerGroup.create();
-        players.setZIndex(100);
-        players.addTo(this.map);
+        this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
 
         // set up layer controls
-        const layerControls = L.control.layers({}, {}, {position: 'topleft'});
-        layerControls.addOverlay(players, 'Players');
-        layerControls.addTo(this.map);
+        this._layerControls = L.control.layers({}, {}, {position: 'topleft'})
+            .addOverlay(this._playersLayer, 'Players')
+            .addTo(this._map);
 
         // add the coords ui control box
-        if (this.options.ui.coords) {
-            CoordsControl.create(this).addTo(this.map);
+        if (this._options.ui.coords) {
+            this._coordsControl = new CoordsControl(this).addTo(this._map);
         }
 
         // add the link ui control box
-        if (this.options.ui.link) {
-            LinkControl.create(this).addTo(this.map);
+        if (this._options.ui.link) {
+            this._linkControl = new LinkControl(this).addTo(this._map);
         }
     }
 
@@ -93,7 +84,7 @@ export class Pl3xMap {
     }
 
     toPoint(latlng: LatLng): Point {
-        return L.point(this.metersToPixels(latlng.lng), this.metersToPixels(-latlng.lat));
+        return L.point(this.metersToPixels(latlng.lng), this.metersToPixels(latlng.lat));
     }
 
     pixelsToMeters(num: number): number {
@@ -105,33 +96,39 @@ export class Pl3xMap {
     }
 
     scale(): number {
-        return 1 / Math.pow(2, this.options.zoom.maxZoom);
+        return 1 / Math.pow(2, this.getMaxZoom());
+    }
+
+    getMaxZoom(): number {
+        return this._world?.zoom.maxOut ?? 0;
     }
 
     centerOn(x: number, z: number, zoom: number) {
-        this.map.setView(this.toLatLng(x, z), this.options.zoom.maxZoom - zoom);
-        return this.map;
+        this._map.setView(this.toLatLng(x, z), this.getMaxZoom() - zoom);
+        return this._map;
     }
 
-    getUrlParam(query: string, def: string): string {
+    getUrlParam<T>(query: string, def: T): T {
         const url = window.location.search.substring(1);
         const vars = url.split('&');
         for (let i = 0; i < vars.length; i++) {
             const param = vars[i].split('=');
             if (param[0] === query) {
-                const value = param[1] === undefined ? '' : decodeURIComponent(param[1]);
-                return value === '' ? def : value;
+                const value = param[1] == null ? null : decodeURIComponent(param[1]);
+                return value == null ? def : (value as unknown as T);
             }
         }
         return def;
     }
 
     getUrlFromView(): string {
-        const center: Point = this.toPoint(this.map.getCenter());
-        const zoom: number = this.options.zoom.maxZoom - this.map.getZoom();
+        const center: Point = this.toPoint(this._map.getCenter());
+        const zoom: number = this.getMaxZoom() - this._map.getZoom();
         const x: number = Math.floor(center.x);
-        const z: number = Math.floor(-center.y);
-        return `?world=${this.world?.name}&zoom=${zoom}&x=${x}&z=${z}`;
+        const z: number = Math.floor(center.y);
+        const world: string = this._world?.name ?? '';
+        const type: string = this._world?.renderer ?? '';
+        return `?world=${world}&renderer=${type}&zoom=${zoom}&x=${x}&z=${z}`;
     }
 
     getJSON(url: string, fn: (json: JSON) => void) {
@@ -141,5 +138,45 @@ export class Pl3xMap {
                     fn(await res.json());
                 }
             });
+    }
+
+    get map(): L.Map {
+        return this._map
+    }
+
+    get options(): Options {
+        return this._options;
+    }
+
+    get lang(): Lang {
+        return this._lang;
+    }
+
+    get world(): World | null {
+        return this._world;
+    }
+
+    get tileLayer(): TileLayer | null {
+        return this._tileLayer;
+    }
+
+    set tileLayer(tileLayer: TileLayer | null) {
+        this._tileLayer = tileLayer;
+    }
+
+    get playersLayer(): PlayerLayerGroup | null {
+        return this._playersLayer;
+    }
+
+    get layerControls(): Control.Layers | null {
+        return this._layerControls;
+    }
+
+    get coordsControl(): CoordsControl | null {
+        return this._coordsControl;
+    }
+
+    get linkControl(): LinkControl | null {
+        return this._linkControl;
     }
 }
