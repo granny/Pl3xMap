@@ -1,5 +1,7 @@
 import {Control, DomEvent} from "leaflet";
 import Layers = Control.Layers;
+import disableClickPropagation = DomEvent.disableClickPropagation;
+import disableScrollPropagation = DomEvent.disableScrollPropagation;
 
 export default class LayersControl extends Layers {
     declare _layersLink: HTMLAnchorElement;
@@ -19,6 +21,9 @@ export default class LayersControl extends Layers {
             this.expanded ? this.collapse() : this.expand();
             e.preventDefault();
         }, this);
+
+        disableClickPropagation(this._container);
+        disableScrollPropagation(this._container);
     }
 
     expand() {
