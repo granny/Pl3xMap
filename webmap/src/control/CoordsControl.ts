@@ -12,12 +12,15 @@ export class CoordsControl extends Control {
         super();
         this._pl3xmap = pl3xmap;
         super.options = {
-            position: 'bottomleft'
+            // @ts-ignore
+            position: 'bottomcenter'
         };
     }
 
     onAdd(): HTMLDivElement {
-        this._dom = L.DomUtil.create('div', 'leaflet-control-layers coordinates');
+        this._dom = L.DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-coordinates');
+        this._dom.dataset.label = this._pl3xmap.lang.coordsLabel;
+
         this._pl3xmap.map.addEventListener('mousemove', (event: LeafletMouseEvent) => this.update(this._pl3xmap.toPoint(event.latlng)));
         this.update(new Point(0, 0));
         return this._dom;
