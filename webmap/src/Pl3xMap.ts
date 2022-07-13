@@ -109,16 +109,7 @@ export class Pl3xMap {
     }
 
     getUrlParam<T>(query: string, def: T): T {
-        const url = window.location.search.substring(1);
-        const vars = url.split('&');
-        for (let i = 0; i < vars.length; i++) {
-            const param = vars[i].split('=');
-            if (param[0] === query) {
-                const value = param[1] == null ? null : decodeURIComponent(param[1]);
-                return value == null ? def : (value as unknown as T);
-            }
-        }
-        return def;
+        return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
     }
 
     getUrlFromView(): string {
