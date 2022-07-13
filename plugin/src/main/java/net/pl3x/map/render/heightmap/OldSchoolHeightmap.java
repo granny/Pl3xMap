@@ -15,8 +15,6 @@ public class OldSchoolHeightmap extends Heightmap {
                 }
             }
         }
-        this.x[x] = pos.getY();
-        this.z[z] = pos.getY();
         return Colors.setAlpha(heightColor, 0x000000);
     }
 }
