@@ -122,6 +122,6 @@ build
 /*.jar
 
 # webmap crap
-*/node_modules/
-*/public/
-*pl3xmap.js*
+/webmap/node_modules/
+/webap/pl3xmap.js*
+/plugin/src/main/resources/web/
