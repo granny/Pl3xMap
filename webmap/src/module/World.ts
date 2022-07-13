@@ -25,9 +25,9 @@ export class World {
         this._zoom = new Zoom(json.zoom.default, json.zoom.max_out, json.zoom.max_in)
         this.renderer = this._pl3xmap.getUrlParam('renderer', json.renderers[0] ?? 'basic');
         this.centerOn(
-            this._pl3xmap.getUrlParam('x', json.spawn.x ?? 0),
-            this._pl3xmap.getUrlParam('z', json.spawn.z ?? 0),
-            this._pl3xmap.getUrlParam('zoom', json.zoom.default ?? 0)
+            this._pl3xmap.getUrlParam('x', json.spawn.x ?? this.spawn.x),
+            this._pl3xmap.getUrlParam('z', json.spawn.z ?? this.spawn.z),
+            this._pl3xmap.getUrlParam('zoom', json.zoom.default ?? this.zoom.default)
         );
     }
 
