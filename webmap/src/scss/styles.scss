@@ -82,11 +82,15 @@ img.leaflet-tile {
   text-align: center;
   min-width: 20rem;
   font-family: monospace;
+  white-space: pre;
+  letter-spacing: 0.2rem;
+  font-size: 1.8rem;
 
   &:before {
     display: block;
     content: attr(data-label);
     font-size: 1.2rem;
+    letter-spacing: 0;
   }
 }
 
