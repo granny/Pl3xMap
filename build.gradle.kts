@@ -22,7 +22,7 @@ tasks.register<Copy>("copyWebmap") {
     dependsOn(tasks.named("npmBuild"))
     println("Copying webmap...")
     from("$rootDir/webmap/public")
-    include("*")
+    include("**/*")
     into("$rootDir/plugin/src/main/resources/web")
 }
 
