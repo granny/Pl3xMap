@@ -125,4 +125,5 @@ build
 /webmap/node_modules/
 /webmap/public/pl3xmap.js*
 /webmap/public/tiles
+/webmap/public/styles.css*
 /plugin/src/main/resources/web/
