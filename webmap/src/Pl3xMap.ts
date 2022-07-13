@@ -8,6 +8,8 @@ import {Lang} from "./options/Lang";
 import {Options} from "./options/Options";
 import {JSON, RootJSON} from "./types/Json";
 
+import "./scss/styles.scss";
+
 window.onload = function () {
     new Pl3xMap();
 };
