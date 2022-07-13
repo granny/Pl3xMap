@@ -4,7 +4,7 @@ import {Pl3xMap} from "../Pl3xMap";
 
 export class LinkControl extends Control {
     private _pl3xmap: Pl3xMap;
-    private _dom: HTMLDivElement = L.DomUtil.create('div');
+    private readonly _dom: HTMLAnchorElement;
 
     constructor(pl3xmap: Pl3xMap) {
         super();
@@ -12,18 +12,20 @@ export class LinkControl extends Control {
         super.options = {
             position: 'bottomleft'
         };
+
+        this._dom = L.DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
+        this._dom.innerHTML = "<img src='images/clear.png' alt=''/>";
     }
 
-    onAdd(): HTMLDivElement {
-        this._dom = L.DomUtil.create('div', 'leaflet-control-layers link');
+    onAdd(): HTMLAnchorElement {
         this._pl3xmap.map.addEventListener('move', () => this.update());
         this._pl3xmap.map.addEventListener('zoom', () => this.update());
         this.update();
+
         return this._dom;
     }
 
     private update(): void {
-        const url = this._pl3xmap.world == null ? '' : this._pl3xmap.getUrlFromView();
-        this._dom.innerHTML = `<a href='${url}'><img src='images/clear.png' alt=''/></a>`;
+        this._dom.href = this._pl3xmap.world == null ? '' : this._pl3xmap.getUrlFromView();
     }
 }

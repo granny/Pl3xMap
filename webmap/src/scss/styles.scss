@@ -1,4 +1,5 @@
 @import 'placeholders';
+@import 'leaflet';
 
 :root {
   --ui-font: "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -67,18 +68,29 @@ img.leaflet-tile {
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-div.leaflet-control-layers.coordinates {
-  vertical-align: bottom;
-  padding: 2px 5px;
-  line-height: 14px;
-  height: 30px;
+.leaflet-control-button {
+  @extend %button;
+  height: var(--ui-button-size);
 }
 
-div.leaflet-control-layers.link img {
-  width: 34px;
-  height: 34px;
-  vertical-align: bottom;
-  bottom: 0;
+.leaflet-control-panel {
+  @extend %panel;
+  height: var(--ui-button-size);
+}
+
+.leaflet-control-coordinates {
+  text-align: center;
+  min-width: 20rem;
+  font-family: monospace;
+
+  &:before {
+    display: block;
+    content: attr(data-label);
+    font-size: 1.2rem;
+  }
+}
+
+.leaflet-control-link {
   background-image: url("../images/link.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
