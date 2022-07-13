@@ -124,4 +124,5 @@ build
 # webmap crap
 /webmap/node_modules/
 /webmap/public/pl3xmap.js*
+/webmap/public/tiles
 /plugin/src/main/resources/web/
