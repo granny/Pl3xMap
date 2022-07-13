@@ -1,14 +1,23 @@
 export class Lang {
-    private _coords: string = 'Coordinates<br/><x>, <z>';
+    private _coordsLabel: string = 'Coordinates';
+    private _coordsValue: string = '<x>, <z>';
     private _players: string = 'Players (<online>/<max>)';
     private _worlds: string = 'Worlds';
 
-    get coords(): string {
-        return this._coords;
+    get coordsLabel(): string {
+        return this._coordsLabel;
     }
 
-    set coords(value: string) {
-        this._coords = value;
+    set coordsLabel(value: string) {
+        this._coordsLabel = value;
+    }
+
+    get coordsValue(): string {
+        return this._coordsValue;
+    }
+
+    set coordsValue(value: string) {
+        this._coordsValue = value;
     }
 
     get players(): string {

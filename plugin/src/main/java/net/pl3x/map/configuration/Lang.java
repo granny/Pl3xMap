@@ -173,8 +173,10 @@ public class Lang extends AbstractConfig {
 
     @Key("ui.title")
     public static String UI_TITLE = "Pl3xMap";
-    @Key("ui.coords")
-    public static String UI_COORDS = "Coordinates<br/><x>, <z>";
+    @Key("ui.coords.label")
+    public static String UI_COORDS_LABEL = "Coordinates";
+    @Key("ui.coords.value")
+    public static String UI_COORDS_VALUE = "<x>, <z>";
     @Key("ui.players")
     public static String UI_PLAYERS = "Players (<online>/<max>)";
     @Key("ui.worlds")

@@ -51,7 +51,8 @@ export class Pl3xMap {
     init(json: RootJSON): void {
         document.title = json.ui.lang.title;
 
-        this._lang.coords = json.ui.lang.coords;
+        this._lang.coordsLabel = json.ui.lang.coords.label;
+        this._lang.coordsValue = json.ui.lang.coords.value;
         this._lang.players = json.ui.lang.players;
         this._lang.worlds = json.ui.lang.worlds;
 

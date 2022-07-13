@@ -3,7 +3,10 @@ export type RootJSON = {
     ui: {
         lang: {
             title: string;
-            coords: string;
+            coords: {
+                label: string
+                value: string;
+            };
             players: string;
             worlds: string;
         };

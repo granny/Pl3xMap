@@ -29,7 +29,7 @@ export class CoordsControl extends Control {
     private update(point: Point): void {
         this._x = Math.round(point.x);
         this._z = Math.round(point.y);
-        this._dom.innerHTML = this._pl3xmap.lang.coords
+        this._dom.innerHTML = this._pl3xmap.lang.coordsValue
             .replace(/<x>/g, this._x.toString())
             .replace(/<z>/g, this._z.toString());
     }
