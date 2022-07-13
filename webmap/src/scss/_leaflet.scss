@@ -94,6 +94,8 @@
       left: 100%;
       top: 0;
       margin-left: var(--ui-element-spacing);
+      width: max-content;
+      max-width: 30rem;
     }
   }
 

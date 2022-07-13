@@ -10,6 +10,7 @@ import {JSON, RootJSON} from "./types/Json";
 
 import "./scss/styles.scss";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
+import LayersControl from "./control/LayersControl";
 
 window.onload = function () {
     new Pl3xMap();
@@ -68,7 +69,7 @@ export class Pl3xMap {
         this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
 
         // set up layer controls
-        this._layerControls = L.control.layers({}, {}, {position: 'topleft'})
+        this._layerControls = new LayersControl({}, {}, {position: 'topleft'})
             .addOverlay(this._playersLayer, 'Players')
             .addTo(this._map);
 
