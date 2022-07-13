@@ -1,8 +1,57 @@
+@import 'placeholders';
+
+:root {
+  --ui-font: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  --ui-button-size: 5rem;
+  --ui-element-spacing: 1rem;
+  --ui-border-radius: 0.4rem;
+  --ui-border: 1px solid #777777;
+  --ui-text-shadow: none; //.1rem 0.1rem #000000;
+
+  --ui-background: rgba(255, 255, 255, 0.9);
+  --ui-background-disabled: #555555;
+  --ui-background-hover: #aaaaaa;
+  --ui-background-active: #888888;
+  --ui-background-selected: #222222;
+
+  --ui-text: #222222;
+  --ui-text-hover: var(--ui-text);
+  --ui-text-active: var(--ui-text);
+  --ui-text-selected: rgba(255, 255, 255, 0.8);
+  --text-disabled: #777777;
+
+  @media(prefers-color-scheme: dark) {
+    --ui-border: 1px solid #333333;
+
+    --ui-background: #222222;
+    --ui-background-disabled: #555555;
+    --ui-background-hover: #363636;
+    --ui-background-active: #6d6d6d;
+    --ui-background-selected: #BDBDBD;
+
+    --ui-text: rgba(255, 255, 255, 0.7);
+    --ui-text-hover: var(--ui-text);
+    --ui-text-active: var(--ui-text);
+    --ui-text-selected: #222222;
+    --ui-text-disabled: rgba(255, 255, 255, 0.5);
+  }
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   background: #000000;
   overflow: hidden;
+  text-shadow: var(--ui-text-shadow);
+  font-family: var(--ui-font);
 }
 
 .map {

@@ -1,0 +1,66 @@
+%button {
+  display: inline-block;
+  appearance: none;
+  box-shadow: var(--ui-box-shadow);
+  white-space: nowrap;
+  height: var(--ui-button-size);
+  min-width: var(--ui-button-size);
+  background-color: var(--ui-background);
+  color: var(--ui-text);
+  border-radius: var(--ui-border-radius);
+  border: var(--ui-border);
+  background-clip: padding-box;
+  position: relative;
+  padding: 0.5rem;
+  line-height: calc(var(--ui-button-size) - 1.2rem);
+  cursor: pointer;
+  transition: 0.2s all ease-in;
+
+  > a:only-child {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  > img:only-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: calc(100% - 1.6rem);
+    height: calc(100% - 1.6rem);
+    pointer-events: none;
+  }
+
+  &:visited {
+    color: var(--ui-text);
+  }
+
+  &[disabled], &.leaflet-disabled,
+  &[disabled]:hover, &.leaflet-disabled:hover,
+  &[disabled]:active, &.leaflet-disabled:active {
+    background-color: var(--ui-background-disabled);
+    color: var(--ui-text-disabled);
+    cursor: not-allowed;
+  }
+
+  &:hover, &:focus-visible {
+    background-color: var(--ui-background-hover);
+    color: var(--ui-text-hover);
+  }
+
+  &:active {
+    background-color: var(--ui-background-active);
+    color: var(--ui-text-active);
+  }
+}
+
+%panel {
+  background-color: var(--ui-background);
+  color: var(--ui-text);
+  border-radius: var(--ui-border-radius);
+  border: var(--ui-border);
+  padding: 0.2rem 0.5rem;
+}
