@@ -51,9 +51,18 @@
     color: var(--ui-text-hover);
   }
 
+  &:focus-visible {
+    outline: solid var(--ui-outline-focus) thick;
+  }
+
   &:active {
     background-color: var(--ui-background-active);
     color: var(--ui-text-active);
+  }
+
+  &[aria-expanded] {
+    background-color: var(--ui-background-selected);
+    color: var(--ui-text-selected);
   }
 }
 
