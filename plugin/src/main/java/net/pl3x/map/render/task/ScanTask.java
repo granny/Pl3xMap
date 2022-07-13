@@ -195,6 +195,8 @@ public class ScanTask implements Runnable {
         for (Renderer renderer : this.renderers) {
             renderer.doIt(this.mapWorld, chunk, blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, heightmap, blockColor);
         }
+
+        heightmap.update(fluidPos == null ? blockPos : fluidPos, x, z);
     }
 
     public void scanNorthChunk(int chunkX, int chunkZ, int blockX, int blockZ, BlockPos.MutableBlockPos blockPos, Heightmap heightmap) {

@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.pl3x.map.util.Colors;
 
 public class ModernHeightmap extends Heightmap {
-    public int scan(BlockPos pos, int x, int z, boolean flat) {
+    public int getColor(BlockPos pos, int x, int z, boolean flat) {
         int heightColor = 0x22;
         if (!flat) {
             if (this.x[x] != Integer.MAX_VALUE) {
@@ -22,8 +22,6 @@ public class ModernHeightmap extends Heightmap {
                 }
             }
         }
-        this.x[x] = pos.getY();
-        this.z[z] = pos.getY();
         return Colors.setAlpha(heightColor, 0x000000);
     }
 }

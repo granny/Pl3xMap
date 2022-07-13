@@ -16,7 +16,7 @@ import net.pl3x.map.util.LightEngine;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.MapWorld;
 
-public class BasicRenderer extends Renderer {
+public final class BasicRenderer extends Renderer {
     private Image.Holder lightImageHolder;
 
     public BasicRenderer(String name, Render render, RegionCoordinate region) {
@@ -48,7 +48,7 @@ public class BasicRenderer extends Renderer {
         int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
         // work out the heightmap
-        pixelColor = Colors.mix(pixelColor, heightmap.scan(blockPos, x, z, flatWater));
+        pixelColor = Colors.mix(pixelColor, heightmap.getColor(blockPos, x, z, flatWater));
 
         // fancy fluids, yum
         if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {

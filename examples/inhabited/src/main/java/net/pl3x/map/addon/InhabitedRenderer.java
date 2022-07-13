@@ -29,7 +29,7 @@ public class InhabitedRenderer extends JavaPlugin {
         Renderers.INSTANCE.unregister("inhabited");
     }
 
-    public static class InhabitedScanner extends Renderer {
+    public static final class InhabitedScanner extends Renderer {
         public InhabitedScanner(String name, Render render, RegionCoordinate region) {
             super(name, render, region);
         }
@@ -49,7 +49,7 @@ public class InhabitedRenderer extends JavaPlugin {
             int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
             // work out the heightmap
-            int heightmapColor = heightmap.scan(blockPos, x, z, flatWater);
+            int heightmapColor = heightmap.getColor(blockPos, x, z, flatWater);
             pixelColor = Colors.mix(pixelColor, heightmapColor);
 
             // fancy fluids, yum

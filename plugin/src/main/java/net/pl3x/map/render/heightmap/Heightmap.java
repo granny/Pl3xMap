@@ -10,7 +10,12 @@ public abstract class Heightmap {
     public int[] x = new int[16];
     public int[] z = new int[16];
 
-    public abstract int scan(BlockPos pos, int x, int z, boolean flat);
+    public abstract int getColor(BlockPos pos, int x, int z, boolean flat);
+
+    public void update(BlockPos pos, int x, int z) {
+        this.x[x] = pos.getY();
+        this.z[z] = pos.getY();
+    }
 
     public enum Type {
         OLD_SCHOOL(() -> new OldSchoolHeightmap()),
