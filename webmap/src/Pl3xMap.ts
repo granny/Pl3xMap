@@ -9,6 +9,7 @@ import {Options} from "./options/Options";
 import {JSON, RootJSON} from "./types/Json";
 
 import "./scss/styles.scss";
+import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 
 window.onload = function () {
     new Pl3xMap();
@@ -26,7 +27,7 @@ export class Pl3xMap {
     private _linkControl: LinkControl | null = null;
 
     constructor() {
-        this._map = L.map('map', {
+        this._map = new Pl3xmapLeafletMap('map', {
             // simple crs for custom map tiles
             crs: L.Util.extend(L.CRS.Simple, {
                 // we need to flip the y-axis correctly
