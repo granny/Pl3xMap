@@ -34,7 +34,6 @@ export default class SidebarControl extends Control {
         this.addTab(new MapsTab());
         this.addTab(new PlayersTab());
         this.addTab(new MarkersTab());
-        this.addTab(new SettingsTab());
     }
 
     onAdd(map: Map) {
