@@ -18,9 +18,6 @@ export default class LayersControl extends Layers {
 
         this._container = DomUtil.create('div', 'leaflet-control-layers');
 
-        // makes this work on IE touch devices by stopping it from firing a mouseout event when the touch is released
-        this._container.setAttribute('aria-haspopup', 'true');
-
         DomEvent.disableClickPropagation(this._container);
         DomEvent.disableScrollPropagation(this._container);
 
