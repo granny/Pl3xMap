@@ -2,7 +2,7 @@ import {Control, DomEvent, DomUtil} from "leaflet";
 import Layers = Control.Layers;
 
 export default class LayersControl extends Layers {
-    declare _layersLink: HTMLAnchorElement;
+    declare _layersLink: HTMLButtonElement;
     declare _container: HTMLDivElement;
     declare _baseLayersList: HTMLDivElement;
     declare _separator: HTMLDivElement;
@@ -16,7 +16,7 @@ export default class LayersControl extends Layers {
         // now we can modify it to our needs without @ts-ignore \o/
         // i removed all the events, so we don't have to turn any off
 
-        this._container = DomUtil.create('div', 'leaflet-control-layers')
+        this._container = DomUtil.create('div', 'leaflet-control-layers');
 
         // makes this work on IE touch devices by stopping it from firing a mouseout event when the touch is released
         this._container.setAttribute('aria-haspopup', 'true');
@@ -26,10 +26,8 @@ export default class LayersControl extends Layers {
 
         this._section = DomUtil.create('section', 'leaflet-control-layers-list');
 
-        this._layersLink = DomUtil.create('a', 'leaflet-control-layers-toggle', this._container);
-        this._layersLink.href = '#';
+        this._layersLink =  DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
         this._layersLink.title = 'Layers';
-        this._layersLink.setAttribute('role', 'button');
 
         DomEvent.on(this._layersLink, 'click', (e: Event) => {
             this.expanded ? this.collapse() : this.expand();
@@ -45,11 +43,13 @@ export default class LayersControl extends Layers {
 
     expand() {
         this.expanded = true;
+        this._layersLink.setAttribute('aria-expanded', 'true');
         return super.expand();
     }
 
     collapse() {
         this.expanded = false;
+        this._layersLink.removeAttribute('aria-expanded');
         return super.collapse();
     }
 }
