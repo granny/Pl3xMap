@@ -47,7 +47,7 @@ module.exports = {
     output: {
         publicPath: '/',
         filename: 'pl3xmap.js',
-        path: path.resolve(__dirname, 'public')
+        path: path.resolve(__dirname, 'dist')
     },
     resolve: {
         extensions: ['.ts', '.js', '.scss', '.css']

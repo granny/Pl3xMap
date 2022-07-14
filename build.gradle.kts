@@ -23,6 +23,10 @@ tasks.register<Copy>("copyWebmap") {
     println("Copying webmap...")
     from("$rootDir/webmap/public")
     include("**/*")
+    exclude("tiles*/")
+    into("$rootDir/plugin/src/main/resources/web")
+    from("$rootDir/webmap/dist")
+    include("**/*")
     into("$rootDir/plugin/src/main/resources/web")
 }
 
