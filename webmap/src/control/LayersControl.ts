@@ -29,10 +29,27 @@ export default class LayersControl extends Layers {
         this._layersLink =  DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
         this._layersLink.title = 'Layers';
 
-        DomEvent.on(this._layersLink, 'click', (e: Event) => {
+        //Avoiding DomEvent here for more specific event typings
+        this._layersLink.addEventListener('click', (e: MouseEvent) => {
             this.expanded ? this.collapse() : this.expand();
             e.preventDefault();
-        }, this);
+        });
+
+        //Expand on right arrow press on button
+        this._layersLink.addEventListener('keydown', (e: KeyboardEvent) => {
+            if(e.key === 'ArrowRight') {
+                this.expand();
+                e.preventDefault();
+            }
+        });
+
+        //Collapse on left arrow press on list
+        this._section.addEventListener('keydown', (e: KeyboardEvent) => {
+            if(e.key === 'ArrowLeft') {
+                this.collapse();
+                e.preventDefault();
+            }
+        });
 
         this._baseLayersList = DomUtil.create('div', 'leaflet-control-layers-base', this._section);
         this._separator = DomUtil.create('div', 'leaflet-control-layers-separator', this._section);
