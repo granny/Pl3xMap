@@ -1,7 +1,8 @@
 import {Map, Control, DomEvent, DomUtil, stamp, Layer} from "leaflet";
 import Layers = Control.Layers;
-import {handleKeyboardEvent} from "../util";
+import {createSVGIcon, handleKeyboardEvent} from "../Util";
 import {Pl3xMap} from "../Pl3xMap";
+import '../svg/layers.svg';
 
 interface LayerControlInput extends HTMLInputElement {
     layerId: number;
@@ -44,6 +45,7 @@ export default class LayersControl extends Layers {
 
         this._layersLink =  DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
         this._layersLink.title = this._pl3xmap.lang.layers;
+        this._layersLink.appendChild(createSVGIcon('layers'));
 
         //Avoiding DomEvent here for more specific event typings
         this._layersLink.addEventListener('click', (e: MouseEvent) => {

@@ -22,7 +22,8 @@
     height: 100%;
   }
 
-  > img:only-child {
+  > img:only-child,
+  > svg:only-child {
     position: absolute;
     top: 0;
     left: 0;
@@ -34,7 +35,7 @@
     pointer-events: none;
   }
 
-  &:visited {
+  &:visited, &:link {
     color: var(--ui-text);
   }
 

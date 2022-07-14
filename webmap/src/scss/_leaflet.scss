@@ -102,6 +102,7 @@
     @extend %button;
     border-radius: var(--ui-border-radius);
     border: var(--ui-border);
+    background-image: none;
   }
 
   .leaflet-control-layers-overlays {

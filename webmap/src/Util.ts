@@ -75,3 +75,13 @@ export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]) =
 		e.preventDefault();
 	}
 }
+
+export const createSVGIcon = (icon: string): DocumentFragment => {
+	const template = document.createElement('template');
+
+	template.innerHTML = `<svg class="svg-icon">
+				<use href="#icon--${icon}"></use>
+			</svg>`;
+
+	return template.content;
+}

@@ -72,6 +72,15 @@ label:focus-within {
    }
 }
 
+button {
+  @extend %button;
+}
+
+.svg-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
 .map {
   width: 100%;
   height: 100vh;
@@ -112,7 +121,6 @@ img.leaflet-tile {
 }
 
 .leaflet-control-link {
-  background-image: url("images/link.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: 50% 50%;
