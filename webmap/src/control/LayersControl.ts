@@ -1,13 +1,25 @@
-import {Control, DomEvent, DomUtil} from "leaflet";
+import {Map, Control, DomEvent, DomUtil, stamp, Layer} from "leaflet";
 import Layers = Control.Layers;
+import {handleKeyboardEvent} from "../util";
+
+interface LayerControlInput extends HTMLInputElement {
+    layerId: number;
+}
 
 export default class LayersControl extends Layers {
+    declare _map: Map;
     declare _layersLink: HTMLButtonElement;
     declare _container: HTMLDivElement;
     declare _baseLayersList: HTMLDivElement;
     declare _separator: HTMLDivElement;
     declare _overlaysList: HTMLDivElement;
     declare _section: HTMLElement;
+    declare _layerControlInputs: HTMLInputElement[];
+
+    declare _checkDisabledLayers: () => void;
+    declare _onInputClick: (e: Event) => void;
+    declare _createRadioElement: (className: string, checked: boolean) => HTMLInputElement;
+
     private expanded = false;
 
     // noinspection JSUnusedGlobalSymbols
@@ -45,6 +57,8 @@ export default class LayersControl extends Layers {
             if(e.key === 'ArrowLeft') {
                 this.collapse();
                 e.preventDefault();
+            } else {
+                handleKeyboardEvent(e, Array.from(this._section.querySelectorAll('input')));
             }
         });
 
@@ -54,6 +68,42 @@ export default class LayersControl extends Layers {
 
         this._container.appendChild(this._section);
     }
+
+    // noinspection JSUnusedGlobalSymbols
+    _addItem(layer: {layer: Layer, name: string, overlay: boolean}) {
+		const label = DomUtil.create('label', 'leaflet-control-layers-selector'),
+            name = document.createElement('span'),
+		    checked = this._map.hasLayer(layer.layer);
+        let input;
+
+        name.innerText = layer.name;
+
+		if (layer.overlay) {
+			input = DomUtil.create('input');
+			input.type = 'checkbox';
+            input.name = 'overlay';
+			input.defaultChecked = checked;
+		} else {
+			input = this._createRadioElement('leaflet-base-layers_' + stamp(this), checked);
+		}
+
+		this._layerControlInputs.push(input);
+        (input as LayerControlInput).layerId = stamp(layer.layer);
+
+		DomEvent.on(input, 'click', this._onInputClick, this);
+
+        label.appendChild(input);
+        label.appendChild(name);
+
+		if(layer.overlay) {
+            this._overlaysList.appendChild(label);
+        } else {
+            this._baseLayersList.appendChild(label);
+        }
+
+		this._checkDisabledLayers();
+		return label;
+	}
 
     expand() {
         this.expanded = true;

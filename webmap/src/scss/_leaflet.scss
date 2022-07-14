@@ -110,4 +110,26 @@
     -moz-user-select: none;
     -ms-user-select: none;
   }
+
+  .leaflet-control-layers-separator {
+    margin: 0.5rem 0;
+    border: var(--ui-border);
+  }
+
+  .leaflet-control-layers-selector {
+    position: static;
+    margin: 0;
+    font-size: inherit;
+    display: flex;
+    align-items: center;
+    border-radius: var(--ui-border-radius);
+
+    span {
+      margin-left: 0.5rem;
+    }
+
+    & + .leaflet-control-layers-selector {
+      margin-top: 0.5rem;
+    }
+  }
 }
