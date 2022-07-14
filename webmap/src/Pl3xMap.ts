@@ -39,6 +39,7 @@ export class Pl3xMap {
         this._lang.coordsValue = json.ui.lang.coords.value;
         this._lang.players = json.ui.lang.players;
         this._lang.worlds = json.ui.lang.worlds;
+        this._lang.layers = json.ui.lang.layers;
 
         this._options.ui.link = json.ui.link;
         this._options.ui.coords = json.ui.coords;
@@ -52,7 +53,7 @@ export class Pl3xMap {
         this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
 
         // set up layer controls
-        this._layerControls = new LayersControl({}, {}, {position: 'topleft'})
+        this._layerControls = new LayersControl(this)
             .addOverlay(this._playersLayer, 'Players')
             .addTo(this._map);
 

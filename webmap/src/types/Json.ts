@@ -9,6 +9,7 @@ export type RootJSON = {
             };
             players: string;
             worlds: string;
+            layers: string;
         };
         link: boolean;
         coords: boolean;

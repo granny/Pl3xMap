@@ -3,6 +3,7 @@ export class Lang {
     private _coordsValue: string = '<x>, <z>';
     private _players: string = 'Players (<online>/<max>)';
     private _worlds: string = 'Worlds';
+    private _layers: string = 'Layers';
 
     get coordsLabel(): string {
         return this._coordsLabel;
@@ -34,5 +35,13 @@ export class Lang {
 
     set worlds(value: string) {
         this._worlds = value;
+    }
+
+    get layers(): string {
+        return this._layers;
+    }
+
+    set layers(value: string) {
+        this._layers = value;
     }
 }

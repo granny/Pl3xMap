@@ -74,6 +74,7 @@ public class UpdateWorldData extends BukkitRunnable {
         lang.put("title", Lang.UI_TITLE);
         lang.put("players", Lang.UI_PLAYERS);
         lang.put("worlds", Lang.UI_WORLDS);
+        lang.put("layers", Lang.UI_LAYERS);
         lang.put("coords", Map.of("label", Lang.UI_COORDS_LABEL, "value", Lang.UI_COORDS_VALUE));
         ui.put("lang", lang);
 

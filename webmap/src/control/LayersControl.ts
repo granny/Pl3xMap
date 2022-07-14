@@ -1,6 +1,7 @@
 import {Map, Control, DomEvent, DomUtil, stamp, Layer} from "leaflet";
 import Layers = Control.Layers;
 import {handleKeyboardEvent} from "../util";
+import {Pl3xMap} from "../Pl3xMap";
 
 interface LayerControlInput extends HTMLInputElement {
     layerId: number;
@@ -20,7 +21,13 @@ export default class LayersControl extends Layers {
     declare _onInputClick: (e: Event) => void;
     declare _createRadioElement: (className: string, checked: boolean) => HTMLInputElement;
 
+    private readonly _pl3xmap: Pl3xMap;
     private expanded = false;
+
+    constructor(pl3xmap: Pl3xMap) {
+        super({}, {}, {position: 'topleft'});
+        this._pl3xmap = pl3xmap;
+    }
 
     // noinspection JSUnusedGlobalSymbols
     _initLayout() {
@@ -36,7 +43,7 @@ export default class LayersControl extends Layers {
         this._section = DomUtil.create('section', 'leaflet-control-layers-list');
 
         this._layersLink =  DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
-        this._layersLink.title = 'Layers';
+        this._layersLink.title = this._pl3xmap.lang.layers;
 
         //Avoiding DomEvent here for more specific event typings
         this._layersLink.addEventListener('click', (e: MouseEvent) => {
