@@ -10,6 +10,7 @@ import {JSON, RootJSON} from "./types/Json";
 import "./scss/styles.scss";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import LayersControl from "./control/LayersControl";
+import SidebarControl from "./control/SidebarControl";
 
 window.onload = function () {
     new Pl3xMap();
@@ -25,6 +26,7 @@ export class Pl3xMap {
     private _layerControls: Control.Layers | null = null;
     private _coordsControl: CoordsControl | null = null;
     private _linkControl: LinkControl | null = null;
+    private _sidebarControl: SidebarControl = new SidebarControl();
 
     constructor() {
         this._map = new Pl3xmapLeafletMap();
@@ -56,6 +58,8 @@ export class Pl3xMap {
         this._layerControls = new LayersControl(this)
             .addOverlay(this._playersLayer, 'Players')
             .addTo(this._map);
+
+        this._sidebarControl.addTo(this._map);
 
         // add the coords ui control box
         if (this._options.ui.coords) {

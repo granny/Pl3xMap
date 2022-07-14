@@ -1,5 +1,6 @@
 @import 'placeholders';
 @import 'leaflet';
+@import 'sidebar';
 
 :root {
   --ui-font: "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -21,6 +22,8 @@
   --ui-text-active: var(--ui-text);
   --ui-text-selected: rgba(255, 255, 255, 0.8);
   --ui-text-disabled: #777777;
+
+  --ui-sidebar-width: 25rem;
 
   @media(prefers-color-scheme: dark) {
     --ui-border: 1px solid #333333;
@@ -62,6 +65,10 @@ html, body {
 
 :focus:not(:focus-visible) {
   outline-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
 }
 
 label:focus-within {

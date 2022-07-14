@@ -18,10 +18,13 @@
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
   align-items: flex-start;
+  position: relative;
+  z-index: 1002;
 }
 
 .leaflet-control-container-bottom {
   align-items: flex-end;
+  z-index: 1001;
 }
 
 .leaflet-top, .leaflet-left,
