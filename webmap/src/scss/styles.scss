@@ -8,7 +8,7 @@
   --ui-border-radius: 0.4rem;
   --ui-border: 1px solid #777777;
   --ui-text-shadow: none; //.1rem 0.1rem #000000;
-  --ui-outline-focus: #ffffff;
+  --ui-outline: solid #ffffff 0.3rem;
 
   --ui-background: rgba(255, 255, 255, 0.9);
   --ui-background-disabled: #555555;
@@ -54,6 +54,22 @@ html, body {
   overflow: hidden;
   text-shadow: var(--ui-text-shadow);
   font-family: var(--ui-font);
+}
+
+:focus {
+  outline: var(--ui-outline);
+}
+
+:focus:not(:focus-visible) {
+  outline-style: none;
+}
+
+label:focus-within {
+  outline: var(--ui-outline);
+
+   > input:focus {
+     outline: none;
+   }
 }
 
 .map {

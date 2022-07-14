@@ -46,13 +46,17 @@
     cursor: not-allowed;
   }
 
-  &:hover, &:focus-visible {
+  &:hover, &:focus {
     background-color: var(--ui-background-hover);
     color: var(--ui-text-hover);
   }
 
-  &:focus-visible {
-    outline: solid var(--ui-outline-focus) thick;
+  &:focus {
+    outline: var(--ui-outline);
+  }
+
+  &:focus:not(:focus-visible) {
+	outline-style: none;
   }
 
   &:active {
