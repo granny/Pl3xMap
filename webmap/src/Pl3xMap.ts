@@ -1,5 +1,4 @@
-import * as L from "leaflet";
-import {Control, LatLng, Point, TileLayer} from "leaflet";
+import {Control, latLng, LatLng, Map, point, Point, TileLayer} from "leaflet";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
@@ -17,7 +16,7 @@ window.onload = function () {
 };
 
 export class Pl3xMap {
-    private readonly _map: L.Map;
+    private readonly _map: Map;
     private _options: Options = new Options();
     private _lang: Lang = new Lang();
     private _world: World | null = null;
@@ -69,11 +68,11 @@ export class Pl3xMap {
     }
 
     toLatLng(x: number, z: number): LatLng {
-        return L.latLng(this.pixelsToMeters(z), this.pixelsToMeters(x));
+        return latLng(this.pixelsToMeters(z), this.pixelsToMeters(x));
     }
 
     toPoint(latlng: LatLng): Point {
-        return L.point(this.metersToPixels(latlng.lng), this.metersToPixels(latlng.lat));
+        return point(this.metersToPixels(latlng.lng), this.metersToPixels(latlng.lat));
     }
 
     pixelsToMeters(num: number): number {
@@ -120,7 +119,7 @@ export class Pl3xMap {
             });
     }
 
-    get map(): L.Map {
+    get map(): Map {
         return this._map
     }
 

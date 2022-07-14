@@ -1,10 +1,9 @@
-import * as L from "leaflet";
-import {Control, LeafletMouseEvent, Point} from "leaflet";
+import {Control, DomUtil, LeafletMouseEvent, Point} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 
 export class CoordsControl extends Control {
     private _pl3xmap: Pl3xMap;
-    private _dom: HTMLDivElement = L.DomUtil.create('div');
+    private _dom: HTMLDivElement = DomUtil.create('div');
     private _x: number = 0;
     private _z: number = 0;
 
@@ -18,7 +17,7 @@ export class CoordsControl extends Control {
     }
 
     onAdd(): HTMLDivElement {
-        this._dom = L.DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-coordinates');
+        this._dom = DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-coordinates');
         this._dom.dataset.label = this._pl3xmap.lang.coordsLabel;
 
         this._pl3xmap.map.addEventListener('mousemove', (event: LeafletMouseEvent) => this.update(this._pl3xmap.toPoint(event.latlng)));

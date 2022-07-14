@@ -1,5 +1,4 @@
-import * as L from "leaflet";
-import {DomUtil, Map} from "leaflet";
+import {CRS, DomUtil, Map, Transformation, Util} from "leaflet";
 
 export default class Pl3xmapLeafletMap extends Map {
     declare _controlCorners: any;
@@ -9,10 +8,10 @@ export default class Pl3xmapLeafletMap extends Map {
     constructor() {
         super('map', {
             // simple crs for custom map tiles
-            crs: L.Util.extend(L.CRS.Simple, {
+            crs: Util.extend(CRS.Simple, {
                 // we need to flip the y-axis correctly
                 // https://stackoverflow.com/a/62320569/3530727
-                transformation: new L.Transformation(1, 0, 1, 0)
+                transformation: new Transformation(1, 0, 1, 0)
             }),
             // always 0,0 center
             center: [0, 0],

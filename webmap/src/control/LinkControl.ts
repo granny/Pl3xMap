@@ -1,5 +1,4 @@
-import * as L from "leaflet";
-import {Control} from "leaflet";
+import {Control, DomUtil} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 
 export class LinkControl extends Control {
@@ -13,7 +12,7 @@ export class LinkControl extends Control {
             position: 'bottomleft'
         };
 
-        this._dom = L.DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
+        this._dom = DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
         this._dom.innerHTML = "<img src='images/clear.png' alt=''/>";
     }
 
