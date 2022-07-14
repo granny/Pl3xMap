@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v2/plugin/src/main/resources/web/images/og.png" alt="Pl3xMap">
+<img src="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v2/webmap/public/images/og.png" alt="Pl3xMap">
 
 # Pl3xMap
 
