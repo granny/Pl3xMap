@@ -1,7 +1,6 @@
-import {Map, Control, DomUtil, DomEvent} from "leaflet";
+import {Control, DomUtil, DomEvent} from "leaflet";
 import MapsTab from "../sidebar/MapsTab";
 import SidebarTab from "../sidebar/SidebarTab";
-import SettingsTab from "../sidebar/SettingsTab";
 import PlayersTab from "../sidebar/PlayersTab";
 import MarkersTab from "../sidebar/MarkersTab";
 import disableClickPropagation = DomEvent.disableClickPropagation;
@@ -36,7 +35,7 @@ export default class SidebarControl extends Control {
         this.addTab(new MarkersTab());
     }
 
-    onAdd(map: Map) {
+    onAdd() {
         return this._container;
     }
 
