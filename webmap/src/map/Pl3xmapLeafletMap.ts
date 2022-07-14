@@ -1,7 +1,7 @@
 import {CRS, DomUtil, Map, Transformation, Util} from "leaflet";
 
 export default class Pl3xmapLeafletMap extends Map {
-    declare _controlCorners: any;
+    declare _controlCorners: { [x: string]: HTMLDivElement; };
     declare _controlContainer?: HTMLElement;
     declare _container?: HTMLElement;
 
@@ -26,9 +26,10 @@ export default class Pl3xmapLeafletMap extends Map {
         this.setView([0, 0], 0);
     }
 
+    // https://stackoverflow.com/a/60391674/3530727
     // noinspection JSUnusedGlobalSymbols
-    _initControlPos() {
-        const corners: any = this._controlCorners = {},
+    _initControlPos(): void {
+        const corners: { [x: string]: HTMLDivElement; } = this._controlCorners = {},
             l = 'leaflet-',
             container = this._controlContainer =
                 DomUtil.create('div', l + 'control-container', this._container),
