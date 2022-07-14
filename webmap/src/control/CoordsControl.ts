@@ -1,5 +1,11 @@
-import {Control, DomUtil, LeafletMouseEvent, Point} from "leaflet";
+import {Control, ControlOptions, ControlPosition, DomUtil, LeafletMouseEvent, Point} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
+
+interface ExtendedControlOptions extends ControlOptions {
+    position?: ControlPosition & Position | undefined;
+}
+
+type Position = 'topcenter' | 'bottomcenter';
 
 export class CoordsControl extends Control {
     private _pl3xmap: Pl3xMap;
@@ -11,9 +17,8 @@ export class CoordsControl extends Control {
         super();
         this._pl3xmap = pl3xmap;
         super.options = {
-            // @ts-ignore
             position: 'bottomcenter'
-        };
+        } as unknown as ExtendedControlOptions;
     }
 
     onAdd(): HTMLDivElement {
