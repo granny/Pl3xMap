@@ -29,17 +29,16 @@ export default class Pl3xmapLeafletMap extends Map {
     // https://stackoverflow.com/a/60391674/3530727
     // noinspection JSUnusedGlobalSymbols
     _initControlPos(): void {
+        this._controlContainer = DomUtil.create('div', 'leaflet-control-container', this._container);
+
         const corners: { [x: string]: HTMLDivElement; } = this._controlCorners = {},
-            l = 'leaflet-',
-            container = this._controlContainer =
-                DomUtil.create('div', l + 'control-container', this._container),
-            topContainer = DomUtil.create('div', l + 'control-container-top', container),
-            bottomContainer = DomUtil.create('div', l + 'control-container-bottom', container);
+            topContainer = DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
+            bottomContainer = DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
 
         function createCorner(vSide: string, hSide: string) {
-            const className = l + vSide + ' ' + l + hSide;
-
-            corners[`${vSide}${hSide}`] = DomUtil.create('div', className, vSide === 'top' ? topContainer : bottomContainer);
+            const className = `leaflet-${vSide} leaflet-${hSide}`,
+                container = vSide === 'top' ? topContainer : bottomContainer;
+            corners[`${vSide}${hSide}`] = DomUtil.create('div', className, container);
         }
 
         createCorner('top', 'left');
