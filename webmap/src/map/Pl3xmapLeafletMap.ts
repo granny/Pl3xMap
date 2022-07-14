@@ -1,12 +1,30 @@
-import {DomUtil, Map, MapOptions} from "leaflet";
+import * as L from "leaflet";
+import {DomUtil, Map} from "leaflet";
 
 export default class Pl3xmapLeafletMap extends Map {
     declare _controlCorners: any;
     declare _controlContainer?: HTMLElement;
     declare _container?: HTMLElement;
 
-    constructor(element: string | HTMLElement, options?: MapOptions) {
-        super(element, options);
+    constructor() {
+        super('map', {
+            // simple crs for custom map tiles
+            crs: L.Util.extend(L.CRS.Simple, {
+                // we need to flip the y-axis correctly
+                // https://stackoverflow.com/a/62320569/3530727
+                transformation: new L.Transformation(1, 0, 1, 0)
+            }),
+            // always 0,0 center
+            center: [0, 0],
+            // hides the leaflet attribution footer
+            attributionControl: false,
+            // canvas is faster than default svg
+            preferCanvas: true
+        });
+
+        // always set center and zoom before doing anything else
+        // this sets the internal "_loaded" value to true
+        this.setView([0, 0], 0);
     }
 
     // noinspection JSUnusedGlobalSymbols

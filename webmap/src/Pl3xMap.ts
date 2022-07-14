@@ -28,23 +28,7 @@ export class Pl3xMap {
     private _linkControl: LinkControl | null = null;
 
     constructor() {
-        this._map = new Pl3xmapLeafletMap('map', {
-            // simple crs for custom map tiles
-            crs: L.Util.extend(L.CRS.Simple, {
-                // we need to flip the y-axis correctly
-                // https://stackoverflow.com/a/62320569/3530727
-                transformation: new L.Transformation(1, 0, 1, 0)
-            }),
-            // always 0,0 center
-            center: [0, 0],
-            // hides the leaflet attribution footer
-            attributionControl: false,
-            // canvas is faster than default svg
-            preferCanvas: true
-        });
-
-        // set center and zoom first
-        this._map.setView([0, 0], 0);
+        this._map = new Pl3xmapLeafletMap();
 
         this.getJSON('tiles/settings.json', (json: RootJSON) => this.init(json));
     }
