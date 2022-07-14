@@ -61,12 +61,24 @@ export default class LayersControl extends Layers {
     expand() {
         this.expanded = true;
         this._layersLink.setAttribute('aria-expanded', 'true');
-        return super.expand();
+
+        super.expand();
+
+        //Focus first layer checkbox
+        const firstItem = this._section.querySelector('input');
+
+        if(firstItem) {
+            firstItem.focus();
+        }
+
+        return this;
     }
 
     collapse() {
         this.expanded = false;
         this._layersLink.removeAttribute('aria-expanded');
+        this._layersLink.focus();
+
         return super.collapse();
     }
 }
