@@ -114,7 +114,7 @@ export default class Pl3xmapLeafletMap extends Map {
         }
 
         world.load().then(() => {
-            this.setMaxZoom(world.zoom.maxOut ?? 0);
+            this.setMaxZoom(world.zoom.maxOut + world.zoom.maxIn);
 
             // Use URL position on initial load
             if(!this._world) {
