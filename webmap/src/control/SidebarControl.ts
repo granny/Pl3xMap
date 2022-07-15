@@ -1,5 +1,5 @@
 import {Control, DomEvent, DomUtil} from "leaflet";
-import MapsTab from "../sidebar/MapsTab";
+import WorldsTab from "../sidebar/WorldsTab";
 import SidebarTab from "../sidebar/SidebarTab";
 import PlayersTab from "../sidebar/PlayersTab";
 import MarkersTab from "../sidebar/MarkersTab";
@@ -30,7 +30,7 @@ export default class SidebarControl extends Control {
         disableClickPropagation(this._container);
         disableScrollPropagation(this._container);
 
-        this.addTab(new MapsTab());
+        this.addTab(new WorldsTab());
         this.addTab(new PlayersTab());
         this.addTab(new MarkersTab());
     }
@@ -50,12 +50,12 @@ export default class SidebarControl extends Control {
     expand() {
         this._expanded = true;
         this._container.classList.add('sidebar--expanded');
-        this._content.removeAttribute('aria-hidden');
+        this._content.setAttribute('aria-hidden', 'false');
     }
 
     collapse() {
         if (this._currentTab) {
-            this.deactivateTab(this._currentTab);
+            this.deactivateTab(this._currentTab, true);
         }
 
         this._expanded = false;
@@ -69,10 +69,23 @@ export default class SidebarControl extends Control {
         }
 
         this._tabs.add(tab);
-        const button = tab.button;
-        button.addEventListener('click', () => this.toggleTab(tab));
 
-        this._buttons.appendChild(button);
+        tab.button.addEventListener('click', () => this.toggleTab(tab));
+        this._buttons.appendChild(tab.button);
+
+        tab.content.addEventListener('keydown', (e: KeyboardEvent) => {
+            if(e.key === 'Escape') {
+                this.collapse();
+            }
+        });
+
+        //Allow moving focus to first child of content when button is pressed
+        if(tab.content.children.length) {
+            (tab.content.firstElementChild as HTMLElement).tabIndex = -1;
+        }
+
+        this._content.appendChild(tab.content);
+
     }
 
     removeTab(tab: SidebarTab) {
@@ -80,7 +93,7 @@ export default class SidebarControl extends Control {
             return;
         }
 
-        this.deactivateTab(tab);
+        this.deactivateTab(tab, false);
         tab.button.remove();
     }
 
@@ -98,21 +111,29 @@ export default class SidebarControl extends Control {
         }
 
         if (this._currentTab) {
-            this.deactivateTab(this._currentTab);
+            this.deactivateTab(this._currentTab, false);
         }
 
         tab.button.setAttribute('aria-expanded', 'true');
+        tab.content.hidden = false;
+        tab.content.setAttribute('aria-hidden', 'false');
         this._currentTab = tab;
-        this._content.replaceChildren(tab.content);
+
+        (tab.content.firstElementChild as HTMLElement).focus();
     }
 
-    deactivateTab(tab: SidebarTab) {
+    deactivateTab(tab: SidebarTab, moveFocus: boolean) {
         if (tab !== this._currentTab) {
             return;
         }
 
-        tab.button.removeAttribute('aria-expanded');
+        tab.button.setAttribute('aria-expanded', 'false');
+        tab.content.hidden = true;
+        tab.content.setAttribute('aria-hidden', 'true');
         this._currentTab = undefined;
-        tab.content.remove();
+
+        if(moveFocus) {
+            tab.button.focus();
+        }
     }
 }

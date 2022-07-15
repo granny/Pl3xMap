@@ -65,7 +65,7 @@
     color: var(--ui-text-active);
   }
 
-  &[aria-expanded] {
+  &[aria-pressed=true], &[aria-expanded=true] {
     background-color: var(--ui-background-selected);
     color: var(--ui-text-selected);
   }

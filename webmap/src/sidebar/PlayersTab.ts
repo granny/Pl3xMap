@@ -5,7 +5,7 @@ import '../svg/players.svg';
 
 export default class PlayersTab extends SidebarTab {
     constructor() {
-        super();
+        super('players');
 
         this._button.appendChild(createSVGIcon('players'));
         this._content.innerHTML = '<h2>//TODO</h2>'
