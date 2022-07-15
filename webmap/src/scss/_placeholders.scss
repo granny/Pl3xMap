@@ -26,6 +26,13 @@
   }
 }
 
+%square-button {
+  @extend %button;
+  height: var(--ui-button-size);
+  width: var(--ui-button-size);
+  line-height: calc(var(--ui-button-size) - 1.2rem);
+}
+
 %panel {
   background-color: var(--ui-background);
   color: var(--ui-text);

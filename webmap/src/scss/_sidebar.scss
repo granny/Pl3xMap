@@ -11,6 +11,10 @@
   #sidebar__buttons {
     display: grid;
     grid-gap: var(--ui-element-spacing);
+
+    button {
+      @extend %square-button;
+    }
   }
 
   #sidebar__content {

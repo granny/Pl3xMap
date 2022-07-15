@@ -62,7 +62,7 @@
 
 .leaflet-bar a,
 .leaflet-touch .leaflet-bar a {
-  @extend %button;
+  @extend %square-button;
   display: block;
   border: var(--ui-border);
   border-top: none;
@@ -102,7 +102,7 @@
   }
 
   .leaflet-control-layers-toggle {
-    @extend %button;
+    @extend %square-button;
     border-radius: var(--ui-border-radius);
     border: var(--ui-border);
     background-image: none;

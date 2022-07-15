@@ -103,8 +103,7 @@ img.leaflet-tile {
 }
 
 .leaflet-control-button {
-  @extend %button;
-  height: var(--ui-button-size);
+  @extend %square-button;
 }
 
 .leaflet-control-panel {
