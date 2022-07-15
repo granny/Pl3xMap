@@ -5,6 +5,7 @@ import PlayersTab from "../sidebar/PlayersTab";
 import MarkersTab from "../sidebar/MarkersTab";
 import disableClickPropagation = DomEvent.disableClickPropagation;
 import disableScrollPropagation = DomEvent.disableScrollPropagation;
+import {Pl3xMap} from "../Pl3xMap";
 
 export default class SidebarControl extends Control {
     private readonly _container: HTMLDivElement;
@@ -15,7 +16,7 @@ export default class SidebarControl extends Control {
     private _expanded: boolean = false;
     private _currentTab?: SidebarTab;
 
-    constructor() {
+    constructor(pl3xmap: Pl3xMap) {
         super({position: 'topright'});
 
         this._container = DomUtil.create('div');
@@ -30,9 +31,9 @@ export default class SidebarControl extends Control {
         disableClickPropagation(this._container);
         disableScrollPropagation(this._container);
 
-        this.addTab(new WorldsTab());
-        this.addTab(new PlayersTab());
-        this.addTab(new MarkersTab());
+        this.addTab(new WorldsTab(pl3xmap));
+        this.addTab(new PlayersTab(pl3xmap));
+        this.addTab(new MarkersTab(pl3xmap));
     }
 
     onAdd() {

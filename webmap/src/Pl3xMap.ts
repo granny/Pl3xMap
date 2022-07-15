@@ -29,7 +29,7 @@ export class Pl3xMap {
     private _layerControls: Control.Layers | null = null;
     private _coordsControl: CoordsControl | null = null;
     private _linkControl: LinkControl | null = null;
-    private _sidebarControl: SidebarControl = new SidebarControl();
+    private _sidebarControl: SidebarControl = new SidebarControl(this);
 
     constructor() {
         this._map = new Pl3xmapLeafletMap(this);
