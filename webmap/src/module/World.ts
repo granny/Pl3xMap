@@ -16,6 +16,7 @@ export class World {
     private _spawn: Spawn = new Spawn(0, 0);
     private _zoom: Zoom = new Zoom(0, 0, 0);
     private _renderers: string[] = ['basic'];
+    private _renderer: string = 'basic';
     private _loaded = false;
 
     constructor(pl3xmap: Pl3xMap, data: WorldListJSON) {
@@ -43,11 +44,8 @@ export class World {
     }
 
     private init(json: WorldJSON): void {
-        this._spawn = new Spawn(json.spawn.x ?? this.spawn.x, json.spawn.z ?? this.spawn.z);
-        this._zoom = new Zoom(
-            json.zoom.default ?? this.zoom.default,
-            json.zoom.max_out ?? this.zoom.maxOut,
-            json.zoom.max_in ?? this.zoom.maxIn);
+        this._spawn = new Spawn(json.spawn.x, json.spawn.z);
+        this._zoom = new Zoom(json.zoom.default, json.zoom.max_out, json.zoom.max_in);
         this._renderers = json.renderers ?? this._renderers;
     }
 

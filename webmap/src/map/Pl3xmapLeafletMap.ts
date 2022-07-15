@@ -77,11 +77,19 @@ export default class Pl3xmapLeafletMap extends Map {
     }
 
     scale(): number {
-        return 1 / Math.pow(2, this.getMaxZoom());
+        return 1 / Math.pow(2, this.getMaxZoomOut());
     }
 
     centerOn(x: number, z: number, zoom: number) {
-        this.setView(this.toLatLng(x, z), this.getMaxZoom() - zoom);
+        this.setView(this.toLatLng(x, z), this.getMaxZoomOut() - zoom);
+    }
+
+    getMaxZoomOut(): number {
+        return this._world?.zoom.maxOut ?? 0;
+    }
+
+    getCurrentZoom(): number {
+        return this.getMaxZoomOut() - this.getZoom();
     }
 
     private updateTileLayer() {
@@ -92,17 +100,19 @@ export default class Pl3xmapLeafletMap extends Map {
         if (this._tileLayer) {
             if (this._tileLayer.world !== this._world) {
                 this.removeLayer(this._tileLayer!);
-                this._tileLayer = new ReversedZoomTileLayer(this._world, this._renderer)
-                    .setZIndex(0)
-                    .addTo(this);
+                this._tileLayer = new ReversedZoomTileLayer(this);
             } else if (this._tileLayer && (this._tileLayer.renderer !== this._renderer)) {
                 this._tileLayer.renderer = this._renderer;
             }
         } else {
-            this._tileLayer = new ReversedZoomTileLayer(this._world, this._renderer)
-                .setZIndex(0)
-                .addTo(this);
+            this._tileLayer = new ReversedZoomTileLayer(this);
         }
+
+        this._pl3xmap.map.centerOn(
+            getUrlParam('x', this._world.spawn.x),
+            getUrlParam('z', this._world.spawn.z),
+            getUrlParam('zoom', this._world.zoom.default)
+        );
     }
 
     get world(): World | null {
@@ -112,21 +122,6 @@ export default class Pl3xmapLeafletMap extends Map {
     set world(world: World | null) {
         if (!world) {
             return;
-        }
-
-        this.setMaxZoom(world.zoom.maxOut + world.zoom.maxIn);
-
-        // Use URL position on initial load
-        if (!this._world) {
-            this._renderer = getUrlParam('renderer', world.renderers[0]);
-            this.centerOn(
-                getUrlParam('x', world.spawn.x),
-                getUrlParam('z', world.spawn.z),
-                getUrlParam('zoom', world.zoom.default)
-            );
-        } else {
-            this._renderer = world.renderers[0];
-            this.centerOn(world.spawn.x, world.spawn.z, world.zoom.default);
         }
 
         this._world = world;

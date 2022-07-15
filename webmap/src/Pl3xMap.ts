@@ -85,7 +85,7 @@ export class Pl3xMap {
 
     getUrlFromView(): string {
         const center: Point = this._map.toPoint(this._map.getCenter());
-        const zoom: number = this._map.getMaxZoom() - this._map.getZoom();
+        const zoom: number = this._map.getCurrentZoom();
         const x: number = Math.floor(center.x);
         const z: number = Math.floor(center.y);
         const world: string = this._currentWorld?.name ?? '';
