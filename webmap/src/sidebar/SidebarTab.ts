@@ -1,5 +1,3 @@
-import {DomEvent} from "leaflet";
-import disableClickPropagation = DomEvent.disableClickPropagation;
 import {Pl3xMap} from "../Pl3xMap";
 
 export default class SidebarTab {
@@ -19,8 +17,6 @@ export default class SidebarTab {
         this._content.hidden = true;
         this._content.id = `sidebar__${this._id}`;
         this._content.setAttribute('aria-hidden', 'true');
-
-        disableClickPropagation(this._button);
     }
 
     get button(): HTMLElement {

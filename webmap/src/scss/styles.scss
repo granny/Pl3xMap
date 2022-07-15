@@ -84,6 +84,13 @@ button {
   @extend %button;
 }
 
+fieldset {
+  appearance: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
 .svg-icon {
   fill: currentColor;
   stroke: none;
@@ -131,4 +138,34 @@ img.leaflet-tile {
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    clip: rect(1px,1px,1px,1px);
+    height: 1px;
+    width: 1px;
+    position: absolute;
+
+    & + label {
+      @extend %button;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    &:checked + label {
+      @include button-pressed;
+    }
+
+    &:focus + label {
+      @include button-focused;
+    }
+
+    &:focus:not(:focus-visible) + label {
+      outline: none;
+    }
+  }
 }
