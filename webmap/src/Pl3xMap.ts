@@ -1,4 +1,4 @@
-import {Control, Map, Point, TileLayer} from "leaflet";
+import {Control, Point} from "leaflet";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
@@ -20,8 +20,10 @@ export class Pl3xMap {
     private readonly _map: Pl3xmapLeafletMap;
     private _options: Options = new Options();
     private _lang: Lang = new Lang();
-    private _world: World | null = null;
-    private _tileLayer: TileLayer | null = null;
+
+    private readonly _worlds: Map<string, World> = new Map();
+    private _currentWorld: World | null = null;
+
     private _playersLayer: PlayerLayerGroup | null = null;
     private _layerControls: Control.Layers | null = null;
     private _coordsControl: CoordsControl | null = null;
@@ -48,8 +50,16 @@ export class Pl3xMap {
 
         this._options.format = json.format;
 
+        for(const world of json.worlds) {
+            this._worlds.set(world.name, new World(this, world));
+        }
+
         // load world from url, or first world from json
-        this._map.world = this._world = new World(this, this.getUrlParam('world', json.worlds[0]?.name ?? 'world'));
+        const initialWorld = this.getUrlParam('world', this._worlds.keys().next().value);
+
+        if(this._worlds.has(initialWorld)) {
+            this.currentWorld = this.worlds.get(initialWorld)!;
+        }
 
         // player tracker layer
         this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
@@ -81,7 +91,7 @@ export class Pl3xMap {
         const zoom: number = this._map.getMaxZoom() - this._map.getZoom();
         const x: number = Math.floor(center.x);
         const z: number = Math.floor(center.y);
-        const world: string = this._map.world?.name ?? '';
+        const world: string = this._currentWorld?.name ?? '';
         const type: string = this._map.renderer ?? '';
         return `?world=${world}&renderer=${type}&zoom=${zoom}&x=${x}&z=${z}`;
     }
@@ -95,8 +105,8 @@ export class Pl3xMap {
             });
     }
 
-    get map(): Map {
-        return this._map
+    get map(): Pl3xmapLeafletMap {
+        return this._map;
     }
 
     get options(): Options {
@@ -107,16 +117,22 @@ export class Pl3xMap {
         return this._lang;
     }
 
-    get world(): World | null {
-        return this._world;
+    get worlds(): Map<string, World> {
+        return this._worlds;
     }
 
-    get tileLayer(): TileLayer | null {
-        return this._tileLayer;
+    get currentWorld(): World | null {
+        return this._currentWorld;
     }
 
-    set tileLayer(tileLayer: TileLayer | null) {
-        this._tileLayer = tileLayer;
+    set currentWorld(world: World | null) {
+        if(!world) {
+            return;
+        }
+
+        world.load().then(() => {
+            this._map.world = this._currentWorld = world;
+        });
     }
 
     get playersLayer(): PlayerLayerGroup | null {

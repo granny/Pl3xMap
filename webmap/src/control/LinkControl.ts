@@ -27,6 +27,6 @@ export class LinkControl extends Control {
     }
 
     private update(): void {
-        this._dom.href = this._pl3xmap.world == null ? '' : this._pl3xmap.getUrlFromView();
+        this._dom.href = this._pl3xmap.currentWorld == null ? '' : this._pl3xmap.getUrlFromView();
     }
 }

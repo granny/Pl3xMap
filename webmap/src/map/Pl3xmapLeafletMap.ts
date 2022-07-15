@@ -113,26 +113,24 @@ export default class Pl3xmapLeafletMap extends Map {
             return;
         }
 
-        world.load().then(() => {
-            this.setMaxZoom(world.zoom.maxOut + world.zoom.maxIn);
+        this.setMaxZoom(world.zoom.maxOut + world.zoom.maxIn);
 
-            // Use URL position on initial load
-            if(!this._world) {
-                this._renderer = this._pl3xmap.getUrlParam('renderer', world.renderers[0]);
-                this.centerOn(
-                    this._pl3xmap.getUrlParam('x', world.spawn.x),
-                    this._pl3xmap.getUrlParam('z', world.spawn.z),
-                    this._pl3xmap.getUrlParam('zoom', world.zoom.default)
-                );
-            } else {
-                this._renderer = world.renderers[0];
-                this.centerOn(world.spawn.x, world.spawn.z, world.zoom.default);
-            }
+        // Use URL position on initial load
+        if(!this._world) {
+            this._renderer = this._pl3xmap.getUrlParam('renderer', world.renderers[0]);
+            this.centerOn(
+                this._pl3xmap.getUrlParam('x', world.spawn.x),
+                this._pl3xmap.getUrlParam('z', world.spawn.z),
+                this._pl3xmap.getUrlParam('zoom', world.zoom.default)
+            );
+        } else {
+            this._renderer = world.renderers[0];
+            this.centerOn(world.spawn.x, world.spawn.z, world.zoom.default);
+        }
 
-            this._world = world;
+        this._world = world;
 
-            this.updateTileLayer();
-        });
+        this.updateTileLayer();
     }
 
     get renderer(): string {
