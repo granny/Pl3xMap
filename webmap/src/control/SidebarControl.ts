@@ -1,4 +1,4 @@
-import {Control, DomUtil, DomEvent} from "leaflet";
+import {Control, DomEvent, DomUtil} from "leaflet";
 import MapsTab from "../sidebar/MapsTab";
 import SidebarTab from "../sidebar/SidebarTab";
 import PlayersTab from "../sidebar/PlayersTab";
@@ -16,7 +16,7 @@ export default class SidebarControl extends Control {
     private _currentTab?: SidebarTab;
 
     constructor() {
-        super({ position: 'topright' });
+        super({position: 'topright'});
 
         this._container = DomUtil.create('div');
         this._container.id = 'sidebar';
@@ -40,7 +40,7 @@ export default class SidebarControl extends Control {
     }
 
     toggle() {
-        if(this._expanded) {
+        if (this._expanded) {
             this.collapse();
         } else {
             this.expand();
@@ -54,7 +54,7 @@ export default class SidebarControl extends Control {
     }
 
     collapse() {
-        if(this._currentTab) {
+        if (this._currentTab) {
             this.deactivateTab(this._currentTab);
         }
 
@@ -64,7 +64,7 @@ export default class SidebarControl extends Control {
     }
 
     addTab(tab: SidebarTab) {
-        if(this._tabs.has(tab)) {
+        if (this._tabs.has(tab)) {
             return;
         }
 
@@ -76,7 +76,7 @@ export default class SidebarControl extends Control {
     }
 
     removeTab(tab: SidebarTab) {
-        if(!this._tabs.has(tab)) {
+        if (!this._tabs.has(tab)) {
             return;
         }
 
@@ -85,7 +85,7 @@ export default class SidebarControl extends Control {
     }
 
     toggleTab(tab: SidebarTab) {
-        if(this._currentTab === tab) {
+        if (this._currentTab === tab) {
             this.collapse();
         } else {
             this.activateTab(tab);
@@ -93,11 +93,11 @@ export default class SidebarControl extends Control {
     }
 
     activateTab(tab: SidebarTab) {
-        if(!this._expanded) {
+        if (!this._expanded) {
             this.expand();
         }
 
-        if(this._currentTab) {
+        if (this._currentTab) {
             this.deactivateTab(this._currentTab);
         }
 
@@ -107,7 +107,7 @@ export default class SidebarControl extends Control {
     }
 
     deactivateTab(tab: SidebarTab) {
-        if(tab !== this._currentTab) {
+        if (tab !== this._currentTab) {
             return;
         }
 

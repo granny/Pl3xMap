@@ -1,8 +1,8 @@
-import {Map, Control, DomEvent, DomUtil, stamp, Layer} from "leaflet";
-import Layers = Control.Layers;
+import {Control, DomEvent, DomUtil, Layer, Map, stamp} from "leaflet";
 import {createSVGIcon, handleKeyboardEvent} from "../Util";
 import {Pl3xMap} from "../Pl3xMap";
 import '../svg/layers.svg';
+import Layers = Control.Layers;
 
 interface LayerControlInput extends HTMLInputElement {
     layerId: number;
@@ -43,7 +43,7 @@ export default class LayersControl extends Layers {
 
         this._section = DomUtil.create('section', 'leaflet-control-layers-list');
 
-        this._layersLink =  DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
+        this._layersLink = DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
         this._layersLink.title = this._pl3xmap.lang.layers;
         this._layersLink.appendChild(createSVGIcon('layers'));
 
@@ -55,7 +55,7 @@ export default class LayersControl extends Layers {
 
         //Expand on right arrow press on button
         this._layersLink.addEventListener('keydown', (e: KeyboardEvent) => {
-            if(e.key === 'ArrowRight') {
+            if (e.key === 'ArrowRight') {
                 this.expand();
                 e.preventDefault();
             }
@@ -63,7 +63,7 @@ export default class LayersControl extends Layers {
 
         //Collapse on left arrow press on list
         this._section.addEventListener('keydown', (e: KeyboardEvent) => {
-            if(e.key === 'ArrowLeft') {
+            if (e.key === 'ArrowLeft') {
                 this.collapse();
                 e.preventDefault();
             } else {
@@ -79,40 +79,40 @@ export default class LayersControl extends Layers {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    _addItem(layer: {layer: Layer, name: string, overlay: boolean}) {
-		const label = DomUtil.create('label', 'leaflet-control-layers-selector'),
+    _addItem(layer: { layer: Layer, name: string, overlay: boolean }) {
+        const label = DomUtil.create('label', 'leaflet-control-layers-selector'),
             name = document.createElement('span'),
-		    checked = this._map.hasLayer(layer.layer);
+            checked = this._map.hasLayer(layer.layer);
         let input;
 
         name.innerText = layer.name;
 
-		if (layer.overlay) {
-			input = DomUtil.create('input');
-			input.type = 'checkbox';
+        if (layer.overlay) {
+            input = DomUtil.create('input');
+            input.type = 'checkbox';
             input.name = 'overlay';
-			input.defaultChecked = checked;
-		} else {
-			input = this._createRadioElement('leaflet-base-layers_' + stamp(this), checked);
-		}
+            input.defaultChecked = checked;
+        } else {
+            input = this._createRadioElement('leaflet-base-layers_' + stamp(this), checked);
+        }
 
-		this._layerControlInputs.push(input);
+        this._layerControlInputs.push(input);
         (input as LayerControlInput).layerId = stamp(layer.layer);
 
-		DomEvent.on(input, 'click', this._onInputClick, this);
+        DomEvent.on(input, 'click', this._onInputClick, this);
 
         label.appendChild(input);
         label.appendChild(name);
 
-		if(layer.overlay) {
+        if (layer.overlay) {
             this._overlaysList.appendChild(label);
         } else {
             this._baseLayersList.appendChild(label);
         }
 
-		this._checkDisabledLayers();
-		return label;
-	}
+        this._checkDisabledLayers();
+        return label;
+    }
 
     expand() {
         this.expanded = true;
@@ -123,7 +123,7 @@ export default class LayersControl extends Layers {
         //Focus first layer checkbox
         const firstItem = this._section.querySelector('input');
 
-        if(firstItem) {
+        if (firstItem) {
             firstItem.focus();
         }
 

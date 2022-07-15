@@ -18,6 +18,9 @@ export default class SidebarTab {
         return this._content;
     }
 
-    onEnable() {}
-    onDisable() {}
+    onEnable() {
+    }
+
+    onDisable() {
+    }
 }

@@ -74,9 +74,9 @@ h1, h2, h3, h4, h5, h6 {
 label:focus-within {
   outline: var(--ui-outline);
 
-   > input:focus {
-     outline: none;
-   }
+  > input:focus {
+    outline: none;
+  }
 }
 
 button {

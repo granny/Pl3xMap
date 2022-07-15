@@ -28,7 +28,7 @@ export class World {
     }
 
     public load(): Promise<World> {
-        if(this._loaded) {
+        if (this._loaded) {
             return Promise.resolve(this);
         }
 

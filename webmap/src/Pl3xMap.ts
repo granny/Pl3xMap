@@ -51,14 +51,14 @@ export class Pl3xMap {
 
         this._options.format = json.format;
 
-        for(const world of json.worlds) {
+        for (const world of json.worlds) {
             this._worlds.set(world.name, new World(this, world));
         }
 
         // load world from url, or first world from json
         const initialWorld = getUrlParam('world', this._worlds.keys().next().value);
 
-        if(this._worlds.has(initialWorld)) {
+        if (this._worlds.has(initialWorld)) {
             this.currentWorld = this.worlds.get(initialWorld)!;
         }
 
@@ -114,7 +114,7 @@ export class Pl3xMap {
     }
 
     set currentWorld(world: World | null) {
-        if(!world) {
+        if (!world) {
             return;
         }
 

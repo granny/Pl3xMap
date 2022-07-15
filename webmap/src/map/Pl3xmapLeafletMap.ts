@@ -85,7 +85,7 @@ export default class Pl3xmapLeafletMap extends Map {
     }
 
     private updateTileLayer() {
-        if(!this._world) {
+        if (!this._world) {
             return;
         }
 
@@ -110,14 +110,14 @@ export default class Pl3xmapLeafletMap extends Map {
     }
 
     set world(world: World | null) {
-        if(!world) {
+        if (!world) {
             return;
         }
 
         this.setMaxZoom(world.zoom.maxOut + world.zoom.maxIn);
 
         // Use URL position on initial load
-        if(!this._world) {
+        if (!this._world) {
             this._renderer = getUrlParam('renderer', world.renderers[0]);
             this.centerOn(
                 getUrlParam('x', world.spawn.x),

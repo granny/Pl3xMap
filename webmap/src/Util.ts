@@ -1,10 +1,10 @@
 const navigationKeys = new Set<string>([
-	'ArrowUp',
-	'ArrowDown',
-	'ArrowLeft',
-	'ArrowRight',
-	'Home',
-	'End'
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End'
 ]);
 
 /**
@@ -21,80 +21,78 @@ const navigationKeys = new Set<string>([
  * @param {HTMLElement[]} elements The elements to consider for focusing
  */
 export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]) => {
-	if(!e.target) {
-		return;
-	}
+    if (!e.target) {
+        return;
+    }
 
-	if(navigationKeys.has(e.key)) {
-		const position = elements.indexOf(e.target as HTMLElement);
+    if (navigationKeys.has(e.key)) {
+        const position = elements.indexOf(e.target as HTMLElement);
 
-		if(position < 0) {
-			return;
-		}
+        if (position < 0) {
+            return;
+        }
 
-		let newPosition = position;
+        let newPosition = position;
 
-		switch(e.key) {
-			case 'ArrowUp':
-			case 'ArrowLeft':
-				newPosition = position - 1;
-				break;
+        switch (e.key) {
+            case 'ArrowUp':
+            case 'ArrowLeft':
+                newPosition = position - 1;
+                break;
 
-			case 'ArrowDown':
-			case 'ArrowRight':
-				newPosition = position + 1;
-				break;
+            case 'ArrowDown':
+            case 'ArrowRight':
+                newPosition = position + 1;
+                break;
 
-			case 'Home':
-				newPosition = 0;
-				break;
+            case 'Home':
+                newPosition = 0;
+                break;
 
-			case 'End':
-				newPosition = elements.length - 1;
-				break;
-		}
+            case 'End':
+                newPosition = elements.length - 1;
+                break;
+        }
 
-		if(newPosition < 0) {
-			newPosition = elements.length - 1;
-		} else if(newPosition >= elements.length) {
-			newPosition = 0;
-		}
+        if (newPosition < 0) {
+            newPosition = elements.length - 1;
+        } else if (newPosition >= elements.length) {
+            newPosition = 0;
+        }
 
-		(elements[newPosition] as HTMLElement).focus();
-		e.preventDefault();
-	} else if(e.key === 'Enter' && e.target) {
-		const mouseEvent = new MouseEvent('click', {
-			ctrlKey: e.ctrlKey,
-			shiftKey: e.shiftKey,
-			metaKey: e.metaKey,
-			altKey: e.altKey,
-			bubbles: true,
-		});
+        (elements[newPosition] as HTMLElement).focus();
+        e.preventDefault();
+    } else if (e.key === 'Enter' && e.target) {
+        const mouseEvent = new MouseEvent('click', {
+            ctrlKey: e.ctrlKey,
+            shiftKey: e.shiftKey,
+            metaKey: e.metaKey,
+            altKey: e.altKey,
+            bubbles: true,
+        });
 
-		e.target.dispatchEvent(mouseEvent);
-		e.preventDefault();
-	}
+        e.target.dispatchEvent(mouseEvent);
+        e.preventDefault();
+    }
 }
 
 export const createSVGIcon = (icon: string): DocumentFragment => {
-	const template = document.createElement('template');
+    const template = document.createElement('template');
 
-	template.innerHTML = `<svg class="svg-icon">
-				<use href="#icon--${icon}"></use>
-			</svg>`;
+    template.innerHTML = `<svg class="svg-icon"><use href="#icon--${icon}"></use></svg>`;
 
-	return template.content;
+    return template.content;
 }
 
 export const getJSON = (url: string) => {
-	return fetch(url, {cache: "no-store"})
-		.then(async res => {
-			if (res.ok) {
-				return await res.json();
-			}
-		});
+    return fetch(url, {cache: "no-store"})
+        .then(async res => {
+            if (res.ok) {
+                return await res.json();
+            }
+        });
 }
 
 export const getUrlParam = <T>(query: string, def: T): T => {
-	return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
+    return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
 }
