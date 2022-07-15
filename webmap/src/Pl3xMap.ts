@@ -89,8 +89,8 @@ export class Pl3xMap {
         const x: number = Math.floor(center.x);
         const z: number = Math.floor(center.y);
         const world: string = this._currentWorld?.name ?? '';
-        const type: string = this._map.renderer ?? '';
-        return `?world=${world}&renderer=${type}&zoom=${zoom}&x=${x}&z=${z}`;
+        const renderer: string = this._map.renderer ?? '';
+        return `?world=${world}&renderer=${renderer}&zoom=${zoom}&x=${x}&z=${z}`;
     }
 
     get map(): Pl3xmapLeafletMap {

@@ -126,7 +126,7 @@ export default class Pl3xmapLeafletMap extends Map {
 
         this._world = world;
 
-        this.updateTileLayer();
+        this.renderer = getUrlParam("renderer", this.renderer ?? this._world?.renderers[0]);
     }
 
     get renderer(): string {
@@ -134,7 +134,12 @@ export default class Pl3xmapLeafletMap extends Map {
     }
 
     set renderer(renderer: string) {
-        this._renderer = renderer;
+        if ((this._world?.renderers.indexOf(renderer) ?? -1) >= 0) {
+            this._renderer = renderer;
+        } else {
+            this._renderer = this._world?.renderers[0] ?? 'basic';
+        }
+        console.log(this._renderer);
         this.updateTileLayer();
     }
 }
