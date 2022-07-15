@@ -11,12 +11,4 @@ export default class PlayersTab extends SidebarTab {
         this._button.appendChild(createSVGIcon('players'));
         this._content.innerHTML = '<h2>//TODO</h2>'
     }
-
-    onEnable() {
-
-    }
-
-    onDisable() {
-
-    }
 }

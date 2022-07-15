@@ -154,6 +154,7 @@ img.leaflet-tile {
       @extend %button;
       margin-bottom: 0.5rem;
       cursor: pointer;
+      padding: 0.8rem;
     }
 
     &:checked + label {

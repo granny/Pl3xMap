@@ -47,6 +47,7 @@
 @mixin button-pressed {
   background-color: var(--ui-background-selected);
   color: var(--ui-text-selected);
+  font-weight: bold;
 }
 
 @mixin button-focused {

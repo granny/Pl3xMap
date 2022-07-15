@@ -80,13 +80,7 @@ export default class SidebarControl extends Control {
             }
         });
 
-        //Allow moving focus to first child of content when button is pressed
-        if(tab.content.children.length) {
-            (tab.content.firstElementChild as HTMLElement).tabIndex = -1;
-        }
-
         this._content.appendChild(tab.content);
-
     }
 
     removeTab(tab: SidebarTab) {
@@ -120,7 +114,7 @@ export default class SidebarControl extends Control {
         tab.content.setAttribute('aria-hidden', 'false');
         this._currentTab = tab;
 
-        (tab.content.firstElementChild as HTMLElement).focus();
+        tab.onActivate();
     }
 
     deactivateTab(tab: SidebarTab, moveFocus: boolean) {

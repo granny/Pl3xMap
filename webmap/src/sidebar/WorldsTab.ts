@@ -87,11 +87,7 @@ export default class WorldsTab extends SidebarTab {
         this._worlds.delete(world);
     }
 
-    onEnable() {
-
-    }
-
-    onDisable() {
-
+    onActivate() {
+        (this._list.querySelector('input:checked') as HTMLElement)!.focus();
     }
 }

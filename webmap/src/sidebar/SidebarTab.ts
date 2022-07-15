@@ -31,9 +31,13 @@ export default class SidebarTab {
         return this._id;
     }
 
-    onEnable() {
+    onActivate() {
+        if(this._content.children.length) {
+            const focusTarget = (this._content.firstElementChild as HTMLElement);
+            focusTarget.tabIndex = -1;
+            focusTarget.focus();
+        }
     }
 
-    onDisable() {
-    }
+    onDeactivate() {}
 }
