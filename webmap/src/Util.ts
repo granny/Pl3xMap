@@ -85,3 +85,16 @@ export const createSVGIcon = (icon: string): DocumentFragment => {
 
 	return template.content;
 }
+
+export const getJSON = (url: string) => {
+	return fetch(url, {cache: "no-store"})
+		.then(async res => {
+			if (res.ok) {
+				return await res.json();
+			}
+		});
+}
+
+export const getUrlParam = <T>(query: string, def: T): T => {
+	return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
+}

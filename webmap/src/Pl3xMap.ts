@@ -11,6 +11,7 @@ import "./scss/styles.scss";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import LayersControl from "./control/LayersControl";
 import SidebarControl from "./control/SidebarControl";
+import {getJSON, getUrlParam} from "./Util";
 
 window.onload = function () {
     new Pl3xMap();
@@ -33,7 +34,7 @@ export class Pl3xMap {
     constructor() {
         this._map = new Pl3xmapLeafletMap(this);
 
-        this.getJSON('tiles/settings.json').then((json: RootJSON) => this.init(json));
+        getJSON('tiles/settings.json').then((json: RootJSON) => this.init(json));
     }
 
     init(json: RootJSON): void {
@@ -55,7 +56,7 @@ export class Pl3xMap {
         }
 
         // load world from url, or first world from json
-        const initialWorld = this.getUrlParam('world', this._worlds.keys().next().value);
+        const initialWorld = getUrlParam('world', this._worlds.keys().next().value);
 
         if(this._worlds.has(initialWorld)) {
             this.currentWorld = this.worlds.get(initialWorld)!;
@@ -82,10 +83,6 @@ export class Pl3xMap {
         }
     }
 
-    getUrlParam<T>(query: string, def: T): T {
-        return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
-    }
-
     getUrlFromView(): string {
         const center: Point = this._map.toPoint(this._map.getCenter());
         const zoom: number = this._map.getMaxZoom() - this._map.getZoom();
@@ -94,15 +91,6 @@ export class Pl3xMap {
         const world: string = this._currentWorld?.name ?? '';
         const type: string = this._map.renderer ?? '';
         return `?world=${world}&renderer=${type}&zoom=${zoom}&x=${x}&z=${z}`;
-    }
-
-    getJSON(url: string) {
-        return fetch(url, {cache: "no-store"})
-            .then(async res => {
-                if (res.ok) {
-                    return await res.json();
-                }
-            });
     }
 
     get map(): Pl3xmapLeafletMap {

@@ -2,6 +2,7 @@ import {Pl3xMap} from "../Pl3xMap";
 import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";
 import {WorldJSON, WorldListJSON} from "../types/Json";
+import {getJSON} from "../Util";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -33,7 +34,7 @@ export class World {
 
         //TODO: Handle errors
         return new Promise((resolve) => {
-            this._pl3xmap.getJSON(`tiles/${this.name}/settings.json`).then((json: WorldJSON) => {
+            getJSON(`tiles/${this.name}/settings.json`).then((json: WorldJSON) => {
                 this._loaded = true;
                 this.init(json);
                 resolve(this);

@@ -2,6 +2,7 @@ import {CRS, DomUtil, LatLng, latLng, Map, point, Point, Transformation, Util} f
 import {World} from "../module/World";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 import {Pl3xMap} from "../Pl3xMap";
+import {getUrlParam} from "../Util";
 
 export default class Pl3xmapLeafletMap extends Map {
     declare _controlCorners: { [x: string]: HTMLDivElement; };
@@ -117,11 +118,11 @@ export default class Pl3xmapLeafletMap extends Map {
 
         // Use URL position on initial load
         if(!this._world) {
-            this._renderer = this._pl3xmap.getUrlParam('renderer', world.renderers[0]);
+            this._renderer = getUrlParam('renderer', world.renderers[0]);
             this.centerOn(
-                this._pl3xmap.getUrlParam('x', world.spawn.x),
-                this._pl3xmap.getUrlParam('z', world.spawn.z),
-                this._pl3xmap.getUrlParam('zoom', world.zoom.default)
+                getUrlParam('x', world.spawn.x),
+                getUrlParam('z', world.spawn.z),
+                getUrlParam('zoom', world.zoom.default)
             );
         } else {
             this._renderer = world.renderers[0];
