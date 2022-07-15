@@ -115,31 +115,17 @@ export default class Pl3xmapLeafletMap extends Map {
         );
     }
 
+    setCurrentMap(world: World, renderer: string) {
+        this._world = world;
+        this._renderer = renderer;
+        this.updateTileLayer();
+    }
+
     get world(): World | null {
         return this._world;
     }
 
-    set world(world: World | null) {
-        if (!world) {
-            return;
-        }
-
-        this._world = world;
-
-        this.renderer = getUrlParam("renderer", this.renderer ?? this._world?.renderers[0]);
-    }
-
     get renderer(): string {
         return this._renderer;
-    }
-
-    set renderer(renderer: string) {
-        if ((this._world?.renderers.indexOf(renderer) ?? -1) >= 0) {
-            this._renderer = renderer;
-        } else {
-            this._renderer = this._world?.renderers[0] ?? 'basic';
-        }
-        console.log(this._renderer);
-        this.updateTileLayer();
     }
 }

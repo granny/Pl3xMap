@@ -24,6 +24,7 @@ export class Pl3xMap {
 
     private readonly _worlds: Map<string, World> = new Map();
     private _currentWorld: World | null = null;
+    private _currentRenderer: string = 'basic';
 
     private _playersLayer: PlayerLayerGroup | null = null;
     private _layerControls: Control.Layers | null = null;
@@ -37,7 +38,7 @@ export class Pl3xMap {
         getJSON('tiles/settings.json').then((json: RootJSON) => this.init(json));
     }
 
-    init(json: RootJSON): void {
+    async init(json: RootJSON) {
         document.title = json.ui.lang.title;
 
         this._lang.coordsLabel = json.ui.lang.coords.label;
@@ -52,14 +53,7 @@ export class Pl3xMap {
         this._options.format = json.format;
 
         for (const world of json.worlds) {
-            this._worlds.set(world.name, new World(this, world));
-        }
-
-        // load world from url, or first world from json
-        const initialWorld = getUrlParam('world', this._worlds.keys().next().value);
-
-        if (this._worlds.has(initialWorld)) {
-            this.currentWorld = this.worlds.get(initialWorld)!;
+            this.addWorld(new World(this, world));
         }
 
         // player tracker layer
@@ -81,6 +75,24 @@ export class Pl3xMap {
         if (this._options.ui.link) {
             this._linkControl = new LinkControl(this).addTo(this._map);
         }
+
+        // load world from url, or first world from json
+        const initialWorld = getUrlParam('world', this._worlds.keys().next().value),
+            initialRenderer = getUrlParam('renderer', this._currentRenderer);
+
+        if (this._worlds.has(initialWorld)) {
+            await this.setCurrentMap(this.worlds.get(initialWorld)!, initialRenderer);
+        }
+    }
+
+    addWorld(world: World) {
+        this._worlds.set(world.name, world);
+
+        dispatchEvent(new CustomEvent('worldadded', {
+            bubbles: false,
+            composed: false,
+            detail: world
+        }));
     }
 
     getUrlFromView(): string {
@@ -91,6 +103,24 @@ export class Pl3xMap {
         const world: string = this._currentWorld?.name ?? '';
         const renderer: string = this._map.renderer ?? '';
         return `?world=${world}&renderer=${renderer}&zoom=${zoom}&x=${x}&z=${z}`;
+    }
+
+    setCurrentMap(world: World, renderer?: string): Promise<void> {
+        return world.load().then(() => {
+            renderer = renderer || this._currentRenderer;
+            renderer = world.renderers.indexOf(renderer) > -1 ? renderer : world.renderers[0] ?? 'basic';
+
+            this._currentWorld = world
+            this._currentRenderer = renderer;
+            this._map.setCurrentMap(world, renderer);
+
+            window.dispatchEvent(new CustomEvent('mapchanged', {
+                detail: {
+                    world,
+                    renderer,
+                }
+            }))
+        });
     }
 
     get map(): Pl3xmapLeafletMap {
@@ -111,16 +141,6 @@ export class Pl3xMap {
 
     get currentWorld(): World | null {
         return this._currentWorld;
-    }
-
-    set currentWorld(world: World | null) {
-        if (!world) {
-            return;
-        }
-
-        world.load().then(() => {
-            this._map.world = this._currentWorld = world;
-        });
     }
 
     get playersLayer(): PlayerLayerGroup | null {
