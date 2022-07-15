@@ -23,7 +23,7 @@ export class World {
         }
 
         //TODO: Handle errors
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this._pl3xmap.getJSON(`tiles/${this.name}/settings.json`).then((json: WorldJSON) => {
                 this._loaded = true;
                 this.init(json);
