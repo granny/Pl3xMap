@@ -30,7 +30,6 @@ import net.pl3x.map.render.job.FullRender;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
-import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
