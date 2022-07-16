@@ -24,12 +24,15 @@ export default class WorldsTab extends SidebarTab {
         super(pl3xmap, 'worlds');
 
         this._button.appendChild(createSVGIcon('maps'));
-        this._button.setAttribute('aria-label','Worlds'); //TODO: Lang
+        this._button.setAttribute('aria-label',pl3xmap.lang.worlds);
 
         const heading = DomUtil.create('h2', '', this._content);
-        heading.innerText = 'Worlds'; //TODO: Lang
+        heading.innerText = pl3xmap.lang.worlds;
+        heading.id = 'worlds-heading';
 
         this._list = DomUtil.create('fieldset', 'menu', this._content);
+        this._list.setAttribute('aria-labelledby', 'worlds-heading');
+        this._list.setAttribute('role', 'radiogroup');
 
         this.initEvents();
     }
