@@ -36,29 +36,8 @@ public class InhabitedRenderer extends JavaPlugin {
 
         @Override
         public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color) {
-            // copied from BasicRenderer
-
-            // fix true block color
-            boolean flatWater = fluidPos != null && !getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
-            int blockColor;
-            if (flatWater) {
-                blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), getChunkHelper(), fluidBiome, fluidState, fluidPos, color);
-            } else {
-                blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), getChunkHelper(), blockBiome, blockState, blockPos, color);
-            }
-            int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
-
-            // work out the heightmap
-            int heightmapColor = heightmap.getColor(blockPos, x, z, flatWater);
-            pixelColor = Colors.mix(pixelColor, heightmapColor);
-
-            // fancy fluids, yum
-            if (fluidPos != null && getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
-                int fluidColor = fancyFluids(fluidState, fluidPos, fluidBiome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
-                pixelColor = Colors.mix(pixelColor, fluidColor);
-            }
-
-            // now we can overlay the basic render
+            // get basic pixel color
+            int pixelColor = basicPixelColor(blockState, blockPos, blockBiome, fluidState, fluidPos, fluidBiome, x, z, glass, heightmap, color);
 
             // we hsb lerp between blue and red with ratio being the
             // percent inhabited time is of the maxed out inhabited time

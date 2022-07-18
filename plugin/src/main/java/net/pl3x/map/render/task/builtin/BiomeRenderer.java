@@ -23,15 +23,23 @@ public final class BiomeRenderer extends Renderer {
 
     @Override
     public void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color) {
-        // simplified from BasicRenderer
+        // fluid stuff
+        boolean isFluid = fluidPos != null;
+        boolean transFluid = getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
+        boolean flatFluid = isFluid && !transFluid;
 
         // determine the biome
-        boolean flatWater = fluidPos != null && !getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
-        ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(mapWorld.getLevel()).getResourceKey(flatWater ? fluidBiome : blockBiome).orElse(null);
+        ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(mapWorld.getLevel()).getResourceKey(flatFluid ? fluidBiome : blockBiome).orElse(null);
         int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0));
 
         // work out the heightmap
-        pixelColor = Colors.mix(pixelColor, heightmap.getColor(blockPos, x, z, flatWater));
+        pixelColor = Colors.mix(pixelColor, heightmap.getColor(blockPos, x, z, flatFluid));
+
+        // fancy fluids, yum
+        if (isFluid && transFluid) {
+            int fluidColor = fancyFluids(fluidState, fluidPos, fluidBiome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
+            pixelColor = Colors.mix(pixelColor, fluidColor);
+        }
 
         int pixelX = blockPos.getX() & Image.SIZE - 1;
         int pixelZ = blockPos.getZ() & Image.SIZE - 1;
