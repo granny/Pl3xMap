@@ -44,12 +44,30 @@ public class UpdateWorldData extends BukkitRunnable {
             zoom.put("max_out", config.ZOOM_MAX_OUT);
             zoom.put("max_in", config.ZOOM_MAX_IN);
 
+            Map<String, Object> playerTracker = new HashMap<>();
+            playerTracker.put("enabled", config.PLAYER_TRACKER_ENABLED);
+            playerTracker.put("interval", config.PLAYER_TRACKER_INTERVAL);
+            playerTracker.put("label", Lang.UI_PLAYER_TRACKER);
+            playerTracker.put("show_controls", config.PLAYER_TRACKER_SHOW_CONTROLS);
+            playerTracker.put("default_hidden", config.PLAYER_TRACKER_DEFAULT_HIDDEN);
+            playerTracker.put("priority", config.PLAYER_TRACKER_PRIORITY);
+            playerTracker.put("z_index", config.PLAYER_TRACKER_Z_INDEX);
+
+            Map<String, Object> nameplates = new HashMap<>();
+            nameplates.put("enabled", config.PLAYER_TRACKER_NAMEPLATE_ENABLED);
+            nameplates.put("show_heads", config.PLAYER_TRACKER_NAMEPLATE_SHOW_HEAD);
+            nameplates.put("show_armor", config.PLAYER_TRACKER_NAMEPLATE_SHOW_ARMOR);
+            nameplates.put("show_health", config.PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH);
+            nameplates.put("heads_url", config.PLAYER_TRACKER_NAMEPLATE_HEADS_URL);
+            playerTracker.put("nameplates", nameplates);
+
             Map<String, Object> settings = new HashMap<>();
             settings.put("name", mapWorld.getName());
             settings.put("renderers", config.RENDER_SCANNERS);
             settings.put("tiles_update_interval", config.RENDER_BACKGROUND_INTERVAL);
             settings.put("spawn", spawn);
             settings.put("zoom", zoom);
+            settings.put("player_tracker", playerTracker);
 
             FileUtil.write(gson.toJson(settings), mapWorld.getWorldTilesDir().resolve("settings.json"));
 

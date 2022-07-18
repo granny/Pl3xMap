@@ -177,6 +177,8 @@ public class Lang extends AbstractConfig {
     public static String UI_COORDS_LABEL = "Coordinates";
     @Key("ui.coords.value")
     public static String UI_COORDS_VALUE = "<x>, <z>";
+    @Key("ui.player-tracker")
+    public static String UI_PLAYER_TRACKER = "Players";
     @Key("ui.players")
     public static String UI_PLAYERS = "Players (<online>/<max>)";
     @Key("ui.worlds")

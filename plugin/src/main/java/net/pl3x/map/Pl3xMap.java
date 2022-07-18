@@ -13,6 +13,7 @@ import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.render.image.io.IO;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.Renderers;
+import net.pl3x.map.task.UpdatePlayerData;
 import net.pl3x.map.task.UpdateWorldData;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
@@ -28,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Pl3xMap extends JavaPlugin {
     private static Pl3xMap instance;
 
+    private UpdatePlayerData updatePlayerDataTask;
     private UpdateWorldData updateWorldDataTask;
     private WorldListener worldListener;
 
@@ -130,6 +132,10 @@ public class Pl3xMap extends JavaPlugin {
             this.worldListener.registerEvents();
         }
 
+        // start updating player data
+        this.updatePlayerDataTask = new UpdatePlayerData();
+        this.updatePlayerDataTask.runTaskTimer(this, 20, 20);
+
         // start updating world data
         this.updateWorldDataTask = new UpdateWorldData();
         this.updateWorldDataTask.runTaskTimer(this, 0, 20 * 5);
@@ -139,6 +145,14 @@ public class Pl3xMap extends JavaPlugin {
         // unregister events
         if (this.worldListener != null) {
             this.worldListener.unregisterEvents();
+        }
+
+        // stop updating player data
+        if (this.updatePlayerDataTask != null) {
+            if (!this.updatePlayerDataTask.isCancelled()) {
+                this.updatePlayerDataTask.cancel();
+            }
+            this.updatePlayerDataTask = null;
         }
 
         // stop updating world data

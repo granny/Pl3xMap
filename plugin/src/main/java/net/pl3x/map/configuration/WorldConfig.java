@@ -100,6 +100,46 @@ public class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
+    @Key("player-tracker.enabled")
+    @Comment("Enable the player tracker")
+    public boolean PLAYER_TRACKER_ENABLED = true;
+    @Key("player-tracker.interval")
+    @Comment("How often to update the player tracker")
+    public int PLAYER_TRACKER_INTERVAL = 1;
+    @Key("player-tracker.controls.show")
+    @Comment("Should the player tracker control be shown")
+    public boolean PLAYER_TRACKER_SHOW_CONTROLS = true;
+    @Key("player-tracker.controls.hidden")
+    @Comment("Should the player layer be hidden by default")
+    public boolean PLAYER_TRACKER_DEFAULT_HIDDEN = false;
+    @Key("player-tracker.layer.priority")
+    @Comment("The priority of the player tracker layer")
+    public int PLAYER_TRACKER_PRIORITY = 2;
+    @Key("player-tracker.layer.z-index")
+    @Comment("The z-index of the player tracker layer")
+    public int PLAYER_TRACKER_Z_INDEX = 2;
+    @Key("player-tracker.hide-players.spectators")
+    @Comment("Hide spectators from the map")
+    public boolean PLAYER_TRACKER_HIDE_SPECTATORS = true;
+    @Key("player-tracker.hide-players.invisible")
+    @Comment("Hide invisible players from the map")
+    public boolean PLAYER_TRACKER_HIDE_INVISIBLE = true;
+    @Key("player-tracker.nameplate.enabled")
+    @Comment("Show players' nameplate by their icon")
+    public boolean PLAYER_TRACKER_NAMEPLATE_ENABLED = true;
+    @Key("player-tracker.nameplate.show-head")
+    @Comment("Show players' head in the nameplate")
+    public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_HEAD = true;
+    @Key("player-tracker.nameplate.show-armor")
+    @Comment("Show players' armor in the nameplate")
+    public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_ARMOR = true;
+    @Key("player-tracker.nameplate.show-health")
+    @Comment("Show players' health in the nameplate")
+    public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH = true;
+    @Key("player-tracker.nameplate.head-url")
+    @Comment("Head url for showing heads")
+    public String PLAYER_TRACKER_NAMEPLATE_HEADS_URL = "https://mc-heads.net/avatar/{uuid}/16";
+
     private final World world;
 
     public WorldConfig(World world) {
