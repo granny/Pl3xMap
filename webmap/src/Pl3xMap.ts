@@ -24,6 +24,7 @@ export class Pl3xMap {
 
     private readonly _worlds: Map<string, World> = new Map();
     private readonly _rendererLayers: Map<string, Layer> = new Map();
+    private readonly _overlayLayers: Set<Layer> = new Set();
 
     private _currentWorld: World | null = null;
     private _currentRenderer: string | null = null;
@@ -59,13 +60,13 @@ export class Pl3xMap {
             this.addWorld(new World(this, world));
         }
 
-        // player tracker layer
-        this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
-
         // set up layer controls
         this._layerControls = new LayersControl(this)
-            .addOverlay(this._playersLayer, 'Players')
             .addTo(this._map);
+
+        // player tracker layer
+        this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
+        this.addOverlay(this._playersLayer, 'Players', true);
 
         this._sidebarControl.addTo(this._map);
 
@@ -108,6 +109,28 @@ export class Pl3xMap {
         const world: string = this._currentWorld?.name ?? '';
         const renderer: string = this._currentRenderer ?? '';
         return `?world=${world}&renderer=${renderer}&zoom=${zoom}&x=${x}&z=${z}`;
+    }
+
+    addOverlay(layer: Layer, name: string, showInControl: boolean) {
+        if(this._overlayLayers.has(layer)) {
+            return;
+        }
+
+        this._overlayLayers.add(layer);
+
+        if(showInControl) {
+            this._layerControls!.addOverlay(layer, name);
+        }
+
+        window.dispatchEvent(new CustomEvent('overlayadded', {
+            bubbles: false,
+            composed: false,
+            detail: {
+                layer,
+                name,
+                showInControl
+            }
+        }));
     }
 
     async setCurrentMap(world: World, renderer?: string | null): Promise<void> {
