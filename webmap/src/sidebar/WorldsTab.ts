@@ -42,7 +42,6 @@ export default class WorldsTab extends BaseTab {
         addEventListener('worldremoved', (e: CustomEvent<World>) => this.removeListItem(e.detail)); //TODO: Refreshless config updates?
         addEventListener('mapchanged', (e: CustomEvent<WorldRendererPair>) => {
             if (this._worlds.has(e.detail.world)) {
-                console.log(this._worlds.get(e.detail.world)!.input.checked);
                 this._worlds.get(e.detail.world)!.input.checked = true;
             }
         });
