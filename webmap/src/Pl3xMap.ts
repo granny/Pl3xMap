@@ -134,40 +134,47 @@ export class Pl3xMap {
     }
 
     async setCurrentMap(world: World, renderer?: string | null): Promise<void> {
+        let worldChanged = false,
+            rendererChanged = false;
+
         return world.load().then(() => {
             renderer = renderer || this._currentRenderer;
             renderer = renderer && world.renderers.indexOf(renderer) > -1 ? renderer : world.renderers[0] ?? 'basic';
 
-            if(world === this._currentWorld && renderer === this._currentRenderer) {
+            if (world === this._currentWorld && renderer === this._currentRenderer) {
                 return;
             }
 
-            if(this._currentRendererLayer) {
+            if (this._currentRendererLayer) {
                 this._currentRendererLayer.remove();
             }
 
-            if(this._currentWorld !== world) {
+            if (this._currentWorld !== world) {
+                worldChanged = rendererChanged = true;
                 this._rendererLayers.clear();
                 this._map.world = world;
+                this._currentWorld = world;
+
+                this._map.centerOn(
+                    getUrlParam('x', world.spawn.x),
+                    getUrlParam('z', world.spawn.z),
+                    getUrlParam('zoom', world.zoom.default)
+                );
+            } else if (this._currentRenderer !== renderer) {
+                rendererChanged = true;
             }
 
-            this._currentWorld = world;
             this._currentRenderer = renderer;
             this._currentRendererLayer = world.getTileLayer(renderer)!;
-            this._currentRendererLayer.addTo(this._map);
+            this._map.addLayer(this._currentRendererLayer);
 
-            this._map.centerOn(
-                getUrlParam('x', world.spawn.x),
-                getUrlParam('z', world.spawn.z),
-                getUrlParam('zoom', world.zoom.default)
-            );
+            if (worldChanged) {
+                window.dispatchEvent(new CustomEvent('worldselected', {detail: world}));
+            }
 
-            window.dispatchEvent(new CustomEvent('mapchanged', {
-                detail: {
-                    world,
-                    renderer,
-                }
-            }))
+            if (rendererChanged) {
+                window.dispatchEvent(new CustomEvent('rendererselected', {detail: renderer}));
+            }
         });
     }
 

@@ -1,11 +1,6 @@
 import {World} from "./module/World";
 import {Layer} from "leaflet";
 
-interface WorldRendererPair {
-    world: World;
-    renderer: string;
-}
-
 interface OverlayAddedPayload {
     layer: Layer;
     name: string;
@@ -16,7 +11,8 @@ declare global {
   interface WindowEventMap {
     worldadded: CustomEvent<World>;
     worldremoved: CustomEvent<World>;
-    mapchanged: CustomEvent<WorldRendererPair>;
+    worldselected: CustomEvent<World>;
+    rendererselected: CustomEvent<string>;
     overlayadded: CustomEvent<OverlayAddedPayload>;
   }
 }

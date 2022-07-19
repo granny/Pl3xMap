@@ -4,7 +4,6 @@ import '../svg/maps.svg';
 import {DomUtil} from "leaflet";
 import {World} from "../module/World";
 import {Pl3xMap} from "../Pl3xMap";
-import {WorldRendererPair} from "../index";
 import BaseTab from "./BaseTab";
 
 interface WorldListItem {
@@ -40,9 +39,9 @@ export default class WorldsTab extends BaseTab {
     private initEvents() {
         addEventListener('worldadded', (e: CustomEvent<World>) => this.createListItem(e.detail));
         addEventListener('worldremoved', (e: CustomEvent<World>) => this.removeListItem(e.detail)); //TODO: Refreshless config updates?
-        addEventListener('mapchanged', (e: CustomEvent<WorldRendererPair>) => {
-            if (this._worlds.has(e.detail.world)) {
-                this._worlds.get(e.detail.world)!.input.checked = true;
+        addEventListener('worldselected', (e: CustomEvent<World>) => {
+            if (this._worlds.has(e.detail)) {
+                this._worlds.get(e.detail)!.input.checked = true;
             }
         });
 
