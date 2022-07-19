@@ -12,8 +12,8 @@ export interface SidebarTab {
     get content(): HTMLElement;
     get id(): string;
     onAdd?: (map: Pl3xmapLeafletMap) => void;
-    onActivate: () => void;
-    onDeactivate: () => void;
+    onActivate?: () => void;
+    onDeactivate?: () => void;
 }
 
 export default class SidebarControl extends Control {
@@ -46,8 +46,8 @@ export default class SidebarControl extends Control {
     }
 
     onAdd(map: Pl3xmapLeafletMap) {
-        for(const tab of this._tabs) {
-            if(tab.onAdd) {
+        for (const tab of this._tabs) {
+            if (tab.onAdd) {
                 tab.onAdd(map);
             }
         }
@@ -90,7 +90,7 @@ export default class SidebarControl extends Control {
         this._buttons.appendChild(tab.button);
 
         tab.content.addEventListener('keydown', (e: KeyboardEvent) => {
-            if(e.key === 'Escape') {
+            if (e.key === 'Escape') {
                 this.collapse();
             }
         });
@@ -129,7 +129,9 @@ export default class SidebarControl extends Control {
         tab.content.setAttribute('aria-hidden', 'false');
         this._currentTab = tab;
 
-        tab.onActivate();
+        if (tab.onActivate) {
+            tab.onActivate();
+        }
     }
 
     deactivateTab(tab: SidebarTab, moveFocus: boolean) {
@@ -142,8 +144,12 @@ export default class SidebarControl extends Control {
         tab.content.setAttribute('aria-hidden', 'true');
         this._currentTab = undefined;
 
-        if(moveFocus) {
+        if (moveFocus) {
             tab.button.focus();
+        }
+
+        if (tab.onDeactivate) {
+            tab.onDeactivate();
         }
     }
 }

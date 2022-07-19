@@ -39,6 +39,4 @@ export default class BaseTab implements SidebarTab {
             focusTarget.focus();
         }
     }
-
-    onDeactivate() {}
 }
