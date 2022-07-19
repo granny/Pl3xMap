@@ -27,5 +27,9 @@
     height: 100vh;
     width: var(--ui-sidebar-width);
     transition: 0.5s transform ease-in;
+
+    h2 {
+      margin-top: 0;
+    }
   }
 }

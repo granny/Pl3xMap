@@ -68,8 +68,15 @@ html, body {
   outline-style: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
+h2 {
+  font-size: 2.8rem;
+  line-height: 3.4rem;
+}
+
+h3 {
+  font-size: 2rem;
+  line-height: 2.8rem;
+  margin-bottom: 0.5rem;
 }
 
 label:focus-within {
