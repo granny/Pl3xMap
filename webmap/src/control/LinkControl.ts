@@ -19,8 +19,10 @@ export class LinkControl extends Control {
     }
 
     onAdd(): HTMLAnchorElement {
-        this._pl3xmap.map.addEventListener('move', () => this.update());
-        this._pl3xmap.map.addEventListener('zoom', () => this.update());
+        this._pl3xmap.map.addEventListener('moveend', () => this.update());
+        this._pl3xmap.map.addEventListener('zoomend', () => this.update());
+        window.addEventListener('rendererselected', () => this.update());
+        window.addEventListener('worldselected', () => this.update());
         this.update();
 
         return this._dom;
