@@ -11,7 +11,7 @@ import "./scss/styles.scss";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import LayersControl from "./control/LayersControl";
 import SidebarControl from "./control/SidebarControl";
-import {getJSON, getUrlParam} from "./Util";
+import {fireCustomEvent, getJSON, getUrlParam} from "./Util";
 
 window.onload = function () {
     new Pl3xMap();
@@ -94,11 +94,7 @@ export class Pl3xMap {
     addWorld(world: World) {
         this._worlds.set(world.name, world);
 
-        dispatchEvent(new CustomEvent('worldadded', {
-            bubbles: false,
-            composed: false,
-            detail: world
-        }));
+        fireCustomEvent('worldadded', world);
     }
 
     getUrlFromView(): string {
@@ -112,7 +108,7 @@ export class Pl3xMap {
     }
 
     addOverlay(layer: Layer, name: string, showInControl: boolean) {
-        if(this._overlayLayers.has(layer)) {
+        if (this._overlayLayers.has(layer)) {
             return;
         }
 
@@ -122,15 +118,11 @@ export class Pl3xMap {
             this._layerControls!.addOverlay(layer, name);
         }
 
-        window.dispatchEvent(new CustomEvent('overlayadded', {
-            bubbles: false,
-            composed: false,
-            detail: {
-                layer,
-                name,
-                showInControl
-            }
-        }));
+        fireCustomEvent('overlayadded', {
+            layer,
+            name,
+            showInControl
+        });
     }
 
     async setCurrentMap(world: World, renderer?: string | null): Promise<void> {
@@ -169,11 +161,11 @@ export class Pl3xMap {
             this._map.addLayer(this._currentRendererLayer);
 
             if (worldChanged) {
-                window.dispatchEvent(new CustomEvent('worldselected', {detail: world}));
+                fireCustomEvent('worldselected', world);
             }
 
             if (rendererChanged) {
-                window.dispatchEvent(new CustomEvent('rendererselected', {detail: renderer}));
+                fireCustomEvent('rendererselected', renderer);
             }
         });
     }

@@ -96,3 +96,7 @@ export const getJSON = (url: string) => {
 export const getUrlParam = <T>(query: string, def: T): T => {
     return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
 }
+
+export const fireCustomEvent = <T>(event: keyof(WindowEventMap), detail: T): void => {
+    window.dispatchEvent(new CustomEvent(event, {detail}));
+}
