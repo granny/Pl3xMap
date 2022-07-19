@@ -6,6 +6,7 @@ import disableClickPropagation = DomEvent.disableClickPropagation;
 import disableScrollPropagation = DomEvent.disableScrollPropagation;
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
+import LayersTab from "../sidebar/LayersTab";
 
 export interface SidebarTab {
     get button(): HTMLElement;
@@ -41,6 +42,7 @@ export default class SidebarControl extends Control {
         disableScrollPropagation(this._container);
 
         this.addTab(new WorldsTab(pl3xmap));
+        this.addTab(new LayersTab(pl3xmap));
         this.addTab(new PlayersTab(pl3xmap));
         this.addTab(new MarkersTab(pl3xmap));
     }

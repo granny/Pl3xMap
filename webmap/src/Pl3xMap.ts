@@ -1,4 +1,4 @@
-import {Control, Layer, Point} from "leaflet";
+import {Layer, Point} from "leaflet";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
@@ -9,9 +9,9 @@ import {RootJSON} from "./types/Json";
 
 import "./scss/styles.scss";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
-import LayersControl from "./control/LayersControl";
 import SidebarControl from "./control/SidebarControl";
 import {fireCustomEvent, getJSON, getUrlParam} from "./Util";
+import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
 
 window.onload = function () {
     new Pl3xMap();
@@ -31,7 +31,6 @@ export class Pl3xMap {
     private _currentRendererLayer: Layer | null = null;
 
     private _playersLayer: PlayerLayerGroup | null = null;
-    private _layerControls: Control.Layers | null = null;
     private _coordsControl: CoordsControl | null = null;
     private _linkControl: LinkControl | null = null;
     private _sidebarControl: SidebarControl = new SidebarControl(this);
@@ -60,15 +59,11 @@ export class Pl3xMap {
             this.addWorld(new World(this, world));
         }
 
-        // set up layer controls
-        this._layerControls = new LayersControl(this)
-            .addTo(this._map);
+        this._sidebarControl.addTo(this._map);
 
         // player tracker layer
-        this._playersLayer = new PlayerLayerGroup().setZIndex(100).addTo(this._map);
-        this.addOverlay(this._playersLayer, 'Players', true);
-
-        this._sidebarControl.addTo(this._map);
+        this._playersLayer = new PlayerLayerGroup().setZIndex(100);
+        this.addOverlay(this._playersLayer, 'Players', true); //TODO: Lang
 
         // add the coords ui control box
         if (this._options.ui.coords) {
@@ -88,7 +83,10 @@ export class Pl3xMap {
             await this.setCurrentMap(this.worlds.get(initialWorld)!, initialRenderer);
         }
 
-        this._map.on('baselayerchange', e => this._currentRendererLayer = e.layer);
+        this._map.on('baselayerchange', e => {
+            this._currentRendererLayer = e.layer;
+            this._currentRenderer = (e.layer as ReversedZoomTileLayer).renderer;
+        });
     }
 
     addWorld(world: World) {
@@ -113,10 +111,6 @@ export class Pl3xMap {
         }
 
         this._overlayLayers.add(layer);
-
-        if(showInControl) {
-            this._layerControls!.addOverlay(layer, name);
-        }
 
         fireCustomEvent('overlayadded', {
             layer,
@@ -192,10 +186,6 @@ export class Pl3xMap {
 
     get playersLayer(): PlayerLayerGroup | null {
         return this._playersLayer;
-    }
-
-    get layerControls(): Control.Layers | null {
-        return this._layerControls;
     }
 
     get coordsControl(): CoordsControl | null {
