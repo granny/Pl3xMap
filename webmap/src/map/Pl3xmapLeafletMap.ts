@@ -1,8 +1,6 @@
 import {CRS, DomUtil, LatLng, latLng, Map, point, Point, Transformation, Util} from "leaflet";
 import {World} from "../module/World";
-import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 import {Pl3xMap} from "../Pl3xMap";
-import {getUrlParam} from "../Util";
 
 export default class Pl3xmapLeafletMap extends Map {
     declare _controlCorners: { [x: string]: HTMLDivElement; };
@@ -12,7 +10,6 @@ export default class Pl3xmapLeafletMap extends Map {
     private _pl3xmap: Pl3xMap;
     private _world: World | null = null;
     private _renderer: string = 'basic';
-    private _tileLayer: ReversedZoomTileLayer | null = null;
 
     constructor(pl3xmap: Pl3xMap) {
         super('map', {
@@ -92,37 +89,12 @@ export default class Pl3xmapLeafletMap extends Map {
         return this.getMaxZoomOut() - this.getZoom();
     }
 
-    private updateTileLayer() {
-        if (!this._world) {
-            return;
-        }
-
-        if (this._tileLayer) {
-            if (this._tileLayer.world !== this._world || this._tileLayer.renderer !== this._renderer) {
-                this.removeLayer(this._tileLayer!);
-                this._tileLayer = new ReversedZoomTileLayer(this._world, this._renderer);
-            }
-        } else {
-            this._tileLayer = new ReversedZoomTileLayer(this._world, this._renderer);
-        }
-
-        this._tileLayer.addTo(this);
-
-        this._pl3xmap.map.centerOn(
-            getUrlParam('x', this._world.spawn.x),
-            getUrlParam('z', this._world.spawn.z),
-            getUrlParam('zoom', this._world.zoom.default)
-        );
-    }
-
-    setCurrentMap(world: World, renderer: string) {
-        this._world = world;
-        this._renderer = renderer;
-        this.updateTileLayer();
-    }
-
     get world(): World | null {
         return this._world;
+    }
+
+    set world(world: World | null) {
+        this._world = world;
     }
 
     get renderer(): string {

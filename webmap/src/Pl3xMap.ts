@@ -1,4 +1,4 @@
-import {Control, Point} from "leaflet";
+import {Control, Layer, Point} from "leaflet";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
@@ -23,8 +23,11 @@ export class Pl3xMap {
     private _lang: Lang = new Lang();
 
     private readonly _worlds: Map<string, World> = new Map();
+    private readonly _rendererLayers: Map<string, Layer> = new Map();
+
     private _currentWorld: World | null = null;
-    private _currentRenderer: string = 'basic';
+    private _currentRenderer: string | null = null;
+    private _currentRendererLayer: Layer | null = null;
 
     private _playersLayer: PlayerLayerGroup | null = null;
     private _layerControls: Control.Layers | null = null;
@@ -83,6 +86,8 @@ export class Pl3xMap {
         if (this._worlds.has(initialWorld)) {
             await this.setCurrentMap(this.worlds.get(initialWorld)!, initialRenderer);
         }
+
+        this._map.on('baselayerchange', e => this._currentRendererLayer = e.layer);
     }
 
     addWorld(world: World) {
@@ -101,18 +106,38 @@ export class Pl3xMap {
         const x: number = Math.floor(center.x);
         const z: number = Math.floor(center.y);
         const world: string = this._currentWorld?.name ?? '';
-        const renderer: string = this._map.renderer ?? '';
+        const renderer: string = this._currentRenderer ?? '';
         return `?world=${world}&renderer=${renderer}&zoom=${zoom}&x=${x}&z=${z}`;
     }
 
-    setCurrentMap(world: World, renderer?: string): Promise<void> {
+    async setCurrentMap(world: World, renderer?: string | null): Promise<void> {
         return world.load().then(() => {
             renderer = renderer || this._currentRenderer;
-            renderer = world.renderers.indexOf(renderer) > -1 ? renderer : world.renderers[0] ?? 'basic';
+            renderer = renderer && world.renderers.indexOf(renderer) > -1 ? renderer : world.renderers[0] ?? 'basic';
 
-            this._currentWorld = world
+            if(world === this._currentWorld && renderer === this._currentRenderer) {
+                return;
+            }
+
+            if(this._currentRendererLayer) {
+                this._currentRendererLayer.remove();
+            }
+
+            if(this._currentWorld !== world) {
+                this._rendererLayers.clear();
+                this._map.world = world;
+            }
+
+            this._currentWorld = world;
             this._currentRenderer = renderer;
-            this._map.setCurrentMap(world, renderer);
+            this._currentRendererLayer = world.getTileLayer(renderer)!;
+            this._currentRendererLayer.addTo(this._map);
+
+            this._map.centerOn(
+                getUrlParam('x', world.spawn.x),
+                getUrlParam('z', world.spawn.z),
+                getUrlParam('zoom', world.zoom.default)
+            );
 
             window.dispatchEvent(new CustomEvent('mapchanged', {
                 detail: {

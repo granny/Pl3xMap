@@ -3,6 +3,7 @@ import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";
 import {WorldJSON, WorldListJSON} from "../types/Json";
 import {getJSON} from "../Util";
+import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -16,7 +17,7 @@ export class World {
     private _spawn: Spawn = new Spawn(0, 0);
     private _zoom: Zoom = new Zoom(0, 0, 0);
     private _renderers: string[] = ['basic'];
-    private _renderer: string = 'basic';
+    private _rendererLayers: Map<string, ReversedZoomTileLayer> = new Map();
     private _loaded = false;
 
     constructor(pl3xmap: Pl3xMap, data: WorldListJSON) {
@@ -47,6 +48,14 @@ export class World {
         this._spawn = new Spawn(json.spawn.x, json.spawn.z);
         this._zoom = new Zoom(json.zoom.default, json.zoom.max_out, json.zoom.max_in);
         this._renderers = json.renderers ?? this._renderers;
+
+        for(const renderer of this._renderers) {
+            this._rendererLayers.set(renderer, new ReversedZoomTileLayer(this, renderer));
+        }
+    }
+
+    getTileLayer(renderer: string) {
+        return this._rendererLayers.get(renderer);
     }
 
     get name(): string {
