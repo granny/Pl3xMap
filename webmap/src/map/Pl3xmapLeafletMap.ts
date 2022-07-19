@@ -98,15 +98,15 @@ export default class Pl3xmapLeafletMap extends Map {
         }
 
         if (this._tileLayer) {
-            if (this._tileLayer.world !== this._world) {
+            if (this._tileLayer.world !== this._world || this._tileLayer.renderer !== this._renderer) {
                 this.removeLayer(this._tileLayer!);
-                this._tileLayer = new ReversedZoomTileLayer(this);
-            } else if (this._tileLayer && (this._tileLayer.renderer !== this._renderer)) {
-                this._tileLayer.renderer = this._renderer;
+                this._tileLayer = new ReversedZoomTileLayer(this._world, this._renderer);
             }
         } else {
-            this._tileLayer = new ReversedZoomTileLayer(this);
+            this._tileLayer = new ReversedZoomTileLayer(this._world, this._renderer);
         }
+
+        this._tileLayer.addTo(this);
 
         this._pl3xmap.map.centerOn(
             getUrlParam('x', this._world.spawn.x),
