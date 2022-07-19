@@ -1,6 +1,7 @@
 import {Pl3xMap} from "../Pl3xMap";
+import {SidebarTab} from "../control/SidebarControl";
 
-export default class SidebarTab {
+export default class BaseTab implements SidebarTab {
     protected readonly _pl3xmap: Pl3xMap;
     protected readonly _button: HTMLButtonElement = document.createElement('button');
     protected readonly _content: HTMLDivElement = document.createElement('div');

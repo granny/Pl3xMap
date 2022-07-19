@@ -1,11 +1,20 @@
 import {Control, DomEvent, DomUtil} from "leaflet";
 import WorldsTab from "../sidebar/WorldsTab";
-import SidebarTab from "../sidebar/SidebarTab";
 import PlayersTab from "../sidebar/PlayersTab";
 import MarkersTab from "../sidebar/MarkersTab";
 import disableClickPropagation = DomEvent.disableClickPropagation;
 import disableScrollPropagation = DomEvent.disableScrollPropagation;
 import {Pl3xMap} from "../Pl3xMap";
+import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
+
+export interface SidebarTab {
+    get button(): HTMLElement;
+    get content(): HTMLElement;
+    get id(): string;
+    onAdd?: (map: Pl3xmapLeafletMap) => void;
+    onActivate: () => void;
+    onDeactivate: () => void;
+}
 
 export default class SidebarControl extends Control {
     private readonly _container: HTMLDivElement;
@@ -36,7 +45,13 @@ export default class SidebarControl extends Control {
         this.addTab(new MarkersTab(pl3xmap));
     }
 
-    onAdd() {
+    onAdd(map: Pl3xmapLeafletMap) {
+        for(const tab of this._tabs) {
+            if(tab.onAdd) {
+                tab.onAdd(map);
+            }
+        }
+
         return this._container;
     }
 

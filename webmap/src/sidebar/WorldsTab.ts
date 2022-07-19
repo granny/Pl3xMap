@@ -3,9 +3,9 @@ import {createSVGIcon, handleKeyboardEvent} from "../Util";
 import '../svg/maps.svg';
 import {DomUtil} from "leaflet";
 import {World} from "../module/World";
-import SidebarTab from "./SidebarTab";
 import {Pl3xMap} from "../Pl3xMap";
 import {WorldRendererPair} from "../index";
+import BaseTab from "./BaseTab";
 
 interface WorldListItem {
     input: HTMLInputElement;
@@ -16,7 +16,7 @@ interface WorldListItem {
     name: HTMLSpanElement;
 }
 
-export default class WorldsTab extends SidebarTab {
+export default class WorldsTab extends BaseTab {
     private readonly _worlds: Map<World, WorldListItem> = new Map();
     private readonly _list: HTMLFieldSetElement;
 
@@ -24,7 +24,7 @@ export default class WorldsTab extends SidebarTab {
         super(pl3xmap, 'worlds');
 
         this._button.appendChild(createSVGIcon('maps'));
-        this._button.setAttribute('aria-label',pl3xmap.lang.worlds);
+        this._button.setAttribute('aria-label', pl3xmap.lang.worlds);
 
         const heading = DomUtil.create('h2', '', this._content);
         heading.innerText = pl3xmap.lang.worlds;
@@ -41,7 +41,7 @@ export default class WorldsTab extends SidebarTab {
         addEventListener('worldadded', (e: CustomEvent<World>) => this.createListItem(e.detail));
         addEventListener('worldremoved', (e: CustomEvent<World>) => this.removeListItem(e.detail)); //TODO: Refreshless config updates?
         addEventListener('mapchanged', (e: CustomEvent<WorldRendererPair>) => {
-            if(this._worlds.has(e.detail.world)) {
+            if (this._worlds.has(e.detail.world)) {
                 console.log(this._worlds.get(e.detail.world)!.input.checked);
                 this._worlds.get(e.detail.world)!.input.checked = true;
             }
@@ -81,7 +81,7 @@ export default class WorldsTab extends SidebarTab {
     private removeListItem(world: World) {
         const listItem = this._worlds.get(world);
 
-        if(!listItem) {
+        if (!listItem) {
             return;
         }
 
