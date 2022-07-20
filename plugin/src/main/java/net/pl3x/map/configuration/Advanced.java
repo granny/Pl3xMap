@@ -136,7 +136,8 @@ public class Advanced extends AbstractConfig {
     @Comment("""
             Each block has a specific color assigned to it. You can
             pick your own color here for any blocks you want to change.
-            Any blocks _not_ in this list will use Mojang's color.""")
+            Any blocks _not_ in this list will use Mojang's color.
+            Setting a color to black (#000000) will make it invisible.""")
     public static Map<Block, Integer> BLOCK_COLORS = new LinkedHashMap<>() {{
         put(Blocks.LAVA, 0xEA5C0F);
 

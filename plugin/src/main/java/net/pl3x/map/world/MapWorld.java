@@ -19,9 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
@@ -30,6 +32,7 @@ import net.pl3x.map.render.job.FullRender;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
 import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.task.UpdateMarkerData;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -53,6 +56,8 @@ public class MapWorld {
     private final Path dataPath;
 
     private final long biomeSeed;
+
+    private final UpdateMarkerData updateMarkerDataTask;
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1,
             new ThreadFactoryBuilder().setNameFormat("Pl3xMap").build());
@@ -83,6 +88,9 @@ public class MapWorld {
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Failed to create data directory for world '%s'", getName()), e);
         }
+
+        this.updateMarkerDataTask = new UpdateMarkerData(this);
+        this.updateMarkerDataTask.runTaskTimer(Pl3xMap.getInstance(), ThreadLocalRandom.current().nextInt(20), 20L * getConfig().MARKERS_UPDATE_INTERVAL);
 
         startBackgroundRender();
 
@@ -322,6 +330,8 @@ public class MapWorld {
         if (hasActiveRender()) {
             cancelRender(true);
         }
+
+        this.updateMarkerDataTask.cancel();
 
         serializeDirtyChunks();
         serializeScannedRegions();

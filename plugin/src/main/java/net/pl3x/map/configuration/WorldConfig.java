@@ -100,11 +100,15 @@ public class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
+    @Key("markers.update-interval")
+    @Comment("How often (in seconds) to update map markers")
+    public int MARKERS_UPDATE_INTERVAL = 5;
+
     @Key("player-tracker.enabled")
     @Comment("Enable the player tracker")
     public boolean PLAYER_TRACKER_ENABLED = true;
     @Key("player-tracker.interval")
-    @Comment("How often to update the player tracker")
+    @Comment("How often (in seconds) to update the player tracker")
     public int PLAYER_TRACKER_INTERVAL = 1;
     @Key("player-tracker.controls.show")
     @Comment("Should the player tracker control be shown")
