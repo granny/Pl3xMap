@@ -40,12 +40,10 @@ tasks.register<Exec>("npmBuild") {
 }
 
 subprojects {
-    if (name == "Pl3xMap") {
-        apply(plugin = "com.github.johnrengelman.shadow")
-    }
     if (name == "Pl3xMap" || name == "InhabitedRenderer") {
         apply(plugin = "java-library")
         apply(plugin = "io.papermc.paperweight.userdev")
+        apply(plugin = "com.github.johnrengelman.shadow")
 
         java {
             toolchain.languageVersion.set(JavaLanguageVersion.of(17))

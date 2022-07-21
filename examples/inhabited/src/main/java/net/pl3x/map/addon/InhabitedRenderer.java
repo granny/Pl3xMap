@@ -8,6 +8,7 @@ import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.Mathf;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class InhabitedRenderer extends JavaPlugin {
@@ -15,6 +16,9 @@ public class InhabitedRenderer extends JavaPlugin {
     public void onEnable() {
         // register our custom renderer with Pl3xMap
         Renderers.INSTANCE.register("inhabited", InhabitedScanner.class);
+
+        // start bstats metrics
+        new Metrics(this, 15869);
     }
 
     @Override
