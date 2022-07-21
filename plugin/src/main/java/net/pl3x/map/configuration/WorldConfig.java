@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.pl3x.map.render.heightmap.Heightmap;
 import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.util.Mathf;
 import org.bukkit.World;
 
 public class WorldConfig extends AbstractConfig {
@@ -47,7 +48,7 @@ public class WorldConfig extends AbstractConfig {
     @Comment("""
             Enables blending of biome grass/foliage/water colors
             similar to the client's biome blending option.
-            Use 0 or negative value to disable this feature.
+            Value clamps 0-15 (inclusive).
             Note: This may slow down your renders quite
             drastically if enabled""")
     public int RENDER_BIOME_BLEND = 0;
@@ -152,6 +153,8 @@ public class WorldConfig extends AbstractConfig {
 
     public void reload() {
         reload(FileUtil.PLUGIN_DIR.resolve("worlds.yml"), WorldConfig.class);
+
+        RENDER_BIOME_BLEND = (int) Mathf.clamp(0, 15, RENDER_BIOME_BLEND);
     }
 
     @Override
