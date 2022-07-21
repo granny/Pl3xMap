@@ -32,7 +32,6 @@ import net.pl3x.map.render.job.Render;
 import net.pl3x.map.util.ReflectionHelper;
 
 public class ChunkHelper {
-    private final Map<Long, Holder<Biome>> biomeCache = new HashMap<>();
     private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
     private final Render render;
     private final Registry<Biome> biomeRegistry;
@@ -49,7 +48,6 @@ public class ChunkHelper {
     }
 
     public void clear() {
-        this.biomeCache.clear();
         this.chunkCache.clear();
     }
 
@@ -136,12 +134,8 @@ public class ChunkHelper {
         //Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.WORLD_SURFACE));
     }
 
-    public Holder<Biome> getBiomeWithCaching(MapWorld mapWorld, BlockPos pos) {
-        return this.biomeCache.computeIfAbsent(ChunkPos.asLong(pos.getX(), pos.getZ()), k -> getBiome(mapWorld, pos));
-    }
-
     // BiomeManager#getBiome
-    private Holder<Biome> getBiome(MapWorld mapWorld, BlockPos pos) {
+    public Holder<Biome> getBiome(MapWorld mapWorld, ChunkAccess chunk, BlockPos pos) {
         int i = pos.getX() - 2;
         int j = pos.getY() - 2;
         int k = pos.getZ() - 2;
@@ -176,7 +170,7 @@ public class ChunkHelper {
         int y = (o & 1) == 0 ? n : n + 1;
         // had to copy this entire method just to change this... :3
         //noinspection SuspiciousNameCombination
-        return getNoiseBiome(mapWorld.getLevel(), w, x, y);
+        return getNoiseBiome(mapWorld.getLevel(), chunk, w, x, y);
     }
 
     // BiomeManager#getFiddledDistance
@@ -203,8 +197,15 @@ public class ChunkHelper {
 
     // nifty trick - don't schedule a blocking getChunk call..
     // LevelReader#getNoiseBiome
-    private Holder<Biome> getNoiseBiome(ServerLevel level, int biomeX, int biomeY, int biomeZ) {
-        ChunkAccess chunkAccess = getChunk(level, QuartPos.toSection(biomeX), QuartPos.toSection(biomeZ));
-        return chunkAccess != null ? chunkAccess.getNoiseBiome(biomeX, biomeY, biomeZ) : level.getUncachedNoiseBiome(biomeX, biomeY, biomeZ);
+    private Holder<Biome> getNoiseBiome(ServerLevel level, ChunkAccess chunk, int biomeX, int biomeY, int biomeZ) {
+        int cX = QuartPos.toSection(biomeX);
+        int cZ = QuartPos.toSection(biomeZ);
+        if (chunk.getPos().x != cX || chunk.getPos().z != cZ) {
+            ChunkAccess chunkAccess = getChunk(level, cX, cZ);
+            if (chunkAccess != null) {
+                return chunkAccess.getNoiseBiome(biomeX, biomeY, biomeZ);
+            }
+        }
+        return chunk.getNoiseBiome(biomeX, biomeY, biomeZ);
     }
 }

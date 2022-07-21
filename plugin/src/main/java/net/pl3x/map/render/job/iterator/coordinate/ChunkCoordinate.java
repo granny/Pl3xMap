@@ -39,6 +39,26 @@ public class ChunkCoordinate extends Coordinate {
     }
 
     @Override
+    public ChunkCoordinate east() {
+        return new ChunkCoordinate(getX() + 1, getZ());
+    }
+
+    @Override
+    public ChunkCoordinate north() {
+        return new ChunkCoordinate(getX(), getZ() - 1);
+    }
+
+    @Override
+    public ChunkCoordinate south() {
+        return new ChunkCoordinate(getX(), getZ() + 1);
+    }
+
+    @Override
+    public ChunkCoordinate west() {
+        return new ChunkCoordinate(getX() - 1, getZ());
+    }
+
+    @Override
     public String toString() {
         return "ChunkCoordinate{x=" + getChunkX() + ",z=" + getChunkZ() + "}";
     }

@@ -39,6 +39,26 @@ public class BlockCoordinate extends Coordinate {
     }
 
     @Override
+    public BlockCoordinate east() {
+        return new BlockCoordinate(getX() + 1, getZ());
+    }
+
+    @Override
+    public BlockCoordinate north() {
+        return new BlockCoordinate(getX(), getZ() - 1);
+    }
+
+    @Override
+    public BlockCoordinate south() {
+        return new BlockCoordinate(getX(), getZ() + 1);
+    }
+
+    @Override
+    public BlockCoordinate west() {
+        return new BlockCoordinate(getX() - 1, getZ());
+    }
+
+    @Override
     public String toString() {
         return "BlockCoordinate{x=" + getBlockX() + ",z=" + getBlockZ() + "}";
     }

@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
-import net.minecraft.core.BlockPos;
+import net.pl3x.map.render.job.iterator.coordinate.BlockCoordinate;
+import net.pl3x.map.render.task.ScanData;
 
 public abstract class Heightmap {
     public int[] x = new int[16];
     public int[] z = new int[16];
 
-    public abstract int getColor(BlockPos pos, int x, int z, boolean flat);
-
-    public void update(BlockPos pos, int x, int z) {
-        this.x[x] = pos.getY();
-        this.z[z] = pos.getY();
+    public int getColor(BlockCoordinate coordinate, ScanData data, ScanData.Data scanData, boolean flat) {
+        return getColor(data, scanData.get(coordinate.west()), scanData.get(coordinate.north()), flat);
     }
+
+    public abstract int getColor(ScanData data1, ScanData data2, ScanData data3, boolean flat);
 
     public enum Type {
         OLD_SCHOOL(() -> new OldSchoolHeightmap()),

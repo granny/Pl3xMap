@@ -24,9 +24,13 @@ public class Key {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Key other)) {
+        if (o == null) {
             return false;
         }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        Key other = (Key) o;
         return getKey().equals(other.getKey());
     }
 

@@ -72,6 +72,14 @@ public abstract class Coordinate {
      */
     public abstract int getRegionZ();
 
+    public abstract Coordinate east();
+
+    public abstract Coordinate north();
+
+    public abstract Coordinate south();
+
+    public abstract Coordinate west();
+
     /**
      * Get a new BlockCoordinate from this coordinate
      *
@@ -104,15 +112,19 @@ public abstract class Coordinate {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Coordinate other)) {
+        if (o == null) {
             return false;
         }
-        return getX() == other.getX() && getZ() == other.getZ();
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Coordinate other = (Coordinate) o;
+        return this.x == other.x && this.z == other.z;
     }
 
     @Override
     public int hashCode() {
-        int prime = 31;
+        int prime = 1543;
         int result = 1;
         result = prime * result + getX();
         result = prime * result + getZ();

@@ -39,6 +39,26 @@ public class RegionCoordinate extends Coordinate {
     }
 
     @Override
+    public RegionCoordinate east() {
+        return new RegionCoordinate(getX() + 1, getZ());
+    }
+
+    @Override
+    public RegionCoordinate north() {
+        return new RegionCoordinate(getX(), getZ() - 1);
+    }
+
+    @Override
+    public RegionCoordinate south() {
+        return new RegionCoordinate(getX(), getZ() + 1);
+    }
+
+    @Override
+    public RegionCoordinate west() {
+        return new RegionCoordinate(getX() - 1, getZ());
+    }
+
+    @Override
     public String toString() {
         return "RegionCoordinate{x=" + getRegionX() + ",z=" + getRegionZ() + "}";
     }

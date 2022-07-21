@@ -1,8 +1,6 @@
 package net.pl3x.map.render.task;
 
-import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -13,95 +11,98 @@ import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.LightEngine;
 import net.pl3x.map.util.Mathf;
-import net.pl3x.map.world.ChunkHelper;
 import net.pl3x.map.world.MapWorld;
 
 public abstract class Renderer {
     private final String name;
-    private final Render render;
-    private final RegionCoordinate region;
+    private final ScanTask scanTask;
 
-    private final MapWorld mapWorld;
-    private final ChunkHelper chunkHelper;
+    private final Heightmap heightmap;
 
     private Image.Holder imageHolder;
 
-    public Renderer(String name, Render render, RegionCoordinate region) {
+    public Renderer(String name, ScanTask scanTask) {
         this.name = name;
-        this.render = render;
-        this.region = region;
+        this.scanTask = scanTask;
 
-        this.mapWorld = render.getWorld();
-        this.chunkHelper = new ChunkHelper(render);
+        this.heightmap = getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.createHeightmap();
     }
 
     public String getName() {
         return this.name;
     }
 
+    public ScanTask getScanTask() {
+        return scanTask;
+    }
+
     public Render getRender() {
-        return this.render;
+        return this.scanTask.getRender();
     }
 
     public RegionCoordinate getRegion() {
-        return this.region;
+        return this.scanTask.getRegion();
     }
 
     public MapWorld getWorld() {
-        return this.mapWorld;
+        return this.scanTask.getWorld();
     }
 
-    public ChunkHelper getChunkHelper() {
-        return this.chunkHelper;
+    public Heightmap getHeightmap() {
+        return this.heightmap;
     }
 
     public Image.Holder getImageHolder() {
         return this.imageHolder;
     }
 
-    public void allocateImages() {
+    public void allocateData() {
         this.imageHolder = new Image.Holder(getName(), getWorld(), getRegion());
     }
 
-    public void saveImages() {
+    public void saveData() {
         this.imageHolder.save();
     }
 
-    public abstract void doIt(MapWorld mapWorld, ChunkAccess chunk, BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color);
+    public abstract void scanData(RegionCoordinate region, ScanData.Data scanData);
 
-    public int basicPixelColor(BlockState blockState, BlockPos blockPos, Biome blockBiome, BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, int x, int z, List<Integer> glass, Heightmap heightmap, int color) {
+    public int basicPixelColor(ScanData data, ScanData.Data scanData) {
         // fluid stuff
-        boolean isFluid = fluidPos != null;
+        boolean isFluid = data.getFluidPos() != null;
         boolean transFluid = getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
         boolean flatFluid = isFluid && !transFluid;
 
         // fix true block color
-        int blockColor;
-        if (flatFluid) {
-            blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), getChunkHelper(), fluidBiome, fluidState, fluidPos, color);
-        } else {
-            blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), getChunkHelper(), blockBiome, blockState, blockPos, color);
+        int pixelColor = 0;
+        if (!flatFluid) {
+            int blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), data, scanData, Colors.getRawBlockColor(data.getBlockState()));
+            if (blockColor != 0) {
+                pixelColor = Colors.setAlpha(0xFF, blockColor);
+            }
         }
-        int pixelColor = blockColor == 0 ? blockColor : Colors.setAlpha(0xFF, blockColor);
 
         // work out the heightmap
-        pixelColor = Colors.mix(pixelColor, heightmap.getColor(blockPos, x, z, flatFluid));
+        pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, flatFluid));
 
         // fancy fluids, yum
-        if (isFluid && transFluid) {
-            int fluidColor = fancyFluids(fluidState, fluidPos, fluidBiome, (fluidPos.getY() - blockPos.getY()) * 0.025F);
-            pixelColor = Colors.mix(pixelColor, fluidColor);
+        if (isFluid) {
+            if (transFluid) {
+                int fluidColor = fancyFluids(data, scanData, data.getFluidState(), (data.getFluidPos().getY() - data.getBlockPos().getY()) * 0.025F);
+                pixelColor = Colors.mix(pixelColor, fluidColor);
+            } else {
+                pixelColor = getRender().getBiomeColors().getWaterColor(data, scanData);
+            }
         }
 
         // if there was translucent glass, mix it in here
-        if (!glass.isEmpty()) {
-            pixelColor = Colors.mix(pixelColor, Colors.merge(glass), Math.min(1.0F, 0.70F + (0.05F * glass.size())));
+        if (!data.getGlassColors().isEmpty()) {
+            pixelColor = Colors.mix(pixelColor, Colors.merge(data.getGlassColors()), Math.min(1.0F, 0.70F + (0.05F * data.getGlassColors().size())));
         }
 
         return pixelColor;
     }
 
-    public int fancyFluids(BlockState fluidState, BlockPos fluidPos, Biome fluidBiome, float depth) {
+    public int fancyFluids(ScanData data, ScanData.Data scanData, BlockState fluidState, float depth) {
         // let's do some maths to get pretty fluid colors based on depth
         int fluidColor;
         if (fluidState.is(Blocks.LAVA)) {
@@ -109,7 +110,7 @@ public abstract class Renderer {
             fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.3F, Easing.cubicOut(depth / 1.5F)));
             fluidColor = Colors.setAlpha(0xFF, fluidColor);
         } else {
-            fluidColor = getRender().getBiomeColors().getWaterColor(getChunkHelper(), fluidBiome, fluidPos);
+            fluidColor = getRender().getBiomeColors().getWaterColor(data, scanData);
             fluidColor = Colors.lerpARGB(fluidColor, 0xFF000000, Mathf.clamp(0, 0.45F, Easing.cubicOut(depth / 1.5F)));
             fluidColor = Colors.setAlpha((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), fluidColor);
         }

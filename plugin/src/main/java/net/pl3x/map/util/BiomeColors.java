@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import javax.imageio.ImageIO;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -21,7 +20,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.pl3x.map.configuration.Advanced;
-import net.pl3x.map.world.ChunkHelper;
+import net.pl3x.map.render.job.iterator.coordinate.BlockCoordinate;
+import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.world.MapWorld;
 
 public class BiomeColors {
@@ -151,39 +151,47 @@ public class BiomeColors {
         return mapFoliage[(j << 8 | i)];
     }
 
-    private int grassColorSampler(Biome biome, BlockPos pos) {
-        return biome.getSpecialEffects().getGrassColorModifier().modifyColor(pos.getX(), pos.getZ(), this.grassColors.get(biome));
+    private int grassColorSampler(Biome biome, BlockCoordinate coordinate) {
+        return biome.getSpecialEffects().getGrassColorModifier().modifyColor(coordinate.getBlockX(), coordinate.getBlockZ(), this.grassColors.get(biome));
     }
 
-    public int getGrassColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos) {
+    public int getGrassColor(ScanData data, ScanData.Data scanData) {
         if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return sampleNeighbors(chunkHelper, pos, this.mapWorld.getConfig().RENDER_BIOME_BLEND, this::grassColorSampler);
+            return sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, this::grassColorSampler);
         }
-        return grassColorSampler(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value(), pos);
+        return grassColorSampler(data.getBiome().value(), data.getCoordinate());
     }
 
-    public int getFoliageColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos) {
+    public int getFoliageColor(ScanData data, ScanData.Data scanData) {
         if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return sampleNeighbors(chunkHelper, pos, this.mapWorld.getConfig().RENDER_BIOME_BLEND, (biome1, pos1) -> this.foliageColors.get(biome1));
+            return sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (biome1, pos1) -> this.foliageColors.get(biome1));
         }
-        return this.foliageColors.get(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value());
+        return this.foliageColors.get(data.getBiome().value());
     }
 
-    public int getWaterColor(ChunkHelper chunkHelper, Biome biome, BlockPos pos) {
-        if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return this.sampleNeighbors(chunkHelper, pos, this.mapWorld.getConfig().RENDER_BIOME_BLEND, (biome1, pos1) -> this.waterColors.get(biome1));
-        }
-        return this.waterColors.get(biome != null ? biome : chunkHelper.getBiomeWithCaching(this.mapWorld, pos).value());
+    public int getWaterColor(ScanData data, ScanData.Data scanData) {
+        return getWaterColor(data, scanData, true);
     }
 
-    private int sampleNeighbors(ChunkHelper chunkHelper, BlockPos pos, int radius, BiFunction<Biome, BlockPos, Integer> colorSampler) {
-        BlockPos.MutableBlockPos pos1 = new BlockPos.MutableBlockPos();
+    public int getWaterColor(ScanData data, ScanData.Data scanData, boolean blend) {
+        if (blend && this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
+            return this.sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (biome1, pos1) -> this.waterColors.get(biome1));
+        }
+        return this.waterColors.get(data.getBiome().value());
+    }
+
+    private int sampleNeighbors(ScanData.Data scanData, BlockCoordinate coordinate, int radius, BiFunction<Biome, BlockCoordinate, Integer> colorSampler) {
         List<Integer> colors = new ArrayList<>();
-        for (int x = pos.getX() - radius; x < pos.getX() + radius; x++) {
-            for (int z = pos.getZ() - radius; z < pos.getZ() + radius; z++) {
-                pos1.set(x, pos.getY(), z);
-                Biome biome1 = chunkHelper.getBiomeWithCaching(this.mapWorld, pos1).value();
-                colors.add(colorSampler.apply(biome1, pos1));
+        for (int x = coordinate.getBlockX() - radius; x < coordinate.getBlockX() + radius; x++) {
+            for (int z = coordinate.getBlockZ() - radius; z < coordinate.getBlockZ() + radius; z++) {
+                BlockCoordinate coordinate1 = new BlockCoordinate(x, z);
+                ScanData data = scanData.get(coordinate1);
+                if (data != null) {
+                    colors.add(colorSampler.apply(data.getBiome().value(), coordinate1));
+                } else {
+                    // missing data?!
+                    colors.add(0xFF0000);
+                }
             }
         }
         return Colors.merge(colors);
