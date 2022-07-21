@@ -4,10 +4,13 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
 }
 
-version = "2.0-SNAPSHOT"
+val minecraftVersion: String by project
+val paperVersion: String by project
+val buildNum = System.getenv("GITHUB_RUN_NUMBER") ?: "SNAPSHOT"
+version = "$minecraftVersion-$buildNum"
 
 dependencies {
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
+    paperDevBundle(paperVersion)
 }
 
 tasks {
@@ -53,7 +56,7 @@ subprojects {
         }
 
         dependencies {
-            paperDevBundle("1.19-R0.1-SNAPSHOT")
+            paperDevBundle(paperVersion)
         }
 
         tasks {
