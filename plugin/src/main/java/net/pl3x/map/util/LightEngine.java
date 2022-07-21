@@ -1,5 +1,6 @@
 package net.pl3x.map.util;
 
+import ca.spottedleaf.starlight.common.light.SWMRNibbleArray;
 import ca.spottedleaf.starlight.common.light.StarLightInterface;
 import java.lang.reflect.Field;
 import net.minecraft.core.BlockPos;
@@ -30,7 +31,9 @@ public class LightEngine {
     }
 
     public static int getBlockLightValue(ChunkAccess chunk, BlockPos pos) {
-        return chunk.getBlockNibbles()[Coordinate.blockToChunk(pos.getY()) - getMinLightSection()].getVisible(pos.getX(), pos.getY(), pos.getZ());
+        final SWMRNibbleArray[] nibbles = chunk.getBlockNibbles();
+        final int index = (int) Mathf.clamp(0, nibbles.length - 1, Coordinate.blockToChunk(pos.getY()) - getMinLightSection());
+        return nibbles[index].getVisible(pos.getX(), pos.getY(), pos.getZ());
     }
 
     private static int getMinLightSection() {
