@@ -3,6 +3,7 @@ package net.pl3x.map.util;
 import java.awt.Color;
 import java.util.List;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.StemBlock;
@@ -193,6 +194,13 @@ public class Colors {
         }
         if (state.is(Blocks.REDSTONE_WIRE)) {
             return RedStoneWireBlock.getColorForPower(state.getValue(RedStoneWireBlock.POWER));
+        }
+        if (state.is(Blocks.COCOA)) {
+            return switch (state.getValue(CocoaBlock.AGE)) {
+                case 0 -> 0x6A682E;
+                case 1 -> 0x654721;
+                default -> 0x703715;
+            };
         }
         return color;
     }

@@ -588,7 +588,7 @@ public class Advanced extends AbstractConfig {
         put(Blocks.LIGHTNING_ROD, 0xC46F53);
         put(Blocks.LILAC, 0x977D8F);
         put(Blocks.LILY_OF_THE_VALLEY, 0x7DB061);
-        put(Blocks.LILY_PAD, 0x888888);
+        put(Blocks.LILY_PAD, 0x208030);
         put(Blocks.LIME_BANNER, 0x8F7748);
         put(Blocks.LIME_BED, 0x70B91A);
         put(Blocks.LIME_CANDLE, 0x63AD17);
