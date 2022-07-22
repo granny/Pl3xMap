@@ -25,13 +25,13 @@ public class ScanData {
     private final ChunkAccess chunk;
     private final BlockCoordinate coordinate;
 
-    private Holder<Biome> biome;
-
+    private Holder<Biome> blockBiome;
     private final BlockPos.MutableBlockPos blockPos;
     private BlockState blockState;
 
+    private Holder<Biome> fluidBiome = null;
     private BlockPos.MutableBlockPos fluidPos = null;
-    private BlockState fluidState;
+    private BlockState fluidState = null;
 
     private final List<Integer> glass = new ArrayList<>();
 
@@ -62,8 +62,8 @@ public class ScanData {
         return this.coordinate;
     }
 
-    public Holder<Biome> getBiome() {
-        return this.biome;
+    public Holder<Biome> getBlockBiome() {
+        return this.blockBiome;
     }
 
     public BlockPos getBlockPos() {
@@ -72,6 +72,10 @@ public class ScanData {
 
     public BlockState getBlockState() {
         return this.blockState;
+    }
+
+    public Holder<Biome> getFluidBiome() {
+        return this.fluidBiome;
     }
 
     public BlockPos getFluidPos() {
@@ -101,24 +105,30 @@ public class ScanData {
             this.blockState = this.chunk.getBlockState(this.blockPos);
             if (!this.blockState.getFluidState().isEmpty()) {
                 if (this.fluidPos == null) {
+                    // get fluid information for the top fluid block
                     this.fluidPos = this.blockPos.mutable();
                     this.fluidState = this.chunk.getBlockState(this.fluidPos);
+                    this.fluidBiome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.fluidPos);
                 }
                 continue;
             }
             // just get a quick color for now
             int blockColor = Colors.getRawBlockColor(this.blockState);
+
             if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(this.blockState)) {
+                // translucent glass. store this color and keep iterating
                 this.glass.add(blockColor);
                 continue;
             }
+
+            // test if block is renderable. we ignore blocks with black color
             if (blockColor > 0) {
                 break;
             }
         } while (this.blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
 
-        // determine the biome
-        this.biome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.blockPos);
+        // determine the biome of final block
+        this.blockBiome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.blockPos);
     }
 
     private boolean isGlass(BlockState state) {

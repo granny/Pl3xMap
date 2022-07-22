@@ -1,5 +1,6 @@
 package net.pl3x.map.render.task.builtin;
 
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.pl3x.map.configuration.Advanced;
@@ -8,7 +9,6 @@ import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
-import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.Colors;
 
 public final class BiomeRenderer extends Renderer {
@@ -19,14 +19,15 @@ public final class BiomeRenderer extends Renderer {
     @Override
     public void scanData(RegionCoordinate region, ScanData.Data scanData) {
         for (ScanData data : scanData.values()) {
-            Biome biome = data.getBiome().value();
+            boolean fluid = data.getFluidPos() != null;
 
             // determine the biome
-            ResourceKey<Biome> biomeKey = BiomeColors.getBiomeRegistry(data.getWorld().getLevel()).getResourceKey(biome).orElse(null);
+            Holder<Biome> biome = fluid ? data.getFluidBiome() : data.getBlockBiome();
+            ResourceKey<Biome> biomeKey = biome.unwrapKey().orElse(null);
             int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0));
 
             // work out the heightmap
-            pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, data.getFluidPos() != null));
+            pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, fluid));
 
             int pixelX = data.getCoordinate().getBlockX() & Image.SIZE - 1;
             int pixelZ = data.getCoordinate().getBlockZ() & Image.SIZE - 1;
