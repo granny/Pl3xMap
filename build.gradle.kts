@@ -40,7 +40,7 @@ tasks.register<Exec>("npmBuild") {
 }
 
 subprojects {
-    if (name == "Pl3xMap" || name == "InhabitedRenderer") {
+    if (name != "WebMap") {
         apply(plugin = "java-library")
         apply(plugin = "io.papermc.paperweight.userdev")
         apply(plugin = "com.github.johnrengelman.shadow")

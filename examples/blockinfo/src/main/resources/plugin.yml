@@ -1,0 +1,7 @@
+name: "${name}"
+main: "${group}.${name}"
+version: "${version}"
+api-version: "1.19"
+author: "BillyGalbreath"
+description: "${description}"
+depend: [ "Pl3xMap" ]

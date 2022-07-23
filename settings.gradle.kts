@@ -10,6 +10,9 @@ rootProject.name = "Pl3xMap"
 setupSubproject("Pl3xMap") {
     projectDir = file("plugin")
 }
+setupSubproject("BlockInfo") {
+    projectDir = file("examples/blockinfo")
+}
 setupSubproject("InhabitedRenderer") {
     projectDir = file("examples/inhabited")
 }

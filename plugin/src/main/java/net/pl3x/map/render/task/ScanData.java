@@ -2,12 +2,13 @@ package net.pl3x.map.render.task;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StainedGlassBlock;
@@ -25,11 +26,13 @@ public class ScanData {
     private final ChunkAccess chunk;
     private final BlockCoordinate coordinate;
 
-    private Holder<Biome> blockBiome;
+    private Biome blockBiome;
+    private ResourceKey<Biome> blockBiomeKey;
     private final BlockPos.MutableBlockPos blockPos;
     private BlockState blockState;
 
-    private Holder<Biome> fluidBiome = null;
+    private Biome fluidBiome = null;
+    private ResourceKey<Biome> fluidBiomeKey = null;
     private BlockPos.MutableBlockPos fluidPos = null;
     private BlockState fluidState = null;
 
@@ -62,8 +65,12 @@ public class ScanData {
         return this.coordinate;
     }
 
-    public Holder<Biome> getBlockBiome() {
+    public Biome getBlockBiome() {
         return this.blockBiome;
+    }
+
+    public ResourceKey<Biome> getBlockBiomeKey() {
+        return this.blockBiomeKey;
     }
 
     public BlockPos getBlockPos() {
@@ -74,8 +81,12 @@ public class ScanData {
         return this.blockState;
     }
 
-    public Holder<Biome> getFluidBiome() {
+    public Biome getFluidBiome() {
         return this.fluidBiome;
+    }
+
+    public ResourceKey<Biome> getFluidBiomeKey() {
+        return this.fluidBiomeKey;
     }
 
     public BlockPos getFluidPos() {
@@ -107,8 +118,10 @@ public class ScanData {
                 if (this.fluidPos == null) {
                     // get fluid information for the top fluid block
                     this.fluidPos = this.blockPos.mutable();
-                    this.fluidState = this.chunk.getBlockState(this.fluidPos);
-                    this.fluidBiome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.fluidPos);
+                    this.fluidState = this.blockState;
+                    Holder<Biome> biome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.blockPos);
+                    this.fluidBiome = biome.value();
+                    this.fluidBiomeKey = biome.unwrapKey().orElse(null);
                 }
                 continue;
             }
@@ -128,7 +141,9 @@ public class ScanData {
         } while (this.blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
 
         // determine the biome of final block
-        this.blockBiome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.blockPos);
+        Holder<Biome> biome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.blockPos);
+        this.blockBiome = biome.value();
+        this.blockBiomeKey = biome.unwrapKey().orElse(null);
     }
 
     private boolean isGlass(BlockState state) {
@@ -156,8 +171,8 @@ public class ScanData {
     }
 
     public static class Data {
-        private final Map<BlockCoordinate, ScanData> scanData = new HashMap<>(Image.SIZE * Image.SIZE, 1.0F);
-        private final Map<BlockCoordinate, ScanData> edgeData = new HashMap<>((Image.SIZE + 2) * 4, 1.0F);
+        private final Map<BlockCoordinate, ScanData> scanData = new LinkedHashMap<>(Image.SIZE * Image.SIZE, 1.0F);
+        private final Map<BlockCoordinate, ScanData> edgeData = new LinkedHashMap<>((Image.SIZE + 2) * 4, 1.0F);
 
         public ScanData get(BlockCoordinate coordinate) {
             ScanData data = this.scanData.get(coordinate);

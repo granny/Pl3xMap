@@ -1,6 +1,5 @@
 package net.pl3x.map.render.task.builtin;
 
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.pl3x.map.configuration.Advanced;
@@ -22,8 +21,7 @@ public final class BiomeRenderer extends Renderer {
             boolean fluid = data.getFluidPos() != null;
 
             // determine the biome
-            Holder<Biome> biome = fluid ? data.getFluidBiome() : data.getBlockBiome();
-            ResourceKey<Biome> biomeKey = biome.unwrapKey().orElse(null);
+            ResourceKey<Biome> biomeKey = fluid ? data.getFluidBiomeKey() : data.getBlockBiomeKey();
             int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0));
 
             // work out the heightmap

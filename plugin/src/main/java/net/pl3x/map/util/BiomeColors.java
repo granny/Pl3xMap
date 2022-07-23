@@ -105,8 +105,8 @@ public class BiomeColors {
         });
     }
 
-    public static Registry<Biome> getBiomeRegistry(ServerLevel world) {
-        return world.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+    public static Registry<Biome> getBiomeRegistry(ServerLevel level) {
+        return level.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
     }
 
     private static int[] getColorsFromImage(BufferedImage image) {
@@ -152,9 +152,7 @@ public class BiomeColors {
     }
 
     private int grassColorSampler(ScanData data) {
-        Biome biome = data.getBlockBiome().value();
-        BlockCoordinate coordinate = data.getCoordinate();
-        return biome.getSpecialEffects().getGrassColorModifier().modifyColor(coordinate.getBlockX(), coordinate.getBlockZ(), this.grassColors.get(biome));
+        return data.getBlockBiome().getSpecialEffects().getGrassColorModifier().modifyColor(data.getCoordinate().getBlockX(), data.getCoordinate().getBlockZ(), this.grassColors.get(data.getBlockBiome()));
     }
 
     public int getGrassColor(ScanData data, ScanData.Data scanData) {
@@ -166,9 +164,9 @@ public class BiomeColors {
 
     public int getFoliageColor(ScanData data, ScanData.Data scanData) {
         if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (data1) -> this.foliageColors.get(data1.getBlockBiome().value()));
+            return sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (data1) -> this.foliageColors.get(data1.getBlockBiome()));
         }
-        return this.foliageColors.get(data.getBlockBiome().value());
+        return this.foliageColors.get(data.getBlockBiome());
     }
 
     public int getWaterColor(ScanData data, ScanData.Data scanData) {
@@ -177,9 +175,9 @@ public class BiomeColors {
 
     public int getWaterColor(ScanData data, ScanData.Data scanData, boolean blend) {
         if (blend && this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return this.sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (data1) -> this.waterColors.get(data1.getFluidBiome().value()));
+            return this.sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (data1) -> this.waterColors.get(data1.getFluidBiome() == null ? data1.getBlockBiome() : data1.getFluidBiome()));
         }
-        return this.waterColors.get(data.getFluidBiome().value());
+        return this.waterColors.get(data.getFluidBiome());
     }
 
     private int sampleNeighbors(ScanData.Data scanData, BlockCoordinate coordinate, int radius, Function<ScanData, Integer> colorSampler) {
