@@ -9,7 +9,7 @@ public class Config extends AbstractConfig {
             (can be spammy)""")
     public static boolean DEBUG_MODE = false;
     @Key("settings.language-file")
-    @Comment("The language file to use in locale/ folder.")
+    @Comment("The language file to use in the locale folder.")
     public static String LANGUAGE_FILE = "lang-en.yml";
 
     @Key("settings.web-directory.path")
@@ -31,7 +31,7 @@ public class Config extends AbstractConfig {
     @Key("settings.internal-webserver.enabled")
     @Comment("""
             Enable the built-in web server.
-            Disable this if you want to use a standalone web server such as apache/nginx.""")
+            Disable this if you want to use a standalone web server such as apache or nginx.""")
     public static boolean HTTPD_ENABLED = true;
     @Key("settings.internal-webserver.bind")
     @Comment("""
@@ -40,13 +40,15 @@ public class Config extends AbstractConfig {
             If you don't understand what this is, leave it set to 0.0.0.0""")
     public static String HTTPD_BIND = "0.0.0.0";
     @Key("settings.internal-webserver.port")
-    @Comment("The port the built-in web server listens to.")
+    @Comment("""
+            The port the built-in web server listens to.
+            Make sure the Port is allocated if using Pterodactyl.""")
     public static int HTTPD_PORT = 8080;
 
     @Key("settings.threading.render-threads")
     @Comment("""
             The number of threads to use for loading and scanning chunks.
-            Value of -1 will use 50% of the available cores.""")
+            Value of -1 will use 50% of the available cores. (recommended)""")
     public static int RENDER_THREADS = -1;
 
     @Key("settings.ui.coords")
