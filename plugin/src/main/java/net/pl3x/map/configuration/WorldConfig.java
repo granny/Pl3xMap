@@ -46,12 +46,18 @@ public class WorldConfig extends AbstractConfig {
 
     @Key("render.biome-blend")
     @Comment("""
-            Enables blending of biome grass/foliage/water colors
-            similar to the client's biome blending option.
-            Value clamps 0-15 (inclusive).
-            Note: This may slow down your renders quite
-            drastically if enabled""")
-    public int RENDER_BIOME_BLEND = 0;
+            Enables blending of biome grass/foliage/water colors similar to
+            the client's biome blending option.
+            Note: This may slow down your renders quite drastically if enabled.
+            0 = off
+            1 = 3x3
+            2 = 5x5 (default)
+            3 = 7x7
+            4 = 9x9
+            5 = 11x11
+            6 = 13x13
+            7 = 15x15""")
+    public int RENDER_BIOME_BLEND = 2;
 
     @Key("render.skylight")
     @Comment("""
@@ -154,7 +160,7 @@ public class WorldConfig extends AbstractConfig {
     public void reload() {
         reload(FileUtil.PLUGIN_DIR.resolve("worlds.yml"), WorldConfig.class);
 
-        RENDER_BIOME_BLEND = (int) Mathf.clamp(0, 15, RENDER_BIOME_BLEND);
+        RENDER_BIOME_BLEND = (int) Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
     }
 
     @Override
