@@ -28,11 +28,12 @@ import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.chunk.storage.RegionFile;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
+import net.pl3x.map.render.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.util.ReflectionHelper;
 
 public class ChunkHelper {
-    private final Map<Long, ChunkAccess> chunkCache = new HashMap<>();
+    private final Map<Long, ChunkAccess> chunkCache = new HashMap<>((Image.SIZE + 2) * (Image.SIZE + 2), 1.0F);
     private final Render render;
     private final Registry<Biome> biomeRegistry;
 
