@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -201,6 +202,9 @@ public class Colors {
                 case 1 -> 0x654721;
                 default -> 0x703715;
             };
+        }
+        if (state.is(Blocks.FARMLAND)) {
+            return state.getValue(FarmBlock.MOISTURE) >= 7 ? 0x512C0F : 0x8E6646;
         }
         return color;
     }
