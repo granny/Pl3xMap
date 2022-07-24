@@ -1,10 +1,9 @@
 package net.pl3x.map.world;
 
 import ca.spottedleaf.starlight.common.light.SWMRNibbleArray;
-import com.destroystokyo.paper.io.PaperFileIOThread;
-import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.mojang.datafixers.util.Either;
 import io.papermc.paper.util.WorldUtil;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +25,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
+import net.minecraft.world.level.chunk.storage.RegionFile;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.pl3x.map.render.job.Render;
@@ -75,8 +75,24 @@ public class ChunkHelper {
             return chunk;
         }
 
+        ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
+
         // load chunk NBT from region file
-        CompoundTag nbt = PaperFileIOThread.Holder.INSTANCE.loadChunkData(level, chunkX, chunkZ, PrioritizedTaskQueue.HIGHEST_PRIORITY, false, true).chunkData;
+        CompoundTag nbt = null;
+        try {
+            RegionFile regionFile = level.chunkSource.chunkMap.regionFileCache.getRegionFile(chunkPos, true, true);
+            //noinspection ConstantConditions
+            if (regionFile != null) {
+                nbt = level.chunkSource.chunkMap.regionFileCache.read(chunkPos, regionFile);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //noinspection ConstantConditions
+        if (nbt == null) {
+            return null;
+        }
 
         // we only care about "full" chunks (aka, level chunks)
         if (ChunkSerializer.getChunkTypeFromTag(nbt) != ChunkStatus.ChunkType.LEVELCHUNK) {
@@ -94,7 +110,6 @@ public class ChunkHelper {
         }
 
         // create our chunk
-        ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
         chunk = new LevelChunk(level.getLevel(), chunkPos, UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), nbt.getLong("InhabitedTime"), levelChunkSections, null, null);
 
         // finish up
