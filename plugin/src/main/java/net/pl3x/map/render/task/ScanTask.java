@@ -1,6 +1,8 @@
 package net.pl3x.map.render.task;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.render.Area;
 import net.pl3x.map.render.job.Render;
@@ -30,7 +32,10 @@ public class ScanTask implements Runnable {
         this.mapWorld = render.getWorld();
         this.chunkHelper = new ChunkHelper(render);
 
-        this.mapWorld.getConfig().RENDER_SCANNERS.forEach(name -> {
+        List<String> renderers = new ArrayList<>();
+        renderers.addAll(this.mapWorld.getConfig().RENDERERS_VISIBLE);
+        renderers.addAll(this.mapWorld.getConfig().RENDERERS_HIDDEN);
+        renderers.forEach(name -> {
             Renderer renderer = Renderers.INSTANCE.createRenderer(name, this);
             if (renderer != null) {
                 this.renderers.put(name, renderer);

@@ -16,15 +16,20 @@ public class WorldConfig extends AbstractConfig {
     public String ICON = "";
     public int ORDER = 0;
 
-    @Key("render.scanners")
+    @Key("render.renderers.visible")
     @Comment("""
-            Scanner types to use. Each scanner will render a different
+            Renderer types to use. Each scanner will render a different
             type of map. The built in scanners include:
-            basic, biome, nether""")
-    public List<String> RENDER_SCANNERS = new ArrayList<>() {{
+            basic, biomes""")
+    public List<String> RENDERERS_VISIBLE = new ArrayList<>() {{
         add("basic");
         add("biomes");
     }};
+
+    @Key("render.renderers.hidden")
+    @Comment("""
+            Renderer types to use, but _not_ show on the map.""")
+    public List<String> RENDERERS_HIDDEN = new ArrayList<>();
 
     @Key("render.background.interval")
     @Comment("""

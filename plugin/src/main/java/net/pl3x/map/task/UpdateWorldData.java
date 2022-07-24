@@ -63,7 +63,7 @@ public class UpdateWorldData extends BukkitRunnable {
 
             Map<String, Object> settings = new HashMap<>();
             settings.put("name", mapWorld.getName());
-            settings.put("renderers", config.RENDER_SCANNERS);
+            settings.put("renderers", config.RENDERERS_VISIBLE);
             settings.put("tiles_update_interval", config.RENDER_BACKGROUND_INTERVAL);
             settings.put("spawn", spawn);
             settings.put("zoom", zoom);
