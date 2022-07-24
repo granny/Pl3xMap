@@ -49,7 +49,7 @@ public class InhabitedRenderer extends JavaPlugin {
 
                 // we hsb lerp between blue and red with ratio being the
                 // percent inhabited time is of the maxed out inhabited time
-                float ratio = Mathf.inverseLerp(0F, 3600000, data.getChunk().getInhabitedTime());
+                float ratio = Mathf.clamp(0F, 1F, data.getChunk().getInhabitedTime() / 3600000F);
                 int inhabitedRGB = Colors.lerpHSB(0xFF0000FF, 0xFFFF0000, ratio, false);
 
                 // set the color, mixing our heatmap on top
