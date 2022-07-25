@@ -37,7 +37,7 @@ export class ReversedZoomTileLayer extends TileLayer {
         this.addEventListener("tileload", (event) => {
             const x: number = event.coords.x;
             const z: number = event.coords.y;
-            getJSON(`tiles/world/${this._getZoomForUrl()}/blockinfo/${x}_${z}.gz`).then((json: BlockInfo) => {
+            getJSON(`tiles/${this._world.name}/${this._getZoomForUrl()}/blockinfo/${x}_${z}.gz`).then((json: BlockInfo) => {
                 this.blockInfos.set(`${x}_${z}`, json);
             });
         });
