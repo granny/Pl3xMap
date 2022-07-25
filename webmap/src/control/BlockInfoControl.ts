@@ -40,13 +40,20 @@ export class BlockInfoControl extends Control {
         const tileX = x & 511;
         const tileZ = z & 511;
 
+        let foundData: boolean = false;
+
         const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(regionX, regionZ);
         if (blockInfo !== undefined) {
             const data: Block = blockInfo?.blocks[tileZ * 512 + tileX];
-            this._block = this._blockPalette.get(data[0]) ?? 'unknown';
-            this._biome = this._pl3xmap.currentWorld?.biomePalette.get(data[1]) ?? 'unknown';
-            this._pl3xmap.coordsControl?.setY(data[2] + 1);
-        } else {
+            if (data != null) {
+                this._block = data[0] == 0 ? 'Void' : this._blockPalette.get(data[0]) ?? 'unknown';
+                this._biome = this._pl3xmap.currentWorld?.biomePalette.get(data[1]) ?? 'unknown';
+                this._pl3xmap.coordsControl?.setY(data[2] + 1);
+                foundData = true;
+            }
+        }
+
+        if (!foundData) {
             this._block = 'unknown';
             this._biome = 'unknown';
             this._pl3xmap.coordsControl?.setY(null);
