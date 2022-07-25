@@ -163,7 +163,6 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
     }
 
     onActivate() {
-        console.log(this._baseLayersList.hidden);
         if (!this._baseLayersList.hidden) {
             (this._baseLayersList.querySelector('input:checked') as HTMLElement)!.focus();
         } else if (!this._overlaysList.hidden) {

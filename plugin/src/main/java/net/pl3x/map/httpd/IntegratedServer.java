@@ -63,6 +63,10 @@ public class IntegratedServer {
                         if (exchange.getRelativePath().startsWith("/tiles")) {
                             exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
                         }
+                        if (exchange.getRelativePath().endsWith(".gz")) {
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+                            exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
+                        }
                         resourceHandler.handleRequest(exchange);
                     })
                     .build();

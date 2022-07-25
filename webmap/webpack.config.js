@@ -1,7 +1,18 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
+    devServer: {
+        compress: true,
+        onBeforeSetupMiddleware: function (server) {
+            server.app.get('*.gz', function (req, res, next) {
+                res.set('Content-Encoding', 'gzip');
+                res.set('Content-Type', 'application/json');
+                next();
+            })
+        }
+    },
     devtool: 'source-map',
     entry: './src/Pl3xMap.ts',
     externals: {
@@ -59,7 +70,10 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js', '.scss', '.css']
     },
-    plugins: [new MiniCssExtractPlugin({
-        filename: 'styles.css'
-    })],
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'styles.css'
+        }),
+        new CompressionPlugin()
+    ]
 }

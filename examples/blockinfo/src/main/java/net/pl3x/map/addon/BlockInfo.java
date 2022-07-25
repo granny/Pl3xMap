@@ -1,8 +1,6 @@
 package net.pl3x.map.addon;
 
 import com.aayushatharva.brotli4j.Brotli4jLoader;
-import com.aayushatharva.brotli4j.encoder.BrotliOutputStream;
-import com.aayushatharva.brotli4j.encoder.Encoder;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +9,9 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -45,8 +45,8 @@ public class BlockInfo extends JavaPlugin {
             .setLenient()
             .create();
 
-    private static final Palette<Block> BLOCK_PALETTES = new Palette<>();
-    private static final Palette<Biome> BIOME_PALETTES = new Palette<>();
+    private static final Palette<Block> BLOCK_PALETTE = new Palette<>();
+    private static final Map<MapWorld, Palette<Biome>> BIOME_PALETTES = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -58,7 +58,7 @@ public class BlockInfo extends JavaPlugin {
         // create block palette
         Registry.BLOCK.forEach(block -> {
             String name = name("block", Registry.BLOCK.getKey(block));
-            BLOCK_PALETTES.add(block, name);
+            BLOCK_PALETTE.add(block, name);
         });
 
         // create biome palette
@@ -68,15 +68,18 @@ public class BlockInfo extends JavaPlugin {
                 return;
             }
 
+            Palette<Biome> palette = new Palette<>();
+            BIOME_PALETTES.put(mapWorld, palette);
+
             ServerLevel level = ((CraftWorld) world).getHandle();
             Registry<Biome> registry = BiomeColors.getBiomeRegistry(level);
             registry.forEach(biome -> {
                 String name = name("biome", registry.getKey(biome));
-                BIOME_PALETTES.add(biome, name);
+                palette.add(biome, name);
             });
 
             try {
-                saveGzip(GSON.toJson(BIOME_PALETTES.getMap()), mapWorld.getWorldTilesDir().resolve("biomes.gz"));
+                saveGzip(GSON.toJson(palette.getMap()), mapWorld.getWorldTilesDir().resolve("biomes.gz"));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -84,13 +87,13 @@ public class BlockInfo extends JavaPlugin {
 
         // save global block palette
         try {
-            saveGzip(GSON.toJson(BLOCK_PALETTES.getMap()), MapWorld.TILES_DIR.resolve("blocks.gz"));
+            saveGzip(GSON.toJson(BLOCK_PALETTE.getMap()), MapWorld.TILES_DIR.resolve("blocks.gz"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         // start bstats metrics
-        new Metrics(this, 15869);
+        new Metrics(this, 15922);
     }
 
     @Override
@@ -113,16 +116,6 @@ public class BlockInfo extends JavaPlugin {
         }
     }
 
-    private static void saveBrotli(String json, Path file) throws IOException {
-        try (
-                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
-                BrotliOutputStream brotliOut = new BrotliOutputStream(fileOut, new Encoder.Parameters().setQuality(9));
-                Writer writer = new OutputStreamWriter(brotliOut)
-        ) {
-            writer.write(json);
-        }
-    }
-
     private static Path mkDirs(Path path) throws IOException {
         if (!Files.exists(path)) {
             Files.createDirectories(path.getParent());
@@ -132,7 +125,7 @@ public class BlockInfo extends JavaPlugin {
     }
 
     public static final class BlockInfoScanner extends Renderer {
-        private Map<String, Object> tileData = new HashMap<>();
+        private Map<String, Object> tileData;
 
         public BlockInfoScanner(String name, ScanTask scanTask) {
             super(name, scanTask);
@@ -140,12 +133,14 @@ public class BlockInfo extends JavaPlugin {
 
         @Override
         public void allocateData() {
-            this.tileData = new HashMap<>();
+            this.tileData = new LinkedHashMap<>();
         }
 
         @Override
         public void saveData() {
-            Path dir = getScanTask().getWorld().getWorldTilesDir().resolve(String.format(Image.DIR_PATH, 0, getName()));
+            Path tilesDir = getScanTask().getWorld().getWorldTilesDir();
+            // TODO - make work for higher zoom levels
+            Path dir = tilesDir.resolve(String.format(Image.DIR_PATH, 0, getName()));
             String filename = String.format(Image.FILE_PATH, getRegion().getRegionX(), getRegion().getRegionZ(), "gz");
             try {
                 saveGzip(GSON.toJson(this.tileData), dir.resolve(filename));
@@ -156,29 +151,36 @@ public class BlockInfo extends JavaPlugin {
 
         @Override
         public void scanData(RegionCoordinate region, ScanData.Data scanData) {
-            Map<String, Object> regionData = new HashMap<>();
+            Map<String, Object> regionData = new LinkedHashMap<>();
             regionData.put("x", region.getRegionX());
             regionData.put("z", region.getRegionZ());
 
-            List<Object> blockData = new ArrayList<>();
+            Object[] blockData = new Object[Image.SIZE * Image.SIZE];
+
+            Palette<Biome> biomePalette = BIOME_PALETTES.get(getWorld());
 
             for (ScanData data : scanData.values()) {
                 boolean fluid = data.getFluidPos() != null;
 
-                Block block = data.getBlockState().getBlock();
+                Block block = (fluid ? data.getFluidState() : data.getBlockState()).getBlock();
                 Biome biome = fluid ? data.getFluidBiome() : data.getBlockBiome();
                 BlockPos pos = fluid ? data.getFluidPos() : data.getBlockPos();
 
-                List<Object> list = new ArrayList<>();
-                list.add(BLOCK_PALETTES.get(block).getIndex());
-                list.add(BIOME_PALETTES.get(biome).getIndex());
-                list.add(pos.getY());
+                int blockIndex = BLOCK_PALETTE.get(block).getIndex();
+                int biomeIndex = biomePalette.get(biome).getIndex();
+                int yPos = pos.getY();
 
-                blockData.add(list);
+                List<Integer> list = new ArrayList<>();
+                list.add(blockIndex);
+                list.add(biomeIndex);
+                list.add(yPos);
+
+                int index = (pos.getZ() & Image.SIZE - 1) * Image.SIZE + (pos.getX() & Image.SIZE - 1);
+                blockData[index] = list;
             }
 
             this.tileData.put("region", regionData);
-            this.tileData.put("blocks", blockData);
+            this.tileData.put("blocks", Arrays.stream(blockData).toList());
         }
     }
 }

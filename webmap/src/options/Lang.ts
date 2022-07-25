@@ -1,9 +1,27 @@
 export class Lang {
+    private _blockInfoLabel: string = 'BlockInfo';
+    private _blockInfoValue: string = '<block><br /><biome>';
     private _coordsLabel: string = 'Coordinates';
     private _coordsValue: string = '<x>, <z>';
     private _players: string = 'Players (<online>/<max>)';
     private _worlds: string = 'Worlds';
     private _layers: string = 'Layers';
+
+    get blockInfoLabel(): string {
+        return this._blockInfoLabel;
+    }
+
+    set blockInfoLabel(value: string) {
+        this._blockInfoLabel = value;
+    }
+
+    get blockInfoValue(): string {
+        return this._blockInfoValue;
+    }
+
+    set blockInfoValue(value: string) {
+        this._blockInfoValue = value;
+    }
 
     get coordsLabel(): string {
         return this._coordsLabel;

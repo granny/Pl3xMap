@@ -1,7 +1,7 @@
 import {Pl3xMap} from "../Pl3xMap";
 import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";
-import {WorldJSON, WorldListJSON} from "../types/Json";
+import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
 import {getJSON} from "../Util";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 
@@ -20,6 +20,8 @@ export class World {
     private _rendererLayers: Map<string, ReversedZoomTileLayer> = new Map();
     private _loaded = false;
 
+    private _biomePalette: Map<number, string> = new Map();
+
     constructor(pl3xmap: Pl3xMap, data: WorldListJSON) {
         this._pl3xmap = pl3xmap;
         this._name = data.name;
@@ -33,6 +35,12 @@ export class World {
         if (this._loaded) {
             return Promise.resolve(this);
         }
+
+        getJSON(`tiles/${this.name}/biomes.gz`).then((json: Palette[]) => {
+            Object.entries(json).forEach((data, index) => {
+                this._biomePalette.set(index, String(json[index]));
+            });
+        });
 
         //TODO: Handle errors
         return new Promise((resolve) => {
@@ -49,12 +57,12 @@ export class World {
         this._zoom = new Zoom(json.zoom.default, json.zoom.max_out, json.zoom.max_in);
         this._renderers = json.renderers ?? this._renderers;
 
-        for(const renderer of this._renderers) {
+        for (const renderer of this._renderers) {
             this._rendererLayers.set(renderer, new ReversedZoomTileLayer(this, renderer));
         }
     }
 
-    getTileLayer(renderer: string) {
+    getTileLayer(renderer: string): ReversedZoomTileLayer | undefined {
         return this._rendererLayers.get(renderer);
     }
 
@@ -92,5 +100,9 @@ export class World {
 
     get format(): string {
         return this._pl3xmap.options.format;
+    }
+
+    get biomePalette(): Map<number, string> {
+        return this._biomePalette;
     }
 }

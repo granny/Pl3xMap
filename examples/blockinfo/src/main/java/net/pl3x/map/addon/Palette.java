@@ -1,6 +1,5 @@
 package net.pl3x.map.addon;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,8 +8,8 @@ public class Palette<T> {
 
     public void add(T type, String name) {
         int index = this.map.size();
-        Entry hmm = new Entry(index, name);
-        this.map.put(type, hmm);
+        Entry entry = new Entry(index, name);
+        this.map.put(type, entry);
     }
 
     public Entry get(T type) {
@@ -18,7 +17,7 @@ public class Palette<T> {
     }
 
     public Map<Integer, String> getMap() {
-        Map<Integer, String> result = new HashMap<>();
+        Map<Integer, String> result = new LinkedHashMap<>();
         this.map.values().forEach(v -> result.put(v.getIndex(), v.getName()));
         return result;
     }
@@ -33,11 +32,11 @@ public class Palette<T> {
         }
 
         public int getIndex() {
-            return index;
+            return this.index;
         }
 
         public String getName() {
-            return name;
+            return this.name;
         }
     }
 }

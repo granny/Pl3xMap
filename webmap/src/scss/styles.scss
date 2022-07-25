@@ -125,6 +125,12 @@ img.leaflet-tile {
   height: var(--ui-button-size);
 }
 
+.leaflet-control-link {
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
 .leaflet-control-coordinates {
   text-align: center;
   min-width: 20rem;
@@ -141,7 +147,8 @@ img.leaflet-tile {
   }
 }
 
-.leaflet-control-link {
+.leaflet-control-blockinfo {
+  text-align: right;
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: 50% 50%;

@@ -1,10 +1,15 @@
 import {TileLayer} from "leaflet";
 import {World} from "../module/World";
+import {getJSON} from "../Util";
+import {BlockInfo} from "../types/Json";
 
 export class ReversedZoomTileLayer extends TileLayer {
     declare private _url: string;
     private readonly _world: World;
     private readonly _renderer: string;
+
+    // temporary storage for tile block info
+    private blockInfos: Map<string, BlockInfo> = new Map();
 
     constructor(world: World, renderer: string) {
         super('', {
@@ -29,7 +34,27 @@ export class ReversedZoomTileLayer extends TileLayer {
         this._renderer = renderer;
         this._url = this.determineUrl();
 
+        this.addEventListener("tileload", (event) => {
+            const x: number = event.coords.x;
+            const z: number = event.coords.y;
+            getJSON(`tiles/world/${this._getZoomForUrl()}/blockinfo/${x}_${z}.gz`).then((json: BlockInfo) => {
+                this.blockInfos.set(`${x}_${z}`, json);
+            });
+        });
+        this.addEventListener("tileunload", (event) => {
+            const x: number = event.coords.x;
+            const z: number = event.coords.y;
+            this.blockInfos.delete(`${x}_${z}`);
+        });
+        this.addEventListener("zoomend", (event) => {
+            this.blockInfos.clear();
+        })
+
         this.setZIndex(0);
+    }
+
+    getBlockInfo(x: number, z: number): BlockInfo | undefined {
+        return this.blockInfos.get(`${x}_${z}`);
     }
 
     private determineUrl() {

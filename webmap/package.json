@@ -11,6 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/leaflet": "^1.7.11",
+    "compression-webpack-plugin": "^10.0.0",
     "css-loader": "^6.7.1",
     "leaflet": "^1.8.0",
     "mini-css-extract-plugin": "^2.6.1",

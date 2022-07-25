@@ -12,6 +12,7 @@ import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import SidebarControl from "./control/SidebarControl";
 import {fireCustomEvent, getJSON, getUrlParam} from "./Util";
 import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
+import {BlockInfoControl} from "./control/BlockInfoControl";
 
 window.onload = function () {
     new Pl3xMap();
@@ -28,10 +29,11 @@ export class Pl3xMap {
 
     private _currentWorld: World | null = null;
     private _currentRenderer: string | null = null;
-    private _currentRendererLayer: Layer | null = null;
+    private _currentRendererLayer: ReversedZoomTileLayer | null = null;
 
     private _playersLayer: PlayerLayerGroup | null = null;
     private _coordsControl: CoordsControl | null = null;
+    private _blockInfoControl: BlockInfoControl | null = null;
     private _linkControl: LinkControl | null = null;
     private _sidebarControl: SidebarControl = new SidebarControl(this);
 
@@ -65,14 +67,19 @@ export class Pl3xMap {
         this._playersLayer = new PlayerLayerGroup().setZIndex(100);
         this.addOverlay(this._playersLayer, 'Players', true); //TODO: Lang
 
+        // add the link ui control box
+        if (this._options.ui.link) {
+            this._linkControl = new LinkControl(this).addTo(this._map);
+        }
+
         // add the coords ui control box
         if (this._options.ui.coords) {
             this._coordsControl = new CoordsControl(this).addTo(this._map);
         }
 
-        // add the link ui control box
-        if (this._options.ui.link) {
-            this._linkControl = new LinkControl(this).addTo(this._map);
+        // add the blockinfo ui control box
+        if (true) { // TODO
+            this._blockInfoControl = new BlockInfoControl(this).addTo(this._map);
         }
 
         // load world from url, or first world from json
@@ -84,8 +91,8 @@ export class Pl3xMap {
         }
 
         this._map.on('baselayerchange', e => {
-            this._currentRendererLayer = e.layer;
-            this._currentRenderer = (e.layer as ReversedZoomTileLayer).renderer;
+            this._currentRendererLayer = (e.layer as ReversedZoomTileLayer);
+            this._currentRenderer = this._currentRendererLayer.renderer;
         });
     }
 
@@ -188,11 +195,19 @@ export class Pl3xMap {
         return this._playersLayer;
     }
 
+    get linkControl(): LinkControl | null {
+        return this._linkControl;
+    }
+
     get coordsControl(): CoordsControl | null {
         return this._coordsControl;
     }
 
-    get linkControl(): LinkControl | null {
-        return this._linkControl;
+    get blockInfoControl(): BlockInfoControl | null {
+        return this._blockInfoControl;
+    }
+
+    get currentTileLayer(): ReversedZoomTileLayer | null {
+        return this._currentRendererLayer;
     }
 }

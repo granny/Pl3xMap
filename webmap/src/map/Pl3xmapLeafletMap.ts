@@ -31,7 +31,7 @@ export default class Pl3xmapLeafletMap extends Map {
 
         // always set center and zoom before doing anything else
         // this sets the internal "_loaded" value to true
-        this.setView([0, 0], 0);
+        //this.setView([0, 0], 0);
     }
 
     // https://stackoverflow.com/a/60391674/3530727

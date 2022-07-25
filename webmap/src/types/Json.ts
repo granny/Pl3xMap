@@ -40,4 +40,23 @@ export type WorldJSON = {
     };
 }
 
+export type Palette = {
+    index: number;
+    block: string;
+}
+
+export type BlockInfo = {
+    region: {
+        x: number;
+        z: number;
+    },
+    blocks: Block[];
+}
+
+export type Block = [
+    number,
+    number,
+    number
+];
+
 export type JSON = RootJSON & WorldListJSON & WorldJSON;
