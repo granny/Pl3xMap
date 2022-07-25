@@ -1,6 +1,5 @@
 package net.pl3x.map.addon;
 
-import com.aayushatharva.brotli4j.Brotli4jLoader;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,8 +49,6 @@ public class BlockInfo extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Brotli4jLoader.ensureAvailability();
-
         // register our custom renderer with Pl3xMap
         Renderers.INSTANCE.register("blockinfo", BlockInfoScanner.class);
 
