@@ -166,7 +166,6 @@ public class Advanced extends AbstractConfig {
         put(Blocks.ATTACHED_MELON_STEM, 0x8C8C8C);
         put(Blocks.ATTACHED_PUMPKIN_STEM, 0x8A8A8A);
         put(Blocks.AZALEA, 0x667D30);
-        put(Blocks.AZALEA_PLANT, 0x5E772E);
         put(Blocks.AZURE_BLUET, 0xACCE82);
         put(Blocks.BAMBOO, 0x5D9013);
         put(Blocks.BAMBOO_SAPLING, 0x5D9013);
@@ -464,7 +463,6 @@ public class Advanced extends AbstractConfig {
         put(Blocks.GLASS, 0xB0D6DB);
         put(Blocks.GLASS_PANE, 0xB0D6DB);
         put(Blocks.GLOWSTONE, 0xAD8455);
-        put(Blocks.GLOW_ITEM_FRAME, 0x000000);
         put(Blocks.GLOW_LICHEN, 0x70837A);
         put(Blocks.GOLD_BLOCK, 0xF8D33E);
         put(Blocks.GOLD_ORE, 0x938769);
@@ -762,7 +760,7 @@ public class Advanced extends AbstractConfig {
         put(Blocks.POTATOES, 0x46872A);
         put(Blocks.POTTED_ACACIA_SAPLING, 0x777618);
         put(Blocks.POTTED_ALLIUM, 0xA089B9);
-        put(Blocks.POTTED_AZALEA_BUSH, 0x647A30);
+        put(Blocks.POTTED_AZALEA, 0x647A30);
         put(Blocks.POTTED_AZURE_BLUET, 0xACCE82);
         put(Blocks.POTTED_BAMBOO, 0x5D9013);
         put(Blocks.POTTED_BIRCH_SAPLING, 0x81A251);
@@ -776,7 +774,7 @@ public class Advanced extends AbstractConfig {
         put(Blocks.POTTED_DARK_OAK_SAPLING, 0x3C5B1E);
         put(Blocks.POTTED_DEAD_BUSH, 0x6D5029);
         put(Blocks.POTTED_FERN, 0x7E7E7E);
-        put(Blocks.POTTED_FLOWERING_AZALEA_BUSH, 0x9D5CAB);
+        put(Blocks.POTTED_FLOWERING_AZALEA, 0x9D5CAB);
         put(Blocks.POTTED_JUNGLE_SAPLING, 0x305111);
         put(Blocks.POTTED_LILY_OF_THE_VALLEY, 0x7DB061);
         put(Blocks.POTTED_MANGROVE_PROPAGULE, 0x5FAF54);
