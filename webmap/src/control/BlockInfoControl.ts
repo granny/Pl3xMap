@@ -15,7 +15,7 @@ export class BlockInfoControl extends Control {
         super();
         this._pl3xmap = pl3xmap;
         super.options = {
-            position: 'bottomright'
+            position: 'bottomleft'
         }
 
         getJSON('tiles/blocks.gz').then((json: Palette[]) => {
@@ -60,7 +60,7 @@ export class BlockInfoControl extends Control {
         }
 
         this._dom.innerHTML = this._pl3xmap.lang.blockInfoValue
-            .replace(/<block>/g, this._block)
-            .replace(/<biome>/g, this._biome);
+            .replace(/<block>/g, this._block.padEnd(15, ' '))
+            .replace(/<biome>/g, this._biome.padEnd(15, ' '));
     }
 }

@@ -47,7 +47,7 @@ export class CoordsControl extends Control {
         this._pl3xmap.blockInfoControl?.update();
         this._dom.innerHTML = this._pl3xmap.lang.coordsValue
             .replace(/<x>/g, this._x.toString().padStart(6, ' '))
-            .replace(/<y>/g, this._y?.toString() ?? '63') // default to 63 (sea level)
+            .replace(/<y>/g, (this._y?.toString() ?? '63').padStart(2, ' ').padEnd(3, ' ')) // default to 63 (sea level)
             .replace(/<z>/g, this._z.toString().padEnd(6, ' '));
     }
 

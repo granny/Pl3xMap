@@ -1,6 +1,5 @@
 import {TileLayer} from "leaflet";
 import {World} from "../module/World";
-import {getJSON} from "../Util";
 import {BlockInfo} from "../types/Json";
 
 export class ReversedZoomTileLayer extends TileLayer {
@@ -9,7 +8,7 @@ export class ReversedZoomTileLayer extends TileLayer {
     private readonly _renderer: string;
 
     // temporary storage for tile block info
-    private blockInfos: Map<string, BlockInfo> = new Map();
+    private _blockInfos: Map<string, BlockInfo> = new Map();
 
     constructor(world: World, renderer: string) {
         super('', {
@@ -37,24 +36,26 @@ export class ReversedZoomTileLayer extends TileLayer {
         this.addEventListener("tileload", (event) => {
             const x: number = event.coords.x;
             const z: number = event.coords.y;
-            getJSON(`tiles/${this._world.name}/${this._getZoomForUrl()}/blockinfo/${x}_${z}.gz`).then((json: BlockInfo) => {
-                this.blockInfos.set(`${x}_${z}`, json);
-            });
+            this._world.loadBlockInfo(x, z);
         });
         this.addEventListener("tileunload", (event) => {
             const x: number = event.coords.x;
             const z: number = event.coords.y;
-            this.blockInfos.delete(`${x}_${z}`);
+            this._blockInfos.delete(`${x}_${z}`);
         });
         this.addEventListener("zoomend", (event) => {
-            this.blockInfos.clear();
+            this._blockInfos.clear();
         })
 
         this.setZIndex(0);
     }
 
     getBlockInfo(x: number, z: number): BlockInfo | undefined {
-        return this.blockInfos.get(`${x}_${z}`);
+        return this._blockInfos.get(`${x}_${z}`);
+    }
+
+    setBlockInfo(x: number, z: number, blockInfo: BlockInfo): void {
+        this._blockInfos.set(`${x}_${z}`, blockInfo);
     }
 
     private determineUrl() {

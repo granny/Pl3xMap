@@ -1,7 +1,7 @@
 import {Pl3xMap} from "../Pl3xMap";
 import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";
-import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
+import {BlockInfo, Palette, WorldJSON, WorldListJSON} from "../types/Json";
 import {getJSON} from "../Util";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 import {LinkControl} from "../control/LinkControl";
@@ -119,5 +119,15 @@ export class World {
 
     get biomePalette(): Map<number, string> {
         return this._biomePalette;
+    }
+
+    loadBlockInfo(x: number, z: number) {
+        if (!this._ui.blockinfo) {
+            return;
+        }
+        const zoom = this._pl3xmap.map.getCurrentZoom();
+        getJSON(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.gz`).then((json: BlockInfo) => {
+            this._pl3xmap.currentTileLayer?.setBlockInfo(x, z, json);
+        });
     }
 }

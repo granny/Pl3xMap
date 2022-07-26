@@ -148,7 +148,9 @@ img.leaflet-tile {
 }
 
 .leaflet-control-blockinfo {
-  text-align: right;
+  font-family: monospace;
+  text-align: left;
+  white-space: pre;
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: 50% 50%;

@@ -15,7 +15,7 @@ export class LinkControl extends Control {
         super();
         this._pl3xmap = pl3xmap;
         super.options = {
-            position: 'bottomleft'
+            position: 'bottomright'
         };
         this._dom = DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
         this._dom.appendChild(createSVGIcon('link'));
