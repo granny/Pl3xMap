@@ -4,6 +4,10 @@ import {Zoom} from "./Zoom";
 import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
 import {getJSON} from "../Util";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
+import {LinkControl} from "../control/LinkControl";
+import {CoordsControl} from "../control/CoordsControl";
+import {BlockInfoControl} from "../control/BlockInfoControl";
+import {UI} from "../options/UI";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -14,6 +18,7 @@ export class World {
     private readonly _type: string = 'overworld';
     private readonly _order: number = 0;
 
+    private _ui: UI = new UI();
     private _spawn: Spawn = new Spawn(0, 0);
     private _zoom: Zoom = new Zoom(0, 0, 0);
     private _renderers: string[] = ['basic'];
@@ -57,9 +62,19 @@ export class World {
         this._zoom = new Zoom(json.zoom.default, json.zoom.max_out, json.zoom.max_in);
         this._renderers = json.renderers ?? this._renderers;
 
+        this._ui.link = json.ui.link;
+        this._ui.coords = json.ui.coords;
+        this._ui.blockinfo = json.ui.blockinfo;
+
         for (const renderer of this._renderers) {
             this._rendererLayers.set(renderer, new ReversedZoomTileLayer(this, renderer));
         }
+    }
+
+    public updateUI() {
+        this._pl3xmap.linkControl = this._ui.link ? new LinkControl(this._pl3xmap) : null;
+        this._pl3xmap.coordsControl = this._ui.coords ? new CoordsControl(this._pl3xmap) : null;
+        this._pl3xmap.blockInfoControl = this._ui.blockinfo ? new BlockInfoControl(this._pl3xmap) : null;
     }
 
     getTileLayer(renderer: string): ReversedZoomTileLayer | undefined {

@@ -44,16 +44,13 @@ export class Pl3xMap {
     }
 
     async init(json: RootJSON) {
-        document.title = json.ui.lang.title;
+        document.title = this.lang.title = json.lang.title;
 
-        this._lang.coordsLabel = json.ui.lang.coords.label;
-        this._lang.coordsValue = json.ui.lang.coords.value;
-        this._lang.players = json.ui.lang.players;
-        this._lang.worlds = json.ui.lang.worlds;
-        this._lang.layers = json.ui.lang.layers;
-
-        this._options.ui.link = json.ui.link;
-        this._options.ui.coords = json.ui.coords;
+        this._lang.coordsLabel = json.lang.coords.label;
+        this._lang.coordsValue = json.lang.coords.value;
+        this._lang.players = json.lang.players;
+        this._lang.worlds = json.lang.worlds;
+        this._lang.layers = json.lang.layers;
 
         this._options.format = json.format;
 
@@ -66,21 +63,6 @@ export class Pl3xMap {
         // player tracker layer
         this._playersLayer = new PlayerLayerGroup().setZIndex(100);
         this.addOverlay(this._playersLayer, 'Players', true); //TODO: Lang
-
-        // add the link ui control box
-        if (this._options.ui.link) {
-            this._linkControl = new LinkControl(this).addTo(this._map);
-        }
-
-        // add the coords ui control box
-        if (this._options.ui.coords) {
-            this._coordsControl = new CoordsControl(this).addTo(this._map);
-        }
-
-        // add the blockinfo ui control box
-        if (true) { // TODO
-            this._blockInfoControl = new BlockInfoControl(this).addTo(this._map);
-        }
 
         // load world from url, or first world from json
         const initialWorld = getUrlParam('world', this._worlds.keys().next().value),
@@ -168,6 +150,9 @@ export class Pl3xMap {
             if (rendererChanged) {
                 fireCustomEvent('rendererselected', renderer);
             }
+
+            this.currentWorld?.updateUI();
+            window.history.replaceState(null, this.lang.title, this.getUrlFromView());
         });
     }
 
@@ -199,12 +184,30 @@ export class Pl3xMap {
         return this._linkControl;
     }
 
+    set linkControl(control: LinkControl | null) {
+        this._linkControl?.remove();
+        this._linkControl = control;
+        this._linkControl?.addTo(this._map);
+    }
+
     get coordsControl(): CoordsControl | null {
         return this._coordsControl;
     }
 
+    set coordsControl(control: CoordsControl | null) {
+        this._coordsControl?.remove();
+        this._coordsControl = control;
+        this._coordsControl?.addTo(this._map);
+    }
+
     get blockInfoControl(): BlockInfoControl | null {
         return this._blockInfoControl;
+    }
+
+    set blockInfoControl(control: BlockInfoControl | null) {
+        this._blockInfoControl?.remove();
+        this._blockInfoControl = control;
+        this._blockInfoControl?.addTo(this._map);
     }
 
     get currentTileLayer(): ReversedZoomTileLayer | null {

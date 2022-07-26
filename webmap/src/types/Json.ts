@@ -1,18 +1,14 @@
 export type RootJSON = {
     format: string;
-    ui: {
-        lang: {
-            title: string;
-            coords: {
-                label: string
-                value: string;
-            };
-            players: string;
-            worlds: string;
-            layers: string;
+    lang: {
+        title: string;
+        coords: {
+            label: string
+            value: string;
         };
-        link: boolean;
-        coords: boolean;
+        players: string;
+        worlds: string;
+        layers: string;
     };
     worlds: WorldListJSON[];
 };
@@ -38,6 +34,11 @@ export type WorldJSON = {
         max_out: number;
         max_in: number;
     };
+    ui: {
+        link: boolean;
+        coords: boolean;
+        blockinfo: boolean;
+    }
 }
 
 export type Palette = {

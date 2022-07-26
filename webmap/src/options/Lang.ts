@@ -1,4 +1,5 @@
 export class Lang {
+    private _title: string = 'Pl3xMap';
     private _blockInfoLabel: string = 'BlockInfo';
     private _blockInfoValue: string = '<block><br /><biome>';
     private _coordsLabel: string = 'Coordinates';
@@ -6,6 +7,14 @@ export class Lang {
     private _players: string = 'Players (<online>/<max>)';
     private _worlds: string = 'Worlds';
     private _layers: string = 'Layers';
+
+    get title(): string {
+        return this._title;
+    }
+
+    set title(value: string) {
+        this._title = value;
+    }
 
     get blockInfoLabel(): string {
         return this._blockInfoLabel;

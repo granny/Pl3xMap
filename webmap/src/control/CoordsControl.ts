@@ -1,4 +1,4 @@
-import {Control, ControlOptions, ControlPosition, DomUtil, LeafletMouseEvent, Point} from "leaflet";
+import {Control, ControlOptions, ControlPosition, DomUtil, LeafletMouseEvent, Map, Point} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 
@@ -16,6 +16,10 @@ export class CoordsControl extends Control {
     private _y: number | null = null;
     private _z: number = 0;
 
+    private onEvent = (event: LeafletMouseEvent) => {
+        return this.update(this._map.toPoint(event.latlng));
+    }
+
     constructor(pl3xmap: Pl3xMap) {
         super();
         this._pl3xmap = pl3xmap;
@@ -24,13 +28,17 @@ export class CoordsControl extends Control {
         } as unknown as ExtendedControlOptions;
     }
 
-    onAdd(): HTMLDivElement {
+    onAdd(map: Map): HTMLDivElement {
         this._dom = DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-coordinates');
         this._dom.dataset.label = this._pl3xmap.lang.coordsLabel;
-
-        this._pl3xmap.map.addEventListener('mousemove', (event: LeafletMouseEvent) => this.update(this._map.toPoint(event.latlng)));
+        this._pl3xmap.map.addEventListener('mousemove', this.onEvent);
         this.update(new Point(0, 0));
         return this._dom;
+    }
+
+    onRemove(map: Map): void {
+        super.onRemove!(map);
+        this._pl3xmap.map.removeEventListener('mousemove', this.onEvent);
     }
 
     private update(point: Point): void {

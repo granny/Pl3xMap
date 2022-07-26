@@ -93,6 +93,13 @@ public class WorldConfig extends AbstractConfig {
             DYNMAP makes every other Y layer darker.""")
     public Heightmap.Type RENDER_HEIGHTMAP_TYPE = Heightmap.Type.MODERN;
 
+    @Key("ui.coords")
+    @Comment("Shows the coordinates box on the map")
+    public boolean UI_COORDS = true;
+    @Key("ui.link")
+    @Comment("Shows the link box on the map")
+    public boolean UI_LINK = true;
+
     @Key("zoom.default")
     @Comment("""
             The default zoom when loading the map in browser.

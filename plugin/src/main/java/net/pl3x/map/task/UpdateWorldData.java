@@ -61,6 +61,11 @@ public class UpdateWorldData extends BukkitRunnable {
             nameplates.put("heads_url", config.PLAYER_TRACKER_NAMEPLATE_HEADS_URL);
             playerTracker.put("nameplates", nameplates);
 
+            Map<String, Object> ui = new HashMap<>();
+            ui.put("link", config.UI_LINK);
+            ui.put("coords", config.UI_COORDS);
+            ui.put("blockinfo", config.RENDERERS_HIDDEN.contains("blockinfo")); // TODO - find a way for plugin to insert the UI
+
             Map<String, Object> settings = new HashMap<>();
             settings.put("name", mapWorld.getName());
             settings.put("renderers", config.RENDERERS_VISIBLE);
@@ -68,6 +73,7 @@ public class UpdateWorldData extends BukkitRunnable {
             settings.put("spawn", spawn);
             settings.put("zoom", zoom);
             settings.put("player_tracker", playerTracker);
+            settings.put("ui", ui);
 
             FileUtil.write(gson.toJson(settings), mapWorld.getWorldTilesDir().resolve("settings.json"));
 
@@ -84,22 +90,17 @@ public class UpdateWorldData extends BukkitRunnable {
         // sort worlds by order, then by name
         worlds.sort(Comparator.<Map<String, Object>>comparingInt(w -> (int) w.get("order")).thenComparing(w -> (String) w.get("name")));
 
-        Map<String, Object> ui = new HashMap<>();
-        ui.put("coords", Config.UI_COORDS_ENABLED);
-        ui.put("link", Config.UI_LINK_ENABLED);
-
         Map<String, Object> lang = new HashMap<>();
         lang.put("title", Lang.UI_TITLE);
         lang.put("players", Lang.UI_PLAYERS);
         lang.put("worlds", Lang.UI_WORLDS);
         lang.put("layers", Lang.UI_LAYERS);
         lang.put("coords", Map.of("label", Lang.UI_COORDS_LABEL, "value", Lang.UI_COORDS_VALUE));
-        ui.put("lang", lang);
 
         Map<String, Object> map = new HashMap<>();
         map.put("worlds", worlds);
-        map.put("ui", ui);
         map.put("format", Config.WEB_TILE_FORMAT);
+        map.put("lang", lang);
 
         FileUtil.write(gson.toJson(map), MapWorld.TILES_DIR.resolve("settings.json"));
     }
