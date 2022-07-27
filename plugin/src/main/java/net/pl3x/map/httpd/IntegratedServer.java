@@ -45,7 +45,7 @@ public class IntegratedServer {
                     .build();
             ResourceHandler resourceHandler = new ResourceHandler(resourceManager, exchange -> {
                 String url = exchange.getRelativePath();
-                if (url.startsWith("/tiles") && url.endsWith(".png")) {
+                if (url.startsWith("/tiles") && (url.endsWith(".png") || url.endsWith(".gz"))) {
                     exchange.setStatusCode(200);
                     return;
                 }
