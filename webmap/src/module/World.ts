@@ -72,6 +72,7 @@ export class World {
     }
 
     public updateUI() {
+        document.getElementById("map")!.style.background = this.background;
         this._pl3xmap.linkControl = this._ui.link ? new LinkControl(this._pl3xmap) : null;
         this._pl3xmap.coordsControl = this._ui.coords ? new CoordsControl(this._pl3xmap) : null;
         this._pl3xmap.blockInfoControl = this._ui.blockinfo ? new BlockInfoControl(this._pl3xmap) : null;
@@ -119,6 +120,18 @@ export class World {
 
     get biomePalette(): Map<number, string> {
         return this._biomePalette;
+    }
+
+    get background(): string {
+        switch (this.type) {
+            case "nether":
+                return "url('images/sky/nether.png')";
+            case "the_end":
+                return "url('images/sky/the_end.png')";
+            case "normal":
+            default:
+                return "url('images/sky/overworld.png')";
+        }
     }
 
     loadBlockInfo(x: number, z: number) {

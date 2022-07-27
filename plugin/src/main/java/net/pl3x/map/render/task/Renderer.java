@@ -82,7 +82,9 @@ public abstract class Renderer {
         }
 
         // work out the heightmap
-        pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, flatFluid));
+        if (pixelColor != 0) {
+            pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, flatFluid));
+        }
 
         // fancy fluids, yum
         if (isFluid) {
