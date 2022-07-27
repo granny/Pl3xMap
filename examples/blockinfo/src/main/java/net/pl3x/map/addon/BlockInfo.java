@@ -5,13 +5,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import net.minecraft.Util;
@@ -122,7 +119,7 @@ public class BlockInfo extends JavaPlugin {
     }
 
     public static final class BlockInfoScanner extends Renderer {
-        private Map<String, Object> tileData;
+        private ByteBuffer byteBuffer;
 
         public BlockInfoScanner(String name, ScanTask scanTask) {
             super(name, scanTask);
@@ -130,17 +127,20 @@ public class BlockInfo extends JavaPlugin {
 
         @Override
         public void allocateData() {
-            this.tileData = new LinkedHashMap<>();
+            this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 20);
         }
 
         @Override
         public void saveData() {
             Path tilesDir = getScanTask().getWorld().getWorldTilesDir();
-            // TODO - make work for higher zoom levels
+            // TODO - make work for higher zoom levels?
             Path dir = tilesDir.resolve(String.format(Image.DIR_PATH, 0, getName()));
-            String filename = String.format(Image.FILE_PATH, getRegion().getRegionX(), getRegion().getRegionZ(), "gz");
-            try {
-                saveGzip(GSON.toJson(this.tileData), dir.resolve(filename));
+            String filename = String.format(Image.FILE_PATH, getRegion().getRegionX(), getRegion().getRegionZ(), "pl3xmap.gz");
+            try (
+                    OutputStream fileOut = Files.newOutputStream(mkDirs(dir.resolve(filename)));
+                    GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
+            ) {
+                gzipOut.write(this.byteBuffer.array());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -148,13 +148,17 @@ public class BlockInfo extends JavaPlugin {
 
         @Override
         public void scanData(RegionCoordinate region, ScanData.Data scanData) {
-            Map<String, Object> regionData = new LinkedHashMap<>();
-            regionData.put("x", region.getRegionX());
-            regionData.put("z", region.getRegionZ());
-
-            Object[] blockData = new Object[Image.SIZE * Image.SIZE];
+            int minY = getWorld().getLevel().getMinBuildHeight();
 
             Palette<Biome> biomePalette = BIOME_PALETTES.get(getWorld());
+
+            this.byteBuffer.clear();
+
+            this.byteBuffer.put(0, toBytes(0x706C3378)); // pl3x
+            this.byteBuffer.put(4, toBytes(0x6D617001)); // map1
+            this.byteBuffer.put(8, toBytes(region.getRegionX()));
+            this.byteBuffer.put(12, toBytes(region.getRegionZ()));
+            this.byteBuffer.put(16, toBytes(minY));
 
             for (ScanData data : scanData.values()) {
                 boolean fluid = data.getFluidPos() != null;
@@ -165,19 +169,24 @@ public class BlockInfo extends JavaPlugin {
 
                 int blockIndex = BLOCK_PALETTE.get(block).getIndex();
                 int biomeIndex = biomePalette.get(biome).getIndex();
-                int yPos = pos.getY();
+                int yPos = pos.getY() - minY; // ensure bottom starts at 0
 
-                List<Integer> list = new ArrayList<>();
-                list.add(blockIndex);
-                list.add(biomeIndex);
-                list.add(yPos);
-
+                // 11111111111111111111111111111111 - 32 bits - (4294967295)
+                // 1111111111                       - 10 bits - block (1023)
+                //           1111111111             - 10 bits - biome (1023)
+                //                     111111111111 - 12 bits - yPos  (4095)
+                int packed = ((blockIndex & 1023) << 22) | ((biomeIndex & 1023) << 12) | (yPos & 4095);
                 int index = (pos.getZ() & Image.SIZE - 1) * Image.SIZE + (pos.getX() & Image.SIZE - 1);
-                blockData[index] = list;
+                this.byteBuffer.put(20 + index * 4, toBytes(packed));
             }
+        }
 
-            this.tileData.put("region", regionData);
-            this.tileData.put("blocks", Arrays.stream(blockData).toList());
+        private byte[] toBytes(int packed) {
+            byte[] bytes = new byte[4];
+            for (int i = 0; i < 4; i++) {
+                bytes[i] = (byte) (packed >>> (i * 8));
+            }
+            return bytes;
         }
     }
 }

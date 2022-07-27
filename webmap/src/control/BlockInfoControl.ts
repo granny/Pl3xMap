@@ -1,7 +1,8 @@
 import {Control, DomUtil} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Block, BlockInfo, Palette} from "../types/Json";
+import {Palette} from "../types/Json";
 import {getJSON} from "../Util";
+import {Block, BlockInfo} from "../module/BlockInfo";
 
 export class BlockInfoControl extends Control {
     private _pl3xmap: Pl3xMap;
@@ -44,11 +45,11 @@ export class BlockInfoControl extends Control {
 
         const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(regionX, regionZ);
         if (blockInfo !== undefined) {
-            const data: Block = blockInfo?.blocks[tileZ * 512 + tileX];
-            if (data != null) {
-                this._block = data[0] == 0 ? 'Void' : this._blockPalette.get(data[0]) ?? 'unknown';
-                this._biome = this._pl3xmap.currentWorld?.biomePalette.get(data[1]) ?? 'unknown';
-                this._pl3xmap.coordsControl?.setY(data[2] + 1);
+            const block: Block = blockInfo.getBlock(tileZ * 512 + tileX);
+            if (block != null) {
+                this._block = block.block == 0 ? 'Void' : this._blockPalette.get(block.block) ?? 'unknown';
+                this._biome = this._pl3xmap.currentWorld?.biomePalette.get(block.biome) ?? 'unknown';
+                this._pl3xmap.coordsControl?.setY(block.yPos + 1);
                 foundData = true;
             }
         }

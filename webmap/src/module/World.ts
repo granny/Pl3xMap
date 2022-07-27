@@ -1,13 +1,14 @@
 import {Pl3xMap} from "../Pl3xMap";
 import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";
-import {BlockInfo, Palette, WorldJSON, WorldListJSON} from "../types/Json";
+import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
 import {getJSON} from "../Util";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 import {LinkControl} from "../control/LinkControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {BlockInfoControl} from "../control/BlockInfoControl";
 import {UI} from "../options/UI";
+import {BlockInfo} from "./BlockInfo";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -139,8 +140,21 @@ export class World {
             return;
         }
         const zoom = this._pl3xmap.map.getCurrentZoom();
-        getJSON(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.gz`).then((json: BlockInfo) => {
-            this._pl3xmap.currentTileLayer?.setBlockInfo(x, z, json);
+        this.getBytes(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.pl3xmap.gz`).then((buffer: ArrayBuffer | undefined) => {
+            if (buffer == undefined) {
+                return;
+            }
+            const blockInfo = new BlockInfo(new Uint8Array(buffer));
+            this._pl3xmap.currentTileLayer?.setBlockInfo(x, z, blockInfo);
         });
+    }
+
+    private getBytes = (url: string) => {
+        return fetch(url, {cache: "no-store"})
+            .then(async res => {
+                if (res.ok) {
+                    return await res.arrayBuffer();
+                }
+            });
     }
 }

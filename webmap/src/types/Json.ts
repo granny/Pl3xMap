@@ -46,18 +46,4 @@ export type Palette = {
     block: string;
 }
 
-export type BlockInfo = {
-    region: {
-        x: number;
-        z: number;
-    },
-    blocks: Block[];
-}
-
-export type Block = [
-    number,
-    number,
-    number
-];
-
 export type JSON = RootJSON & WorldListJSON & WorldJSON;

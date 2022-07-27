@@ -1,6 +1,6 @@
 import {TileLayer} from "leaflet";
 import {World} from "../module/World";
-import {BlockInfo} from "../types/Json";
+import {BlockInfo} from "../module/BlockInfo";
 
 export class ReversedZoomTileLayer extends TileLayer {
     declare private _url: string;
