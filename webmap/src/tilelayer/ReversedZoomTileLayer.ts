@@ -1,6 +1,6 @@
 import {TileLayer} from "leaflet";
-import {World} from "../module/World";
 import {BlockInfo} from "../module/BlockInfo";
+import {World} from "../module/World";
 
 export class ReversedZoomTileLayer extends TileLayer {
     declare private _url: string;
@@ -8,7 +8,7 @@ export class ReversedZoomTileLayer extends TileLayer {
     private readonly _renderer: string;
 
     // temporary storage for tile block info
-    private _blockInfos: Map<string, BlockInfo> = new Map();
+    private _blockInfos: Map<number, Map<string, BlockInfo>> = new Map();
 
     constructor(world: World, renderer: string) {
         super('', {
@@ -34,28 +34,36 @@ export class ReversedZoomTileLayer extends TileLayer {
         this._url = this.determineUrl();
 
         this.addEventListener("tileload", (event) => {
+            const zoom: number = this.world.pl3xmap.map.getMaxZoomOut() - event.coords.z;
             const x: number = event.coords.x;
             const z: number = event.coords.y;
-            this._world.loadBlockInfo(x, z);
+            this._world.loadBlockInfo(zoom, x, z);
         });
         this.addEventListener("tileunload", (event) => {
+            const zoom: number = event.coords.z;
             const x: number = event.coords.x;
             const z: number = event.coords.y;
-            this._blockInfos.delete(`${x}_${z}`);
+            this._blockInfos.get(zoom)?.delete(`${x}_${z}`);
         });
-        this.addEventListener("zoomend", (event) => {
-            this._blockInfos.clear();
-        })
 
         this.setZIndex(0);
     }
 
-    getBlockInfo(x: number, z: number): BlockInfo | undefined {
-        return this._blockInfos.get(`${x}_${z}`);
+    getBlockInfo(zoom: number, x: number, z: number): BlockInfo | undefined {
+        return this._blockInfos.get(zoom < 0 ? 0 : zoom)?.get(`${x}_${z}`);
     }
 
-    setBlockInfo(x: number, z: number, blockInfo: BlockInfo): void {
-        this._blockInfos.set(`${x}_${z}`, blockInfo);
+    setBlockInfo(zoom: number, x: number, z: number, blockInfo: BlockInfo | null): void {
+        let infoMap = this._blockInfos.get(zoom < 0 ? 0 : zoom);
+        if (infoMap == undefined) {
+            infoMap = new Map();
+            this._blockInfos.set(zoom, infoMap);
+        }
+        if (blockInfo == null) {
+            infoMap.delete(`${x}_${z}`);
+        } else {
+            infoMap.set(`${x}_${z}`, blockInfo);
+        }
     }
 
     private determineUrl() {

@@ -1,10 +1,8 @@
-import {createSVGIcon} from "../Util";
-
-import '../svg/layers.svg';
-import {Map, Control, DomEvent, DomUtil, Layer, Util} from "leaflet";
+import {Control, DomEvent, DomUtil, Layer, Map, Util as LeafletUtil} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
+import {Util} from "../Util";
 import {SidebarTab} from "../control/SidebarControl";
-import stamp = Util.stamp;
+import '../svg/layers.svg';
 
 interface LayerControlInput extends HTMLInputElement {
     layerId: number;
@@ -43,7 +41,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         this._button.type = 'button';
         this._button.setAttribute('aria-expanded', 'false');
         this._button.setAttribute('aria-controls', `sidebar__layers`);
-        this._button.appendChild(createSVGIcon('layers'));
+        this._button.appendChild(Util.createSVGIcon('layers'));
         this._button.setAttribute('aria-label', pl3xmap.lang.layers);
 
         this._content.hidden = true;
@@ -135,7 +133,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
 
         input.type = layer.overlay ? 'checkbox' : 'radio';
         input.name = layer.overlay ? 'overlays' : 'base';
-        input.layerId = stamp(layer.layer);
+        input.layerId = LeafletUtil.stamp(layer.layer);
         input.id = label.htmlFor = `${layer.overlay ? 'overlay-' : 'base-'}${input.layerId}`;
         input.defaultChecked = this._map.hasLayer(layer.layer);
 

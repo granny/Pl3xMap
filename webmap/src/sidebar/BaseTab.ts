@@ -28,12 +28,12 @@ export default class BaseTab implements SidebarTab {
         return this._content;
     }
 
-    get id(): string{
+    get id(): string {
         return this._id;
     }
 
     onActivate() {
-        if(this._content.children.length) {
+        if (this._content.children.length) {
             const focusTarget = (this._content.firstElementChild as HTMLElement);
             focusTarget.tabIndex = -1;
             focusTarget.focus();

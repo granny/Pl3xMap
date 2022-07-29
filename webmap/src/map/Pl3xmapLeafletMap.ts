@@ -1,6 +1,6 @@
 import {CRS, DomUtil, LatLng, latLng, Map, point, Point, Transformation, Util} from "leaflet";
-import {World} from "../module/World";
 import {Pl3xMap} from "../Pl3xMap";
+import {World} from "../module/World";
 
 export default class Pl3xmapLeafletMap extends Map {
     declare _controlCorners: { [x: string]: HTMLDivElement; };

@@ -1,31 +1,24 @@
 export class BlockInfo {
     private readonly _data: Uint8Array;
-    private readonly _x: number;
-    private readonly _z: number;
-    private readonly _minY: number;
 
     constructor(data: Uint8Array) {
         this._data = data;
-        this._x = this.getInt(8);
-        this._z = this.getInt(12);
-        this._minY = this.getInt(16);
     }
 
     get x(): number {
-        return this._x;
+        return this.getInt(8);
     }
 
     get z(): number {
-        return this._z;
+        return this.getInt(12);
     }
 
     get minY(): number {
-        return this._minY;
+        return this.getInt(16);
     }
 
     getBlock(index: number): Block {
-        const packed = this.getInt(20 + index * 4);
-        return new Block(packed, this.minY);
+        return new Block(this.getInt(20 + index * 4), this.minY);
     }
 
     private getInt(position: number): number {

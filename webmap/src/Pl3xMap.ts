@@ -1,18 +1,17 @@
 import {Layer, Point} from "leaflet";
+import {BlockInfoControl} from "./control/BlockInfoControl";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
+import SidebarControl from "./control/SidebarControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
+import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import {World} from "./module/World";
 import {Lang} from "./options/Lang";
 import {Options} from "./options/Options";
-import {RootJSON} from "./types/Json";
-
-import "./scss/styles.scss";
-import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
-import SidebarControl from "./control/SidebarControl";
-import {fireCustomEvent, getJSON, getUrlParam} from "./Util";
 import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
-import {BlockInfoControl} from "./control/BlockInfoControl";
+import {RootJSON} from "./types/Json";
+import {Util} from "./Util";
+import "./scss/styles.scss";
 
 window.onload = function () {
     new Pl3xMap();
@@ -40,7 +39,7 @@ export class Pl3xMap {
     constructor() {
         this._map = new Pl3xmapLeafletMap(this);
 
-        getJSON('tiles/settings.json').then((json: RootJSON) => this.init(json));
+        Util.getJSON('tiles/settings.json').then((json: RootJSON) => this.init(json));
     }
 
     async init(json: RootJSON) {
@@ -65,8 +64,8 @@ export class Pl3xMap {
         this.addOverlay(this._playersLayer, 'Players', true); //TODO: Lang
 
         // load world from url, or first world from json
-        const initialWorld = getUrlParam('world', this._worlds.keys().next().value),
-            initialRenderer = getUrlParam('renderer', this._currentRenderer);
+        const initialWorld = Util.getUrlParam('world', this._worlds.keys().next().value),
+            initialRenderer = Util.getUrlParam('renderer', this._currentRenderer);
 
         if (this._worlds.has(initialWorld)) {
             await this.setCurrentMap(this.worlds.get(initialWorld)!, initialRenderer);
@@ -81,7 +80,7 @@ export class Pl3xMap {
     addWorld(world: World) {
         this._worlds.set(world.name, world);
 
-        fireCustomEvent('worldadded', world);
+        Util.fireCustomEvent('worldadded', world);
     }
 
     getUrlFromView(): string {
@@ -101,7 +100,7 @@ export class Pl3xMap {
 
         this._overlayLayers.add(layer);
 
-        fireCustomEvent('overlayadded', {
+        Util.fireCustomEvent('overlayadded', {
             layer,
             name,
             showInControl
@@ -131,9 +130,9 @@ export class Pl3xMap {
                 this._currentWorld = world;
 
                 this._map.centerOn(
-                    getUrlParam('x', world.spawn.x),
-                    getUrlParam('z', world.spawn.z),
-                    getUrlParam('zoom', world.zoom.default)
+                    Util.getUrlParam('x', world.spawn.x),
+                    Util.getUrlParam('z', world.spawn.z),
+                    Util.getUrlParam('zoom', world.zoom.default)
                 );
             } else if (this._currentRenderer !== renderer) {
                 rendererChanged = true;
@@ -144,11 +143,11 @@ export class Pl3xMap {
             this._map.addLayer(this._currentRendererLayer);
 
             if (worldChanged) {
-                fireCustomEvent('worldselected', world);
+                Util.fireCustomEvent('worldselected', world);
             }
 
             if (rendererChanged) {
-                fireCustomEvent('rendererselected', renderer);
+                Util.fireCustomEvent('rendererselected', renderer);
             }
 
             this.currentWorld?.updateUI();

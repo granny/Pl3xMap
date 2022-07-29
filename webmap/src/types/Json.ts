@@ -45,5 +45,3 @@ export type Palette = {
     index: number;
     block: string;
 }
-
-export type JSON = RootJSON & WorldListJSON & WorldJSON;

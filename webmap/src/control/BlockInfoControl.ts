@@ -1,8 +1,8 @@
 import {Control, DomUtil} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Palette} from "../types/Json";
-import {getJSON} from "../Util";
+import {Util} from "../Util";
 import {Block, BlockInfo} from "../module/BlockInfo";
+import {Palette} from "../types/Json";
 
 export class BlockInfoControl extends Control {
     private _pl3xmap: Pl3xMap;
@@ -19,7 +19,7 @@ export class BlockInfoControl extends Control {
             position: 'bottomleft'
         }
 
-        getJSON('tiles/blocks.gz').then((json: Palette[]) => {
+        Util.getJSON('tiles/blocks.gz').then((json: Palette[]) => {
             Object.entries(json).forEach((data, index) => {
                 this._blockPalette.set(index, String(json[index]));
             });
@@ -34,6 +34,7 @@ export class BlockInfoControl extends Control {
     }
 
     public update(): void {
+        const zoom: number = this._pl3xmap.map.getCurrentZoom();
         const x: number = this._pl3xmap.coordsControl?.getX() ?? 0;
         const z: number = this._pl3xmap.coordsControl?.getZ() ?? 0;
         const regionX = x >> 9;
@@ -43,7 +44,7 @@ export class BlockInfoControl extends Control {
 
         let foundData: boolean = false;
 
-        const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(regionX, regionZ);
+        const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(zoom, regionX, regionZ);
         if (blockInfo !== undefined) {
             const block: Block = blockInfo.getBlock(tileZ * 512 + tileX);
             if (block != null) {

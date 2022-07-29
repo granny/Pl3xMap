@@ -1,10 +1,9 @@
-import {createSVGIcon, handleKeyboardEvent} from "../Util";
-
-import '../svg/maps.svg';
 import {DomUtil} from "leaflet";
-import {World} from "../module/World";
-import {Pl3xMap} from "../Pl3xMap";
 import BaseTab from "./BaseTab";
+import {Pl3xMap} from "../Pl3xMap";
+import {Util} from "../Util";
+import {World} from "../module/World";
+import '../svg/maps.svg';
 
 interface WorldListItem {
     input: HTMLInputElement;
@@ -22,7 +21,7 @@ export default class WorldsTab extends BaseTab {
     constructor(pl3xmap: Pl3xMap) {
         super(pl3xmap, 'worlds');
 
-        this._button.appendChild(createSVGIcon('maps'));
+        this._button.appendChild(Util.createSVGIcon('maps'));
         this._button.setAttribute('aria-label', pl3xmap.lang.worlds);
 
         const heading = DomUtil.create('h2', '', this._content);
@@ -46,7 +45,7 @@ export default class WorldsTab extends BaseTab {
         });
 
         this._list.addEventListener('keydown', (e: KeyboardEvent) =>
-            handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
+            Util.handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
     }
 
     private createListItem(world: World) {

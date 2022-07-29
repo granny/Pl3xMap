@@ -1,6 +1,6 @@
 import {Control, DomUtil, Map} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {createSVGIcon} from "../Util";
+import {Util} from "../Util";
 import '../svg/link.svg';
 
 export class LinkControl extends Control {
@@ -18,7 +18,7 @@ export class LinkControl extends Control {
             position: 'bottomright'
         };
         this._dom = DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
-        this._dom.appendChild(createSVGIcon('link'));
+        this._dom.appendChild(Util.createSVGIcon('link'));
     }
 
     onAdd(): HTMLAnchorElement {

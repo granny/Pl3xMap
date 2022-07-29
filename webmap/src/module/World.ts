@@ -1,14 +1,14 @@
-import {Pl3xMap} from "../Pl3xMap";
+import {BlockInfo} from "./BlockInfo";
 import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";
-import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
-import {getJSON} from "../Util";
-import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
+import {Pl3xMap} from "../Pl3xMap";
+import {Util} from "../Util";
 import {LinkControl} from "../control/LinkControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {BlockInfoControl} from "../control/BlockInfoControl";
 import {UI} from "../options/UI";
-import {BlockInfo} from "./BlockInfo";
+import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
+import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -42,19 +42,21 @@ export class World {
             return Promise.resolve(this);
         }
 
-        getJSON(`tiles/${this.name}/biomes.gz`).then((json: Palette[]) => {
-            Object.entries(json).forEach((data, index) => {
-                this._biomePalette.set(index, String(json[index]));
+        Util.getJSON(`tiles/${this.name}/biomes.gz`)
+            .then((json: Palette[]) => {
+                Object.entries(json).forEach((data, index) => {
+                    this._biomePalette.set(index, String(json[index]));
+                });
             });
-        });
 
         //TODO: Handle errors
         return new Promise((resolve) => {
-            getJSON(`tiles/${this.name}/settings.json`).then((json: WorldJSON) => {
-                this._loaded = true;
-                this.init(json);
-                resolve(this);
-            });
+            Util.getJSON(`tiles/${this.name}/settings.json`)
+                .then((json: WorldJSON) => {
+                    this._loaded = true;
+                    this.init(json);
+                    resolve(this);
+                });
         });
     }
 
@@ -81,6 +83,10 @@ export class World {
 
     getTileLayer(renderer: string): ReversedZoomTileLayer | undefined {
         return this._rendererLayers.get(renderer);
+    }
+
+    get pl3xmap(): Pl3xMap {
+        return this._pl3xmap;
     }
 
     get name(): string {
@@ -135,18 +141,15 @@ export class World {
         }
     }
 
-    loadBlockInfo(x: number, z: number) {
+    loadBlockInfo(zoom: number, x: number, z: number) {
         if (!this._ui.blockinfo) {
             return;
         }
-        const zoom = this._pl3xmap.map.getCurrentZoom();
-        this.getBytes(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.pl3xmap.gz`).then((buffer: ArrayBuffer | undefined) => {
-            if (buffer == undefined) {
-                return;
-            }
-            const blockInfo = new BlockInfo(new Uint8Array(buffer));
-            this._pl3xmap.currentTileLayer?.setBlockInfo(x, z, blockInfo);
-        });
+        this.getBytes(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.pl3xmap.gz`)
+            .then((buffer: ArrayBuffer | undefined) => {
+                const blockInfo = buffer == undefined ? null : new BlockInfo(new Uint8Array(buffer));
+                this._pl3xmap.currentTileLayer?.setBlockInfo(zoom, x, z, blockInfo);
+            });
     }
 
     private getBytes = (url: string) => {

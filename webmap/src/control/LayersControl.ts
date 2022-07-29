@@ -1,14 +1,13 @@
 import {Control, DomEvent, DomUtil, Layer, Map, stamp} from "leaflet";
-import {createSVGIcon, handleKeyboardEvent} from "../Util";
 import {Pl3xMap} from "../Pl3xMap";
+import {Util} from "../Util";
 import '../svg/layers.svg';
-import Layers = Control.Layers;
 
 interface LayerControlInput extends HTMLInputElement {
     layerId: number;
 }
 
-export default class LayersControl extends Layers {
+export default class LayersControl extends Control.Layers {
     declare _map: Map;
     declare _layersLink: HTMLButtonElement;
     declare _container: HTMLDivElement;
@@ -45,7 +44,7 @@ export default class LayersControl extends Layers {
 
         this._layersLink = DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
         this._layersLink.title = this._pl3xmap.lang.layers;
-        this._layersLink.appendChild(createSVGIcon('layers'));
+        this._layersLink.appendChild(Util.createSVGIcon('layers'));
 
         //Avoiding DomEvent here for more specific event typings
         this._layersLink.addEventListener('click', (e: MouseEvent) => {
@@ -67,7 +66,7 @@ export default class LayersControl extends Layers {
                 this.collapse();
                 e.preventDefault();
             } else {
-                handleKeyboardEvent(e, Array.from(this._section.querySelectorAll('input')));
+                Util.handleKeyboardEvent(e, Array.from(this._section.querySelectorAll('input')));
             }
         });
 
