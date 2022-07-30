@@ -1,6 +1,7 @@
-import {Control, DomUtil, Map} from "leaflet";
+import {Control, DomUtil} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
+import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 import '../svg/link.svg';
 
 export class LinkControl extends Control {
@@ -21,19 +22,19 @@ export class LinkControl extends Control {
         this._dom.appendChild(Util.createSVGIcon('link'));
     }
 
-    onAdd(): HTMLAnchorElement {
-        this._pl3xmap.map.addEventListener('moveend', this.onEvent);
-        this._pl3xmap.map.addEventListener('zoomend', this.onEvent);
+    onAdd(map: Pl3xmapLeafletMap): HTMLAnchorElement {
+        map.addEventListener('moveend', this.onEvent);
+        map.addEventListener('zoomend', this.onEvent);
         window.addEventListener('rendererselected', this.onEvent);
         window.addEventListener('worldselected', this.onEvent);
         this.update();
         return this._dom;
     }
 
-    onRemove(map: Map): void {
+    onRemove(map: Pl3xmapLeafletMap): void {
         super.onRemove!(map);
-        this._pl3xmap.map.removeEventListener('moveend', this.onEvent);
-        this._pl3xmap.map.removeEventListener('zoomend', this.onEvent);
+        map.removeEventListener('moveend', this.onEvent);
+        map.removeEventListener('zoomend', this.onEvent);
         window.removeEventListener("rendererselected", this.onEvent);
         window.removeEventListener("worldselected", this.onEvent);
     }

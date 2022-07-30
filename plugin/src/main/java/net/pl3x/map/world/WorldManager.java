@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.pl3x.map.PaletteManager;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
 import org.bukkit.World;
@@ -57,6 +58,7 @@ public class WorldManager {
         }
         MapWorld mapWorld = new MapWorld(world, config);
         this.mapWorlds.put(world.getUID(), mapWorld);
+        PaletteManager.INSTANCE.initWorld(mapWorld);
         Logger.debug("<green>Loaded <world>"
                 .replace("<world>", world.getName()));
         return mapWorld;

@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import net.pl3x.map.render.task.builtin.BasicRenderer;
 import net.pl3x.map.render.task.builtin.BiomeRenderer;
+import net.pl3x.map.render.task.builtin.BlockInfo;
 
 public class Renderers {
     public static final Renderers INSTANCE = new Renderers();
 
     public static final Class<? extends Renderer> BASIC = INSTANCE.register("basic", BasicRenderer.class);
     public static final Class<? extends Renderer> BIOMES = INSTANCE.register("biomes", BiomeRenderer.class);
+    public static final Class<? extends Renderer> BLOCKINFO = INSTANCE.register("blockinfo", BlockInfo.class);
 
     private final Map<String, Class<? extends Renderer>> renderers = new HashMap<>();
 

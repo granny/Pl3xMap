@@ -145,19 +145,10 @@ export class World {
         if (!this._ui.blockinfo) {
             return;
         }
-        this.getBytes(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.pl3xmap.gz`)
+        Util.getBytes(`tiles/${this._name}/${zoom}/blockinfo/${x}_${z}.pl3xmap.gz`)
             .then((buffer: ArrayBuffer | undefined) => {
                 const blockInfo = buffer == undefined ? null : new BlockInfo(new Uint8Array(buffer));
                 this._pl3xmap.currentTileLayer?.setBlockInfo(zoom, x, z, blockInfo);
-            });
-    }
-
-    private getBytes = (url: string) => {
-        return fetch(url, {cache: "no-store"})
-            .then(async res => {
-                if (res.ok) {
-                    return await res.arrayBuffer();
-                }
             });
     }
 }

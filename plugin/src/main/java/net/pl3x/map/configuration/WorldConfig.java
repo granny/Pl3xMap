@@ -29,7 +29,9 @@ public class WorldConfig extends AbstractConfig {
     @Key("render.renderers.hidden")
     @Comment("""
             Renderer types to use, but _not_ show on the map.""")
-    public List<String> RENDERERS_HIDDEN = new ArrayList<>();
+    public List<String> RENDERERS_HIDDEN = new ArrayList<>() {{
+        add("blockinfo");
+    }};
 
     @Key("render.background.interval")
     @Comment("""

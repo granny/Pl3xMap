@@ -88,6 +88,9 @@ public class Pl3xMap extends JavaPlugin {
         // load remaining configs
         Advanced.reload();
 
+        // init global palette
+        PaletteManager.INSTANCE.init();
+
         // initialize these classes early
         //noinspection unused
         Class<? extends Renderer> basic = Renderers.BASIC;

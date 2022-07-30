@@ -1,4 +1,4 @@
-package net.pl3x.map.addon;
+package net.pl3x.map.util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -6,7 +6,16 @@ import java.util.Map;
 public class Palette<T> {
     private final Map<T, Entry> map = new LinkedHashMap<>();
 
+    private boolean locked;
+
+    public void lock() {
+        this.locked = true;
+    }
+
     public void add(T type, String name) {
+        if (locked) {
+            throw new IllegalStateException("Palette is locked");
+        }
         int index = this.map.size();
         Entry entry = new Entry(index, name);
         this.map.put(type, entry);
@@ -40,3 +49,4 @@ public class Palette<T> {
         }
     }
 }
+

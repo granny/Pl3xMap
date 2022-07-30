@@ -1,10 +1,10 @@
 import {Control, DomEvent, DomUtil} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
-import WorldsTab from "../sidebar/WorldsTab";
-import PlayersTab from "../sidebar/PlayersTab";
-import MarkersTab from "../sidebar/MarkersTab";
 import LayersTab from "../sidebar/LayersTab";
+import MarkersTab from "../sidebar/MarkersTab";
+import PlayersTab from "../sidebar/PlayersTab";
+import WorldsTab from "../sidebar/WorldsTab";
 import disableClickPropagation = DomEvent.disableClickPropagation;
 import disableScrollPropagation = DomEvent.disableScrollPropagation;
 

@@ -2,15 +2,15 @@ import {Layer, Point} from "leaflet";
 import {BlockInfoControl} from "./control/BlockInfoControl";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
-import SidebarControl from "./control/SidebarControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
-import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import {World} from "./module/World";
 import {Lang} from "./options/Lang";
 import {Options} from "./options/Options";
 import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
 import {RootJSON} from "./types/Json";
 import {Util} from "./Util";
+import SidebarControl from "./control/SidebarControl";
+import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import "./scss/styles.scss";
 
 window.onload = function () {

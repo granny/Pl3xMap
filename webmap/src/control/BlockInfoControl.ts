@@ -3,6 +3,7 @@ import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import {Block, BlockInfo} from "../module/BlockInfo";
 import {Palette} from "../types/Json";
+import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 
 export class BlockInfoControl extends Control {
     private _pl3xmap: Pl3xMap;
@@ -26,15 +27,15 @@ export class BlockInfoControl extends Control {
         });
     }
 
-    onAdd(): HTMLDivElement {
+    onAdd(map: Pl3xmapLeafletMap): HTMLDivElement {
         this._dom = DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-blockinfo');
         this._dom.dataset.label = this._pl3xmap.lang.blockInfoLabel;
-        this.update();
+        this.update(map);
         return this._dom;
     }
 
-    public update(): void {
-        const zoom: number = this._pl3xmap.map.getCurrentZoom();
+    public update(map: Pl3xmapLeafletMap): void {
+        const zoom: number = map.getCurrentZoom();
         const x: number = this._pl3xmap.coordsControl?.getX() ?? 0;
         const z: number = this._pl3xmap.coordsControl?.getZ() ?? 0;
         const regionX = x >> 9;

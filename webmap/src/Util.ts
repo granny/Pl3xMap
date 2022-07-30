@@ -1,5 +1,5 @@
 export class Util {
-    public static readonly navigationKeys = new Set<string>([
+    private static readonly navigationKeys = new Set<string>([
         'ArrowUp',
         'ArrowDown',
         'ArrowLeft',
@@ -90,6 +90,15 @@ export class Util {
             .then(async res => {
                 if (res.ok) {
                     return await res.json();
+                }
+            });
+    }
+
+    public static getBytes(url: string) {
+        return fetch(url, {cache: "no-store"})
+            .then(async res => {
+                if (res.ok) {
+                    return await res.arrayBuffer();
                 }
             });
     }

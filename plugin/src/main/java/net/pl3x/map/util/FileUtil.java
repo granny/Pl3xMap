@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.FileSystems;
@@ -17,6 +19,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import net.minecraft.server.level.ServerLevel;
@@ -147,5 +150,32 @@ public class FileUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void saveGzip(String json, Path file) throws IOException {
+        try (
+                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
+                Writer writer = new OutputStreamWriter(gzipOut)
+        ) {
+            writer.write(json);
+        }
+    }
+
+    public static void saveGzip(byte[] bytes, Path file) throws IOException {
+        try (
+                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
+        ) {
+            gzipOut.write(bytes);
+        }
+    }
+
+    public static Path mkDirs(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            Files.createDirectories(path.getParent());
+            Files.createFile(path);
+        }
+        return path;
     }
 }
