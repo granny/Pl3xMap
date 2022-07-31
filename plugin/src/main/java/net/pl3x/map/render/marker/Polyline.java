@@ -1,19 +1,32 @@
 package net.pl3x.map.render.marker;
 
-import java.util.HashMap;
-import java.util.Map;
-import net.pl3x.map.render.marker.option.Options;
+import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Polyline marker.
+ */
 public class Polyline extends Marker {
-    public Polyline(Options options) {
-        super(options);
+    public Polyline() {
     }
 
     @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("type", "polyline");
-        map.put("options", getOptions().serialize());
-        return map;
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Polyline other = (Polyline) o;
+        return getOptions().equals(other.getOptions());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOptions());
     }
 }

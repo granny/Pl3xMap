@@ -1,19 +1,32 @@
 package net.pl3x.map.render.marker;
 
-import java.util.HashMap;
-import java.util.Map;
-import net.pl3x.map.render.marker.option.Options;
+import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Polygon marker.
+ */
 public class Polygon extends Marker {
-    public Polygon(Options options) {
-        super(options);
+    public Polygon() {
     }
 
     @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("type", "polygon");
-        map.put("options", getOptions().serialize());
-        return map;
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Polygon other = (Polygon) o;
+        return getOptions().equals(other.getOptions());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOptions());
     }
 }

@@ -1,6 +1,7 @@
 package net.pl3x.map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ import net.pl3x.map.world.MapWorld;
 public class PaletteManager {
     public static PaletteManager INSTANCE = new PaletteManager();
 
-    private static final Gson GSON = new Gson().newBuilder()
+    private static final Gson GSON = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()

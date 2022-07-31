@@ -1,25 +1,34 @@
 package net.pl3x.map.render.marker.option;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import com.google.common.base.Preconditions;
+import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Fill properties of a marker.
+ */
 public class Fill {
     private Type type;
     private int color;
-    private double opacity;
 
-    public Fill(Type type, int color, double opacity) {
-        this.type = type;
-        this.color = color;
-        this.opacity = opacity;
+    public Fill() {
+        this(Type.EVENODD, 0x33FF0000);
     }
 
+    public Fill(@NotNull Type type, int color) {
+        setType(type);
+        setColor(color);
+    }
+
+    @NotNull
     public Type getType() {
         return this.type;
     }
 
-    public Fill setType(Type type) {
+    @NotNull
+    public Fill setType(@NotNull Type type) {
+        Preconditions.checkNotNull(type);
         this.type = type;
         return this;
     }
@@ -28,29 +37,34 @@ public class Fill {
         return this.color;
     }
 
+    @NotNull
     public Fill setColor(int color) {
         this.color = color;
         return this;
     }
 
-    public double getOpacity() {
-        return this.opacity;
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Fill other = (Fill) o;
+        return getType().equals(other.getType())
+                && getColor() == other.getColor();
     }
 
-    public Fill setOpacity(double opacity) {
-        this.opacity = opacity;
-        return this;
-    }
-
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("type", getType().name().toLowerCase(Locale.ROOT));
-        map.put("color", getColor());
-        map.put("opacity", getOpacity());
-        return map;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getType(), getColor());
     }
 
     public enum Type {
-        NONE, NONZERO, EVENODD
+        NONZERO, EVENODD
     }
 }

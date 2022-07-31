@@ -1,6 +1,7 @@
 package net.pl3x.map.task;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class UpdatePlayerData extends BukkitRunnable {
-    private final Gson gson = new Gson().newBuilder()
+    private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()

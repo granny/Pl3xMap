@@ -1,9 +1,11 @@
-package net.pl3x.map.render.marker;
+package net.pl3x.map.render.marker.data;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Key {
+    public static final Key NONE = new Key("none");
+
     private static final Pattern VALID_CHARS = Pattern.compile("^[a-zA-Z0-9._-]$");
 
     private final String key;

@@ -1,6 +1,7 @@
 package net.pl3x.map.task;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class UpdateWorldData extends BukkitRunnable {
-    private final Gson gson = new Gson().newBuilder()
+    private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
