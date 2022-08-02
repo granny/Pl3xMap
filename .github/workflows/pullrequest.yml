@@ -1,8 +1,5 @@
 name: Build
-on:
-  push:
-    branches:
-      - v2
+on: [ pull_request ]
 
 jobs:
   build:
@@ -22,17 +19,3 @@ jobs:
         run: cd webmap && npm install && cd ../
       - name: Build
         run: ./gradlew build --stacktrace
-      - name: Store artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Pl3xMap-v2
-          path: |
-            build/libs
-            !build/libs/*-dev*
-      - name: Deploy Javadoc
-        uses: MathieuSoysal/Javadoc-publisher.yml@v2.0.4
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          javadoc-branch: javadoc
-          java-version: 17
-          target-folder: javadoc
