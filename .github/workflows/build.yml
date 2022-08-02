@@ -29,10 +29,13 @@ jobs:
           path: |
             build/libs
             !build/libs/*-dev*
+      - name: Generate Javadoc
+        run: ./gradlew javadoc
       - name: Deploy Javadoc
-        uses: MathieuSoysal/Javadoc-publisher.yml@v2.0.4
+        uses: JamesIves/github-pages-deploy-action@4.4.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          javadoc-branch: javadoc
-          java-version: 17
-          target-folder: javadoc
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: javadoc
+          clean: true
+          folder: plugin/build/docs/javadoc
+          target-folder: ./
