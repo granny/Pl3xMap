@@ -1,43 +1,75 @@
 package net.pl3x.map.render.marker;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import java.lang.reflect.Type;
+import net.pl3x.map.render.marker.data.JsonSerializable;
 import net.pl3x.map.render.marker.option.MarkerOptions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base marker.
  */
-public abstract class Marker {
-    private static final Gson GSON = new GsonBuilder()
+public abstract class Marker implements JsonSerializable {
+    public static final Gson GSON = new GsonBuilder()
             //.setPrettyPrinting()
-            .disableHtmlEscaping()
+            //.disableHtmlEscaping()
             //.serializeNulls()
+            .registerTypeHierarchyAdapter(Marker.class, new Adapter())
             .setLenient()
             .create();
 
-    private MarkerOptions options = new MarkerOptions();
+    private final String type;
+    private MarkerOptions options = null;
+
+    /**
+     * Create a new marker.
+     *
+     * @param type type of marker
+     */
+    public Marker(@NotNull String type) {
+        this.type = type;
+    }
+
+    /**
+     * Get the type identifier of this marker.
+     * <p>
+     * Used in the serialized json for the frontend.
+     *
+     * @return marker type
+     */
+    @NotNull
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the options of this marker.
+     * <p>
+     * Null options represents "default" values. See wiki about defaults.
      *
      * @return marker options
      */
-    @NotNull
+    @Nullable
     public MarkerOptions getOptions() {
         return this.options;
     }
 
     /**
      * Set new options for this marker.
+     * <p>
+     * Null options represents "default" values. See wiki about defaults.
      *
-     * @param options new options
+     * @param options new options or null
      * @return this marker
      */
     @NotNull
-    public Marker setOptions(@NotNull MarkerOptions options) {
-        Preconditions.checkNotNull(options);
+    public Marker setOptions(@Nullable MarkerOptions options) {
         this.options = options;
         return this;
     }
@@ -47,7 +79,22 @@ public abstract class Marker {
      *
      * @return serialized json string
      */
+    @NotNull
     public String serialize() {
         return GSON.toJson(this);
+    }
+
+    private static class Adapter implements JsonSerializer<Marker> {
+        @Override
+        @NotNull
+        public JsonElement serialize(@NotNull Marker marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
+            JsonArray json = new JsonArray();
+            json.add(marker.getType());
+            json.add(marker.toJson());
+            if (marker.getOptions() != null) {
+                json.add(marker.getOptions().toJson());
+            }
+            return json;
+        }
     }
 }

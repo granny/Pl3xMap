@@ -1,6 +1,8 @@
 package net.pl3x.map.render.marker;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.render.marker.data.Point;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +15,21 @@ public class Circle extends Marker {
     private Point center;
     private double radius;
 
-    public Circle(Point center, double radius) {
+    /**
+     * Create a new circle with default values.
+     */
+    public Circle() {
+        this(Point.ZERO, 10);
+    }
+
+    /**
+     * Create a new circle.
+     *
+     * @param center center location
+     * @param radius circle radius
+     */
+    public Circle(@NotNull Point center, double radius) {
+        super("circ");
         setCenter(center);
         setRadius(radius);
     }
@@ -63,6 +79,15 @@ public class Circle extends Marker {
     }
 
     @Override
+    @NotNull
+    public JsonElement toJson() {
+        JsonArray data = new JsonArray();
+        data.add(getCenter().toJson());
+        data.add(getRadius());
+        return data;
+    }
+
+    @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
@@ -76,7 +101,7 @@ public class Circle extends Marker {
         Circle other = (Circle) o;
         return Double.compare(getRadius(), other.getRadius()) == 0
                 && Objects.equals(getCenter(), other.getCenter())
-                && getOptions().equals(other.getOptions());
+                && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override

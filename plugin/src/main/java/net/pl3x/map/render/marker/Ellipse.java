@@ -1,6 +1,8 @@
 package net.pl3x.map.render.marker;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.render.marker.data.Point;
 import org.jetbrains.annotations.NotNull;
@@ -14,11 +16,22 @@ public class Ellipse extends Marker {
     private double radiusX;
     private double radiusZ;
 
+    /**
+     * Create a new ellipse at 0,0 with horizontal and vertical radius of 10.
+     */
     public Ellipse() {
-        this(Point.ZERO, 0, 0);
+        this(Point.ZERO, 10, 10);
     }
 
+    /**
+     * Create a new ellipse.
+     *
+     * @param center  center location
+     * @param radiusX horizontal radius
+     * @param radiusZ vertical radius
+     */
     public Ellipse(@NotNull Point center, double radiusX, double radiusZ) {
+        super("elli");
         setCenter(center);
         setRadiusX(radiusX);
         setRadiusZ(radiusZ);
@@ -29,7 +42,7 @@ public class Ellipse extends Marker {
      *
      * @return center point
      */
-    @Nullable
+    @NotNull
     public Point getCenter() {
         return this.center;
     }
@@ -50,18 +63,18 @@ public class Ellipse extends Marker {
     }
 
     /**
-     * Get the radiusX of this ellipse.
+     * Get the horizontal radius of this ellipse.
      *
-     * @return radiusX
+     * @return horizontal radius
      */
     public double getRadiusX() {
         return this.radiusX;
     }
 
     /**
-     * Set the radiusX for this ellipse.
+     * Set the horizontal radius for this ellipse.
      *
-     * @param radius new radiusX
+     * @param radius new horizontal radius
      * @return this ellipse
      */
     @NotNull
@@ -71,24 +84,35 @@ public class Ellipse extends Marker {
     }
 
     /**
-     * Get the radiusZ of this ellipse.
+     * Get the vertical radius of this ellipse.
      *
-     * @return radiusZ
+     * @return vertical radius
      */
     public double getRadiusZ() {
         return this.radiusZ;
     }
 
     /**
-     * Set the radiusZ for this ellipse.
+     * Set the vertical radius for this ellipse.
      *
-     * @param radius new radiusZ
+     * @param radius new vertical radius
      * @return this ellipse
      */
     @NotNull
     public Ellipse setRadiusZ(double radius) {
         this.radiusZ = radius;
         return this;
+    }
+
+    @Override
+    @NotNull
+    public JsonElement toJson() {
+        JsonArray data = new JsonArray();
+        data.add(getCenter().toJson());
+        data.add(getCenter().toJson());
+        data.add(getRadiusX());
+        data.add(getRadiusZ());
+        return data;
     }
 
     @Override
@@ -106,7 +130,7 @@ public class Ellipse extends Marker {
         return Double.compare(getRadiusX(), other.getRadiusX()) == 0
                 && Double.compare(getRadiusZ(), other.getRadiusZ()) == 0
                 && Objects.equals(getCenter(), other.getCenter())
-                && getOptions().equals(other.getOptions());
+                && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override

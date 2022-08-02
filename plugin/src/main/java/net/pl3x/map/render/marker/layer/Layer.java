@@ -10,7 +10,7 @@ public interface Layer {
     /**
      * Get the label of this Layer, shown in the control box
      *
-     * @return label
+     * @return layer label
      */
     String getLabel();
 
@@ -19,7 +19,7 @@ public interface Layer {
      * <p>
      * Default implementation always returns {@code true}
      *
-     * @return boolean
+     * @return true if showing controls
      */
     default boolean showControls() {
         return true;
@@ -30,7 +30,7 @@ public interface Layer {
      * <p>
      * Default implementation always returns {@code false}
      *
-     * @return boolean
+     * @return true if hidden by default
      */
     default boolean defaultHidden() {
         return false;
@@ -41,7 +41,7 @@ public interface Layer {
      * <p>
      * Falls back to alphanumeric ordering based on label if there are order conflicts
      *
-     * @return arbitrary number
+     * @return layer priority
      */
     int getPriority();
 
@@ -52,7 +52,7 @@ public interface Layer {
      * <p>
      * Default implementation returns {@link #getPriority()}
      *
-     * @return arbitrary number
+     * @return layer z-index
      */
     default int getZIndex() {
         return this.getPriority();
@@ -61,7 +61,7 @@ public interface Layer {
     /**
      * Get the markers to display in this Layer
      *
-     * @return markers
+     * @return markers to display
      */
     Collection<Marker> getMarkers();
 }
