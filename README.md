@@ -15,7 +15,7 @@ for Paper servers using the vanilla Minecraft rendering style.</b></big>
 
 ## Downloads
 
-Downloads can be obtained from the [releases](https://github.com/BillyGalbreath/Pl3xMap/releases) section.
+Downloads can be obtained from the [releases](https://github.com/BillyGalbreath/Pl3xMap/releases) section. (Coming soon<sup>TM</sup>)
 
 ## Licenses
 
