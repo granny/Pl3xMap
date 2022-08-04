@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Lang;
@@ -27,7 +27,7 @@ public class ConfirmCommand extends Pl3xMapCommand {
                 .clickEvent(ClickEvent.runCommand("/map confirm"));
     }
 
-    public ConfirmCommand(Pl3xMap plugin, CommandManager commandManager) {
+    public ConfirmCommand(Pl3xMapPlugin plugin, CommandManager commandManager) {
         super(plugin, commandManager);
     }
 

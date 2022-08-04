@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import net.pl3x.map.PaletteManager;
+import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
 import org.bukkit.World;
@@ -15,8 +15,6 @@ import org.bukkit.World;
  * Manages mapped worlds
  */
 public class WorldManager {
-    public static final WorldManager INSTANCE = new WorldManager();
-
     private final Map<UUID, MapWorld> mapWorlds = new ConcurrentHashMap<>();
 
     /**
@@ -58,7 +56,7 @@ public class WorldManager {
         }
         MapWorld mapWorld = new MapWorld(world, config);
         this.mapWorlds.put(world.getUID(), mapWorld);
-        PaletteManager.INSTANCE.initWorld(mapWorld);
+        Pl3xMap.api().getPaletteManager().initWorld(mapWorld);
         Logger.debug("<green>Loaded <world>"
                 .replace("<world>", world.getName()));
         return mapWorld;

@@ -6,25 +6,27 @@ import cloud.commandframework.minecraft.extras.RichDescription;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.player.MapPlayer;
+import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.command.exception.CompletedSuccessfullyException;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.world.MapWorld;
-import net.pl3x.map.world.WorldManager;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class Pl3xMapCommand {
-    private final Pl3xMap plugin;
+    private final Pl3xMapPlugin plugin;
     private final CommandManager commandManager;
 
-    protected Pl3xMapCommand(Pl3xMap plugin, CommandManager commandManager) {
+    protected Pl3xMapCommand(Pl3xMapPlugin plugin, CommandManager commandManager) {
         this.plugin = plugin;
         this.commandManager = commandManager;
     }
 
-    public Pl3xMap getPlugin() {
+    public Pl3xMapPlugin getPlugin() {
         return this.plugin;
     }
 
@@ -42,7 +44,7 @@ public abstract class Pl3xMapCommand {
         }
         if (sender instanceof Player player) {
             World bukkit = player.getWorld();
-            MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(bukkit);
+            MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(bukkit);
             if (mapWorld == null) {
                 Lang.send(sender, Lang.ERROR_WORLD_DISABLED,
                         Placeholder.unparsed("world", bukkit.getName()));
@@ -56,26 +58,27 @@ public abstract class Pl3xMapCommand {
         }
     }
 
-    public static Player resolvePlayer(CommandContext<CommandSender> context) {
+    public static MapPlayer resolvePlayer(CommandContext<CommandSender> context) {
         CommandSender sender = context.getSender();
         SinglePlayerSelector selector = context.getOrDefault("player", null);
+        PlayerManager playerManager = Pl3xMap.api().getPlayerManager();
 
         if (selector == null) {
-            if (sender instanceof Player) {
-                return (Player) sender;
+            if (sender instanceof Player player) {
+                return playerManager.getPlayer(player.getUniqueId());
             }
             Lang.send(sender, Lang.ERROR_MUST_SPECIFY_PLAYER);
             throw new CompletedSuccessfullyException();
         }
 
-        Player targetPlayer = selector.getPlayer();
-        if (targetPlayer == null) {
+        Player target = selector.getPlayer();
+        if (target == null) {
             Lang.send(sender, Lang.ERROR_NO_SUCH_PLAYER,
                     Placeholder.unparsed("player", selector.getSelector()));
             throw new CompletedSuccessfullyException();
         }
 
-        return targetPlayer;
+        return playerManager.getPlayer(target.getUniqueId());
     }
 
     public static RichDescription description(String miniMessage, TagResolver.Single... placeholders) {

@@ -11,9 +11,9 @@ import java.util.Queue;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.world.MapWorld;
-import net.pl3x.map.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ public class MapWorldArgument<C> extends CommandArgument<C, MapWorld> {
                 return ArgumentParseResult.failure(new MapWorldParseException(input, MapWorldParseException.FailureReason.NO_SUCH_WORLD));
             }
 
-            MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(world);
+            MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(world);
             if (mapWorld == null) {
                 return ArgumentParseResult.failure(new MapWorldParseException(input, MapWorldParseException.FailureReason.MAP_NOT_ENABLED));
             }
@@ -78,7 +78,7 @@ public class MapWorldArgument<C> extends CommandArgument<C, MapWorld> {
 
         @Override
         public @NotNull List<String> suggestions(@NotNull CommandContext<C> commandContext, @NotNull String input) {
-            return WorldManager.INSTANCE.getMapWorlds().stream().map(MapWorld::getName).collect(Collectors.toList());
+            return Pl3xMap.api().getWorldManager().getMapWorlds().stream().map(MapWorld::getName).collect(Collectors.toList());
         }
     }
 

@@ -2,7 +2,7 @@ package net.pl3x.map.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.pl3x.map.render.heightmap.Heightmap;
+import net.pl3x.map.api.heightmap.Heightmap;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
 import org.bukkit.World;
@@ -174,7 +174,7 @@ public class WorldConfig extends AbstractConfig {
     public void reload() {
         reload(FileUtil.PLUGIN_DIR.resolve("worlds.yml"), WorldConfig.class);
 
-        RENDER_BIOME_BLEND = (int) Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
+        RENDER_BIOME_BLEND = Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
     }
 
     @Override

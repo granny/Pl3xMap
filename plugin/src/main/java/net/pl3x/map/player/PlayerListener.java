@@ -1,6 +1,7 @@
 package net.pl3x.map.player;
 
-import net.pl3x.map.world.WorldManager;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.player.MapPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,17 +12,17 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        PlayerManager manager = PlayerManager.INSTANCE;
-        if (manager.isHidden(player)) {
-            manager.setHidden(player, manager.isHidden(player), false);
+        MapPlayer mapPlayer = Pl3xMap.api().getPlayerManager().getPlayer(player.getUniqueId());
+        if (mapPlayer.isHidden()) {
+            mapPlayer.setHidden(true, false);
         }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        PlayerManager.INSTANCE.setHidden(player, false, false);
-        WorldManager.INSTANCE.getMapWorlds().forEach(mapWorld -> {
+        Pl3xMap.api().getPlayerManager().unloadPlayer(player.getUniqueId());
+        Pl3xMap.api().getWorldManager().getMapWorlds().forEach(mapWorld -> {
             if (!mapWorld.hasActiveRender()) {
                 return;
             }

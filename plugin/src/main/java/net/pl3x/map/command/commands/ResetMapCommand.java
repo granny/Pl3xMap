@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.command.arguments.MapWorldArgument;
@@ -17,7 +17,7 @@ import net.pl3x.map.world.MapWorld;
 import org.bukkit.command.CommandSender;
 
 public class ResetMapCommand extends Pl3xMapCommand {
-    public ResetMapCommand(Pl3xMap plugin, CommandManager commandManager) {
+    public ResetMapCommand(Pl3xMapPlugin plugin, CommandManager commandManager) {
         super(plugin, commandManager);
     }
 

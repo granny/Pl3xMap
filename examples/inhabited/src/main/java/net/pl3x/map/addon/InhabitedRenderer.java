@@ -1,9 +1,9 @@
 package net.pl3x.map.addon;
 
-import net.pl3x.map.render.image.Image;
-import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.coordinate.RegionCoordinate;
+import net.pl3x.map.api.image.Image;
 import net.pl3x.map.render.task.Renderer;
-import net.pl3x.map.render.task.Renderers;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.util.Colors;
@@ -15,7 +15,7 @@ public class InhabitedRenderer extends JavaPlugin {
     @Override
     public void onEnable() {
         // register our custom renderer with Pl3xMap
-        Renderers.INSTANCE.register("inhabited", InhabitedScanner.class);
+        Pl3xMap.api().getRendererManager().register("inhabited", InhabitedScanner.class);
 
         // start bstats metrics
         new Metrics(this, 15869);
@@ -24,7 +24,7 @@ public class InhabitedRenderer extends JavaPlugin {
     @Override
     public void onDisable() {
         // register our custom renderer with Pl3xMap
-        Renderers.INSTANCE.unregister("inhabited");
+        Pl3xMap.api().getRendererManager().unregister("inhabited");
     }
 
     public static final class InhabitedScanner extends Renderer {

@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.pl3x.map.player.PlayerManager;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.player.MapPlayer;
+import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
-import net.pl3x.map.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -30,8 +31,10 @@ public class UpdatePlayerData extends BukkitRunnable {
     public void run() {
         List<Object> players = new ArrayList<>();
 
+        PlayerManager playerManager = Pl3xMap.api().getPlayerManager();
+
         Bukkit.getWorlds().forEach(world -> {
-            MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(world);
+            MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(world);
 
             world.getPlayers().forEach(player -> {
                 if (mapWorld != null && mapWorld.getConfig().PLAYER_TRACKER_HIDE_SPECTATORS && player.getGameMode() == GameMode.SPECTATOR) {
@@ -40,16 +43,17 @@ public class UpdatePlayerData extends BukkitRunnable {
                 if (mapWorld != null && mapWorld.getConfig().PLAYER_TRACKER_HIDE_INVISIBLE && player.isInvisible()) {
                     return;
                 }
-                if (PlayerManager.INSTANCE.isHidden(player)) {
+                if (player.hasMetadata("NPC")) {
                     return;
                 }
-                if (player.hasMetadata("NPC")) {
+                MapPlayer mapPlayer = playerManager.getPlayer(player.getUniqueId());
+                if (mapPlayer.isHidden()) {
                     return;
                 }
                 Map<String, Object> playerEntry = new HashMap<>();
                 Location loc = player.getLocation();
 
-                playerEntry.put("name", PlayerManager.INSTANCE.decorateName(player));
+                playerEntry.put("name", playerManager.decorateName(mapPlayer));
                 playerEntry.put("uuid", player.getUniqueId().toString().replace("-", ""));
                 playerEntry.put("world", loc.getWorld().getName());
 

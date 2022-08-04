@@ -28,12 +28,14 @@ import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.chunk.storage.RegionFile;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.ticks.LevelChunkTicks;
-import net.pl3x.map.render.image.Image;
+import net.pl3x.map.api.image.Image;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.util.ReflectionHelper;
 
 public class ChunkHelper {
-    private final Map<Long, ChunkAccess> chunkCache = new HashMap<>((Image.SIZE + 2) * (Image.SIZE + 2), 1.0F);
+    private static final int CHUNK_CACHE_SIZE = (int) Math.ceil((Image.SIZE + 2) * (Image.SIZE + 2) * (4F / 3));
+
+    private final Map<Long, ChunkAccess> chunkCache;
     private final Render render;
     private final Registry<Biome> biomeRegistry;
 
@@ -45,7 +47,8 @@ public class ChunkHelper {
         ServerLevel level = render.getWorld().getLevel();
         this.biomeRegistry = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY);
         this.minSection = WorldUtil.getMinLightSection(level);
-        this.totalLightSections = WorldUtil.getMaxLightSection(level) - minSection + 1;
+        this.totalLightSections = WorldUtil.getMaxLightSection(level) - this.minSection + 1;
+        this.chunkCache = new HashMap<>(CHUNK_CACHE_SIZE);
     }
 
     public void clear() {

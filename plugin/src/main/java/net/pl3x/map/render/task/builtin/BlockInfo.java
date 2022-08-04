@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import net.pl3x.map.PaletteManager;
-import net.pl3x.map.render.image.Image;
-import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.coordinate.RegionCoordinate;
+import net.pl3x.map.api.image.Image;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
@@ -54,8 +54,8 @@ public class BlockInfo extends Renderer {
         this.byteBuffer.put(12, ByteUtil.toBytes(region.getRegionZ()));
         this.byteBuffer.put(16, ByteUtil.toBytes(minY));
 
-        Palette<Block> blockPalette = PaletteManager.INSTANCE.getBlockPalette();
-        Palette<Biome> biomePalette = PaletteManager.INSTANCE.getBiomePalette(getWorld());
+        Palette<Block> blockPalette = Pl3xMap.api().getPaletteManager().getBlockPalette();
+        Palette<Biome> biomePalette = Pl3xMap.api().getPaletteManager().getBiomePalette(getWorld());
 
         for (ScanData data : scanData.values()) {
             boolean fluid = data.getFluidPos() != null;

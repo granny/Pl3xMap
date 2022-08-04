@@ -15,7 +15,7 @@ import java.util.function.UnaryOperator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.commands.CancelRenderCommand;
 import net.pl3x.map.command.commands.ConfirmCommand;
 import net.pl3x.map.command.commands.FullRenderCommand;
@@ -32,7 +32,7 @@ import net.pl3x.map.configuration.Lang;
 import org.bukkit.command.CommandSender;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
-    public CommandManager(Pl3xMap plugin) throws Exception {
+    public CommandManager(Pl3xMapPlugin plugin) throws Exception {
         super(plugin, CommandExecutionCoordinator.simpleCoordinator(), UnaryOperator.identity(), UnaryOperator.identity());
 
         if (hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {

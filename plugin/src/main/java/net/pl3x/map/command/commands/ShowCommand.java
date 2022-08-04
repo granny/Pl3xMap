@@ -5,16 +5,15 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
+import net.pl3x.map.api.player.MapPlayer;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Lang;
-import net.pl3x.map.player.PlayerManager;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class ShowCommand extends Pl3xMapCommand {
-    public ShowCommand(Pl3xMap plugin, CommandManager commandManager) {
+    public ShowCommand(Pl3xMapPlugin plugin, CommandManager commandManager) {
         super(plugin, commandManager);
     }
 
@@ -33,13 +32,13 @@ public class ShowCommand extends Pl3xMapCommand {
 
     private void execute(CommandContext<CommandSender> context) {
         CommandSender sender = context.getSender();
-        Player target = resolvePlayer(context);
+        MapPlayer target = resolvePlayer(context);
 
-        if (!PlayerManager.INSTANCE.isHidden(target)) {
+        if (!target.isHidden()) {
             Lang.send(sender, Lang.COMMAND_SHOW_NOT_HIDDEN, Placeholder.unparsed("player", target.getName()));
             return;
         }
-        PlayerManager.INSTANCE.setHidden(target, false, true);
+        target.setHidden(false, true);
         Lang.send(sender, Lang.COMMAND_SHOW_SUCCESS, Placeholder.unparsed("player", target.getName()));
     }
 }

@@ -7,12 +7,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.MapWorld;
-import net.pl3x.map.world.WorldManager;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,7 +28,7 @@ public class UpdateWorldData extends BukkitRunnable {
     public void run() {
         List<Map<String, Object>> worlds = new ArrayList<>();
 
-        WorldManager.INSTANCE.getMapWorlds().forEach(mapWorld -> {
+        Pl3xMap.api().getWorldManager().getMapWorlds().forEach(mapWorld -> {
             WorldConfig config = mapWorld.getConfig();
 
             if (!config.ENABLED) {

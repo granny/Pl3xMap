@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
 import net.pl3x.map.configuration.Lang;
@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender;
 public class HelpCommand extends Pl3xMapCommand {
     private final MinecraftHelp<CommandSender> minecraftHelp;
 
-    public HelpCommand(Pl3xMap plugin, CommandManager commandManager) {
+    public HelpCommand(Pl3xMapPlugin plugin, CommandManager commandManager) {
         super(plugin, commandManager);
         this.minecraftHelp = new MinecraftHelp<>("/map help", AudienceProvider.nativeAudience(), commandManager);
         this.minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(

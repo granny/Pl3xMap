@@ -1,5 +1,5 @@
 name: "${name}"
-main: "${group}.${name}"
+main: "${group}.${name}Plugin"
 version: "${version}"
 api-version: "1.19"
 author: "BillyGalbreath"

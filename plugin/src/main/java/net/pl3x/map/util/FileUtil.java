@@ -23,11 +23,11 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import net.minecraft.server.level.ServerLevel;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.logger.Logger;
 
 public class FileUtil {
-    public static final Path PLUGIN_DIR = Pl3xMap.getInstance().getDataFolder().toPath();
+    public static final Path PLUGIN_DIR = Pl3xMapPlugin.getInstance().getDataFolder().toPath();
     public static final Path DATA_DIR = FileUtil.PLUGIN_DIR.resolve("data");
     public static final Path LOCALE_DIR = FileUtil.PLUGIN_DIR.resolve("locale");
 
@@ -35,7 +35,7 @@ public class FileUtil {
 
     public static void extract(String filename, boolean replace) {
         if (!Files.exists(FileUtil.PLUGIN_DIR.resolve(filename))) {
-            Pl3xMap.getInstance().saveResource(filename, replace);
+            Pl3xMapPlugin.getInstance().saveResource(filename, replace);
         }
     }
 

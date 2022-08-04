@@ -7,10 +7,9 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.Mathf;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ProgressBossbar {
@@ -27,16 +26,16 @@ public class ProgressBossbar {
     }
 
     // called for progress starter and any player that uses /status command
-    public void show(Player player) {
-        this.players.add(player);
-        player.showBossBar(this.bossbar);
+    public void show(Audience audience) {
+        this.players.add(audience);
+        audience.showBossBar(this.bossbar);
     }
 
     // called when a listening player quits the server
-    public boolean hide(Player player) {
-        boolean result = this.players.remove(player);
+    public boolean hide(Audience audience) {
+        boolean result = this.players.remove(audience);
         if (result) {
-            player.hideBossBar(this.bossbar);
+            audience.hideBossBar(this.bossbar);
         }
         return result;
     }
@@ -77,6 +76,6 @@ public class ProgressBossbar {
                     cancel();
                 }
             }
-        }.runTaskTimerAsynchronously(Pl3xMap.getInstance(), 0, 5);
+        }.runTaskTimerAsynchronously(Pl3xMapPlugin.getInstance(), 0, 5);
     }
 }

@@ -23,15 +23,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.BiomeManager;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.render.job.BackgroundRender;
 import net.pl3x.map.render.job.FullRender;
 import net.pl3x.map.render.job.Render;
-import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
+import net.pl3x.map.api.coordinate.ChunkCoordinate;
+import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.task.UpdateMarkerData;
 import net.pl3x.map.util.FileUtil;
 import org.bukkit.Bukkit;
@@ -90,7 +90,7 @@ public class MapWorld {
         }
 
         this.updateMarkerDataTask = new UpdateMarkerData(this);
-        this.updateMarkerDataTask.runTaskTimer(Pl3xMap.getInstance(), ThreadLocalRandom.current().nextInt(20), 20L * getConfig().MARKERS_UPDATE_INTERVAL);
+        this.updateMarkerDataTask.runTaskTimer(Pl3xMapPlugin.getInstance(), ThreadLocalRandom.current().nextInt(20), 20L * getConfig().MARKERS_UPDATE_INTERVAL);
 
         startBackgroundRender();
 

@@ -1,7 +1,7 @@
 package net.pl3x.map.logger;
 
 import java.util.logging.Level;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.Bukkit;
@@ -26,6 +26,6 @@ public class Logger {
     }
 
     public static java.util.logging.Logger log() {
-        return Pl3xMap.getInstance().getLogger();
+        return Pl3xMapPlugin.getInstance().getLogger();
     }
 }

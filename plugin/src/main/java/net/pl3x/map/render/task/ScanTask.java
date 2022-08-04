@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.coordinate.BlockCoordinate;
+import net.pl3x.map.api.coordinate.Coordinate;
+import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.render.Area;
 import net.pl3x.map.render.job.Render;
-import net.pl3x.map.render.job.iterator.coordinate.BlockCoordinate;
-import net.pl3x.map.render.job.iterator.coordinate.Coordinate;
-import net.pl3x.map.render.job.iterator.coordinate.RegionCoordinate;
 import net.pl3x.map.world.ChunkHelper;
 import net.pl3x.map.world.MapWorld;
 
@@ -36,7 +37,7 @@ public class ScanTask implements Runnable {
         renderers.addAll(this.mapWorld.getConfig().RENDERERS_VISIBLE);
         renderers.addAll(this.mapWorld.getConfig().RENDERERS_HIDDEN);
         renderers.forEach(name -> {
-            Renderer renderer = Renderers.INSTANCE.createRenderer(name, this);
+            Renderer renderer = Pl3xMap.api().getRendererManager().createRenderer(name, this);
             if (renderer != null) {
                 this.renderers.put(name, renderer);
             }

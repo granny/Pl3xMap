@@ -17,8 +17,6 @@ import net.pl3x.map.util.Palette;
 import net.pl3x.map.world.MapWorld;
 
 public class PaletteManager {
-    public static PaletteManager INSTANCE = new PaletteManager();
-
     private static final Gson GSON = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
@@ -29,10 +27,7 @@ public class PaletteManager {
     private static final Palette<Block> BLOCK_PALETTE = new Palette<>();
     private static final Map<MapWorld, Palette<Biome>> BIOME_PALETTES = new HashMap<>();
 
-    private PaletteManager() {
-    }
-
-    public void init() {
+    public PaletteManager() {
         // create block palette
         Registry.BLOCK.forEach(block -> {
             String name = name("block", Registry.BLOCK.getKey(block));

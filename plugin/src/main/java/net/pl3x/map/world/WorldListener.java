@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.Pl3xMapPlugin;
+import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.coordinate.ChunkCoordinate;
+import net.pl3x.map.api.coordinate.Coordinate;
 import net.pl3x.map.configuration.Advanced;
-import net.pl3x.map.render.job.iterator.coordinate.ChunkCoordinate;
-import net.pl3x.map.render.job.iterator.coordinate.Coordinate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -50,21 +51,21 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.EventExecutor;
 
 public class WorldListener implements Listener {
-    private final Pl3xMap plugin;
+    private final Pl3xMapPlugin plugin;
     private final List<Listener> registeredListeners = new ArrayList<>();
 
-    public WorldListener(Pl3xMap plugin) {
+    public WorldListener(Pl3xMapPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event) {
-        WorldManager.INSTANCE.loadWorld(event.getWorld());
+        Pl3xMap.api().getWorldManager().loadWorld(event.getWorld());
     }
 
     @EventHandler
     public void onWorldUnload(WorldUnloadEvent event) {
-        WorldManager.INSTANCE.unloadWorld(event.getWorld());
+        Pl3xMap.api().getWorldManager().unloadWorld(event.getWorld());
     }
 
     public void registerEvents() {
@@ -141,7 +142,7 @@ public class WorldListener implements Listener {
     }
 
     private void markChunk(Location loc, boolean skipVisibilityCheck) {
-        MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(loc.getWorld());
+        MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(loc.getWorld());
         if (mapWorld == null) {
             return;
         }
@@ -149,7 +150,7 @@ public class WorldListener implements Listener {
     }
 
     private void markChunk(World world, List<Block> blocks) {
-        MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(world);
+        MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(world);
         if (mapWorld == null) {
             return;
         }
@@ -157,7 +158,7 @@ public class WorldListener implements Listener {
     }
 
     private void markChunk(World world, Collection<BlockState> states) {
-        MapWorld mapWorld = WorldManager.INSTANCE.getMapWorld(world);
+        MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(world);
         if (mapWorld == null) {
             return;
         }
