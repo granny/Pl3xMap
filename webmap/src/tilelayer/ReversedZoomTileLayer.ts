@@ -40,7 +40,7 @@ export class ReversedZoomTileLayer extends TileLayer {
             this._world.loadBlockInfo(zoom, x, z);
         });
         this.addEventListener("tileunload", (event) => {
-            const zoom: number = event.coords.z;
+            const zoom: number = this.world.pl3xmap.map.getMaxZoomOut() - event.coords.z;
             const x: number = event.coords.x;
             const z: number = event.coords.y;
             this._blockInfos.get(zoom)?.delete(`${x}_${z}`);

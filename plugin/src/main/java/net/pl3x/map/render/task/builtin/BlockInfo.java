@@ -2,8 +2,14 @@ package net.pl3x.map.render.task.builtin;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.pl3x.map.api.Pl3xMap;
@@ -14,9 +20,13 @@ import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.util.ByteUtil;
 import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.util.Mathf;
 import net.pl3x.map.util.Palette;
+import net.pl3x.map.world.MapWorld;
 
 public class BlockInfo extends Renderer {
+    private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+
     private ByteBuffer byteBuffer;
 
     public BlockInfo(String name, ScanTask scanTask) {
@@ -25,21 +35,73 @@ public class BlockInfo extends Renderer {
 
     @Override
     public void allocateData() {
-        this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 20);
+        this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 12);
     }
 
     @Override
     public void saveData() {
-        Path tilesDir = getScanTask().getWorld().getWorldTilesDir();
-        // TODO - make work for higher zoom levels?
-        Path dir = tilesDir.resolve(String.format(Image.DIR_PATH, 0, getName()));
-        String filename = String.format(Image.FILE_PATH, getRegion().getRegionX(), getRegion().getRegionZ(), "pl3xmap.gz");
-        try {
-            FileUtil.saveGzip(this.byteBuffer.array(), dir.resolve(filename));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        MapWorld mapWorld = getScanTask().getWorld();
+        Path tilesDir = mapWorld.getWorldTilesDir();
+        for (int zoom = 0; zoom <= mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
+            Path dirPath = tilesDir.resolve(String.format(Image.DIR_PATH, zoom, getName()));
 
+            // create directories if they don't exist
+            FileUtil.createDirs(dirPath);
+
+            // calculate correct sizes for this zoom level
+            int step = Mathf.pow2(zoom);
+            int size = Image.SIZE / step;
+
+            Path filePath = dirPath.resolve(String.format(Image.FILE_PATH,
+                    Mth.floor((double) getRegion().getRegionX() / step),
+                    Mth.floor((double) getRegion().getRegionZ() / step),
+                    "pl3xmap.gz"));
+
+            ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));
+            lock.writeLock().lock();
+
+            // short circuit bottom zoom
+            if (zoom == 0) {
+                try {
+                    FileUtil.saveGzip(this.byteBuffer.array(), filePath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                continue;
+            }
+
+            try {
+                // read existing data from disk
+                ByteBuffer buffer = ByteBuffer.allocate(this.byteBuffer.capacity());
+                if (Files.exists(filePath) && Files.size(filePath) > 0) {
+                    FileUtil.readGzip(filePath, buffer);
+                }
+
+                // copy header
+                for (int i = 0; i < 12; i++) {
+                    buffer.put(i, this.byteBuffer.get(i));
+                }
+
+                // write new data
+                int baseX = (getRegion().getRegionX() * size) & (Image.SIZE - 1);
+                int baseZ = (getRegion().getRegionZ() * size) & (Image.SIZE - 1);
+                for (int x = 0; x < Image.SIZE; x += step) {
+                    for (int z = 0; z < Image.SIZE; z += step) {
+                        int index = z * Image.SIZE + x;
+                        int packed = ByteUtil.getInt(this.byteBuffer, 12 + index * 4);
+                        int newIndex = (baseZ + (z / step)) * Image.SIZE + (baseX + (x / step));
+                        buffer.put(12 + newIndex * 4, ByteUtil.toBytes(packed));
+                    }
+                }
+
+                // finally, save data to disk
+                FileUtil.saveGzip(buffer.array(), filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            lock.writeLock().unlock();
+        }
     }
 
     @Override
@@ -50,9 +112,7 @@ public class BlockInfo extends Renderer {
 
         this.byteBuffer.put(0, ByteUtil.toBytes(0x706C3378)); // pl3x
         this.byteBuffer.put(4, ByteUtil.toBytes(0x6D617001)); // map1
-        this.byteBuffer.put(8, ByteUtil.toBytes(region.getRegionX()));
-        this.byteBuffer.put(12, ByteUtil.toBytes(region.getRegionZ()));
-        this.byteBuffer.put(16, ByteUtil.toBytes(minY));
+        this.byteBuffer.put(8, ByteUtil.toBytes(minY));
 
         Palette<Block> blockPalette = Pl3xMap.api().getPaletteManager().getBlockPalette();
         Palette<Biome> biomePalette = Pl3xMap.api().getPaletteManager().getBiomePalette(getWorld());
@@ -74,7 +134,7 @@ public class BlockInfo extends Renderer {
             //                     111111111111 - 12 bits - yPos  (4095)
             int packed = ((blockIndex & 1023) << 22) | ((biomeIndex & 1023) << 12) | (yPos & 4095);
             int index = (pos.getZ() & Image.SIZE - 1) * Image.SIZE + (pos.getX() & Image.SIZE - 1);
-            this.byteBuffer.put(20 + index * 4, ByteUtil.toBytes(packed));
+            this.byteBuffer.put(12 + index * 4, ByteUtil.toBytes(packed));
         }
     }
 }

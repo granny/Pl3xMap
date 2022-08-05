@@ -5,20 +5,12 @@ export class BlockInfo {
         this._data = data;
     }
 
-    get x(): number {
+    get minY(): number {
         return this.getInt(8);
     }
 
-    get z(): number {
-        return this.getInt(12);
-    }
-
-    get minY(): number {
-        return this.getInt(16);
-    }
-
     getBlock(index: number): Block {
-        return new Block(this.getInt(20 + index * 4), this.minY);
+        return new Block(this.getInt(12 + index * 4), this.minY);
     }
 
     private getInt(position: number): number {

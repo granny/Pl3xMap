@@ -13,6 +13,7 @@ import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.util.Colors;
+import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.MapWorld;
 
@@ -59,7 +60,7 @@ public class Image {
             Path dirPath = worldDir.resolve(String.format(DIR_PATH, zoom, this.name));
 
             // create directories if they don't exist
-            createDirs(dirPath);
+            FileUtil.createDirs(dirPath);
 
             // calculate correct sizes for this zoom level
             int step = Mathf.pow2(zoom);
@@ -83,16 +84,6 @@ public class Image {
             this.io.write(filePath, buffer);
 
             lock.writeLock().unlock();
-        }
-    }
-
-    private void createDirs(Path dirPath) {
-        if (!Files.exists(dirPath)) {
-            try {
-                Files.createDirectories(dirPath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 

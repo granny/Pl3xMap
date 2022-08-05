@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +20,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -171,11 +173,30 @@ public class FileUtil {
         }
     }
 
+    public static void readGzip(Path file, ByteBuffer buffer) throws IOException {
+        try (
+                InputStream fileIn = Files.newInputStream(file);
+                GZIPInputStream gzipIn = new GZIPInputStream(fileIn);
+        ) {
+            buffer.put(gzipIn.readAllBytes());
+        }
+    }
+
     public static Path mkDirs(Path path) throws IOException {
         if (!Files.exists(path)) {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
         }
         return path;
+    }
+
+    public static void createDirs(Path dirPath) {
+        if (!Files.exists(dirPath)) {
+            try {
+                Files.createDirectories(dirPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

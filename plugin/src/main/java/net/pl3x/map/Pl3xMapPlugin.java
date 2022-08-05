@@ -118,10 +118,6 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         this.rendererManager = new RendererManager();
         this.worldManager = new WorldManager();
 
-        // initialize these classes early
-        //noinspection unused
-        Class<? extends Renderer> basic = RendererManager.BASIC;
-
         // we have to be the plugin that initializes this
         // if an addon does it can't find the WebP stuff
         IO.get("png");

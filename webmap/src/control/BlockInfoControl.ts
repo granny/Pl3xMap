@@ -38,14 +38,17 @@ export class BlockInfoControl extends Control {
         const zoom: number = map.getCurrentZoom();
         const x: number = this._pl3xmap.coordsControl?.getX() ?? 0;
         const z: number = this._pl3xmap.coordsControl?.getZ() ?? 0;
-        const regionX = x >> 9;
-        const regionZ = z >> 9;
-        const tileX = x & 511;
-        const tileZ = z & 511;
+        const step: number = 1 << zoom;
+        const regionX: number = x >> 9;
+        const regionZ: number = z >> 9;
+        const fileX: number = Math.floor(regionX / step);
+        const fileZ: number = Math.floor(regionZ / step);
+        const tileX: number = (x / step) & 511;
+        const tileZ: number = (z / step) & 511;
 
         let foundData: boolean = false;
 
-        const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(zoom, regionX, regionZ);
+        const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(zoom, fileX, fileZ);
         if (blockInfo !== undefined) {
             const block: Block = blockInfo.getBlock(tileZ * 512 + tileX);
             if (block != null) {
