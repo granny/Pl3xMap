@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.Key;
+import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.marker.Marker;
 import net.pl3x.map.api.marker.Point;
 import net.pl3x.map.api.registry.IconRegistry;
@@ -81,8 +82,8 @@ public class Icon extends Marker {
      */
     @NotNull
     public Icon setImage(@NotNull Key image) {
-        Preconditions.checkNotNull(image);
-        // TODO check icon registry
+        Preconditions.checkNotNull(image, "Image key is null");
+        Preconditions.checkNotNull(Pl3xMap.api().getIconRegistry().get(image), String.format("Icon not in registry (%s)", image));
         this.image = image;
         return this;
     }
@@ -105,7 +106,7 @@ public class Icon extends Marker {
      */
     @NotNull
     public Icon setPoint(@NotNull Point point) {
-        Preconditions.checkNotNull(point);
+        Preconditions.checkNotNull(point, "Icon point is null");
         this.point = point;
         return this;
     }

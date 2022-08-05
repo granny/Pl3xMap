@@ -45,8 +45,8 @@ public class Rectangle extends Marker {
      */
     public Rectangle(@NotNull Point point1, @NotNull Point point2) {
         super("rect");
-        Preconditions.checkNotNull(point1);
-        Preconditions.checkNotNull(point2);
+        Preconditions.checkNotNull(point1, "Rectangle point1 is null");
+        Preconditions.checkNotNull(point2, "Rectangle point2 is null");
         setPoint1(point1);
         setPoint2(point2);
     }

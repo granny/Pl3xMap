@@ -58,7 +58,7 @@ public class Ellipse extends Marker {
      */
     @NotNull
     public Ellipse setCenter(@NotNull Point center) {
-        Preconditions.checkNotNull(center);
+        Preconditions.checkNotNull(center, "Ellipse center is null");
         this.center = center;
         return this;
     }

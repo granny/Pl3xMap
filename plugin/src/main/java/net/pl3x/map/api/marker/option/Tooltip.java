@@ -55,7 +55,7 @@ public class Tooltip implements JsonSerializable {
      */
     @NotNull
     public Tooltip setType(@NotNull Type type) {
-        Preconditions.checkNotNull(type);
+        Preconditions.checkNotNull(type, "Tooltip type is null");
         this.type = type;
         return this;
     }
@@ -80,7 +80,7 @@ public class Tooltip implements JsonSerializable {
      */
     @NotNull
     public Tooltip setString(@NotNull String string) {
-        Preconditions.checkNotNull(string);
+        Preconditions.checkNotNull(string, "Tooltip string is null");
         this.string = string;
         return this;
     }
@@ -103,7 +103,7 @@ public class Tooltip implements JsonSerializable {
      */
     @NotNull
     public Tooltip setOffset(@NotNull Point offset) {
-        Preconditions.checkNotNull(offset);
+        Preconditions.checkNotNull(offset, "Tooltip offset is null");
         this.offset = offset;
         return this;
     }

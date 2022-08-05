@@ -53,7 +53,7 @@ public class Fill implements JsonSerializable {
      */
     @NotNull
     public Fill setType(@NotNull Type type) {
-        Preconditions.checkNotNull(type);
+        Preconditions.checkNotNull(type, "Fill type is null");
         this.type = type;
         return this;
     }

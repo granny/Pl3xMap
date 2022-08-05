@@ -53,7 +53,7 @@ public class Circle extends Marker {
      */
     @NotNull
     public Circle setCenter(@NotNull Point center) {
-        Preconditions.checkNotNull(center);
+        Preconditions.checkNotNull(center, "Circle center is null");
         this.center = center;
         return this;
     }
