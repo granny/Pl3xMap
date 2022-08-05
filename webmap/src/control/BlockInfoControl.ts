@@ -35,7 +35,7 @@ export class BlockInfoControl extends Control {
     }
 
     public update(map: Pl3xmapLeafletMap): void {
-        const zoom: number = map.getCurrentZoom();
+        const zoom: number = map.getCurrentZoom() < 0 ? 0 : map.getCurrentZoom();
         const x: number = this._pl3xmap.coordsControl?.getX() ?? 0;
         const z: number = this._pl3xmap.coordsControl?.getZ() ?? 0;
         const step: number = 1 << zoom;
