@@ -32,7 +32,6 @@ export class LinkControl extends Control {
     }
 
     onRemove(map: Pl3xmapLeafletMap): void {
-        super.onRemove!(map);
         map.removeEventListener('moveend', this.onEvent);
         map.removeEventListener('zoomend', this.onEvent);
         window.removeEventListener("rendererselected", this.onEvent);

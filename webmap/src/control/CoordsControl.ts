@@ -37,7 +37,6 @@ export class CoordsControl extends Control {
     }
 
     onRemove(map: Pl3xmapLeafletMap): void {
-        super.onRemove!(map);
         map.removeEventListener('mousemove', this.onEvent);
     }
 
