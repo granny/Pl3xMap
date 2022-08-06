@@ -29,7 +29,7 @@ export class Block {
     private readonly _minY: number;
 
     constructor(packed: number, minY: number) {
-        this._block = packed >> 22;
+        this._block = packed >>> 22;
         this._biome = (packed << 10) >> 22;
         this._yPos = ((packed << 20) >> 20);
         this._minY = minY;
