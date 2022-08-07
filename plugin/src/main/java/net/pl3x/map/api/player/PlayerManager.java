@@ -7,6 +7,8 @@ import java.util.function.BiFunction;
  * Manages player specific data
  */
 public interface PlayerManager {
+    MapPlayer getPlayer(String name);
+
     MapPlayer getPlayer(UUID uuid);
 
     void unloadPlayer(UUID uuid);

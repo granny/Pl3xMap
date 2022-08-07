@@ -16,18 +16,32 @@ public class BukkitPlayerManager implements PlayerManager {
 
     private Map<BiFunction<MapPlayer, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
 
-    @Override
-    public MapPlayer getPlayer(UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) {
-            return null;
-        }
+    public MapPlayer getPlayer(Player player) {
+        UUID uuid = player.getUniqueId();
         MapPlayer mapPlayer = this.players.get(uuid);
         if (mapPlayer == null) {
             mapPlayer = new BukkitPlayer(player);
             this.players.put(uuid, mapPlayer);
         }
         return mapPlayer;
+    }
+
+    @Override
+    public MapPlayer getPlayer(String name) {
+        Player player = Bukkit.getPlayer(name);
+        if (player == null) {
+            return null;
+        }
+        return getPlayer(player);
+    }
+
+    @Override
+    public MapPlayer getPlayer(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) {
+            return null;
+        }
+        return getPlayer(player);
     }
 
     public void unloadPlayer(UUID uuid) {

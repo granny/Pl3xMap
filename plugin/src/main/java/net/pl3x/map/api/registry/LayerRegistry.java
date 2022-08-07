@@ -8,7 +8,7 @@ import net.pl3x.map.api.marker.layer.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class LayerRegistry implements Registry<Layer> {
+public class LayerRegistry implements Registry<Layer> {
     private final Map<Key, Layer> layers = new ConcurrentHashMap<>();
 
     @Override

@@ -94,7 +94,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         FileUtil.extract("/locale/", FileUtil.LOCALE_DIR, false);
 
         // register bukkit listeners
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.worldListener = new WorldListener(this);
         getServer().getPluginManager().registerEvents(this.worldListener, this);
 
