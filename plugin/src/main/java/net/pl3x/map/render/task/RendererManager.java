@@ -39,7 +39,7 @@ public class RendererManager {
         }
 
         try {
-            Constructor<? extends Renderer> ctor = clazz.getConstructor(String.class, ScanTask.class);
+            Constructor<? extends Renderer> ctor = clazz.getConstructor(String.class, scanTask.getClass());
             return ctor.newInstance(name, scanTask);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {

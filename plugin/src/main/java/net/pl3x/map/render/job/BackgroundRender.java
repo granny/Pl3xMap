@@ -1,12 +1,14 @@
 package net.pl3x.map.render.job;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import net.pl3x.map.render.Area;
 import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
+import net.pl3x.map.render.Area;
 import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.Bukkit;
@@ -45,12 +47,20 @@ public class BackgroundRender extends Render {
             }
         }
 
-        // create set of regions from all the modified chunks
-        Set<RegionCoordinate> regions = new HashSet<>();
-        chunks.forEach(chunk -> regions.add(new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ())));
+        // get the tasks ready
+        Map<RegionCoordinate, ScanTask> regionScanTasks = new HashMap<>();
+        chunks.forEach(chunk -> {
+            RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
+            ScanTask scanTask = regionScanTasks.get(region);
+            if (scanTask == null) {
+                scanTask = new ScanTask(this, region, scannableArea);
+                regionScanTasks.put(region, scanTask);
+            }
+            scanTask.addChunk(chunk);
+        });
 
         // send regions to executor to scan
-        regions.forEach(region -> getRenderExecutor().submit(new ScanTask(this, region, scannableArea)));
+        regionScanTasks.forEach((region, scanTask) -> getRenderExecutor().submit(scanTask));
     }
 
     @Override

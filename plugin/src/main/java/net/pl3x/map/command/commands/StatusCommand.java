@@ -86,8 +86,8 @@ public class StatusCommand extends Pl3xMapCommand {
         // no toggle? fine, show current status
         Lang.send(sender, Lang.COMMAND_STATUS_RENDER,
                 Placeholder.unparsed("world", mapWorld.getName()),
-                Placeholder.parsed("background", mapWorld.isPaused() ? "<red>Paused" : "<green>Running"),
-                Placeholder.parsed("foreground", mapWorld.hasActiveRender() ? (mapWorld.isPaused() ? "<red>Paused" : "<green>Running") : "<red>Not Running")
+                Placeholder.parsed("background", getStatus(mapWorld.hasBackgroundRender(), mapWorld.isPaused())),
+                Placeholder.parsed("foreground", getStatus(mapWorld.hasActiveRender(), mapWorld.isPaused()))
         );
 
         if (progress != null && !mapWorld.isPaused()) {
@@ -95,9 +95,13 @@ public class StatusCommand extends Pl3xMapCommand {
                     Placeholder.unparsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
                     Placeholder.unparsed("chunks_total", Long.toString(progress.getTotalChunks())),
                     Placeholder.unparsed("percent", String.format("%.2f", progress.getPercent())),
-                    Placeholder.unparsed("remaining", "1:23:45"),
+                    Placeholder.unparsed("remaining", progress.getETA()),
                     Placeholder.unparsed("cps", String.format("%.2f", progress.getCPS()))
             );
         }
+    }
+
+    private String getStatus(boolean hasRender, boolean isPaused) {
+        return hasRender ? (isPaused ? Lang.COMMAND_STATUS_RENDER_PAUSED : Lang.COMMAND_STATUS_RENDER_RUNNING) : Lang.COMMAND_STATUS_RENDER_NOT_RUNNING;
     }
 }

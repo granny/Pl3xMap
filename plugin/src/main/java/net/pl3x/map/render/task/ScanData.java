@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.pl3x.map.api.image.Image;
 import net.pl3x.map.api.coordinate.BlockCoordinate;
+import net.pl3x.map.api.image.Image;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.world.MapWorld;
 

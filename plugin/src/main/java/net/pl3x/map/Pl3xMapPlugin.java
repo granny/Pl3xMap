@@ -16,7 +16,6 @@ import net.pl3x.map.logger.Logger;
 import net.pl3x.map.logger.Pl3xLogger;
 import net.pl3x.map.player.BukkitPlayerManager;
 import net.pl3x.map.player.PlayerListener;
-import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.RendererManager;
 import net.pl3x.map.task.UpdatePlayerData;
 import net.pl3x.map.task.UpdateWorldData;

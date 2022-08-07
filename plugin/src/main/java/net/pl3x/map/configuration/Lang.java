@@ -137,6 +137,12 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_STATUS_RENDER_DETAILS = """
             <grey>    Chunks: <chunks_done>/<chunks_total> (<gold><percent>%</gold>)
             <grey>    Remaining: <remaining> (<gold><cps> cps</gold>)""";
+    @Key("command.status.render-running")
+    public static String COMMAND_STATUS_RENDER_RUNNING = "<green>Running";
+    @Key("command.status.render-not-running")
+    public static String COMMAND_STATUS_RENDER_NOT_RUNNING = "<red>Not Running";
+    @Key("command.status.render-paused")
+    public static String COMMAND_STATUS_RENDER_PAUSED = "<red>Paused";
     @Key("command.status.player-only-feature")
     public static String COMMAND_STATUS_PLAYER_ONLY_FEATURE = "<red>That is a player only feature";
 

@@ -1,7 +1,7 @@
 package net.pl3x.map.render.task.builtin;
 
-import net.pl3x.map.api.image.Image;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
+import net.pl3x.map.api.image.Image;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
