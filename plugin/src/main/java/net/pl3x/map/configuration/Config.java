@@ -13,7 +13,11 @@ public class Config extends AbstractConfig {
     public static String LANGUAGE_FILE = "lang-en.yml";
 
     @Key("settings.web-directory.path")
-    @Comment("The directory that houses the Pl3xMap website and world tiles.")
+    @Comment("""
+            The directory that houses the website and world tiles.
+            This is a relative path from Pl3xMap's plugin directory,
+            unless it starts with / in which case it will be treated
+            as an absolute path.""")
     public static String WEB_DIR = "web";
     @Key("settings.web-directory.read-only")
     @Comment("""
@@ -42,14 +46,8 @@ public class Config extends AbstractConfig {
     @Key("settings.internal-webserver.port")
     @Comment("""
             The port the built-in web server listens to.
-            Make sure the Port is allocated if using Pterodactyl.""")
+            Make sure the port is allocated if using Pterodactyl.""")
     public static int HTTPD_PORT = 8080;
-
-    @Key("settings.threading.render-threads")
-    @Comment("""
-            The number of threads to use for loading and scanning chunks.
-            Value of -1 will use 50% of the available cores. (recommended)""")
-    public static int RENDER_THREADS = -1;
 
     private static final Config CONFIG = new Config();
 

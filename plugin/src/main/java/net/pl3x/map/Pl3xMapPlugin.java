@@ -7,7 +7,7 @@ import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.api.registry.IconRegistry;
 import net.pl3x.map.command.CommandManager;
-import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.httpd.UndertowServer;
@@ -19,8 +19,6 @@ import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.render.task.RendererManager;
 import net.pl3x.map.task.UpdatePlayerData;
 import net.pl3x.map.task.UpdateWorldData;
-import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
 import net.pl3x.map.world.WorldListener;
 import net.pl3x.map.world.WorldManager;
 import org.apache.commons.lang.BooleanUtils;
@@ -53,8 +51,8 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
 
         INSTANCE = this;
 
+        // try to hack in a fancier logger :3
         try {
-            // try to hack in a fancier logger :3
             Field logger = JavaPlugin.class.getDeclaredField("logger");
             logger.trySetAccessible();
             logger.set(this, new Pl3xLogger());
@@ -87,42 +85,28 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
             return;
         }
 
-        // extract default worlds.yml file for nether and end default stuff
-        FileUtil.extract("worlds.yml", false);
+        // load up configs
+        saveDefaultConfig();
+        Config.reload();
+        Lang.reload();
+        AdvancedConfig.reload();
 
-        // extract locale from jar
-        FileUtil.extract("/locale/", FileUtil.LOCALE_DIR, false);
+        // we have to be the plugin that initializes IO.
+        // if an addon does, it can't find the WebP stuff.
+        IO.get("png");
 
         // register bukkit listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.worldListener = new WorldListener(this);
         getServer().getPluginManager().registerEvents(this.worldListener, this);
 
-        // load up configs
-        Config.reload();
-        Lang.reload();
-
-        // this has to load after configs in order to know
-        // what web dir is and if it should be overwritten
-        // but before advanced config to load biome colors
-        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
-
-        // load remaining configs
-        Advanced.reload();
-
+        // setup managers
         this.integratedServer = new UndertowServer();
         this.iconRegistry = new IconRegistry();
         this.paletteManager = new PaletteManager();
         this.playerManager = new BukkitPlayerManager();
         this.rendererManager = new RendererManager();
         this.worldManager = new WorldManager();
-
-        // we have to be the plugin that initializes this
-        // if an addon does it can't find the WebP stuff
-        IO.get("png");
-
-        // enable the plugin
-        enable();
 
         // register command manager
         try {
@@ -138,6 +122,9 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         Metrics metrics = new Metrics(this, 10133);
         metrics.addCustomChart(new SimplePie("internal_web_server", () ->
                 BooleanUtils.toStringTrueFalse(Config.HTTPD_ENABLED)));
+
+        // enable the plugin
+        enable();
     }
 
     @Override

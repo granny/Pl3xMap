@@ -12,79 +12,47 @@ public class WorldConfig extends AbstractConfig {
     @Comment("Enables this world to be rendered on the map.")
     public boolean ENABLED = false;
 
-    public String DISPLAY_NAME = "<world>";
-    public String ICON = "";
-    public int ORDER = 0;
-
-    @Key("render.renderers.visible")
+    @Key("render.renderers")
     @Comment("""
-            Renderer types to use. Each scanner will render a different
-            type of map. The built in scanners include:
-            basic, biomes""")
+            Renderers to use. Each renderer will render a different
+            type of map. The built in renderers include: basic, biomes""")
     public List<String> RENDERERS_VISIBLE = new ArrayList<>() {{
         add("basic");
         add("biomes");
     }};
 
-    @Key("render.renderers.hidden")
+    @Key("render.render-threads")
     @Comment("""
-            Renderer types to use, but _not_ show on the map.""")
-    public List<String> RENDERERS_HIDDEN = new ArrayList<>() {{
-        add("blockinfo");
-    }};
-
-    @Key("render.background.interval")
-    @Comment("""
-            How often to check the queue for any chunks needing updates.
-            This is what updates your map as changes happen in the world.
-            Use 0 or negative value to disable this feature""")
-    public int RENDER_BACKGROUND_INTERVAL = 5;
-    @Key("render.background.max-chunks-per-interval")
-    @Comment("""
-            The maximum amount of chunks to render from the queue at
-            time. Setting this too high may cause lag on your main
-            thread if the queue gets too large""")
-    public int RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL = 1024;
-    @Key("render.background.render-threads")
-    @Comment("""
-            This number of threads to use for background rendering.
-            Value of -1 will use 50% of the available cores.""")
-    public int RENDER_BACKGROUND_RENDER_THREADS = -1;
+            The number of threads to use for loading and scanning chunks.
+            Value of -1 will use 50% of the available cores. (recommended)""")
+    public int RENDER_THREADS = -1;
 
     @Key("render.biome-blend")
     @Comment("""
             Enables blending of biome grass/foliage/water colors similar to
             the client's biome blending option.
             Note: This may slow down your renders quite drastically if enabled.
-            0 = off
-            1 = 3x3
-            2 = 5x5 (default)
-            3 = 7x7
-            4 = 9x9
-            5 = 11x11
-            6 = 13x13
-            7 = 15x15""")
+            Values are in range 0-7""")
     public int RENDER_BIOME_BLEND = 2;
 
     @Key("render.skylight")
     @Comment("""
             Skylight value for world.
-            Values are 0-15 with 1 being darkest and 15 being full bright.
-            Negative values disable skylight (same as full bright).""")
+            Values are 0-15 with 0 being darkest and 15 being full bright.""")
     public int RENDER_SKYLIGHT = 5;
 
     @Key("render.translucent-fluids")
     @Comment("""
-            Enable translucent water.
-            This will make the water look fancier and translucent
-            so you can see the ground below in shallow waters.""")
+            Enable translucent fluids.
+            This will make the fluids look fancier and translucent
+            so you can see the blocks below in shallow fluids.""")
     public boolean RENDER_TRANSLUCENT_FLUIDS = true;
 
     @Key("render.translucent-glass")
     @Comment("""
             Enable translucent glass.
             This will make the glass look fancier and translucent
-            so you can see the ground below.""")
+            so you can see the blocks below.""")
     public boolean RENDER_TRANSLUCENT_GLASS = true;
 
     @Key("render.heightmap-type")
@@ -95,12 +63,47 @@ public class WorldConfig extends AbstractConfig {
             DYNMAP makes every other Y layer darker.""")
     public Heightmap.Type RENDER_HEIGHTMAP_TYPE = Heightmap.Type.MODERN;
 
+    @Key("render.background.interval")
+    @Comment("""
+            How often to check the queue for any chunks needing updates.
+            This is what updates your map as changes happen in the world.
+            Setting this too low may cause the background renderer to run
+            non-stop. Setting this too high may cause a delay in seeing
+            updates on your map. Use 0 value to disable this feature.""")
+    public int RENDER_BACKGROUND_INTERVAL = 5;
+
+    @Key("render.background.max-chunks-per-interval")
+    @Comment("""
+            The maximum amount of chunks to render from the queue at
+            a time. Setting this too low may cause the queue to become
+            quite large and delay updates from showing on the map.
+            Setting this too high may cause the background renderer to
+            run non-stop.""")
+    public int RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL = 1024;
+
+    @Key("ui.display-name")
+    @Comment("The display position for the blockinfo box")
+    public String DISPLAY_NAME = "<world>";
+
+    @Key("ui.icon")
+    @Comment("The display position for the blockinfo box")
+    public String ICON = "";
+
+    @Key("ui.order")
+    @Comment("The display position for the blockinfo box")
+    public int ORDER = 0;
+
+    @Key("ui.blockinfo")
+    @Comment("The display position for the blockinfo box")
+    public String UI_BLOCKINFO = "bottomleft";
+
     @Key("ui.coords")
-    @Comment("Shows the coordinates box on the map")
-    public boolean UI_COORDS = true;
+    @Comment("The display position for the coordinates box")
+    public String UI_COORDS = "bottomcenter";
+
     @Key("ui.link")
-    @Comment("Shows the link box on the map")
-    public boolean UI_LINK = true;
+    @Comment("The display position for the link box")
+    public String UI_LINK = "bottomright";
 
     @Key("zoom.default")
     @Comment("""
@@ -139,10 +142,10 @@ public class WorldConfig extends AbstractConfig {
     public boolean PLAYER_TRACKER_DEFAULT_HIDDEN = false;
     @Key("player-tracker.layer.priority")
     @Comment("The priority of the player tracker layer")
-    public int PLAYER_TRACKER_PRIORITY = 2;
+    public int PLAYER_TRACKER_PRIORITY = 0;
     @Key("player-tracker.layer.z-index")
     @Comment("The z-index of the player tracker layer")
-    public int PLAYER_TRACKER_Z_INDEX = 2;
+    public int PLAYER_TRACKER_Z_INDEX = 999;
     @Key("player-tracker.hide-players.spectators")
     @Comment("Hide spectators from the map")
     public boolean PLAYER_TRACKER_HIDE_SPECTATORS = true;
@@ -172,9 +175,10 @@ public class WorldConfig extends AbstractConfig {
     }
 
     public void reload() {
-        reload(FileUtil.PLUGIN_DIR.resolve("worlds.yml"), WorldConfig.class);
+        reload(FileUtil.PLUGIN_DIR.resolve("config.yml"), WorldConfig.class);
 
         RENDER_BIOME_BLEND = Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
+        RENDER_SKYLIGHT = Mathf.clamp(0, 15, RENDER_SKYLIGHT);
     }
 
     @Override

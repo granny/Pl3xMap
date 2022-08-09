@@ -1,29 +1,29 @@
 export class UI {
-    private _link: boolean = false;
-    private _coords: boolean = false;
-    private _blockinfo: boolean = false;
+    private _link: string = 'bottomright';
+    private _coords: string = 'bottomcenter';
+    private _blockinfo: string = 'bottomleft';
 
-    get link(): boolean {
+    get link(): string {
         return this._link;
     }
 
-    set link(value: boolean) {
+    set link(value: string) {
         this._link = value;
     }
 
-    get coords(): boolean {
+    get coords(): string {
         return this._coords;
     }
 
-    set coords(value: boolean) {
+    set coords(value: string) {
         this._coords = value;
     }
 
-    get blockinfo(): boolean {
+    get blockinfo(): string {
         return this._blockinfo;
     }
 
-    set blockinfo(value: boolean) {
+    set blockinfo(value: string) {
         this._blockinfo = value;
     }
 }

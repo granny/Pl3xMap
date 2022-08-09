@@ -195,6 +195,9 @@ public class Lang extends AbstractConfig {
     private static final Lang CONFIG = new Lang();
 
     public static void reload() {
+        // extract locale from jar
+        FileUtil.extract("/locale/", FileUtil.LOCALE_DIR, false);
+
         CONFIG.reload(FileUtil.LOCALE_DIR.resolve(Config.LANGUAGE_FILE), Lang.class);
     }
 

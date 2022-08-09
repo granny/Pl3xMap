@@ -42,7 +42,7 @@ import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
  * Represents a world which is mapped by Pl3xMap
  */
 public class MapWorld {
-    public static final Path WEB_DIR = FileUtil.PLUGIN_DIR.resolve(Config.WEB_DIR);
+    public static final Path WEB_DIR = Config.WEB_DIR.startsWith("/") ? Path.of(Config.WEB_DIR) : FileUtil.PLUGIN_DIR.resolve(Config.WEB_DIR);
     public static final Path TILES_DIR = WEB_DIR.resolve("tiles");
 
     private static final String DIRTY_CHUNKS = "dirty_chunks.json";

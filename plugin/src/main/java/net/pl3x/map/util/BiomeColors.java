@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.pl3x.map.api.coordinate.BlockCoordinate;
-import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.world.MapWorld;
 
@@ -91,15 +91,15 @@ public class BiomeColors {
             waterColors.put(biome, biome.getSpecialEffects().getWaterColor());
         }
 
-        Advanced.COLOR_OVERRIDES_BIOME_GRASS.forEach((resourceKey, rgb) -> {
+        AdvancedConfig.COLOR_OVERRIDES_BIOME_GRASS.forEach((resourceKey, rgb) -> {
             Biome biome = biomeRegistry.get(resourceKey);
             grassColors.put(biome, rgb);
         });
-        Advanced.COLOR_OVERRIDES_BIOME_FOLIAGE.forEach((resourceKey, rgb) -> {
+        AdvancedConfig.COLOR_OVERRIDES_BIOME_FOLIAGE.forEach((resourceKey, rgb) -> {
             Biome biome = biomeRegistry.get(resourceKey);
             foliageColors.put(biome, rgb);
         });
-        Advanced.COLOR_OVERRIDES_BIOME_WATER.forEach((resourceKey, rgb) -> {
+        AdvancedConfig.COLOR_OVERRIDES_BIOME_WATER.forEach((resourceKey, rgb) -> {
             Biome biome = biomeRegistry.get(resourceKey);
             waterColors.put(biome, rgb);
         });

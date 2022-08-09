@@ -13,10 +13,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.world.MapWorld;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 
-public class Advanced extends AbstractConfig {
+public class AdvancedConfig extends AbstractConfig {
     @Key("settings.event-listeners.BlockBreakEvent")
     @Comment("Triggers when a player breaks a block")
     public static boolean BLOCK_BREAK_EVENT = true;
@@ -1146,10 +1147,13 @@ public class Advanced extends AbstractConfig {
     @Comment("Override water colors per biome")
     public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_WATER = new LinkedHashMap<>();
 
-    private static final Advanced CONFIG = new Advanced();
+    private static final AdvancedConfig CONFIG = new AdvancedConfig();
 
     public static void reload() {
-        CONFIG.reload(FileUtil.PLUGIN_DIR.resolve("advanced.yml"), Advanced.class);
+        // this has to extract before advanced config to load biome colors correctly
+        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
+
+        CONFIG.reload(FileUtil.PLUGIN_DIR.resolve("advanced.yml"), AdvancedConfig.class);
     }
 
     protected Object getValue(String path, Object def) {

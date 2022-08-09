@@ -1,4 +1,4 @@
-import {Control, DomEvent, DomUtil, Layer, Map, stamp} from "leaflet";
+import {Control, ControlOptions, ControlPosition, DomEvent, DomUtil, Layer, Map, stamp} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import '../svg/layers.svg';
@@ -6,6 +6,12 @@ import '../svg/layers.svg';
 interface LayerControlInput extends HTMLInputElement {
     layerId: number;
 }
+
+export interface ExtendedControlOptions extends ControlOptions {
+    position?: ControlPosition & Position | undefined;
+}
+
+type Position = 'topcenter' | 'bottomcenter';
 
 export default class LayersControl extends Control.Layers {
     declare _map: Map;

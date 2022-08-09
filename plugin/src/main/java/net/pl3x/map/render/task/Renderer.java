@@ -120,7 +120,7 @@ public abstract class Renderer {
     }
 
     public int calculateLight(ChunkAccess chunk, BlockPos blockPos, BlockState fluidState, BlockPos fluidPos, int pixelColor) {
-        if (getWorld().getConfig().RENDER_SKYLIGHT > -1 && getWorld().getConfig().RENDER_SKYLIGHT < 15) {
+        if (getWorld().getConfig().RENDER_SKYLIGHT < 15) {
             // get light level right above this block
             int blockLight;
             if (fluidState != null && fluidState.is(Blocks.LAVA)) {
@@ -134,7 +134,7 @@ public abstract class Renderer {
             // blocklight in 0-255 range
             int alpha = (int) (Mathf.inverseLerp(0, 15, blockLight) * 0xFF);
             // skylight level in 0-15 range
-            int skylight = (int) Mathf.clamp(0, 15, getWorld().getConfig().RENDER_SKYLIGHT);
+            int skylight = getWorld().getConfig().RENDER_SKYLIGHT;
             // inverse of the skylight level in 0-1 range
             float inverseSkylight = Mathf.inverseLerp(0, 15, 15 - skylight);
             // how much darkness to draw in 0-255 range

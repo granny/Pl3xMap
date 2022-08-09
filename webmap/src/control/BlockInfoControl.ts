@@ -1,4 +1,5 @@
 import {Control, DomUtil} from "leaflet";
+import {ExtendedControlOptions} from "./LayersControl";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import {Block, BlockInfo} from "../module/BlockInfo";
@@ -13,12 +14,12 @@ export class BlockInfoControl extends Control {
 
     private _blockPalette: Map<number, string> = new Map();
 
-    constructor(pl3xmap: Pl3xMap) {
+    constructor(pl3xmap: Pl3xMap, position: string) {
         super();
         this._pl3xmap = pl3xmap;
         super.options = {
-            position: 'bottomleft'
-        }
+            position: position
+        } as unknown as ExtendedControlOptions
 
         Util.getJSON('tiles/blocks.gz').then((json: Palette[]) => {
             Object.entries(json).forEach((data, index) => {

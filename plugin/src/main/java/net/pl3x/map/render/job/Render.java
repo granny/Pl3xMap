@@ -7,7 +7,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.audience.Audience;
-import net.pl3x.map.configuration.Config;
 import net.pl3x.map.render.job.progress.Progress;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.world.MapWorld;
@@ -41,9 +40,9 @@ public abstract class Render implements Runnable {
 
     public Render(MapWorld mapWorld, Audience starter, int centerX, int centerZ) {
         this(mapWorld, starter, centerX, centerZ,
-                Executors.newFixedThreadPool(getThreads(Config.RENDER_THREADS),
+                Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build()),
-                Executors.newFixedThreadPool(getThreads(Config.RENDER_THREADS),
+                Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build())
         );
     }

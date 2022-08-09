@@ -1,12 +1,7 @@
 import {Control, ControlOptions, ControlPosition, DomUtil, LeafletMouseEvent, Point} from "leaflet";
+import {ExtendedControlOptions} from "./LayersControl";
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
-
-interface ExtendedControlOptions extends ControlOptions {
-    position?: ControlPosition & Position | undefined;
-}
-
-type Position = 'topcenter' | 'bottomcenter';
 
 export class CoordsControl extends Control {
     declare _map: Pl3xmapLeafletMap;
@@ -20,11 +15,11 @@ export class CoordsControl extends Control {
         return this.update(this._map, this._map.toPoint(event.latlng));
     }
 
-    constructor(pl3xmap: Pl3xMap) {
+    constructor(pl3xmap: Pl3xMap, position: string) {
         super();
         this._pl3xmap = pl3xmap;
         super.options = {
-            position: 'bottomcenter'
+            position: position
         } as unknown as ExtendedControlOptions;
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
-import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.render.task.ScanData;
 
 public class Colors {
@@ -167,7 +167,7 @@ public class Colors {
     }
 
     public static int getRawBlockColor(BlockState state) {
-        int color = Advanced.BLOCK_COLORS.getOrDefault(state.getBlock(), -1);
+        int color = AdvancedConfig.BLOCK_COLORS.getOrDefault(state.getBlock(), -1);
         if (color < 0) {
             //noinspection ConstantConditions
             return state.getMapColor(null, null).col;

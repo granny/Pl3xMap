@@ -76,9 +76,9 @@ export class World {
 
     public updateUI() {
         document.getElementById("map")!.style.background = this.background;
-        this._pl3xmap.linkControl = this._ui.link ? new LinkControl(this._pl3xmap) : null;
-        this._pl3xmap.coordsControl = this._ui.coords ? new CoordsControl(this._pl3xmap) : null;
-        this._pl3xmap.blockInfoControl = this._ui.blockinfo ? new BlockInfoControl(this._pl3xmap) : null;
+        this._pl3xmap.linkControl = this._ui.link ? new LinkControl(this._pl3xmap, this._ui.link) : null;
+        this._pl3xmap.coordsControl = this._ui.coords ? new CoordsControl(this._pl3xmap, this._ui.coords) : null;
+        this._pl3xmap.blockInfoControl = this._ui.blockinfo ? new BlockInfoControl(this._pl3xmap, this._ui.blockinfo) : null;
     }
 
     getTileLayer(renderer: string): ReversedZoomTileLayer | undefined {

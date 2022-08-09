@@ -8,7 +8,7 @@ import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.Coordinate;
-import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.configuration.AdvancedConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -69,45 +69,45 @@ public class WorldListener implements Listener {
     }
 
     public void registerEvents() {
-        registerEvent(Advanced.BLOCK_BREAK_EVENT, BlockBreakEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_BURN_EVENT, BlockBurnEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_FADE_EVENT, BlockFadeEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_FORM_EVENT, BlockFormEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_GROW_EVENT, BlockGrowEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_PHYSICS_EVENT, BlockPhysicsEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_PLACE_EVENT, BlockPlaceEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.BLOCK_SPREAD_EVENT, BlockSpreadEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.ENTITY_BLOCK_FORM_EVENT, EntityBlockFormEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.LEAVES_DECAY_EVENT, LeavesDecayEvent.class, this::handleBlockEvent);
-        registerEvent(Advanced.CHUNK_LOAD_EVENT, ChunkLoadEvent.class, this::handleChunkEvent);
-        registerEvent(Advanced.CHUNK_POPULATE_EVENT, ChunkPopulateEvent.class, this::handleChunkEvent);
-        registerEvent(Advanced.PLAYER_JOIN_EVENT, PlayerJoinEvent.class, this::handlePlayerEvent);
-        registerEvent(Advanced.PLAYER_MOVE_EVENT, PlayerMoveEvent.class, this::handlePlayerEvent);
-        registerEvent(Advanced.PLAYER_QUIT_EVENT, PlayerQuitEvent.class, this::handlePlayerEvent);
+        registerEvent(AdvancedConfig.BLOCK_BREAK_EVENT, BlockBreakEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_BURN_EVENT, BlockBurnEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_FADE_EVENT, BlockFadeEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_FORM_EVENT, BlockFormEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_GROW_EVENT, BlockGrowEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_PHYSICS_EVENT, BlockPhysicsEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_PLACE_EVENT, BlockPlaceEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.BLOCK_SPREAD_EVENT, BlockSpreadEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.ENTITY_BLOCK_FORM_EVENT, EntityBlockFormEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.LEAVES_DECAY_EVENT, LeavesDecayEvent.class, this::handleBlockEvent);
+        registerEvent(AdvancedConfig.CHUNK_LOAD_EVENT, ChunkLoadEvent.class, this::handleChunkEvent);
+        registerEvent(AdvancedConfig.CHUNK_POPULATE_EVENT, ChunkPopulateEvent.class, this::handleChunkEvent);
+        registerEvent(AdvancedConfig.PLAYER_JOIN_EVENT, PlayerJoinEvent.class, this::handlePlayerEvent);
+        registerEvent(AdvancedConfig.PLAYER_MOVE_EVENT, PlayerMoveEvent.class, this::handlePlayerEvent);
+        registerEvent(AdvancedConfig.PLAYER_QUIT_EVENT, PlayerQuitEvent.class, this::handlePlayerEvent);
 
-        registerEvent(Advanced.BLOCK_EXPLODE_EVENT, BlockExplodeEvent.class,
+        registerEvent(AdvancedConfig.BLOCK_EXPLODE_EVENT, BlockExplodeEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.blockList()));
-        registerEvent(Advanced.BLOCK_FROM_TO_EVENT, BlockFromToEvent.class,
+        registerEvent(AdvancedConfig.BLOCK_FROM_TO_EVENT, BlockFromToEvent.class,
                 // this event gets spammed really hard, to the point
                 // where checking the highest Y becomes quite expensive.
                 // it's better to queue some unnecessary map updates
                 // than to cause tps lag if this listener is enabled.
                 e -> markChunk(e.getBlock().getLocation(), true));
-        registerEvent(Advanced.BLOCK_PISTON_EXTEND_EVENT, BlockPistonExtendEvent.class,
+        registerEvent(AdvancedConfig.BLOCK_PISTON_EXTEND_EVENT, BlockPistonExtendEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.getBlocks()));
-        registerEvent(Advanced.BLOCK_PISTON_RETRACT_EVENT, BlockPistonRetractEvent.class,
+        registerEvent(AdvancedConfig.BLOCK_PISTON_RETRACT_EVENT, BlockPistonRetractEvent.class,
                 e -> markChunk(e.getBlock().getWorld(), e.getBlocks()));
-        registerEvent(Advanced.ENTITY_CHANGE_BLOCK_EVENT, EntityChangeBlockEvent.class,
+        registerEvent(AdvancedConfig.ENTITY_CHANGE_BLOCK_EVENT, EntityChangeBlockEvent.class,
                 e -> markChunk(e.getBlock().getLocation()));
-        registerEvent(Advanced.ENTITY_EXPLODE_EVENT, EntityExplodeEvent.class,
+        registerEvent(AdvancedConfig.ENTITY_EXPLODE_EVENT, EntityExplodeEvent.class,
                 e -> markChunk(e.getEntity().getWorld(), e.blockList()));
-        registerEvent(Advanced.FLUID_LEVEL_CHANGE_EVENT, FluidLevelChangeEvent.class,
+        registerEvent(AdvancedConfig.FLUID_LEVEL_CHANGE_EVENT, FluidLevelChangeEvent.class,
                 e -> {
                     if (e.getBlock().getBlockData().getMaterial() != e.getNewData().getMaterial()) {
                         markChunk(e.getBlock().getLocation());
                     }
                 });
-        registerEvent(Advanced.STRUCTURE_GROW_EVENT, StructureGrowEvent.class,
+        registerEvent(AdvancedConfig.STRUCTURE_GROW_EVENT, StructureGrowEvent.class,
                 e -> markChunk(e.getWorld(), e.getBlocks()));
     }
 

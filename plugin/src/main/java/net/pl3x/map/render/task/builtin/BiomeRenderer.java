@@ -4,7 +4,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.api.image.Image;
-import net.pl3x.map.configuration.Advanced;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
@@ -22,7 +22,7 @@ public final class BiomeRenderer extends Renderer {
 
             // determine the biome
             ResourceKey<Biome> biomeKey = fluid ? data.getFluidBiomeKey() : data.getBlockBiomeKey();
-            int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, Advanced.BIOME_COLORS.getOrDefault(biomeKey, 0));
+            int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, AdvancedConfig.BIOME_COLORS.getOrDefault(biomeKey, 0));
 
             // work out the heightmap
             pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, fluid));

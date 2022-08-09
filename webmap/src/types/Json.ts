@@ -35,9 +35,9 @@ export type WorldJSON = {
         max_in: number;
     };
     ui: {
-        link: boolean;
-        coords: boolean;
-        blockinfo: boolean;
+        link: string;
+        coords: string;
+        blockinfo: string;
     }
 }
 
