@@ -1,6 +1,5 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
     devServer: {
@@ -73,7 +72,6 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'styles.css'
-        }),
-        new CompressionPlugin()
+        })
     ]
 }

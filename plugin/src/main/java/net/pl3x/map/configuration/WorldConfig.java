@@ -16,7 +16,7 @@ public class WorldConfig extends AbstractConfig {
     @Comment("""
             Renderers to use. Each renderer will render a different
             type of map. The built in renderers include: basic, biomes""")
-    public List<String> RENDERERS_VISIBLE = new ArrayList<>() {{
+    public List<String> RENDER_RENDERERS = new ArrayList<>() {{
         add("basic");
         add("biomes");
     }};

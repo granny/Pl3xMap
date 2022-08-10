@@ -1,7 +1,9 @@
 package net.pl3x.map.render.task;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.api.Pl3xMap;
@@ -35,7 +37,14 @@ public class ScanTask implements Runnable {
         this.mapWorld = render.getWorld();
         this.chunkHelper = new ChunkHelper(render);
 
-        this.mapWorld.getConfig().RENDERERS_VISIBLE.forEach(name -> {
+        List<String> rendererNames = new ArrayList<>(this.mapWorld.getConfig().RENDER_RENDERERS);
+
+        String blockInfo = this.mapWorld.getConfig().UI_BLOCKINFO;
+        if (blockInfo != null && !blockInfo.isEmpty()) {
+            rendererNames.add("blockinfo");
+        }
+
+        rendererNames.forEach(name -> {
             Renderer renderer = Pl3xMap.api().getRendererManager().createRenderer(name, this);
             if (renderer != null) {
                 this.renderers.put(name, renderer);
