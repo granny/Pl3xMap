@@ -1,0 +1,125 @@
+progress:
+  chat: '<world>: <processed_chunks>/<total_chunks> (<percent>%) <gold><cps> cps</gold> Schätzung: <eta>'
+  bossbar: '<gold>Map Render von <grey><world></grey>: <red><percent></red>% Schätzung: <eta>'
+  eta:
+    unknown: Unbekannt
+prefix:
+  logger: '[<dark_aqua>Pl3xMap</dark_aqua>] '
+  command: '[<blue>Pl3xMap</blue>] '
+command:
+  event:
+    click-for-help: Klick für Hilfe
+    click-to-confirm: Klick zum Bestätigen
+  argument:
+    help-query: Hilfe
+    optional-player: Benutzt den ausführenden Spieler, wenn keiner Ausgewählt (Konsole muss angeben)
+    optional-world: Benutzt die Welt des ausführenden Spielers, wenn keine angegeben
+    optional-center: Benutzt (<white>0<gray>,</gray> 0</white>), wenn nicht angegeben
+  confirm:
+    description: Bestätige einen Befehl
+    not-rendering: <red>Bestätigung benötigt. Bestätige mit <grey>/map confirm
+    success: <red>Du hast nichts zum bestätigen!
+  pauserender:
+    description: Pausiert alle Render einer Welt
+    paused: <green>Render für <grey><world> <green>Pausiert
+    resumed: <green>Render für <grey><world> <green>Fortgesetzt
+  radiusrender:
+    description: Render die Sektion einer Welt
+    already-rendering: <grey><world> <red>ist schon am rendern!
+    starting: <green>Starte Radius render von <gold><world>
+    finished: <green>Radius Render von <grey><world> </grey>in <grey><elapsed> </grey>abgeschlossen!
+    cancelled: <red>Radius Render von <grey><world> <red>abgebrochen
+    obtaining-regions: <yellow>Ergatter Chunks im Radius... (das könnte etwas dauern)
+    found-total-regions: <grey><total></grey> <green>Chunks im Radius gefunden
+    use-status-for-progress: <gold>Nutz <grey>/map status</grey> um Fortschritt zu sehen
+    error-parsing-region-file: Konnte Regions Datei nicht parsen <grey><path> (<filename>)
+  resetmap:
+    description: Breche aktiven render für Welt ab
+    active-render: <red>Ein aktiver render für <grey><world> <red>läuft!
+    success: <green>Map für <grey><world> <green>zurückgesetzt!
+    failed: <red>Konnte Map für <grey><world> <red>nicht zurücksetzen!
+  base:
+    usage: <light_purple><description>:\n<yellow>/<grey><command> <usage>
+    subcommands:
+      title: '<color:#25b8ff>Verfügbare Befehle</color><color:#9558ff>:'
+      full-command: <color:#9558ff>/<color:#dedede><command>
+      entry:
+        text: ' <color:#999999><prefix> <color:#dedede><command></color> <color:#9558ff>-</color> <i><description>'
+        prefix: \u251C
+        prefix-last: \u2514
+  cancelrender:
+    description: Breche aktiven render in Welt ab
+    not-rendering: <grey><world> <red>hat keinen aktiven Render
+    success: <green>Render in <grey><world> </grey>wurde abgebrochen
+  fullrender:
+    description: Render eine Komplette Welt
+    already-rendering: <grey><world> <red>ist schon am rendern
+    starting: <green>Starte vollen Render von <grey><world></grey>!
+    finished: <green>Vollen Render von <grey><world> </grey>abgeschlossen!
+    cancelled: <red>Vollen Render von <grey><world> </grey>abgebrochen.
+    obtaining-regions: <yellow>Bekomme Regions Dateien
+    sorting-regions: <yellow>Sortiere Regions Dateien
+    found-total-regions: <grey><total> <green>Regions Dateien wurden gefunden!
+    use-status-for-progress: <gold>Nutz <grey>/map status</grey> um den Fortschritt zu sehen
+    error-parsing-region-file: Konnte Koordinaten von Regions Datei nicht bekommen <grey><path> (<filename>)
+    resumed-rendering: <yellow>Vorher nicht abgeschlossener Render für <grey><world> </grey>macht nun weiter wo er gestoppt hat!
+    resumed-total-regions: <green>Scannen Weitergeführt von <grey><done></grey>/<grey><total></grey> Regionen (<gold><percent>%</gold>)
+  help:
+    description: Hilfe für Pl3xMap Befehle
+  hide:
+    description: Verstecke Spieler von Map
+    already-hidden: <grey><player> <red>ist schon von der Map versteckt!
+    success: <green><player> ist nun auf der Map versteckt!
+  reload:
+    description: Lade das Plugin neu
+    success: <green>Pl3xMap <grey>v<version> <green>neu geladen!
+  show:
+    description: Zeige Spieler auf Map
+    not-hidden: <red><player> war nicht auf der Map versteckt!
+    success: <green><player> ist nicht mehr auf der Map versteckt!
+  status:
+    render: |-
+      <green>Map Status von <grey><world>
+      <white>  Hintergrund: <i><background>
+      <white>  Vordergrund: <i><foreground>
+    render-details: |-
+      <grey>    Chunks: <chunks_done>/<chunks_total> (<gold><percent>%</gold>)
+      <grey>    Übrig: <remaining> (<gold><cps> cps</gold>)
+    description: Schaue den Render Status einer Welt an
+    already-rendering: |-
+      <gold>Map Status von <grey><world>
+      Hintergrund: <green>Running
+      Aktiv: <red>Nicht am laufen
+    success: |-
+      <gold>Map Status von <grey><world>
+      Hintergrund: <red>Pausiert
+      Aktiv: <green><status>
+        <gray>- Chunks gerendert <chunk_done>/<chunks_total> (<gold><percent>%</gold>)
+        <gray>- Zeit übrig: <remaining> (<gold><cps> cps</gold>)
+    player-only-feature: <red>Dieses Feature können nur Spieler benutzen
+httpd:
+  started:
+    success: <green>Interner Webserver läuft unter <yellow><bind></yellow>:<yellow><port></yellow>
+    error: <red>Interner Webserver konnte nicht starten
+  stopped:
+    success: <green>Interner Webserver gestoppt
+    error: <red>Ein Fehler ist mit dem Internen Webserver aufgetreten!
+  disabled: <green>Interner Webserver wurde in <grey>config.yml </grey>deaktiviert!
+error:
+  unknown-error: <red>Unbekannter Fehler!
+  unknown-subcommand: <red>Unbekannter Unterbefehl!
+  must-specify-player: <red>Du musst den Spieler angeben!
+  no-such-player: <red>Spieler <grey><player> <red>nicht gefunden!
+  must-specify-world: <red>Du musst eine Welt angeben!
+  no-such-world: <red>Welt <grey><world> <red>nicht gefunden!
+  world-disabled: <red>Pl3xMap ist in der Welt <grey><world> <red>deaktiviert!
+  render-stalled: <red>Render steckt fest! Breche ab.
+ui:
+  title: Pl3xMap
+  coords:
+    label: Koordinaten
+    value: <x>, <z>
+  players: Spieler (<online>/<max>)
+  worlds: Welten
+  player-tracker: Spieler
+  layers: Schichten

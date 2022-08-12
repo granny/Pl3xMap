@@ -30,29 +30,29 @@ public class Lang extends AbstractConfig {
     @Key("command.cancelrender.description")
     public static String COMMAND_CANCELRENDER_DESCRIPTION = "Cancel active render of a world";
     @Key("command.cancelrender.not-rendering")
-    public static String COMMAND_CANCELRENDER_NOT_RENDERING = "<red><world> does not have active render";
+    public static String COMMAND_CANCELRENDER_NOT_RENDERING = "<grey><world> <red>does not have active render";
     @Key("command.cancelrender.success")
-    public static String COMMAND_CANCELRENDER_SUCCESS = "<green>Render on <world> has been cancelled";
+    public static String COMMAND_CANCELRENDER_SUCCESS = "<green>Render on <grey><world> </grey>has been cancelled";
 
     @Key("command.confirm.description")
     public static String COMMAND_CONFIRM_DESCRIPTION = "Confirm a pending command";
     @Key("command.confirm.not-rendering")
-    public static String COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE = "<red>Confirmation required. Confirm using /map confirm";
+    public static String COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE = "<red>Confirmation required. Confirm using <grey>/map confirm";
     @Key("command.confirm.success")
     public static String COMMAND_CONFIRM_NO_PENDING_MESSAGE = "<red>You don't have any pending confirmations";
 
     @Key("command.fullrender.description")
     public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
     @Key("command.fullrender.already-rendering")
-    public static String COMMAND_FULLRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
+    public static String COMMAND_FULLRENDER_ALREADY_RENDERING = "<grey><world> <red>is already rendering";
     @Key("command.fullrender.starting")
-    public static String COMMAND_FULLRENDER_STARTING = "<green>Starting full render of <world>";
+    public static String COMMAND_FULLRENDER_STARTING = "<green>Starting full render of <grey><world>";
     @Key("command.fullrender.finished")
-    public static String COMMAND_FULLRENDER_FINISHED = "<green>Finished full render on <world> in <elapsed>";
+    public static String COMMAND_FULLRENDER_FINISHED = "<green>Finished full render on <grey><world></grey> in <grey><elapsed>";
     @Key("command.fullrender.cancelled")
-    public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled full render on <world>";
+    public static String COMMAND_FULLRENDER_CANCELLED = "<red>Cancelled full render on <grey><world>";
     @Key("command.fullrender.resumed-rendering")
-    public static String COMMAND_FULLRENDER_RESUMED_RENDERING = "<yellow>Previously incomplete full render for <world> has resumed where it left off";
+    public static String COMMAND_FULLRENDER_RESUMED_RENDERING = "<yellow>Previously incomplete full render for <grey><world></grey> has resumed where it left off";
     @Key("command.fullrender.obtaining-regions")
     public static String COMMAND_FULLRENDER_OBTAINING_REGIONS = "<yellow>Obtaining regions from files... (this may take a moment)";
     @Key("command.fullrender.found-total-regions")
@@ -62,7 +62,7 @@ public class Lang extends AbstractConfig {
     @Key("command.fullrender.use-status-for-progress")
     public static String COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS = "<gold>Use <grey>/map status</grey> command to view progress";
     @Key("command.fullrender.error-parsing-region-file")
-    public static String COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE = "Failed to parse coordinates for region file '<path>' (<filename>)";
+    public static String COMMAND_FULLRENDER_ERROR_PARSING_REGION_FILE = "Failed to parse coordinates for region file <grey><path> (<filename>)";
 
     @Key("command.help.description")
     public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";
@@ -70,27 +70,27 @@ public class Lang extends AbstractConfig {
     @Key("command.hide.description")
     public static String COMMAND_HIDE_DESCRIPTION = "Hide a player from the map";
     @Key("command.hide.already-hidden")
-    public static String COMMAND_HIDE_ALREADY_HIDDEN = "<red><player> is already hidden from map";
+    public static String COMMAND_HIDE_ALREADY_HIDDEN = "<grey><player> <red>is already hidden from the map";
     @Key("command.hide.success")
-    public static String COMMAND_HIDE_SUCCESS = "<green><player> is now hidden from map";
+    public static String COMMAND_HIDE_SUCCESS = "<grey><player> <green>is now hidden from the map";
 
     @Key("command.pauserender.description")
     public static String COMMAND_PAUSERENDER_DESCRIPTION = "Pauses all renders for the specified world";
     @Key("command.pauserender.paused")
-    public static String COMMAND_PAUSERENDER_PAUSED = "<green>Paused renders for <world>";
+    public static String COMMAND_PAUSERENDER_PAUSED = "<green>Paused renders for <grey><world>";
     @Key("command.pauserender.resumed")
-    public static String COMMAND_PAUSERENDER_RESUMED = "<green>Resumed renders for <world>";
+    public static String COMMAND_PAUSERENDER_RESUMED = "<green>Resumed renders for <grey><world>";
 
     @Key("command.radiusrender.description")
     public static String COMMAND_RADIUSRENDER_DESCRIPTION = "Render a section of a world";
     @Key("command.radiusrender.already-rendering")
-    public static String COMMAND_RADIUSRENDER_ALREADY_RENDERING = "<red><world> is already rendering";
+    public static String COMMAND_RADIUSRENDER_ALREADY_RENDERING = "<grey><world> <red>is already rendering";
     @Key("command.radiusrender.starting")
-    public static String COMMAND_RADIUSRENDER_STARTING = "<green>Starting radius render of <world>";
+    public static String COMMAND_RADIUSRENDER_STARTING = "<green>Starting radius render of <grey><world>";
     @Key("command.radiusrender.finished")
-    public static String COMMAND_RADIUSRENDER_FINISHED = "<green>Finished radius render on <world> in <elapsed>";
+    public static String COMMAND_RADIUSRENDER_FINISHED = "<green>Finished radius render on <grey><world></grey> in <grey><elapsed>";
     @Key("command.radiusrender.cancelled")
-    public static String COMMAND_RADIUSRENDER_CANCELLED = "<red>Cancelled radius render on <world>";
+    public static String COMMAND_RADIUSRENDER_CANCELLED = "<red>Cancelled radius render on <grey><world>";
     @Key("command.radiusrender.obtaining-regions")
     public static String COMMAND_RADIUSRENDER_OBTAINING_CHUNKS = "<yellow>Obtaining chunks in radius... (this may take a moment)";
     @Key("command.radiusrender.found-total-regions")
@@ -103,23 +103,23 @@ public class Lang extends AbstractConfig {
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";
     @Key("command.reload.success")
-    public static String COMMAND_RELOAD_SUCCESS = "<green>Pl3xMap v<version> reloaded";
+    public static String COMMAND_RELOAD_SUCCESS = "<green>Pl3xMap <grey>v<version></grey> reloaded";
 
     @Key("command.resetmap.description")
     public static String COMMAND_RESETMAP_DESCRIPTION = "Cancel active render of a world";
     @Key("command.resetmap.active-render")
-    public static String COMMAND_RESETMAP_ACTIVE_RENDER = "<red>There is an active render for <world>";
+    public static String COMMAND_RESETMAP_ACTIVE_RENDER = "<red>There is an active render for <grey><world>";
     @Key("command.resetmap.success")
-    public static String COMMAND_RESETMAP_SUCCESS = "<green>Successfully reset map for <world>";
+    public static String COMMAND_RESETMAP_SUCCESS = "<green>Successfully reset map for <grey><world>";
     @Key("command.resetmap.failed")
-    public static String COMMAND_RESETMAP_FAILED = "<red>Could not reset map for <world>";
+    public static String COMMAND_RESETMAP_FAILED = "<red>Could not reset map for <grey><world>";
 
     @Key("command.show.description")
     public static String COMMAND_SHOW_DESCRIPTION = "Show a player on the map";
     @Key("command.show.not-hidden")
-    public static String COMMAND_SHOW_NOT_HIDDEN = "<red><player> is not hidden from map";
+    public static String COMMAND_SHOW_NOT_HIDDEN = "<grey><player> <red>is not hidden from the map";
     @Key("command.show.success")
-    public static String COMMAND_SHOW_SUCCESS = "<green><player> is no longer hidden from map";
+    public static String COMMAND_SHOW_SUCCESS = "<grey><player> <green>is no longer hidden from the map";
 
     @Key("command.status.description")
     public static String COMMAND_STATUS_DESCRIPTION = "View a world's render status";
@@ -155,7 +155,7 @@ public class Lang extends AbstractConfig {
     @Key("httpd.stopped.error")
     public static String HTTPD_STOP_ERROR = "<red>An error occurred with the internal webserver";
     @Key("httpd.disabled")
-    public static String HTTPD_DISABLED = "<green>Internal webserver is disabled in config.yml";
+    public static String HTTPD_DISABLED = "<green>Internal webserver is disabled in <grey>config.yml";
 
     @Key("progress.chat")
     public static String PROGRESS_CHAT = "<world>: <processed_chunks>/<total_chunks> (<percent>%) <gold><cps> cps</gold> eta: <eta>";
@@ -167,13 +167,13 @@ public class Lang extends AbstractConfig {
     @Key("error.must-specify-player")
     public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
     @Key("error.no-such-player")
-    public static String ERROR_NO_SUCH_PLAYER = "<red>No such player <player>";
+    public static String ERROR_NO_SUCH_PLAYER = "<red>No such player <grey><player>";
     @Key("error.must-specify-world")
     public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
     @Key("error.no-such-world")
-    public static String ERROR_NO_SUCH_WORLD = "<red>No such world <world>";
+    public static String ERROR_NO_SUCH_WORLD = "<red>No such world <grey><world>";
     @Key("error.world-disabled")
-    public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <world>";
+    public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <grey><world>";
     @Key("error.render-stalled")
     public static String ERROR_RENDER_STALLED = "<red>Render has stalled! Cancelling.";
 

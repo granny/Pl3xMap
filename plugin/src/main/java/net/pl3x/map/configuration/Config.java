@@ -9,7 +9,7 @@ public class Config extends AbstractConfig {
             (can be spammy)""")
     public static boolean DEBUG_MODE = false;
     @Key("settings.language-file")
-    @Comment("The language file to use in the locale folder.")
+    @Comment("The language file to use from the locale folder.")
     public static String LANGUAGE_FILE = "lang-en.yml";
 
     @Key("settings.web-directory.path")
