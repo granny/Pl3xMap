@@ -33,7 +33,14 @@ tasks.register<Copy>("copyWebmap") {
     into("$rootDir/plugin/src/main/resources/web")
 }
 
+tasks.register<Exec>("npmInstall") {
+    println("Installing npm dependencies...")
+    workingDir(projectDir.resolve("webmap"))
+    commandLine("npm", "install")
+}
+
 tasks.register<Exec>("npmBuild") {
+    dependsOn(tasks.named("npmInstall"))
     println("Building webmap...")
     workingDir(projectDir.resolve("webmap"))
     commandLine("npm", "run", "build")
