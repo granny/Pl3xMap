@@ -33,7 +33,7 @@ Downloads can be obtained from the [releases](https://github.com/BillyGalbreath/
 
 ## Building from source
 
-To build this project just issue the following command:
+To build this project ensure npm is installed then just run the following command:
 
 ```
 ./gradlew build
