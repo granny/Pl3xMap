@@ -45,7 +45,23 @@ export class World {
         Util.getJSON(`tiles/${this.name}/biomes.gz`)
             .then((json: Palette[]) => {
                 Object.entries(json).forEach((data, index) => {
-                    this._biomePalette.set(index, String(json[index]));
+                    // get biome name
+                    let biome: string = String(json[index]);
+
+                    // get everything after the last period
+                    const i: number = biome.lastIndexOf(".");
+                    if (i >= 0) {
+                        biome = biome.substring(i + 1);
+                    }
+
+                    // replace underscores with spaces and capitalize first letter of every word
+                    const words: string[] = biome.replace(/_+/g, ' ').split(" ");
+                    for (let i = 0; i < words.length; i++) {
+                        words[i] = words[i][0].toUpperCase() + words[i].substring(1);
+                    }
+
+                    // store biome name
+                    this._biomePalette.set(index, words.join(" "));
                 });
             });
 

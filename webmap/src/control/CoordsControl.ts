@@ -1,11 +1,10 @@
-import {Control, ControlOptions, ControlPosition, DomUtil, LeafletMouseEvent, Point} from "leaflet";
-import {ExtendedControlOptions} from "./LayersControl";
+import {DomUtil, LeafletMouseEvent, Point} from "leaflet";
+import {ControlBox} from "./ControlBox";
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 
-export class CoordsControl extends Control {
+export class CoordsControl extends ControlBox {
     declare _map: Pl3xmapLeafletMap;
-    private _pl3xmap: Pl3xMap;
     private _dom: HTMLDivElement = DomUtil.create('div');
     private _x: number = 0;
     private _y: number | null = null;
@@ -16,11 +15,7 @@ export class CoordsControl extends Control {
     }
 
     constructor(pl3xmap: Pl3xMap, position: string) {
-        super();
-        this._pl3xmap = pl3xmap;
-        super.options = {
-            position: position
-        } as unknown as ExtendedControlOptions;
+        super(pl3xmap, position);
     }
 
     onAdd(map: Pl3xmapLeafletMap): HTMLDivElement {
@@ -41,7 +36,7 @@ export class CoordsControl extends Control {
         this._pl3xmap.blockInfoControl?.update(map);
         this._dom.innerHTML = this._pl3xmap.lang.coordsValue
             .replace(/<x>/g, this._x.toString().padStart(6, ' '))
-            .replace(/<y>/g, (this._y?.toString() ?? '63').padStart(2, ' ').padEnd(3, ' ')) // default to 63 (sea level)
+            .replace(/<y>/g, (this._y?.toString() ?? '???').padStart(2, ' ').padEnd(3, ' '))
             .replace(/<z>/g, this._z.toString().padEnd(6, ' '));
     }
 

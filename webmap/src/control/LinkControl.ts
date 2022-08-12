@@ -1,12 +1,11 @@
-import {Control, DomUtil} from "leaflet";
-import {ExtendedControlOptions} from "./LayersControl";
+import {DomUtil} from "leaflet";
+import {ControlBox} from "./ControlBox";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 import '../svg/link.svg';
 
-export class LinkControl extends Control {
-    private _pl3xmap: Pl3xMap;
+export class LinkControl extends ControlBox {
     private readonly _dom: HTMLAnchorElement;
 
     private onEvent = () => {
@@ -14,11 +13,7 @@ export class LinkControl extends Control {
     }
 
     constructor(pl3xmap: Pl3xMap, position: string) {
-        super();
-        this._pl3xmap = pl3xmap;
-        super.options = {
-            position: position
-        } as unknown as ExtendedControlOptions;
+        super(pl3xmap, position);
         this._dom = DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
         this._dom.appendChild(Util.createSVGIcon('link'));
     }

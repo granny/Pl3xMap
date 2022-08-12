@@ -1,25 +1,18 @@
-import {Control, DomUtil} from "leaflet";
-import {ExtendedControlOptions} from "./LayersControl";
+import {DomUtil} from "leaflet";
+import {ControlBox} from "./ControlBox";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import {Block, BlockInfo} from "../module/BlockInfo";
 import {Palette} from "../types/Json";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 
-export class BlockInfoControl extends Control {
-    private _pl3xmap: Pl3xMap;
+export class BlockInfoControl extends ControlBox {
     private _dom: HTMLDivElement = DomUtil.create('div');
-    private _block: string = '';
-    private _biome: string = '';
 
     private _blockPalette: Map<number, string> = new Map();
 
     constructor(pl3xmap: Pl3xMap, position: string) {
-        super();
-        this._pl3xmap = pl3xmap;
-        super.options = {
-            position: position
-        } as unknown as ExtendedControlOptions
+        super(pl3xmap, position);
 
         Util.getJSON('tiles/blocks.gz').then((json: Palette[]) => {
             Object.entries(json).forEach((data, index) => {
@@ -47,27 +40,26 @@ export class BlockInfoControl extends Control {
         const tileX: number = (x / step) & 511;
         const tileZ: number = (z / step) & 511;
 
-        let foundData: boolean = false;
+        let blockName: string = 'unknown';
+        let biomeName: string = 'unknown';
+        let y: number | null = null;
 
         const blockInfo: BlockInfo | undefined = this._pl3xmap.currentTileLayer?.getBlockInfo(zoom, fileX, fileZ);
         if (blockInfo !== undefined) {
             const block: Block = blockInfo.getBlock(tileZ * 512 + tileX);
             if (block != null) {
-                this._block = block.block == 0 ? 'Void' : this._blockPalette.get(block.block) ?? 'unknown';
-                this._biome = this._pl3xmap.currentWorld?.biomePalette.get(block.biome) ?? 'unknown';
-                this._pl3xmap.coordsControl?.setY(block.yPos + 1);
-                foundData = true;
+                blockName = block.block == 0 ? 'unknown' : this._blockPalette.get(block.block) ?? 'unknown';
+                biomeName = block.biome == 0 ? 'unknown' : this._pl3xmap.currentWorld?.biomePalette.get(block.biome) ?? 'unknown';
+
+                if (block.block != 0) {
+                    y = block.yPos + 1;
+                }
             }
         }
 
-        if (!foundData) {
-            this._block = 'unknown';
-            this._biome = 'unknown';
-            this._pl3xmap.coordsControl?.setY(null);
-        }
-
+        this._pl3xmap.coordsControl?.setY(y);
         this._dom.innerHTML = this._pl3xmap.lang.blockInfoValue
-            .replace(/<block>/g, this._block.padEnd(15, ' '))
-            .replace(/<biome>/g, this._biome.padEnd(15, ' '));
+            .replace(/<block>/g, blockName!.padEnd(15, ' '))
+            .replace(/<biome>/g, biomeName!.padEnd(15, ' '));
     }
 }
