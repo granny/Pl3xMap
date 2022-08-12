@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 import net.pl3x.map.render.task.builtin.BasicRenderer;
 import net.pl3x.map.render.task.builtin.BiomeRenderer;
-import net.pl3x.map.render.task.builtin.BlockInfo;
+import net.pl3x.map.render.task.builtin.BlockInfoRenderer;
 
 public class RendererManager {
     public RendererManager() {
         register("basic", BasicRenderer.class);
         register("biomes", BiomeRenderer.class);
-        register("blockinfo", BlockInfo.class);
+        register("blockinfo", BlockInfoRenderer.class);
     }
 
     private final Map<String, Class<? extends Renderer>> renderers = new HashMap<>();

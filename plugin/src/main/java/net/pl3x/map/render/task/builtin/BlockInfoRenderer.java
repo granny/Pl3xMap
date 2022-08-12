@@ -24,12 +24,12 @@ import net.pl3x.map.util.Mathf;
 import net.pl3x.map.util.Palette;
 import net.pl3x.map.world.MapWorld;
 
-public class BlockInfo extends Renderer {
+public class BlockInfoRenderer extends Renderer {
     private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     private ByteBuffer byteBuffer;
 
-    public BlockInfo(String name, ScanTask scanTask) {
+    public BlockInfoRenderer(String name, ScanTask scanTask) {
         super(name, scanTask);
     }
 
@@ -59,16 +59,6 @@ public class BlockInfo extends Renderer {
 
             ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));
             lock.writeLock().lock();
-
-            // short circuit bottom zoom
-            if (zoom == 0) {
-                try {
-                    FileUtil.saveGzip(this.byteBuffer.array(), filePath);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                continue;
-            }
 
             try {
                 // read existing data from disk
