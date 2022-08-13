@@ -10,7 +10,7 @@ rootProject.name = "Pl3xMap"
 setupSubproject("Pl3xMap") {
     projectDir = file("plugin")
 }
-setupSubproject("InhabitedRenderer") {
+setupSubproject("InhabitedAddon") {
     projectDir = file("examples/inhabited")
 }
 setupSubproject("WebMap") {

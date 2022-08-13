@@ -84,7 +84,10 @@ subprojects {
 
             processResources {
                 filteringCharset = Charsets.UTF_8.name()
-                filesMatching("plugin.yml") {
+                filesMatching(listOf(
+                    "addon.yml",
+                    "plugin.yml"
+                )) {
                     expand(
                         "name" to project.name,
                         "group" to project.group,

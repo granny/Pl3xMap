@@ -1,6 +1,7 @@
 package net.pl3x.map.api;
 
 import net.pl3x.map.PaletteManager;
+import net.pl3x.map.api.addon.AddonManager;
 import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.api.registry.IconRegistry;
@@ -19,6 +20,8 @@ public interface Pl3xMap {
     static Pl3xMap api() {
         return Provider.api;
     }
+
+    AddonManager getAddonManager();
 
     IconRegistry getIconRegistry();
 

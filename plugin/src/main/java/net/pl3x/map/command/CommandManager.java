@@ -16,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.Pl3xMapPlugin;
+import net.pl3x.map.command.commands.AddonCommand;
 import net.pl3x.map.command.commands.CancelRenderCommand;
 import net.pl3x.map.command.commands.ConfirmCommand;
 import net.pl3x.map.command.commands.FullRenderCommand;
@@ -50,6 +51,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         registerExceptionHandlers();
 
         ImmutableList.of(
+                new AddonCommand(plugin, this),
                 new CancelRenderCommand(plugin, this),
                 new ConfirmCommand(plugin, this),
                 new FullRenderCommand(plugin, this),

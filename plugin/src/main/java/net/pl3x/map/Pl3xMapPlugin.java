@@ -2,6 +2,7 @@ package net.pl3x.map;
 
 import java.lang.reflect.Field;
 import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.addon.AddonManager;
 import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.api.player.PlayerManager;
@@ -35,6 +36,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     private UpdateWorldData updateWorldDataTask;
     private WorldListener worldListener;
 
+    private AddonManager addonManager;
     private IconRegistry iconRegistry;
     private IntegratedServer integratedServer;
     private PaletteManager paletteManager;
@@ -101,8 +103,9 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         getServer().getPluginManager().registerEvents(this.worldListener, this);
 
         // setup managers
-        this.integratedServer = new UndertowServer();
+        this.addonManager = new AddonManager();
         this.iconRegistry = new IconRegistry();
+        this.integratedServer = new UndertowServer();
         this.paletteManager = new PaletteManager();
         this.playerManager = new BukkitPlayerManager();
         this.rendererManager = new RendererManager();
@@ -151,13 +154,17 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         // start updating world data
         this.updateWorldDataTask = new UpdateWorldData();
         this.updateWorldDataTask.runTaskTimer(this, 0, 20 * 5);
+
+        // enable addons
+        getAddonManager().enableAddons();
     }
 
     public void disable() {
-        // unregister events
-        if (this.worldListener != null) {
-            this.worldListener.unregisterEvents();
-        }
+        // disable addons
+        getAddonManager().disableAddons();
+
+        // stop integrated server
+        getIntegratedServer().stopServer();
 
         // stop updating player data
         if (this.updatePlayerDataTask != null) {
@@ -175,11 +182,18 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
             this.updateWorldDataTask = null;
         }
 
-        // stop integrated server
-        getIntegratedServer().stopServer();
+        // unregister events
+        if (this.worldListener != null) {
+            this.worldListener.unregisterEvents();
+        }
 
         // unload all map worlds
         getWorldManager().unload();
+    }
+
+    @Override
+    public AddonManager getAddonManager() {
+        return this.addonManager;
     }
 
     @Override

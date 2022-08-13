@@ -10,6 +10,30 @@ permissions:
     description: Gives access to the base command
     default: op
 
+  pl3xmap.command.addon:
+    description: Gives access to addons command
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.addon.list:
+    description: Gives access to list addons
+    default: op
+    children:
+      pl3xmap.command.addon: true
+
+  pl3xmap.command.addon.load:
+    description: Gives access to load addons
+    default: op
+    children:
+      pl3xmap.command.addon: true
+
+  pl3xmap.command.addon.unload:
+    description: Gives access to unload addons
+    default: op
+    children:
+      pl3xmap.command.addon: true
+
   pl3xmap.command.cancelrender:
     description: Gives access to cancel renders
     default: op

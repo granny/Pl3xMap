@@ -18,6 +18,13 @@ public class Lang extends AbstractConfig {
     @Key("command.event.click-to-confirm")
     public static String CLICK_TO_CONFIRM = "Click to confirm";
 
+    @Key("addon.loading")
+    public static String ADDON_LOADING = "Loading addon <name>";
+    @Key("addon.enabling")
+    public static String ADDON_ENABLING = "Enabling addon <name>";
+    @Key("addon.disabling")
+    public static String ADDON_DISABLING = "Disabling addon <name>";
+
     @Key("command.argument.help-query")
     public static String COMMAND_ARGUMENT_HELP_QUERY_DESCRIPTION = "Help Query";
     @Key("command.argument.optional-player")
@@ -26,6 +33,9 @@ public class Lang extends AbstractConfig {
     public static String COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION = "Defaults to the players current world if not provided";
     @Key("command.argument.optional-center")
     public static String COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION = "Defaults to (<white>0<gray>,</gray> 0</white>) if unspecified";
+
+    @Key("command.addon.description")
+    public static String COMMAND_ADDON_DESCRIPTION = "Manage Pl3xMap addons";
 
     @Key("command.cancelrender.description")
     public static String COMMAND_CANCELRENDER_DESCRIPTION = "Cancel active render of a world";
