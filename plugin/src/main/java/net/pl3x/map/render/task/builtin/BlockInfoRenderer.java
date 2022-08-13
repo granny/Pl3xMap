@@ -36,7 +36,12 @@ public class BlockInfoRenderer extends Renderer {
     @Override
     public void allocateData() {
         this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 12);
-        Path path = getScanTask().getWorld().getWorldTilesDir().resolve(String.format(Image.DIR_PATH, 0, getName()));
+        Path path = getScanTask().getWorld().getWorldTilesDir()
+                .resolve(String.format(Image.DIR_PATH, 0, getName()))
+                .resolve(String.format(Image.FILE_PATH,
+                        getRegion().getRegionX(),
+                        getRegion().getRegionZ(),
+                        "pl3xmap.gz"));
         try {
             if (Files.exists(path) && Files.size(path) > 0) {
                 FileUtil.readGzip(path, this.byteBuffer);
