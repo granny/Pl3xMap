@@ -1,13 +1,8 @@
 package net.pl3x.map.render.job;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.render.Area;
 import net.pl3x.map.render.task.ScanTask;
@@ -33,33 +28,19 @@ public class BackgroundRender extends Render {
 
     @Override
     public void render() {
-        Set<ChunkCoordinate> chunks = new HashSet<>();
-
-        // don't scan any chunks outside the world border
+        // don't scan any regions outside the world border
         Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
 
-        // get modified chunks to render this interval
-        while (getWorld().hasModifiedChunks() && chunks.size() < getWorld().getConfig().RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL) {
-            ChunkCoordinate chunk = getWorld().getNextModifiedChunk();
-            if (scannableArea.containsChunk(chunk.getChunkX(), chunk.getChunkZ())) {
-                chunks.add(chunk);
+        // send regions to executor to scan
+        int count = 0;
+        while (getWorld().hasModifiedRegions() && count < getWorld().getConfig().RENDER_BACKGROUND_MAX_REGIONS_PER_INTERVAL) {
+            RegionCoordinate region = getWorld().getNextModifiedRegion();
+            if (scannableArea.containsRegion(region.getRegionX(), region.getRegionZ())) {
+                ScanTask scanTask = new ScanTask(this, region, scannableArea);
+                getRenderExecutor().submit(scanTask);
+                count++;
             }
         }
-
-        // get the tasks ready
-        Map<RegionCoordinate, ScanTask> regionScanTasks = new HashMap<>();
-        chunks.forEach(chunk -> {
-            RegionCoordinate region = new RegionCoordinate(chunk.getRegionX(), chunk.getRegionZ());
-            ScanTask scanTask = regionScanTasks.get(region);
-            if (scanTask == null) {
-                scanTask = new ScanTask(this, region, scannableArea);
-                regionScanTasks.put(region, scanTask);
-            }
-            scanTask.addChunk(chunk);
-        });
-
-        // send regions to executor to scan
-        regionScanTasks.forEach((region, scanTask) -> getRenderExecutor().submit(scanTask));
     }
 
     @Override

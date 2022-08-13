@@ -1,14 +1,11 @@
 package net.pl3x.map.render.task;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.coordinate.BlockCoordinate;
-import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.Coordinate;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.render.Area;
@@ -27,7 +24,6 @@ public class ScanTask implements Runnable {
     private final LinkedHashMap<String, Renderer> renderers = new LinkedHashMap<>();
 
     private final ScanData.Data scanData = new ScanData.Data();
-    private final Set<ChunkCoordinate> scannableChunks = new HashSet<>();
 
     public ScanTask(Render render, RegionCoordinate region, Area area) {
         this.render = render;
@@ -70,13 +66,6 @@ public class ScanTask implements Runnable {
 
     public Renderer getRenderer(String name) {
         return this.renderers.get(name);
-    }
-
-    public boolean isChunkScannable(int chunkX, int chunkZ) {
-        if (this.scannableChunks.isEmpty()) {
-            return true;
-        }
-        return this.scannableChunks.contains(new ChunkCoordinate(chunkX, chunkZ));
     }
 
     @Override
@@ -143,11 +132,6 @@ public class ScanTask implements Runnable {
             return;
         }
 
-        // check if chunk is scannable
-        if (!isChunkScannable(chunkX, chunkZ)) {
-            return;
-        }
-
         // scan the chunk
         ChunkAccess chunk = this.chunkHelper.getChunk(this.mapWorld.getLevel(), chunkX, chunkZ);
         if (chunk == null) {
@@ -170,9 +154,5 @@ public class ScanTask implements Runnable {
                 }
             }
         }
-    }
-
-    public void addChunk(ChunkCoordinate chunk) {
-        this.scannableChunks.add(chunk);
     }
 }

@@ -74,12 +74,12 @@ public class WorldConfig extends AbstractConfig {
 
     @Key("render.background.max-chunks-per-interval")
     @Comment("""
-            The maximum amount of chunks to render from the queue at
+            The maximum amount of regions to render from the queue at
             a time. Setting this too low may cause the queue to become
             quite large and delay updates from showing on the map.
             Setting this too high may cause the background renderer to
             run non-stop.""")
-    public int RENDER_BACKGROUND_MAX_CHUNKS_PER_INTERVAL = 1024;
+    public int RENDER_BACKGROUND_MAX_REGIONS_PER_INTERVAL = 5;
 
     @Key("ui.display-name")
     @Comment("The display position for the blockinfo box")

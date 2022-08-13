@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.api.Pl3xMap;
-import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.Coordinate;
+import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.configuration.AdvancedConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -167,9 +167,9 @@ public class WorldListener implements Listener {
 
     private void markChunk(MapWorld mapWorld, Location loc, boolean skipVisibilityCheck) {
         if (skipVisibilityCheck || locationVisible(loc)) {
-            mapWorld.addModifiedChunk(new ChunkCoordinate(
-                    Coordinate.blockToChunk(loc.getBlockX()),
-                    Coordinate.blockToChunk(loc.getBlockZ())
+            mapWorld.addModifiedRegion(new RegionCoordinate(
+                    Coordinate.blockToRegion(loc.getBlockX()),
+                    Coordinate.blockToRegion(loc.getBlockZ())
             ));
         }
     }

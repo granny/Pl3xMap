@@ -65,7 +65,7 @@ public class MapWorld {
     private ScheduledFuture<?> backgroundRender;
     private Render activeRender = null;
 
-    private final Set<ChunkCoordinate> modifiedChunks = ConcurrentHashMap.newKeySet();
+    private final Set<RegionCoordinate> modifiedRegions = ConcurrentHashMap.newKeySet();
     private final LinkedHashMap<RegionCoordinate, Boolean> scannedRegions = new LinkedHashMap<>();
 
     private boolean paused;
@@ -182,7 +182,7 @@ public class MapWorld {
         try {
             final Path file = this.dataPath.resolve(DIRTY_CHUNKS);
             if (Files.exists(file)) {
-                this.modifiedChunks.addAll(GSON.fromJson(
+                this.modifiedRegions.addAll(GSON.fromJson(
                         new FileReader(file.toFile()),
                         TypeToken.getParameterized(List.class, ChunkCoordinate.class).getType()
                 ));
@@ -195,29 +195,29 @@ public class MapWorld {
 
     private void serializeDirtyChunks() {
         try {
-            Files.writeString(this.dataPath.resolve(DIRTY_CHUNKS), GSON.toJson(this.modifiedChunks));
+            Files.writeString(this.dataPath.resolve(DIRTY_CHUNKS), GSON.toJson(this.modifiedRegions));
         } catch (IOException e) {
             Logger.warn(String.format("Failed to serialize dirty chunks for world '%s'", getName()));
             e.printStackTrace();
         }
     }
 
-    public void addModifiedChunk(ChunkCoordinate chunk) {
-        this.modifiedChunks.add(chunk);
+    public void addModifiedRegion(RegionCoordinate region) {
+        this.modifiedRegions.add(region);
     }
 
-    public boolean hasModifiedChunks() {
-        return !this.modifiedChunks.isEmpty();
+    public boolean hasModifiedRegions() {
+        return !this.modifiedRegions.isEmpty();
     }
 
-    public ChunkCoordinate getNextModifiedChunk() {
-        if (!hasModifiedChunks()) {
+    public RegionCoordinate getNextModifiedRegion() {
+        if (!hasModifiedRegions()) {
             return null;
         }
-        Iterator<ChunkCoordinate> it = this.modifiedChunks.iterator();
-        ChunkCoordinate chunk = it.next();
+        Iterator<RegionCoordinate> it = this.modifiedRegions.iterator();
+        RegionCoordinate region = it.next();
         it.remove();
-        return chunk;
+        return region;
     }
 
     public void clearScannedRegions() {
