@@ -7,12 +7,6 @@ interface LayerControlInput extends HTMLInputElement {
     layerId: number;
 }
 
-export interface ExtendedControlOptions extends ControlOptions {
-    position?: ControlPosition & Position | undefined;
-}
-
-type Position = 'topcenter' | 'bottomcenter';
-
 export default class LayersControl extends Control.Layers {
     declare _map: Map;
     declare _layersLink: HTMLButtonElement;

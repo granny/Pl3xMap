@@ -36,6 +36,14 @@ public class BlockInfoRenderer extends Renderer {
     @Override
     public void allocateData() {
         this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 12);
+        Path path = getScanTask().getWorld().getWorldTilesDir().resolve(String.format(Image.DIR_PATH, 0, getName()));
+        try {
+            if (Files.exists(path) && Files.size(path) > 0) {
+                FileUtil.readGzip(path, this.byteBuffer);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -60,34 +68,49 @@ public class BlockInfoRenderer extends Renderer {
             ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));
             lock.writeLock().lock();
 
-            try {
-                // read existing data from disk
-                ByteBuffer buffer = ByteBuffer.allocate(this.byteBuffer.capacity());
-                if (Files.exists(filePath) && Files.size(filePath) > 0) {
-                    FileUtil.readGzip(filePath, buffer);
-                }
+            Throwable error = null;
 
-                // copy header
-                for (int i = 0; i < 12; i++) {
-                    buffer.put(i, this.byteBuffer.get(i));
+            if (zoom == 0) {
+                // short circuit bottom zoom
+                try {
+                    FileUtil.saveGzip(this.byteBuffer.array(), filePath);
+                } catch (IOException e) {
+                    error = e;
                 }
-
-                // write new data
-                int baseX = (getRegion().getRegionX() * size) & (Image.SIZE - 1);
-                int baseZ = (getRegion().getRegionZ() * size) & (Image.SIZE - 1);
-                for (int x = 0; x < Image.SIZE; x += step) {
-                    for (int z = 0; z < Image.SIZE; z += step) {
-                        int index = z * Image.SIZE + x;
-                        int packed = ByteUtil.getInt(this.byteBuffer, 12 + index * 4);
-                        int newIndex = (baseZ + (z / step)) * Image.SIZE + (baseX + (x / step));
-                        buffer.put(12 + newIndex * 4, ByteUtil.toBytes(packed));
+            } else {
+                try {
+                    // read existing data from disk
+                    ByteBuffer buffer = ByteBuffer.allocate(this.byteBuffer.capacity());
+                    if (Files.exists(filePath) && Files.size(filePath) > 0) {
+                        FileUtil.readGzip(filePath, buffer);
                     }
-                }
 
-                // finally, save data to disk
-                FileUtil.saveGzip(buffer.array(), filePath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                    // copy header
+                    for (int i = 0; i < 12; i++) {
+                        buffer.put(i, this.byteBuffer.get(i));
+                    }
+
+                    // write new data
+                    int baseX = (getRegion().getRegionX() * size) & (Image.SIZE - 1);
+                    int baseZ = (getRegion().getRegionZ() * size) & (Image.SIZE - 1);
+                    for (int x = 0; x < Image.SIZE; x += step) {
+                        for (int z = 0; z < Image.SIZE; z += step) {
+                            int index = z * Image.SIZE + x;
+                            int packed = ByteUtil.getInt(this.byteBuffer, 12 + index * 4);
+                            int newIndex = (baseZ + (z / step)) * Image.SIZE + (baseX + (x / step));
+                            buffer.put(12 + newIndex * 4, ByteUtil.toBytes(packed));
+                        }
+                    }
+
+                    // finally, save data to disk
+                    FileUtil.saveGzip(buffer.array(), filePath);
+                } catch (IOException e) {
+                    error = e;
+                }
+            }
+
+            if (error != null) {
+                throw new RuntimeException(error);
             }
 
             lock.writeLock().unlock();

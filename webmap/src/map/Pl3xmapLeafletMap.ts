@@ -28,10 +28,6 @@ export default class Pl3xmapLeafletMap extends Map {
         });
 
         this._pl3xmap = pl3xmap;
-
-        // always set center and zoom before doing anything else
-        // this sets the internal "_loaded" value to true
-        //this.setView([0, 0], 0);
     }
 
     // https://stackoverflow.com/a/60391674/3530727
@@ -40,13 +36,11 @@ export default class Pl3xmapLeafletMap extends Map {
         this._controlContainer = DomUtil.create('div', 'leaflet-control-container', this._container);
 
         const corners: { [x: string]: HTMLDivElement; } = this._controlCorners = {},
-            topContainer = DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
-            bottomContainer = DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
+            top = DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
+            bottom = DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
 
         function createCorner(vSide: string, hSide: string) {
-            const className = `leaflet-${vSide} leaflet-${hSide}`,
-                container = vSide === 'top' ? topContainer : bottomContainer;
-            corners[`${vSide}${hSide}`] = DomUtil.create('div', className, container);
+            corners[`${vSide}${hSide}`] = DomUtil.create('div', `leaflet-${vSide} leaflet-${hSide}`, vSide === 'top' ? top : bottom);
         }
 
         createCorner('top', 'left');
