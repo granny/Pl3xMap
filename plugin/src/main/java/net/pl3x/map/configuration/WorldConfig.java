@@ -2,7 +2,6 @@ package net.pl3x.map.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.pl3x.map.api.heightmap.Heightmap;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
 import org.bukkit.World;
@@ -59,9 +58,9 @@ public class WorldConfig extends AbstractConfig {
     @Comment("""
             Type of heightmap to render.
             MODERN is a clearer, more detailed view.
-            OLD_SCHOOL is the type from V1.
-            DYNMAP makes every other Y layer darker.""")
-    public Heightmap.Type RENDER_HEIGHTMAP_TYPE = Heightmap.Type.MODERN;
+            OLD_SCHOOL is the old type from v1.
+            EVEN_ODD makes every other Y layer darker, like Dynmap.""")
+    public String RENDER_HEIGHTMAP_TYPE = "MODERN";
 
     @Key("render.background.interval")
     @Comment("""
@@ -188,23 +187,12 @@ public class WorldConfig extends AbstractConfig {
 
     @Override
     protected Object getValue(String path, Object def) {
-        boolean heightmap = def instanceof Heightmap.Type;
-        if (heightmap) {
-            def = ((Heightmap.Type) def).name();
-        }
-
         if (getConfig().get("world-settings.default." + path) == null) {
             getConfig().set("world-settings.default." + path, def);
         }
 
-        Object value = getConfig().get("world-settings." + this.world.getName() + "." + path,
+        return getConfig().get("world-settings." + this.world.getName() + "." + path,
                 getConfig().get("world-settings.default." + path));
-
-        if (value instanceof String && heightmap) {
-            value = Heightmap.Type.get((String) value);
-        }
-
-        return value;
     }
 
     @Override

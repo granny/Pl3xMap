@@ -2,10 +2,11 @@ package net.pl3x.map.api;
 
 import net.pl3x.map.PaletteManager;
 import net.pl3x.map.api.addon.AddonManager;
+import net.pl3x.map.api.heightmap.HeightmapRegistry;
 import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.api.registry.IconRegistry;
-import net.pl3x.map.render.task.RendererManager;
+import net.pl3x.map.render.task.RendererRegistry;
 import net.pl3x.map.world.WorldManager;
 
 public interface Pl3xMap {
@@ -22,6 +23,8 @@ public interface Pl3xMap {
     }
 
     AddonManager getAddonManager();
+
+    HeightmapRegistry getHeightmapRegistry();
 
     IconRegistry getIconRegistry();
 

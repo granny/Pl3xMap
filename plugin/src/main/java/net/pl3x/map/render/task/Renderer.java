@@ -1,9 +1,12 @@
 package net.pl3x.map.render.task;
 
+import java.util.Locale;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.pl3x.map.api.Key;
+import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.api.heightmap.Heightmap;
 import net.pl3x.map.api.image.Image;
@@ -25,7 +28,8 @@ public abstract class Renderer {
         this.name = name;
         this.scanTask = scanTask;
 
-        this.heightmap = getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.createHeightmap();
+        Key key = new Key(getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT) + "_heightmap");
+        this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
     }
 
     public String getName() {
@@ -75,15 +79,13 @@ public abstract class Renderer {
         // fix true block color
         int pixelColor = 0;
         if (!flatFluid) {
-            int blockColor = Colors.fixBlockColor(getRender().getBiomeColors(), data, scanData, Colors.getRawBlockColor(data.getBlockState()));
-            if (blockColor != 0) {
-                pixelColor = Colors.setAlpha(0xFF, blockColor);
+            pixelColor = Colors.fixBlockColor(getRender().getBiomeColors(), data, scanData, Colors.getRawBlockColor(data.getBlockState()));
+            if (pixelColor != 0) {
+                // fix alpha
+                pixelColor = Colors.setAlpha(0xFF, pixelColor);
+                // work out the heightmap
+                pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
             }
-        }
-
-        // work out the heightmap
-        if (pixelColor != 0) {
-            pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, flatFluid));
         }
 
         // fancy fluids, yum

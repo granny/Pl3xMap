@@ -3,6 +3,7 @@ package net.pl3x.map;
 import java.lang.reflect.Field;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.addon.AddonManager;
+import net.pl3x.map.api.heightmap.HeightmapRegistry;
 import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.api.player.PlayerManager;
@@ -37,6 +38,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     private WorldListener worldListener;
 
     private AddonManager addonManager;
+    private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
     private IntegratedServer integratedServer;
     private PaletteManager paletteManager;
@@ -104,6 +106,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
 
         // setup managers
         this.addonManager = new AddonManager();
+        this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
         this.integratedServer = new UndertowServer();
         this.paletteManager = new PaletteManager();
@@ -194,6 +197,11 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     @Override
     public AddonManager getAddonManager() {
         return this.addonManager;
+    }
+
+    @Override
+    public HeightmapRegistry getHeightmapRegistry() {
+        return this.heightmapRegistry;
     }
 
     @Override

@@ -25,7 +25,9 @@ public final class BiomeRenderer extends Renderer {
             int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, AdvancedConfig.BIOME_COLORS.getOrDefault(biomeKey, 0));
 
             // work out the heightmap
-            pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData, fluid));
+            if (!fluid) {
+                pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
+            }
 
             int pixelX = data.getCoordinate().getBlockX() & Image.SIZE - 1;
             int pixelZ = data.getCoordinate().getBlockZ() & Image.SIZE - 1;
