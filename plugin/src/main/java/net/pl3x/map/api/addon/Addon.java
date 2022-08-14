@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents a Pl3xMap addon.
  */
 public abstract class Addon {
-    private final AddonInfo info = null;
+    AddonInfo info = null;
 
     /**
      * Called when this addon is enabled.

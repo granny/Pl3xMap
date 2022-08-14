@@ -1,7 +1,6 @@
 package net.pl3x.map.api.addon;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -77,6 +76,7 @@ public class AddonManager {
                     Logger.severe("Jar file does not contain an addon.yml info file (" + path.getFileName() + ")");
                     continue;
                 }
+
                 AddonInfo info = new AddonInfo(jar.getInputStream(entry));
 
                 if (this.loadedAddons.containsKey(info.getName())) {
@@ -91,11 +91,9 @@ public class AddonManager {
                 URLClassLoader loader = new URLClassLoader(new URL[]{path.toFile().toURI().toURL()}, Pl3xMapPlugin.class.getClassLoader());
                 Class<?> jarClass = Class.forName(info.getMain(), true, loader);
                 Class<? extends Addon> clazz = jarClass.asSubclass(Addon.class);
-                Addon addon = clazz.getDeclaredConstructor().newInstance();
 
-                Field desc = Addon.class.getDeclaredField("info");
-                desc.setAccessible(true);
-                desc.set(addon, info);
+                Addon addon = clazz.getDeclaredConstructor().newInstance();
+                addon.info = info;
 
                 Logger.info(Lang.ADDON_ENABLING
                         .replace("<name>", info.getName())
