@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
  * name, for example {@code "myplugin_layer-1"}, would be good practice.
  */
 public final class Key {
-    public static final Key NONE = new Key("none");
+    private static final Pattern VALID_CHARS = Pattern.compile("^[a-zA-Z0-9._-]+$");
 
-    private static final Pattern VALID_CHARS = Pattern.compile("^[a-zA-Z0-9._-]$");
+    public static final Key NONE = new Key("none");
 
     private final String key;
 
