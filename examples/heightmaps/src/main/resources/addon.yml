@@ -1,0 +1,5 @@
+name: "${name}"
+main: "${group}.${name}"
+version: "${version}"
+description: "${description}"
+author: "BillyGalbreath"

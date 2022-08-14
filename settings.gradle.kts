@@ -10,6 +10,9 @@ rootProject.name = "Pl3xMap"
 setupSubproject("Pl3xMap") {
     projectDir = file("plugin")
 }
+setupSubproject("HeightmapsAddon") {
+    projectDir = file("examples/heightmaps")
+}
 setupSubproject("InhabitedAddon") {
     projectDir = file("examples/inhabited")
 }
