@@ -41,7 +41,7 @@ public class ScanTask implements Runnable {
         }
 
         rendererNames.forEach(name -> {
-            Renderer renderer = Pl3xMap.api().getRendererManager().createRenderer(name, this);
+            Renderer renderer = Pl3xMap.api().getRendererRegistry().createRenderer(name, this);
             if (renderer != null) {
                 this.renderers.put(name, renderer);
             }

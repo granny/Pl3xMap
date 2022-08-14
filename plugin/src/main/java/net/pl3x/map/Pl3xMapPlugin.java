@@ -18,7 +18,7 @@ import net.pl3x.map.logger.Logger;
 import net.pl3x.map.logger.Pl3xLogger;
 import net.pl3x.map.player.BukkitPlayerManager;
 import net.pl3x.map.player.PlayerListener;
-import net.pl3x.map.render.task.RendererManager;
+import net.pl3x.map.render.task.RendererRegistry;
 import net.pl3x.map.task.UpdatePlayerData;
 import net.pl3x.map.task.UpdateWorldData;
 import net.pl3x.map.world.WorldListener;
@@ -43,7 +43,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     private IntegratedServer integratedServer;
     private PaletteManager paletteManager;
     private PlayerManager playerManager;
-    private RendererManager rendererManager;
+    private RendererRegistry rendererRegistry;
     private WorldManager worldManager;
 
     public static Pl3xMapPlugin getInstance() {
@@ -111,7 +111,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         this.integratedServer = new UndertowServer();
         this.paletteManager = new PaletteManager();
         this.playerManager = new BukkitPlayerManager();
-        this.rendererManager = new RendererManager();
+        this.rendererRegistry = new RendererRegistry();
         this.worldManager = new WorldManager();
 
         // register command manager
@@ -225,8 +225,8 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     }
 
     @Override
-    public RendererManager getRendererManager() {
-        return this.rendererManager;
+    public RendererRegistry getRendererRegistry() {
+        return this.rendererRegistry;
     }
 
     @Override

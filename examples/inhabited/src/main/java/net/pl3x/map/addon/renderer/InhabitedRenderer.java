@@ -1,4 +1,4 @@
-package net.pl3x.map.addon;
+package net.pl3x.map.addon.renderer;
 
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.api.image.Image;

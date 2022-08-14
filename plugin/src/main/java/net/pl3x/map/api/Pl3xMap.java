@@ -34,7 +34,7 @@ public interface Pl3xMap {
 
     PlayerManager getPlayerManager();
 
-    RendererManager getRendererManager();
+    RendererRegistry getRendererRegistry();
 
     WorldManager getWorldManager();
 }

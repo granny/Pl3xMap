@@ -8,8 +8,8 @@ import net.pl3x.map.render.task.builtin.BasicRenderer;
 import net.pl3x.map.render.task.builtin.BiomeRenderer;
 import net.pl3x.map.render.task.builtin.BlockInfoRenderer;
 
-public class RendererManager {
-    public RendererManager() {
+public class RendererRegistry {
+    public RendererRegistry() {
         register("basic", BasicRenderer.class);
         register("biomes", BiomeRenderer.class);
         register("blockinfo", BlockInfoRenderer.class);
