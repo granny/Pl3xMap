@@ -13,6 +13,12 @@ public class HeightmapRegistry {
 
     private final Map<Key, Heightmap> heightmaps = new HashMap<>();
 
+    public HeightmapRegistry() {
+        register(EVEN_ODD, new EvenOddHeightmap());
+        register(MODERN, new ModernHeightmap());
+        register(OLD_SCHOOL, new OldSchoolHeightmap());
+    }
+
     public void register(@NotNull Key key, @NotNull Heightmap heightmap) {
         if (this.heightmaps.containsKey(key)) {
             throw new IllegalStateException("Heightmap already registered (" + key + ")");
