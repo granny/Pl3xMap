@@ -1,4 +1,4 @@
-import {Control, ControlOptions, ControlPosition, DomEvent, DomUtil, Layer, Map, stamp} from "leaflet";
+import {Control, DomEvent, DomUtil, Layer, Map, stamp} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import '../svg/layers.svg';
