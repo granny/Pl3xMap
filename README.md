@@ -15,7 +15,10 @@ for Paper servers using the vanilla Minecraft rendering style.</b></big>
 
 ## Downloads
 
-Coming soon..
+Downloads are available on Modrinth.  
+(Currently in alpha stages, use at your own risk!)
+
+[![Download on Modrinth](https://i.imgur.com/5C4fVJC.png)](https://modrinth.com/mod/pl3xmap)
 
 ## Licenses
 

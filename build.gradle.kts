@@ -2,6 +2,7 @@ plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "1.3.8"
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 val minecraftVersion: String by project
@@ -84,10 +85,12 @@ subprojects {
 
             processResources {
                 filteringCharset = Charsets.UTF_8.name()
-                filesMatching(listOf(
-                    "addon.yml",
-                    "plugin.yml"
-                )) {
+                filesMatching(
+                    listOf(
+                        "addon.yml",
+                        "plugin.yml"
+                    )
+                ) {
                     expand(
                         "name" to project.name,
                         "group" to project.group,
@@ -97,5 +100,26 @@ subprojects {
                 }
             }
         }
+    }
+}
+
+tasks {
+    modrinth {
+        token.set(System.getenv("MODRINTH_TOKEN"))
+        projectId.set("pl3xmap")
+        versionName.set("${project.version}")
+        versionNumber.set("${project.version}")
+        versionType.set("alpha")
+        uploadFile.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar").get())
+        // Modrinth does not support arbitrary additional files
+        //additionalFiles.set(
+        //    listOf(
+        //        rootProject.layout.buildDirectory.file("libs/${project(":HeightmapsAddon").name}-${project.version}.jar").get(),
+        //        rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get()
+        //    )
+        //)
+        gameVersions.addAll(listOf(minecraftVersion))
+        loaders.addAll(listOf("paper", "purpur"))
+        changelog.set(System.getenv("COMMIT_MESSAGE"))
     }
 }
