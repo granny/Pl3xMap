@@ -3,7 +3,7 @@
 
 # Pl3xMap
 
-[![Build Status](https://img.shields.io/github/workflow/status/BillyGalbreath/Pl3xMap/Build?event=push&logo=github)](https://github.com/BillyGalbreath/Pl3xMap/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/BillyGalbreath/Pl3xMap/Build?event=push&logo=github)](https://modrinth.com/mod/pl3xmap/versions)
 [![CodeFactor Score](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap/badge)](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap)
 [![Join us on Discord](https://img.shields.io/discord/944144133054931025.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/nhGzEkwXQX)
 
