@@ -6,7 +6,6 @@
 [![Build Status](https://img.shields.io/github/workflow/status/BillyGalbreath/Pl3xMap/Build?event=push&logo=github)](https://github.com/BillyGalbreath/Pl3xMap/releases)
 [![CodeFactor Score](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap/badge)](https://www.codefactor.io/repository/github/BillyGalbreath/Pl3xMap)
 [![Join us on Discord](https://img.shields.io/discord/944144133054931025.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/nhGzEkwXQX)
-[![wakatime](https://wakatime.com/badge/github/BillyGalbreath/Pl3xMap.svg)](https://wakatime.com/badge/github/BillyGalbreath/Pl3xMap)
 
 <big><b>Pl3xMap is the <u>original</u> minimalistic and lightweight world map viewer  
 for Paper servers using the vanilla Minecraft rendering style.</b></big>
