@@ -10,14 +10,15 @@ rootProject.name = "Pl3xMap"
 setupSubproject("Pl3xMap") {
     projectDir = file("plugin")
 }
-setupSubproject("HeightmapsAddon") {
-    projectDir = file("examples/heightmaps")
-}
-setupSubproject("InhabitedAddon") {
-    projectDir = file("examples/inhabited")
-}
 setupSubproject("WebMap") {
     projectDir = file("webmap")
+}
+
+setupSubproject("HeightmapsAddon") {
+    projectDir = file("addons/heightmaps")
+}
+setupSubproject("InhabitedAddon") {
+    projectDir = file("addons/inhabited")
 }
 
 inline fun setupSubproject(name: String, block: ProjectDescriptor.() -> Unit) {
