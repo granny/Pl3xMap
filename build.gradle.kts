@@ -112,12 +112,12 @@ tasks {
         versionType.set("alpha")
         uploadFile.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar").get())
         // Modrinth does not support arbitrary additional files
-        //additionalFiles.set(
-        //    listOf(
-        //        rootProject.layout.buildDirectory.file("libs/${project(":HeightmapsAddon").name}-${project.version}.jar").get(),
-        //        rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get()
-        //    )
-        //)
+        additionalFiles.set(
+            listOf(
+                rootProject.layout.buildDirectory.file("libs/${project(":HeightmapsAddon").name}-${project.version}.jar").get(),
+                rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get()
+            )
+        )
         gameVersions.addAll(listOf(minecraftVersion))
         loaders.addAll(listOf("paper", "purpur"))
         changelog.set(System.getenv("COMMIT_MESSAGE"))
