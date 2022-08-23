@@ -114,6 +114,7 @@ tasks {
         // Modrinth does not support arbitrary additional files
         additionalFiles.set(
             listOf(
+                rootProject.layout.buildDirectory.file("libs/${project(":FlowerMapAddon").name}-${project.version}.jar").get(),
                 rootProject.layout.buildDirectory.file("libs/${project(":HeightmapsAddon").name}-${project.version}.jar").get(),
                 rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get()
             )

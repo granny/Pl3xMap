@@ -14,6 +14,7 @@ import net.pl3x.map.api.image.Image;
 import net.pl3x.map.render.task.Renderer;
 import net.pl3x.map.render.task.ScanData;
 import net.pl3x.map.render.task.ScanTask;
+import net.pl3x.map.util.Colors;
 
 public class FlowerMapRenderer extends Renderer {
     private final RandomSource random = RandomSource.createThreadSafe();
@@ -52,6 +53,18 @@ public class FlowerMapRenderer extends Renderer {
                 SimpleBlockConfiguration flower = (SimpleBlockConfiguration) config.feature().value().feature().value().config();
                 BlockState state = flower.toPlace().getState(this.random, data.getBlockPos());
                 pixelColor = this.colorMap.getOrDefault(state, 0xFF7F7F7F);
+            }
+
+            // fluid stuff
+            boolean isFluid = data.getFluidPos() != null;
+            boolean transFluid = getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
+            boolean flatFluid = isFluid && !transFluid;
+            if (isFluid) {
+                if (transFluid) {
+                    pixelColor = Colors.mix(pixelColor, fancyFluids(data, scanData, data.getFluidState(), (data.getFluidPos().getY() - data.getBlockPos().getY()) * 0.025F));
+                } else {
+                    pixelColor = getRender().getBiomeColors().getWaterColor(data, scanData);
+                }
             }
 
             // draw color data to image

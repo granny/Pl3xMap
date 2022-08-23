@@ -10,7 +10,7 @@ shows a flower layer on your map. Idea inspired by the [FlowerMap mod](https://m
 
 ## Screenshots
 
-[<img src="https://i.imgur.com/0G3Zpt3.png" width="200">](https://i.imgur.com/0G3Zpt3.png)
+[<img src="https://i.imgur.com/10ZSx59.png" width="200">](https://i.imgur.com/10ZSx59.png)
 
 ## Downloads
 
