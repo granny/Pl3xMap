@@ -1,6 +1,6 @@
-group = "net.pl3x.map.addon.heightmaps"
+group = "net.pl3x.map.addon.flowermap"
 version = rootProject.version
-description = "Pl3xMap addon that adds more heightmap types"
+description = "Pl3xMap addon that renders a flower map"
 
 dependencies {
     compileOnly(project(":Pl3xMap"))

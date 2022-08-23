@@ -1,9 +1,9 @@
-package net.pl3x.map.addon;
+package net.pl3x.map.addon.heightmaps;
 
-import net.pl3x.map.addon.heightmap.EvenOddLowContrastHeightmap;
-import net.pl3x.map.addon.heightmap.EvenOddModernHeightmap;
-import net.pl3x.map.addon.heightmap.EvenOddOldSchoolHeightmap;
-import net.pl3x.map.addon.heightmap.LowContrastHeightmap;
+import net.pl3x.map.addon.heightmaps.heightmap.EvenOddLowContrastHeightmap;
+import net.pl3x.map.addon.heightmaps.heightmap.EvenOddModernHeightmap;
+import net.pl3x.map.addon.heightmaps.heightmap.EvenOddOldSchoolHeightmap;
+import net.pl3x.map.addon.heightmaps.heightmap.LowContrastHeightmap;
 import net.pl3x.map.api.Key;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.addon.Addon;

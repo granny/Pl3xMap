@@ -1,6 +1,6 @@
-package net.pl3x.map.addon;
+package net.pl3x.map.addon.inhabited;
 
-import net.pl3x.map.addon.renderer.InhabitedRenderer;
+import net.pl3x.map.addon.inhabited.renderer.InhabitedRenderer;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.addon.Addon;
 import net.pl3x.map.render.task.RendererRegistry;

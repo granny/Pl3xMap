@@ -14,11 +14,17 @@ setupSubproject("WebMap") {
     projectDir = file("webmap")
 }
 
+setupSubproject("FlowerMapAddon") {
+    projectDir = file("addons/flowermap")
+}
 setupSubproject("HeightmapsAddon") {
     projectDir = file("addons/heightmaps")
 }
 setupSubproject("InhabitedAddon") {
     projectDir = file("addons/inhabited")
+}
+setupSubproject("WorldBorderAddon") {
+    projectDir = file("addons/worldborder")
 }
 
 inline fun setupSubproject(name: String, block: ProjectDescriptor.() -> Unit) {

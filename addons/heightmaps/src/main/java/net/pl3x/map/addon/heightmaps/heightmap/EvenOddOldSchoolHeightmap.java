@@ -1,4 +1,4 @@
-package net.pl3x.map.addon.heightmap;
+package net.pl3x.map.addon.heightmaps.heightmap;
 
 import net.pl3x.map.api.coordinate.BlockCoordinate;
 import net.pl3x.map.api.heightmap.Heightmap;

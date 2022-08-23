@@ -1,6 +1,6 @@
-group = "net.pl3x.map.addon.heightmaps"
+group = "net.pl3x.map.addon.worldborder"
 version = rootProject.version
-description = "Pl3xMap addon that adds more heightmap types"
+description = "Pl3xMap addon that adds world border marker to maps"
 
 dependencies {
     compileOnly(project(":Pl3xMap"))
