@@ -55,12 +55,12 @@ public class FlowerMapRenderer extends Renderer {
                 pixelColor = this.colorMap.getOrDefault(state, 0xFF7F7F7F);
             }
 
+            // work out the heightmap
+            pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
+
             // fluid stuff
-            boolean isFluid = data.getFluidPos() != null;
-            boolean transFluid = getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
-            boolean flatFluid = isFluid && !transFluid;
-            if (isFluid) {
-                if (transFluid) {
+            if (data.getFluidPos() != null) {
+                if (getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
                     pixelColor = Colors.mix(pixelColor, fancyFluids(data, scanData, data.getFluidState(), (data.getFluidPos().getY() - data.getBlockPos().getY()) * 0.025F));
                 } else {
                     pixelColor = getRender().getBiomeColors().getWaterColor(data, scanData);
