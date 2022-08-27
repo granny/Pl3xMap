@@ -86,21 +86,29 @@ export class Util {
     }
 
     public static getJSON(url: string) {
-        return fetch(url, {cache: "no-store"})
-            .then(async res => {
-                if (res.ok) {
-                    return await res.json();
-                }
-            });
+        return fetch(url, {
+            cache: "no-store",
+            headers: {
+                "Content-Disposition": "inline"
+            }
+        }).then(async res => {
+            if (res.ok) {
+                return await res.json();
+            }
+        });
     }
 
     public static getBytes(url: string) {
-        return fetch(url, {cache: "no-store"})
-            .then(async res => {
-                if (res.ok) {
-                    return await res.arrayBuffer();
-                }
-            });
+        return fetch(url, {
+            cache: "no-store",
+            headers: {
+                "Content-Disposition": "inline"
+            }
+        }).then(async res => {
+            if (res.ok) {
+                return await res.arrayBuffer();
+            }
+        });
     }
 
     public static getUrlParam<T>(query: string, def: T): T {
