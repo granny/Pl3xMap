@@ -5,6 +5,7 @@ import net.pl3x.map.api.addon.AddonManager;
 import net.pl3x.map.api.heightmap.HeightmapRegistry;
 import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.player.PlayerManager;
+import net.pl3x.map.api.registry.EventRegistry;
 import net.pl3x.map.api.registry.IconRegistry;
 import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.render.task.RendererRegistry;
@@ -24,6 +25,8 @@ public interface Pl3xMap {
     }
 
     AddonManager getAddonManager();
+
+    EventRegistry getEventRegistry();
 
     HeightmapRegistry getHeightmapRegistry();
 

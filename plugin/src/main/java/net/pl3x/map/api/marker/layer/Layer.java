@@ -13,6 +13,7 @@ public interface Layer {
      *
      * @return layer label
      */
+    @NotNull
     String getLabel();
 
     /**

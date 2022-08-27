@@ -7,9 +7,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.pl3x.map.api.Pl3xMap;
+import net.pl3x.map.api.event.world.WorldLoadedEvent;
+import net.pl3x.map.api.event.world.WorldUnloadedEvent;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages mapped worlds
@@ -22,6 +26,7 @@ public class WorldManager {
      *
      * @return map worlds
      */
+    @NotNull
     public Collection<MapWorld> getMapWorlds() {
         return Collections.unmodifiableCollection(this.mapWorlds.values());
     }
@@ -32,7 +37,8 @@ public class WorldManager {
      * @param world Bukkit world
      * @return map world
      */
-    public MapWorld getMapWorld(World world) {
+    @Nullable
+    public MapWorld getMapWorld(@Nullable World world) {
         return world == null ? null : this.mapWorlds.get(world.getUID());
     }
 
@@ -40,9 +46,8 @@ public class WorldManager {
      * Load a map world
      *
      * @param world Bukkit world
-     * @return map world
      */
-    public MapWorld loadWorld(World world) {
+    public void loadWorld(@NotNull World world) {
         if (this.mapWorlds.containsKey(world.getUID())) {
             throw new RuntimeException("World is already loaded");
         }
@@ -52,14 +57,14 @@ public class WorldManager {
         } catch (RuntimeException ignore) {
             Logger.debug("<yellow>Skipping <world>"
                     .replace("<world>", world.getName()));
-            return null;
+            return;
         }
         MapWorld mapWorld = new MapWorld(world, config);
         this.mapWorlds.put(world.getUID(), mapWorld);
         Pl3xMap.api().getPaletteManager().register(mapWorld);
+        new WorldLoadedEvent(mapWorld).callEvent();
         Logger.debug("<green>Loaded <world>"
                 .replace("<world>", world.getName()));
-        return mapWorld;
     }
 
     /**
@@ -67,10 +72,11 @@ public class WorldManager {
      *
      * @param world Bukkit world
      */
-    public void unloadWorld(World world) {
+    public void unloadWorld(@NotNull World world) {
         MapWorld mapWorld = this.mapWorlds.remove(world.getUID());
         if (mapWorld != null) {
             mapWorld.unload();
+            new WorldUnloadedEvent(mapWorld).callEvent();
         }
     }
 

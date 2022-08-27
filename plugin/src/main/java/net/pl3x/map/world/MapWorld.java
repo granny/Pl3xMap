@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.border.WorldBorder;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.coordinate.ChunkCoordinate;
@@ -137,6 +138,10 @@ public class MapWorld {
      */
     public UUID getUUID() {
         return this.world.getUID();
+    }
+
+    public WorldBorder getBorder() {
+        return getLevel().getWorldBorder();
     }
 
     public WorldConfig getConfig() {

@@ -8,6 +8,7 @@ import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.api.image.io.Png;
 import net.pl3x.map.api.player.PlayerManager;
+import net.pl3x.map.api.registry.EventRegistry;
 import net.pl3x.map.api.registry.IconRegistry;
 import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.command.CommandManager;
@@ -40,6 +41,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     private WorldListener worldListener;
 
     private AddonManager addonManager;
+    private EventRegistry eventRegistry;
     private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
     private IntegratedServer integratedServer;
@@ -108,6 +110,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
 
         // setup managers
         this.addonManager = new AddonManager();
+        this.eventRegistry = new EventRegistry();
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
         this.integratedServer = new UndertowServer();
@@ -148,6 +151,9 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         // register built-in renderers
         getRendererRegistry().init();
 
+        // enable addons
+        getAddonManager().enableAddons();
+
         // start integrated server
         getIntegratedServer().startServer();
 
@@ -166,18 +172,9 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         // start updating world data
         this.updateWorldDataTask = new UpdateWorldData();
         this.updateWorldDataTask.runTaskTimer(this, 0, 20 * 5);
-
-        // enable addons
-        getAddonManager().enableAddons();
     }
 
     public void disable() {
-        // disable addons
-        getAddonManager().disableAddons();
-
-        // stop integrated server
-        getIntegratedServer().stopServer();
-
         // stop updating player data
         if (this.updatePlayerDataTask != null) {
             if (!this.updatePlayerDataTask.isCancelled()) {
@@ -202,6 +199,12 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         // unload all map worlds
         getWorldManager().unload();
 
+        // stop integrated server
+        getIntegratedServer().stopServer();
+
+        // disable addons
+        getAddonManager().disableAddons();
+
         // unregister heightmaps
         getHeightmapRegistry().unregisterAll();
 
@@ -221,6 +224,11 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     @Override
     public AddonManager getAddonManager() {
         return this.addonManager;
+    }
+
+    @Override
+    public EventRegistry getEventRegistry() {
+        return this.eventRegistry;
     }
 
     @Override

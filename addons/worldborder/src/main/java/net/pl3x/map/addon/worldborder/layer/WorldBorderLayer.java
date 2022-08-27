@@ -2,13 +2,12 @@ package net.pl3x.map.addon.worldborder.layer;
 
 import java.util.Collection;
 import java.util.Collections;
+import net.minecraft.world.level.border.WorldBorder;
 import net.pl3x.map.api.marker.Marker;
 import net.pl3x.map.api.marker.Point;
 import net.pl3x.map.api.marker.layer.Layer;
 import net.pl3x.map.api.marker.type.Polyline;
 import net.pl3x.map.world.MapWorld;
-import org.bukkit.Location;
-import org.bukkit.WorldBorder;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldBorderLayer implements Layer {
@@ -20,7 +19,7 @@ public class WorldBorderLayer implements Layer {
     private final int priority;
     private final int zIndex;
 
-    public WorldBorderLayer(MapWorld mapWorld) {
+    public WorldBorderLayer(@NotNull MapWorld mapWorld) {
         this.mapWorld = mapWorld;
 
         this.label = "World Border";
@@ -30,11 +29,13 @@ public class WorldBorderLayer implements Layer {
         this.zIndex = 500;
     }
 
+    @NotNull
     public MapWorld getMapWorld() {
         return this.mapWorld;
     }
 
     @Override
+    @NotNull
     public String getLabel() {
         return this.label;
     }
@@ -62,10 +63,9 @@ public class WorldBorderLayer implements Layer {
     @Override
     @NotNull
     public Collection<Marker> getMarkers() {
-        WorldBorder border = this.mapWorld.getWorld().getWorldBorder();
-        Location center = border.getCenter();
-        int x = center.getBlockX();
-        int z = center.getBlockZ();
+        WorldBorder border = getMapWorld().getBorder();
+        int x = (int) border.getCenterX();
+        int z = (int) border.getCenterZ();
         int r = (int) border.getSize() / 2;
         Polyline.Line line = new Polyline.Line()
                 .addPoint(new Point(x - r, z - r))
