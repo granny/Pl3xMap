@@ -43,7 +43,7 @@ public class PaletteManager {
         }
     }
 
-    public void initWorld(MapWorld mapWorld) {
+    public void register(MapWorld mapWorld) {
         Palette<Biome> palette = new Palette<>();
         BIOME_PALETTES.put(mapWorld, palette);
 
@@ -59,6 +59,10 @@ public class PaletteManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void unregister(MapWorld mapWorld) {
+        BIOME_PALETTES.remove(mapWorld);
     }
 
     private String name(String type, ResourceLocation key) {

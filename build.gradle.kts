@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "1.3.8"
-    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("com.modrinth.minotaur") version "2.+"
 }
 
@@ -66,6 +66,10 @@ subprojects {
         }
 
         tasks {
+            shadowJar {
+                from(rootProject.projectDir.resolve("LICENSE"))
+            }
+
             reobfJar {
                 outputJar.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
             }
@@ -116,7 +120,9 @@ tasks {
             listOf(
                 rootProject.layout.buildDirectory.file("libs/${project(":FlowerMapAddon").name}-${project.version}.jar").get(),
                 rootProject.layout.buildDirectory.file("libs/${project(":HeightmapsAddon").name}-${project.version}.jar").get(),
-                rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get()
+                rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get(),
+                rootProject.layout.buildDirectory.file("libs/${project(":WebpAddon").name}-${project.version}.jar").get(),
+                //rootProject.layout.buildDirectory.file("libs/${project(":WorldBorderAddon").name}-${project.version}.jar").get(),
             )
         )
         gameVersions.addAll(listOf(minecraftVersion))

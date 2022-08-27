@@ -56,7 +56,7 @@ public class WorldManager {
         }
         MapWorld mapWorld = new MapWorld(world, config);
         this.mapWorlds.put(world.getUID(), mapWorld);
-        Pl3xMap.api().getPaletteManager().initWorld(mapWorld);
+        Pl3xMap.api().getPaletteManager().register(mapWorld);
         Logger.debug("<green>Loaded <world>"
                 .replace("<world>", world.getName()));
         return mapWorld;

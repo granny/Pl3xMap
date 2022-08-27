@@ -13,6 +13,8 @@ public interface PlayerManager {
 
     void unloadPlayer(UUID uuid);
 
+    void unloadAll();
+
     /**
      * Function that is used to change player name in a player list
      * <p>

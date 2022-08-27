@@ -2,6 +2,7 @@ package net.pl3x.map.api.marker.layer;
 
 import java.util.Collection;
 import net.pl3x.map.api.marker.Marker;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides Markers and other metadata which make up a Layer
@@ -63,5 +64,6 @@ public interface Layer {
      *
      * @return markers to display
      */
+    @NotNull
     Collection<Marker> getMarkers();
 }

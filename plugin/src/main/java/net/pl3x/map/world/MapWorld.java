@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.Pl3xMapPlugin;
+import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.configuration.Config;
@@ -335,6 +336,8 @@ public class MapWorld {
 
         serializeDirtyChunks();
         serializeScannedRegions();
+
+        Pl3xMap.api().getPaletteManager().unregister(this);
     }
 
     public Path getWorldTilesDir() {

@@ -44,8 +44,15 @@ public class BukkitPlayerManager implements PlayerManager {
         return getPlayer(player);
     }
 
+    @Override
     public void unloadPlayer(UUID uuid) {
         this.players.remove(uuid);
+    }
+
+    @Override
+    public void unloadAll() {
+        this.players.clear();
+        this.nameDecorators.clear();
     }
 
     @Override

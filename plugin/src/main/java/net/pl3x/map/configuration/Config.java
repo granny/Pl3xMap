@@ -28,8 +28,7 @@ public class Config extends AbstractConfig {
     @Key("settings.web-directory.tile-format")
     @Comment("""
             The image format for tile images.
-            Supported types: png, webp
-            Important: Webp is still highly experimental. Use at your own risk.""")
+            Built in types: png""")
     public static String WEB_TILE_FORMAT = "png";
 
     @Key("settings.internal-webserver.enabled")

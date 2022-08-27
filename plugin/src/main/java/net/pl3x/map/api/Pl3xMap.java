@@ -6,6 +6,7 @@ import net.pl3x.map.api.heightmap.HeightmapRegistry;
 import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.api.registry.IconRegistry;
+import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.render.task.RendererRegistry;
 import net.pl3x.map.world.WorldManager;
 
@@ -13,13 +14,13 @@ public interface Pl3xMap {
     final class Provider {
         static Pl3xMap api = null;
 
-        static Pl3xMap api() {
+        public static Pl3xMap api() {
             return Provider.api;
         }
     }
 
     static Pl3xMap api() {
-        return Provider.api;
+        return Provider.api();
     }
 
     AddonManager getAddonManager();
@@ -27,6 +28,8 @@ public interface Pl3xMap {
     HeightmapRegistry getHeightmapRegistry();
 
     IconRegistry getIconRegistry();
+
+    LayerRegistry getLayerRegistry();
 
     IntegratedServer getIntegratedServer();
 

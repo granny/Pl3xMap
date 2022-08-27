@@ -1,4 +1,4 @@
-package net.pl3x.map.api.image.io;
+package net.pl3x.map.addon.webp.io;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.metadata.ImageMetadata;
@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import net.pl3x.map.api.image.Image;
+import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.logger.Logger;
 
 public class Webp extends IO.Type {

@@ -9,7 +9,7 @@ import net.pl3x.map.render.task.builtin.BiomeRenderer;
 import net.pl3x.map.render.task.builtin.BlockInfoRenderer;
 
 public class RendererRegistry {
-    public RendererRegistry() {
+    public void init() {
         register("basic", BasicRenderer.class);
         register("biomes", BiomeRenderer.class);
         register("blockinfo", BlockInfoRenderer.class);
@@ -30,6 +30,10 @@ public class RendererRegistry {
             throw new IllegalStateException(String.format("No renderer registered with name %s", name));
         }
         return this.renderers.remove(name);
+    }
+
+    public void unregisterAll() {
+        this.renderers.clear();
     }
 
     public Renderer createRenderer(String name, ScanTask scanTask) {

@@ -13,7 +13,7 @@ public class HeightmapRegistry {
 
     private final Map<Key, Heightmap> heightmaps = new HashMap<>();
 
-    public HeightmapRegistry() {
+    public void init() {
         register(EVEN_ODD, new EvenOddHeightmap());
         register(MODERN, new ModernHeightmap());
         register(OLD_SCHOOL, new OldSchoolHeightmap());
@@ -30,6 +30,10 @@ public class HeightmapRegistry {
         if (this.heightmaps.remove(key) == null) {
             throw new IllegalStateException("Heightmap not registered (" + key + ")");
         }
+    }
+
+    public void unregisterAll() {
+        this.heightmaps.clear();
     }
 
     @Nullable
