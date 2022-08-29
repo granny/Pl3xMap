@@ -3,7 +3,7 @@ package net.pl3x.map.task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.pl3x.map.api.Pl3xMap;
@@ -50,7 +50,7 @@ public class UpdatePlayerData extends BukkitRunnable {
                 if (mapPlayer.isHidden()) {
                     return;
                 }
-                Map<String, Object> playerEntry = new HashMap<>();
+                Map<String, Object> playerEntry = new LinkedHashMap<>();
                 Location loc = player.getLocation();
 
                 playerEntry.put("name", playerManager.decorateName(mapPlayer));
@@ -73,9 +73,9 @@ public class UpdatePlayerData extends BukkitRunnable {
             });
         });
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("players", players);
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("max", Bukkit.getMaxPlayers());
+        map.put("players", players);
 
         FileUtil.write(this.gson.toJson(map), MapWorld.TILES_DIR.resolve("players.json"));
     }

@@ -37,6 +37,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
 
     private UpdatePlayerData updatePlayerDataTask;
     private UpdateWorldData updateWorldDataTask;
+
     private WorldListener worldListener;
 
     private AddonManager addonManager;

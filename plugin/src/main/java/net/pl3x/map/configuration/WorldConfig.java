@@ -84,12 +84,8 @@ public class WorldConfig extends AbstractConfig {
     @Comment("The display position for the blockinfo box")
     public String DISPLAY_NAME = "<world>";
 
-    @Key("ui.icon")
-    @Comment("The display position for the blockinfo box")
-    public String ICON = "";
-
     @Key("ui.order")
-    @Comment("The display position for the blockinfo box")
+    @Comment("The order of the world in the world list")
     public int ORDER = 0;
 
     @Key("ui.blockinfo")
@@ -122,10 +118,6 @@ public class WorldConfig extends AbstractConfig {
             tile images so you can zoom in further without
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
-
-    @Key("markers.update-interval")
-    @Comment("How often (in seconds) to update map markers")
-    public int MARKERS_UPDATE_INTERVAL = 5;
 
     @Key("player-tracker.enabled")
     @Comment("Enable the player tracker")

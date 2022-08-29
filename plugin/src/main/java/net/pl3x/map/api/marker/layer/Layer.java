@@ -1,6 +1,7 @@
 package net.pl3x.map.api.marker.layer;
 
 import java.util.Collection;
+import net.pl3x.map.api.Key;
 import net.pl3x.map.api.marker.Marker;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,12 +10,27 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Layer {
     /**
+     * Get the key of this Layer
+     *
+     * @return layer key
+     */
+    @NotNull
+    Key getKey();
+
+    /**
      * Get the label of this Layer, shown in the control box
      *
      * @return layer label
      */
     @NotNull
     String getLabel();
+
+    /**
+     * Get this layer's update interval (in seconds).
+     *
+     * @return update interval
+     */
+    int getUpdateInterval();
 
     /**
      * Whether to show this Layer in the control box

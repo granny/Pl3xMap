@@ -95,7 +95,7 @@ public class MapWorld {
         }
 
         this.updateMarkerDataTask = new UpdateMarkerData(this);
-        this.updateMarkerDataTask.runTaskTimer(Pl3xMapPlugin.getInstance(), ThreadLocalRandom.current().nextInt(20), 20L * getConfig().MARKERS_UPDATE_INTERVAL);
+        this.updateMarkerDataTask.runTaskTimer(Pl3xMapPlugin.getInstance(), ThreadLocalRandom.current().nextInt(20), 20);
 
         startBackgroundRender();
 
@@ -352,7 +352,21 @@ public class MapWorld {
         Pl3xMap.api().getPaletteManager().unregister(this);
     }
 
-    public Path getWorldTilesDir() {
+    /**
+     * Get the tiles directory for this world
+     *
+     * @return world tiles directory
+     */
+    public Path getTilesDir() {
         return TILES_DIR.resolve(getName());
+    }
+
+    /**
+     * Get the markers directory for this world
+     *
+     * @return world markers directory
+     */
+    public Path getMarkersDir() {
+        return getTilesDir().resolve("markers");
     }
 }

@@ -36,7 +36,7 @@ public class BlockInfoRenderer extends Renderer {
     @Override
     public void allocateData() {
         this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 12);
-        Path path = getScanTask().getWorld().getWorldTilesDir()
+        Path path = getScanTask().getWorld().getTilesDir()
                 .resolve(String.format(Image.DIR_PATH, 0, getName()))
                 .resolve(String.format(Image.FILE_PATH,
                         getRegion().getRegionX(),
@@ -54,7 +54,7 @@ public class BlockInfoRenderer extends Renderer {
     @Override
     public void saveData() {
         MapWorld mapWorld = getScanTask().getWorld();
-        Path tilesDir = mapWorld.getWorldTilesDir();
+        Path tilesDir = mapWorld.getTilesDir();
         for (int zoom = 0; zoom <= mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
             Path dirPath = tilesDir.resolve(String.format(Image.DIR_PATH, zoom, getName()));
 

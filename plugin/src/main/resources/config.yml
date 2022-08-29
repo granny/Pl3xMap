@@ -5,9 +5,18 @@ world-settings:
     enabled: false
   world:
     enabled: true
+    ui:
+      display-name: Overworld
+      order: 0
   world_nether:
+    ui:
+      display-name: The Nether
+      order: 1
     render:
       skylight: 10
   world_the_end:
+    ui:
+      display-name: The End
+      order: 2
     render:
       skylight: 10

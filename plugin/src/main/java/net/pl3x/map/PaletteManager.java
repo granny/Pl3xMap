@@ -55,7 +55,7 @@ public class PaletteManager {
         palette.lock();
 
         try {
-            FileUtil.saveGzip(GSON.toJson(palette.getMap()), mapWorld.getWorldTilesDir().resolve("biomes.gz"));
+            FileUtil.saveGzip(GSON.toJson(palette.getMap()), mapWorld.getTilesDir().resolve("biomes.gz"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -57,9 +57,9 @@ public class BukkitPlayerManager implements PlayerManager {
 
     @Override
     public void registerNameDecorator(int priority, BiFunction<MapPlayer, String, String> decorator) {
-        nameDecorators.put(decorator, priority);
+        this.nameDecorators.put(decorator, priority);
 
-        nameDecorators = nameDecorators.entrySet().stream()
+        this.nameDecorators = this.nameDecorators.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
@@ -68,7 +68,7 @@ public class BukkitPlayerManager implements PlayerManager {
     @Override
     public String decorateName(MapPlayer player) {
         String name = player.getName();
-        for (BiFunction<MapPlayer, String, String> fn : nameDecorators.keySet()) {
+        for (BiFunction<MapPlayer, String, String> fn : this.nameDecorators.keySet()) {
             name = fn.apply(player, name);
         }
         return name;

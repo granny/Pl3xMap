@@ -46,7 +46,7 @@ public class ResetMapCommand extends Pl3xMapCommand {
         mapWorld.setPaused(true);
 
         // delete all tiles for world
-        Path worldTilesDir = MapWorld.TILES_DIR.resolve(mapWorld.getName());
+        Path worldTilesDir = mapWorld.getTilesDir();
         try {
             FileUtil.deleteSubdirectories(worldTilesDir);
         } catch (IOException e) {

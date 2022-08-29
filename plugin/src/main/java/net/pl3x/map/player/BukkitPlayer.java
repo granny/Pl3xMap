@@ -20,12 +20,12 @@ public class BukkitPlayer implements MapPlayer {
 
     @Override
     public UUID getUUID() {
-        return null;
+        return this.player.getUniqueId();
     }
 
     @Override
     public String getName() {
-        return null;
+        return this.player.getName();
     }
 
     @Override
