@@ -25,13 +25,13 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
     declare protected _checkDisabledLayers: () => void;
 
     protected _pl3xmap: Pl3xMap;
-    protected _button: HTMLButtonElement = document.createElement('button');
-    protected _content: HTMLDivElement = document.createElement('div');
+    protected _button: HTMLButtonElement = DomUtil.create('button');
+    protected _content: HTMLDivElement = DomUtil.create('div');
 
-    protected _baseContainer: HTMLDivElement = document.createElement('div');
-    protected _baseLayersList: HTMLFieldSetElement = document.createElement('fieldset');
-    protected _overlayContainer: HTMLDivElement = document.createElement('div');
-    protected _overlaysList: HTMLFieldSetElement = document.createElement('fieldset');
+    protected _baseContainer: HTMLDivElement = DomUtil.create('div');
+    protected _baseLayersList: HTMLFieldSetElement = DomUtil.create('fieldset');
+    protected _overlayContainer: HTMLDivElement = DomUtil.create('div');
+    protected _overlaysList: HTMLFieldSetElement = DomUtil.create('fieldset');
 
     constructor(pl3xmap: Pl3xMap) {
         super({}, {}, {hideSingleBase: true});
@@ -73,11 +73,11 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         heading.innerText = this._pl3xmap.lang.layers;
         heading.id = 'layers-heading';
 
-        const baseHeading = DomUtil.create('h3', '', this._content);
+        const baseHeading = DomUtil.create('h3', '', this._baseContainer);
         baseHeading.innerText = 'Renderers';
         baseHeading.id = 'base-layers-heading';
 
-        const overlayHeading = DomUtil.create('h3', '', this._content);
+        const overlayHeading = DomUtil.create('h3', '', this._overlayContainer);
         overlayHeading.innerText = 'Overlays';
         overlayHeading.id = 'overlay-layers-heading';
 
@@ -88,12 +88,9 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         this._overlaysList.setAttribute('role', 'listbox');
 
         this._baseContainer.hidden = this._overlayContainer.hidden = true;
-        this._baseContainer.appendChild(baseHeading)
         this._baseContainer.appendChild(this._baseLayersList);
-        this._overlayContainer.appendChild(overlayHeading)
         this._overlayContainer.appendChild(this._overlaysList);
 
-        this._content.appendChild(heading);
         this._content.appendChild(this._baseContainer);
         this._content.appendChild(this._overlayContainer);
     }
@@ -119,16 +116,19 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
 
         // Hide base layers section if there's only one layer.
         if (this.options.hideSingleBase) {
+            this._baseContainer.hidden = baseLayersCount <= 1;
+        } else {
             this._baseContainer.hidden = !baseLayersCount;
-            this._overlayContainer.hidden = !overlaysCount;
         }
+
+        this._overlayContainer.hidden = !overlaysCount;
 
         return this;
     }
 
     private _addItem(layer: LayerListItem) {
-        const label = document.createElement('label'),
-            input = document.createElement('input') as LayerControlInput,
+        const label = DomUtil.create('label'),
+            input = DomUtil.create('input') as LayerControlInput,
             container = layer.overlay ? this._overlaysList : this._baseLayersList;
 
         input.type = layer.overlay ? 'checkbox' : 'radio';
@@ -161,10 +161,10 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
     }
 
     onActivate() {
-        if (!this._baseLayersList.hidden) {
+        if (!this._baseContainer.hidden) {
             (this._baseLayersList.querySelector('input:checked') as HTMLElement)!.focus();
-        } else if (!this._overlaysList.hidden) {
-            (this._baseLayersList.querySelector('input') as HTMLElement)!.focus();
+        } else if (!this._overlayContainer.hidden) {
+            (this._overlaysList.querySelector('input') as HTMLElement)!.focus();
         }
     }
 
