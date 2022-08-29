@@ -49,7 +49,8 @@ export class Pl3xMap {
         this._lang.coordsValue = json.lang.coords.value;
         this._lang.players = json.lang.players;
         this._lang.worlds = json.lang.worlds;
-        this._lang.layers = json.lang.layers;
+        this._lang.layersHeading = json.lang.layers.heading;
+        this._lang.layersSkeleton = json.lang.layers.skeleton;
 
         this._options.format = json.format;
 

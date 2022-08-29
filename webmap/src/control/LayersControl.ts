@@ -43,7 +43,7 @@ export default class LayersControl extends Control.Layers {
         this._section = DomUtil.create('section', 'leaflet-control-layers-list');
 
         this._layersLink = DomUtil.create('button', 'leaflet-control-layers-toggle', this._container);
-        this._layersLink.title = this._pl3xmap.lang.layers;
+        this._layersLink.title = this._pl3xmap.lang.layersHeading;
         this._layersLink.appendChild(Util.createSVGIcon('layers'));
 
         //Avoiding DomEvent here for more specific event typings

@@ -28,6 +28,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
     protected _button: HTMLButtonElement = DomUtil.create('button');
     protected _content: HTMLDivElement = DomUtil.create('div');
 
+    protected _skeleton: HTMLParagraphElement = DomUtil.create('p');
     protected _baseContainer: HTMLDivElement = DomUtil.create('div');
     protected _baseLayersList: HTMLFieldSetElement = DomUtil.create('fieldset');
     protected _overlayContainer: HTMLDivElement = DomUtil.create('div');
@@ -42,7 +43,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         this._button.setAttribute('aria-expanded', 'false');
         this._button.setAttribute('aria-controls', `sidebar__layers`);
         this._button.appendChild(Util.createSVGIcon('layers'));
-        this._button.setAttribute('aria-label', pl3xmap.lang.layers);
+        this._button.setAttribute('aria-label', pl3xmap.lang.layersHeading);
 
         this._content.hidden = true;
         this._content.id = `sidebar__layers`;
@@ -70,7 +71,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
 
     private _initLayout() {
         const heading = DomUtil.create('h2', '', this._content);
-        heading.innerText = this._pl3xmap.lang.layers;
+        heading.innerText = this._pl3xmap.lang.layersHeading;
         heading.id = 'layers-heading';
 
         const baseHeading = DomUtil.create('h3', '', this._baseContainer);
@@ -80,6 +81,10 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         const overlayHeading = DomUtil.create('h3', '', this._overlayContainer);
         overlayHeading.innerText = 'Overlays';
         overlayHeading.id = 'overlay-layers-heading';
+
+        this._skeleton.innerText = this._pl3xmap.lang.layersSkeleton;
+        this._skeleton.id = 'layers-skeleton';
+        this._skeleton.tabIndex = -1;
 
         this._baseLayersList.setAttribute('aria-labelledby', 'base-layers-heading');
         this._overlaysList.setAttribute('aria-labelledby', 'overlay-layers-heading');
@@ -91,6 +96,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         this._baseContainer.appendChild(this._baseLayersList);
         this._overlayContainer.appendChild(this._overlaysList);
 
+        this._content.appendChild(this._skeleton);
         this._content.appendChild(this._baseContainer);
         this._content.appendChild(this._overlayContainer);
     }
@@ -122,6 +128,7 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
         }
 
         this._overlayContainer.hidden = !overlaysCount;
+        this._skeleton.hidden = !!(baseLayersCount || overlaysCount);
 
         return this;
     }
@@ -165,6 +172,8 @@ export default class LayersTab extends Control.Layers implements SidebarTab {
             (this._baseLayersList.querySelector('input:checked') as HTMLElement)!.focus();
         } else if (!this._overlayContainer.hidden) {
             (this._overlaysList.querySelector('input') as HTMLElement)!.focus();
+        } else {
+            this._skeleton.focus();
         }
     }
 

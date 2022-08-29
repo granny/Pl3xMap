@@ -8,7 +8,10 @@ export type RootJSON = {
         };
         players: string;
         worlds: string;
-        layers: string;
+        layers: {
+            heading: string
+            skeleton: string;
+        };
     };
     worlds: WorldListJSON[];
 };
