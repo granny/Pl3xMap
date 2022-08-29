@@ -5,7 +5,8 @@ export class Lang {
     private _coordsLabel: string = 'Coordinates';
     private _coordsValue: string = '<x>, <z>';
     private _players: string = 'Players (<online>/<max>)';
-    private _worlds: string = 'Worlds';
+    private _worldsHeading: string = 'Worlds';
+    private _worldsSkeleton: string = 'No worlds have been configured';
     private _layersHeading: string = 'Layers';
     private _layersSkeleton: string = 'No layers have been configured';
 
@@ -57,12 +58,20 @@ export class Lang {
         this._players = value;
     }
 
-    get worlds(): string {
-        return this._worlds;
+    get worldsHeading(): string {
+        return this._worldsHeading;
     }
 
-    set worlds(value: string) {
-        this._worlds = value;
+    set worldsHeading(value: string) {
+        this._worldsHeading = value;
+    }
+
+    get worldsSkeleton(): string {
+        return this._worldsSkeleton;
+    }
+
+    set worldsSkeleton(value: string) {
+        this._worldsSkeleton = value;
     }
 
     get layersHeading(): string {

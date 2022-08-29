@@ -93,7 +93,7 @@ public class UpdateWorldData extends BukkitRunnable {
         Map<String, Object> lang = new LinkedHashMap<>();
         lang.put("title", Lang.UI_TITLE);
         lang.put("players", Lang.UI_PLAYERS);
-        lang.put("worlds", Lang.UI_WORLDS);
+        lang.put("worlds", Map.of("heading", Lang.UI_WORLDS_HEADING, "skeleton", Lang.UI_WORLDS_SKELETON));
         lang.put("layers", Map.of("heading", Lang.UI_LAYERS_HEADING, "skeleton", Lang.UI_LAYERS_SKELETON));
         lang.put("coords", Map.of("label", Lang.UI_COORDS_LABEL, "value", Lang.UI_COORDS_VALUE));
 

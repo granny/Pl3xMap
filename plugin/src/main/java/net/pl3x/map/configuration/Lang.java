@@ -197,8 +197,10 @@ public class Lang extends AbstractConfig {
     public static String UI_PLAYER_TRACKER = "Players";
     @Key("ui.players")
     public static String UI_PLAYERS = "Players (<online>/<max>)";
-    @Key("ui.worlds")
-    public static String UI_WORLDS = "Worlds";
+    @Key("ui.worlds.heading")
+    public static String UI_WORLDS_HEADING = "Worlds";
+    @Key("ui.worlds.skeleton")
+    public static String UI_WORLDS_SKELETON = "No worlds have been configured";
     @Key("ui.layers.heading")
     public static String UI_LAYERS_HEADING = "Layers";
     @Key("ui.layers.skeleton")

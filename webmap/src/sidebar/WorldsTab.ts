@@ -16,17 +16,22 @@ interface WorldListItem {
 
 export default class WorldsTab extends BaseTab {
     private readonly _worlds: Map<World, WorldListItem> = new Map();
+    private readonly _skeleton: HTMLParagraphElement;
     private readonly _list: HTMLFieldSetElement;
 
     constructor(pl3xmap: Pl3xMap) {
         super(pl3xmap, 'worlds');
 
         this._button.appendChild(Util.createSVGIcon('maps'));
-        this._button.setAttribute('aria-label', pl3xmap.lang.worlds);
+        this._button.setAttribute('aria-label', pl3xmap.lang.worldsHeading);
 
         const heading = DomUtil.create('h2', '', this._content);
-        heading.innerText = pl3xmap.lang.worlds;
+        heading.innerText = pl3xmap.lang.worldsHeading;
         heading.id = 'worlds-heading';
+
+        this._skeleton = DomUtil.create('p', '', this._content);
+        this._skeleton.innerText = pl3xmap.lang.worldsSkeleton;
+        this._skeleton.tabIndex = -1;
 
         this._list = DomUtil.create('fieldset', 'menu', this._content);
         this._list.setAttribute('aria-labelledby', 'worlds-heading');
@@ -71,6 +76,7 @@ export default class WorldsTab extends BaseTab {
             name,
         });
 
+        this._skeleton.hidden = true;
         this._list.appendChild(input);
         this._list.appendChild(label);
     }
@@ -85,9 +91,17 @@ export default class WorldsTab extends BaseTab {
         listItem.label.remove();
         listItem.input.remove();
         this._worlds.delete(world);
+
+        if(!this._worlds.size) {
+            this._skeleton.hidden = false;
+        }
     }
 
     onActivate() {
-        (this._list.querySelector('input:checked') as HTMLElement)!.focus();
+        if(this._worlds.size) {
+            (this._list.querySelector('input:checked') as HTMLElement)!.focus()
+        } else {
+            this._skeleton.focus();
+        }
     }
 }

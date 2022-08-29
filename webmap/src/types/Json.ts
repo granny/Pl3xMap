@@ -7,7 +7,10 @@ export type RootJSON = {
             value: string;
         };
         players: string;
-        worlds: string;
+        worlds: {
+            heading: string
+            skeleton: string;
+        };
         layers: {
             heading: string
             skeleton: string;
