@@ -28,6 +28,7 @@ import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.coordinate.ChunkCoordinate;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
+import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.logger.Logger;
@@ -54,6 +55,7 @@ public class MapWorld {
     private final World world;
     private final ServerLevel level;
     private final WorldConfig config;
+    private final LayerRegistry layerRegistry;
 
     private final Path dataPath;
 
@@ -79,6 +81,7 @@ public class MapWorld {
         this.world = world;
         this.level = ((CraftWorld) world).getHandle();
         this.config = config;
+        this.layerRegistry = new LayerRegistry();
 
         this.biomeSeed = BiomeManager.obfuscateSeed(this.level.getSeed());
 
@@ -146,6 +149,10 @@ public class MapWorld {
 
     public WorldConfig getConfig() {
         return this.config;
+    }
+
+    public LayerRegistry getLayerRegistry() {
+        return this.layerRegistry;
     }
 
     public long getBiomeSeed() {

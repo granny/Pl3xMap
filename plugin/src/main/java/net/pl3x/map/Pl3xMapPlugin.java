@@ -10,7 +10,6 @@ import net.pl3x.map.api.image.io.Png;
 import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.api.registry.EventRegistry;
 import net.pl3x.map.api.registry.IconRegistry;
-import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
@@ -45,7 +44,6 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
     private IntegratedServer integratedServer;
-    private LayerRegistry layerRegistry;
     private PaletteManager paletteManager;
     private PlayerManager playerManager;
     private RendererRegistry rendererRegistry;
@@ -114,7 +112,6 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
         this.integratedServer = new UndertowServer();
-        this.layerRegistry = new LayerRegistry();
         this.paletteManager = new PaletteManager();
         this.playerManager = new BukkitPlayerManager();
         this.rendererRegistry = new RendererRegistry();
@@ -214,9 +211,6 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         // unregister icons
         getIconRegistry().entries().forEach((key, image) -> getIconRegistry().unregister(key));
 
-        // unregister layers
-        getLayerRegistry().entries().forEach((key, layer) -> getLayerRegistry().unregister(key));
-
         // unload all players
         getPlayerManager().unloadAll();
     }
@@ -239,11 +233,6 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
     @Override
     public IconRegistry getIconRegistry() {
         return this.iconRegistry;
-    }
-
-    @Override
-    public LayerRegistry getLayerRegistry() {
-        return this.layerRegistry;
     }
 
     @Override

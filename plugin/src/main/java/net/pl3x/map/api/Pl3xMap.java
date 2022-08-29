@@ -32,8 +32,6 @@ public interface Pl3xMap {
 
     IconRegistry getIconRegistry();
 
-    LayerRegistry getLayerRegistry();
-
     IntegratedServer getIntegratedServer();
 
     PaletteManager getPaletteManager();
