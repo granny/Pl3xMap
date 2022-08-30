@@ -2,13 +2,17 @@ group = "net.pl3x.map"
 version = rootProject.version
 description = "Minimalistic and lightweight world map viewer for Paper servers"
 
+val bstatsVersion: String by rootProject
+val cloudVersion: String by rootProject
+val undertowVersion: String by rootProject
+
 dependencies {
-    implementation("io.undertow:undertow-core:2.2.19.Final")
-    implementation("cloud.commandframework:cloud-paper:1.7.1")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.1") {
+    implementation("io.undertow", "undertow-core", undertowVersion)
+    implementation("cloud.commandframework", "cloud-paper", cloudVersion)
+    implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion) {
         exclude("net.kyori")
     }
-    implementation("org.bstats:bstats-bukkit:3.0.0")
+    implementation("org.bstats", "bstats-bukkit", bstatsVersion)
 }
 
 tasks {
