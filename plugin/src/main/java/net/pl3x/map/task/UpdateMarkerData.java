@@ -2,9 +2,7 @@ package net.pl3x.map.task;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import net.pl3x.map.api.Key;
 import net.pl3x.map.api.marker.Marker;
@@ -28,10 +26,10 @@ public class UpdateMarkerData extends BukkitRunnable {
 
     @Override
     public void run() {
-        List<String> layers = new ArrayList<>();
+        Map<String, Integer> layers = new HashMap<>();
 
         this.mapWorld.getLayerRegistry().entries().forEach((key, layer) -> {
-            layers.add(key.getKey());
+            layers.put(key.getKey(), layer.getUpdateInterval());
 
             long now = System.currentTimeMillis() / 1000;
             long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
