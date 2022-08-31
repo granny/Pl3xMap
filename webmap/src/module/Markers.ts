@@ -7,8 +7,10 @@ export class Markers {
         const a = ["circ", [10, 10, 10.0], [[3, -65536], [0, 872349696], []]];
         const b = ["rect", [10, 10, 20, 20]];
         const c = ["rect", [10, 10, 20, 20], [[], [], [0, "testing 1 2 3", [0, 0]]]];
-        const z = [a, b];
-        this.parseMarker(a);
+        const z = [a, b, c];
+        for (let i = 0; i < z.length; i++) {
+            this.parseMarker(z[i]);
+        }
     }
 
     parseMarker(arr: unknown[]): L.Layer | undefined {
@@ -22,25 +24,31 @@ export class Markers {
         let marker;
 
         switch (type) {
-            case "circ":
+            case "circ": {
                 const x = data[0] as number;
                 const z = data[1] as number;
                 const radius = data[2] as number;
                 marker = L.circle(Util.toLatLng(x, z), {...properties, radius: Util.pixelsToMeters(radius)});
                 break;
-            case "elli":
+            }
+            case "elli": {
                 break;
-            case "icon":
+            }
+            case "icon": {
                 break;
-            case "poly":
+            }
+            case "poly": {
                 break;
-            case "line":
+            }
+            case "line": {
                 break;
-            case "rect":
+            }
+            case "rect": {
                 const point1 = Util.toLatLng(data[0] as number, data[1] as number);
                 const point2 = Util.toLatLng(data[2] as number, data[3] as number);
                 marker = L.rectangle(L.latLngBounds(point1, point2), {...properties});
                 break;
+            }
         }
 
         if (marker && tooltip) {
