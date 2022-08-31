@@ -1,4 +1,5 @@
 import * as L from "leaflet";
+import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import {MarkerOptions} from "./MarkerOptions";
 
@@ -6,10 +7,10 @@ export class Markers {
     test(): void {
         const a = ["circ", [10, 10, 10.0], [[3, -65536], [0, 872349696], []]];
         const b = ["rect", [10, 10, 20, 20]];
-        const c = ["rect", [10, 10, 20, 20], [[], [], [0, "testing 1 2 3", [0, 0]]]];
+        const c = ["rect", [30, 30, 40, 40], [[], [], [0, "testing 1 2 3", [0, 0]]]];
         const z = [a, b, c];
         for (let i = 0; i < z.length; i++) {
-            this.parseMarker(z[i]);
+            this.parseMarker(z[i])?.addTo(Pl3xMap.getInstance().map);
         }
     }
 

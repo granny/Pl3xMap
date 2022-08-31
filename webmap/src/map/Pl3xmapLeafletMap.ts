@@ -10,7 +10,7 @@ export default class Pl3xmapLeafletMap extends L.Map {
 
     private _pl3xmap: Pl3xMap;
     private _world: World | null = null;
-    private _renderer: string = 'basic';
+    private _rendererType: string = 'basic';
 
     constructor(pl3xmap: Pl3xMap) {
         super('map', {
@@ -72,7 +72,7 @@ export default class Pl3xmapLeafletMap extends L.Map {
         this._world = world;
     }
 
-    get renderer(): string {
-        return this._renderer;
+    get rendererType(): string {
+        return this._rendererType;
     }
 }
