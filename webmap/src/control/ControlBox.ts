@@ -1,13 +1,13 @@
-import {Control, ControlOptions, ControlPosition} from "leaflet";
+import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 
-interface ExtendedControlOptions extends ControlOptions {
-    position?: ControlPosition & Position | undefined;
+interface ExtendedControlOptions extends L.ControlOptions {
+    position?: L.ControlPosition & Position | undefined;
 }
 
 type Position = 'topcenter' | 'bottomcenter';
 
-export abstract class ControlBox extends Control {
+export abstract class ControlBox extends L.Control {
     protected readonly _pl3xmap: Pl3xMap;
 
     protected constructor(pl3xmap: Pl3xMap, position: string) {

@@ -1,6 +1,6 @@
-import BaseTab from "./BaseTab";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
+import BaseTab from "./BaseTab";
 import '../svg/marker_point.svg';
 
 export default class MarkersTab extends BaseTab {

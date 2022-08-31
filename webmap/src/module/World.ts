@@ -1,14 +1,13 @@
-import {BlockInfo} from "./BlockInfo";
-import {Spawn} from "./Spawn";
-import {Zoom} from "./Zoom";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
+import {BlockInfo, Palette} from "./BlockInfo";
+import {Spawn} from "./Spawn";
+import {Zoom} from "./Zoom";
 import {LinkControl} from "../control/LinkControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {BlockInfoControl} from "../control/BlockInfoControl";
 import {UI} from "../options/UI";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
-import {Palette, WorldJSON, WorldListJSON} from "../types/Json";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -166,5 +165,33 @@ export class World {
                 const blockInfo = buffer == undefined ? null : new BlockInfo(new Uint8Array(buffer));
                 this._pl3xmap.currentTileLayer?.setBlockInfo(zoom, x, z, blockInfo);
             });
+    }
+}
+
+export type WorldListJSON = {
+    name: string;
+    display_name: string;
+    icon: string;
+    type: string;
+    order: number;
+}
+
+export type WorldJSON = {
+    name: string;
+    renderers: string[];
+    tiles_update_interval: number;
+    spawn: {
+        x: number;
+        z: number;
+    };
+    zoom: {
+        default: number;
+        max_out: number;
+        max_in: number;
+    };
+    ui: {
+        link: string;
+        coords: string;
+        blockinfo: string;
     }
 }

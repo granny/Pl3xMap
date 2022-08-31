@@ -1,14 +1,13 @@
-import {Layer, Point} from "leaflet";
+import * as L from "leaflet";
+import {Util} from "./Util";
 import {BlockInfoControl} from "./control/BlockInfoControl";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";
 import {PlayerLayerGroup} from "./layergroup/PlayerLayerGroup";
-import {World} from "./module/World";
+import {World, WorldListJSON} from "./module/World";
 import {Lang} from "./options/Lang";
 import {Options} from "./options/Options";
 import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
-import {RootJSON} from "./types/Json";
-import {Util} from "./Util";
 import SidebarControl from "./control/SidebarControl";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import "./scss/styles.scss";
@@ -18,13 +17,15 @@ window.onload = function () {
 };
 
 export class Pl3xMap {
+    private static instance: Pl3xMap;
+
     private readonly _map: Pl3xmapLeafletMap;
     private _options: Options = new Options();
     private _lang: Lang = new Lang();
 
     private readonly _worlds: Map<string, World> = new Map();
-    private readonly _rendererLayers: Map<string, Layer> = new Map();
-    private readonly _overlayLayers: Set<Layer> = new Set();
+    private readonly _rendererLayers: Map<string, L.Layer> = new Map();
+    private readonly _overlayLayers: Set<L.Layer> = new Set();
 
     private _currentWorld: World | null = null;
     private _currentRenderer: string | null = null;
@@ -37,9 +38,15 @@ export class Pl3xMap {
     private _sidebarControl: SidebarControl = new SidebarControl(this);
 
     constructor() {
+        Pl3xMap.instance = this;
+
         this._map = new Pl3xmapLeafletMap(this);
 
         Util.getJSON('tiles/settings.json').then((json: RootJSON) => this.init(json));
+    }
+
+    static getInstance(): Pl3xMap {
+        return Pl3xMap.instance;
     }
 
     async init(json: RootJSON) {
@@ -85,8 +92,12 @@ export class Pl3xMap {
         Util.fireCustomEvent('worldadded', world);
     }
 
+    getWorld(name: string): World | undefined {
+        return this._worlds.get(name);
+    }
+
     getUrlFromView(): string {
-        const center: Point = this._map.toPoint(this._map.getCenter());
+        const center: L.Point = Util.toPoint(this._map.getCenter());
         const zoom: number = this._map.getCurrentZoom();
         const x: number = Math.floor(center.x);
         const z: number = Math.floor(center.y);
@@ -95,7 +106,7 @@ export class Pl3xMap {
         return `?world=${world}&renderer=${renderer}&zoom=${zoom}&x=${x}&z=${z}`;
     }
 
-    addOverlay(layer: Layer, name: string, showInControl: boolean) {
+    addOverlay(layer: L.Layer, name: string, showInControl: boolean) {
         if (this._overlayLayers.has(layer)) {
             return;
         }
@@ -215,3 +226,24 @@ export class Pl3xMap {
         return this._currentRendererLayer;
     }
 }
+
+export type RootJSON = {
+    format: string;
+    lang: {
+        title: string;
+        coords: {
+            label: string
+            value: string;
+        };
+        players: string;
+        worlds: {
+            heading: string
+            skeleton: string;
+        };
+        layers: {
+            heading: string
+            skeleton: string;
+        };
+    };
+    worlds: WorldListJSON[];
+};

@@ -1,12 +1,10 @@
-import {Control, DomEvent, DomUtil} from "leaflet";
+import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 import LayersTab from "../sidebar/LayersTab";
 import MarkersTab from "../sidebar/MarkersTab";
 import PlayersTab from "../sidebar/PlayersTab";
 import WorldsTab from "../sidebar/WorldsTab";
-import disableClickPropagation = DomEvent.disableClickPropagation;
-import disableScrollPropagation = DomEvent.disableScrollPropagation;
 
 export interface SidebarTab {
     get button(): HTMLElement;
@@ -20,7 +18,7 @@ export interface SidebarTab {
     onDeactivate?: () => void;
 }
 
-export default class SidebarControl extends Control {
+export default class SidebarControl extends L.Control {
     private readonly _container: HTMLDivElement;
     private readonly _buttons: HTMLElement;
     private readonly _content: HTMLElement;
@@ -32,17 +30,17 @@ export default class SidebarControl extends Control {
     constructor(pl3xmap: Pl3xMap) {
         super({position: 'topright'});
 
-        this._container = DomUtil.create('div');
+        this._container = L.DomUtil.create('div');
         this._container.id = 'sidebar';
 
-        this._buttons = DomUtil.create('header', '', this._container);
+        this._buttons = L.DomUtil.create('header', '', this._container);
         this._buttons.id = 'sidebar__buttons';
 
-        this._content = DomUtil.create('section', '', this._container);
+        this._content = L.DomUtil.create('section', '', this._container);
         this._content.id = 'sidebar__content';
 
-        disableClickPropagation(this._container);
-        disableScrollPropagation(this._container);
+        L.DomEvent.disableClickPropagation(this._container);
+        L.DomEvent.disableScrollPropagation(this._container);
 
         this.addTab(new WorldsTab(pl3xmap));
         this.addTab(new LayersTab(pl3xmap));

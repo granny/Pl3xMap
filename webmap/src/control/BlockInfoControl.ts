@@ -1,13 +1,12 @@
-import {DomUtil} from "leaflet";
-import {ControlBox} from "./ControlBox";
+import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
-import {Block, BlockInfo} from "../module/BlockInfo";
-import {Palette} from "../types/Json";
+import {ControlBox} from "./ControlBox";
+import {Block, BlockInfo, Palette} from "../module/BlockInfo";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 
 export class BlockInfoControl extends ControlBox {
-    private _dom: HTMLDivElement = DomUtil.create('div');
+    private _dom: HTMLDivElement = L.DomUtil.create('div');
 
     private _blockPalette: Map<number, string> = new Map();
 
@@ -22,7 +21,7 @@ export class BlockInfoControl extends ControlBox {
     }
 
     onAdd(map: Pl3xmapLeafletMap): HTMLDivElement {
-        this._dom = DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-blockinfo');
+        this._dom = L.DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-blockinfo');
         this._dom.dataset.label = this._pl3xmap.lang.blockInfoLabel;
         this.update(map);
         return this._dom;

@@ -1,8 +1,9 @@
-import {CRS, DomUtil, LatLng, latLng, Map, point, Point, Transformation, Util} from "leaflet";
+import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
+import {Util} from "../Util";
 import {World} from "../module/World";
 
-export default class Pl3xmapLeafletMap extends Map {
+export default class Pl3xmapLeafletMap extends L.Map {
     declare _controlCorners: { [x: string]: HTMLDivElement; };
     declare _controlContainer?: HTMLElement;
     declare _container?: HTMLElement;
@@ -14,10 +15,10 @@ export default class Pl3xmapLeafletMap extends Map {
     constructor(pl3xmap: Pl3xMap) {
         super('map', {
             // simple crs for custom map tiles
-            crs: Util.extend(CRS.Simple, {
+            crs: L.Util.extend(L.CRS.Simple, {
                 // we need to flip the y-axis correctly
                 // https://stackoverflow.com/a/62320569/3530727
-                transformation: new Transformation(1, 0, 1, 0)
+                transformation: new L.Transformation(1, 0, 1, 0)
             }),
             // always 0,0 center
             center: [0, 0],
@@ -33,14 +34,14 @@ export default class Pl3xmapLeafletMap extends Map {
     // https://stackoverflow.com/a/60391674/3530727
     // noinspection JSUnusedGlobalSymbols
     _initControlPos(): void {
-        this._controlContainer = DomUtil.create('div', 'leaflet-control-container', this._container);
+        this._controlContainer = L.DomUtil.create('div', 'leaflet-control-container', this._container);
 
         const corners: { [x: string]: HTMLDivElement; } = this._controlCorners = {},
-            top = DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
-            bottom = DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
+            top = L.DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
+            bottom = L.DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
 
         function createCorner(vSide: string, hSide: string) {
-            corners[`${vSide}${hSide}`] = DomUtil.create('div', `leaflet-${vSide} leaflet-${hSide}`, vSide === 'top' ? top : bottom);
+            corners[`${vSide}${hSide}`] = L.DomUtil.create('div', `leaflet-${vSide} leaflet-${hSide}`, vSide === 'top' ? top : bottom);
         }
 
         createCorner('top', 'left');
@@ -51,32 +52,12 @@ export default class Pl3xmapLeafletMap extends Map {
         createCorner('bottom', 'right');
     }
 
-    toLatLng(x: number, z: number): LatLng {
-        return latLng(this.pixelsToMeters(z), this.pixelsToMeters(x));
-    }
-
-    toPoint(latlng: LatLng): Point {
-        return point(this.metersToPixels(latlng.lng), this.metersToPixels(latlng.lat));
-    }
-
-    pixelsToMeters(num: number): number {
-        return num * this.scale();
-    }
-
-    metersToPixels(num: number): number {
-        return num / this.scale();
-    }
-
-    scale(): number {
-        return 1 / Math.pow(2, this.getMaxZoomOut());
-    }
-
     centerOn(x: number, z: number, zoom: number) {
-        this.setView(this.toLatLng(x, z), this.getMaxZoomOut() - zoom);
+        this.setView(Util.toLatLng(x, z), this.getMaxZoomOut() - zoom);
     }
 
     getMaxZoomOut(): number {
-        return this._world?.zoom.maxOut ?? 0;
+        return this.world?.zoom.maxOut ?? 0;
     }
 
     getCurrentZoom(): number {

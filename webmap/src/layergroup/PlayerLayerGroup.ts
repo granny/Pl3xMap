@@ -1,4 +1,4 @@
-import {LayerGroup} from "leaflet";
+import * as L from "leaflet";
 
-export class PlayerLayerGroup extends LayerGroup {
+export class PlayerLayerGroup extends L.LayerGroup {
 }

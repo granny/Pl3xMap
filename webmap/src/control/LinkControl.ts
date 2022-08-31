@@ -1,7 +1,7 @@
-import {DomUtil} from "leaflet";
-import {ControlBox} from "./ControlBox";
+import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
+import {ControlBox} from "./ControlBox";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 import '../svg/link.svg';
 
@@ -14,7 +14,7 @@ export class LinkControl extends ControlBox {
 
     constructor(pl3xmap: Pl3xMap, position: string) {
         super(pl3xmap, position);
-        this._dom = DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
+        this._dom = L.DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
         this._dom.appendChild(Util.createSVGIcon('link'));
     }
 

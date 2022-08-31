@@ -47,3 +47,8 @@ export class Block {
         return this._yPos + this._minY;
     }
 }
+
+export type Palette = {
+    index: number;
+    block: string;
+}

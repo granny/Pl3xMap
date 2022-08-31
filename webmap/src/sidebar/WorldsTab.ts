@@ -1,8 +1,8 @@
-import {DomUtil} from "leaflet";
-import BaseTab from "./BaseTab";
+import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Util} from "../Util";
 import {World} from "../module/World";
+import BaseTab from "./BaseTab";
 import '../svg/maps.svg';
 
 interface WorldListItem {
@@ -25,15 +25,15 @@ export default class WorldsTab extends BaseTab {
         this._button.appendChild(Util.createSVGIcon('maps'));
         this._button.setAttribute('aria-label', pl3xmap.lang.worldsHeading);
 
-        const heading = DomUtil.create('h2', '', this._content);
+        const heading = L.DomUtil.create('h2', '', this._content);
         heading.innerText = pl3xmap.lang.worldsHeading;
         heading.id = 'worlds-heading';
 
-        this._skeleton = DomUtil.create('p', '', this._content);
+        this._skeleton = L.DomUtil.create('p', '', this._content);
         this._skeleton.innerText = pl3xmap.lang.worldsSkeleton;
         this._skeleton.tabIndex = -1;
 
-        this._list = DomUtil.create('fieldset', 'menu', this._content);
+        this._list = L.DomUtil.create('fieldset', 'menu', this._content);
         this._list.setAttribute('aria-labelledby', 'worlds-heading');
         this._list.setAttribute('role', 'radiogroup');
 
@@ -54,10 +54,10 @@ export default class WorldsTab extends BaseTab {
     }
 
     private createListItem(world: World) {
-        const input = DomUtil.create('input'),
-            label = DomUtil.create('label'),
+        const input = L.DomUtil.create('input'),
+            label = L.DomUtil.create('label'),
             //TODO Icon
-            name = DomUtil.create('span', '', label);
+            name = L.DomUtil.create('span', '', label);
 
         name.innerText = world.displayName;
         input.id = label.htmlFor = `world-${world.name}`;
@@ -92,13 +92,13 @@ export default class WorldsTab extends BaseTab {
         listItem.input.remove();
         this._worlds.delete(world);
 
-        if(!this._worlds.size) {
+        if (!this._worlds.size) {
             this._skeleton.hidden = false;
         }
     }
 
     onActivate() {
-        if(this._worlds.size) {
+        if (this._worlds.size) {
             (this._list.querySelector('input:checked') as HTMLElement)!.focus()
         } else {
             this._skeleton.focus();

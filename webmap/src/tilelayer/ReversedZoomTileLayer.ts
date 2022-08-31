@@ -1,8 +1,8 @@
-import {TileLayer} from "leaflet";
+import * as L from "leaflet";
 import {BlockInfo} from "../module/BlockInfo";
 import {World} from "../module/World";
 
-export class ReversedZoomTileLayer extends TileLayer {
+export class ReversedZoomTileLayer extends L.TileLayer {
     declare private _url: string;
     private readonly _world: World;
     private readonly _renderer: string;

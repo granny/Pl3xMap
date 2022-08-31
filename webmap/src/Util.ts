@@ -1,3 +1,6 @@
+import * as L from "leaflet";
+import {Pl3xMap} from "./Pl3xMap";
+
 export class Util {
     private static readonly navigationKeys = new Set<string>([
         'ArrowUp',
@@ -117,5 +120,26 @@ export class Util {
 
     public static fireCustomEvent<T>(event: keyof (WindowEventMap), detail: T): void {
         window.dispatchEvent(new CustomEvent(event, {detail}));
+    }
+
+    public static toLatLng(x: number, z: number): L.LatLng {
+        return L.latLng(Util.pixelsToMeters(z), Util.pixelsToMeters(x));
+    }
+
+    public static toPoint(latlng: L.LatLng): L.Point {
+        return L.point(Util.metersToPixels(latlng.lng), Util.metersToPixels(latlng.lat));
+    }
+
+    public static pixelsToMeters(num: number): number {
+        return num * Util.getScale();
+    }
+
+    public static metersToPixels(num: number): number {
+        return num / Util.getScale();
+    }
+
+    public static getScale() {
+        const map = Pl3xMap.getInstance().map;
+        return 1 / Math.pow(2, map.getMaxZoomOut());
     }
 }
