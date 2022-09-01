@@ -11,6 +11,7 @@ import {ReversedZoomTileLayer} from "./tilelayer/ReversedZoomTileLayer";
 import SidebarControl from "./control/SidebarControl";
 import Pl3xmapLeafletMap from "./map/Pl3xmapLeafletMap";
 import "./scss/styles.scss";
+import {Markers} from "./module/marker/Markers";
 
 window.onload = function () {
     new Pl3xMap();
@@ -165,6 +166,8 @@ export class Pl3xMap {
 
             this.currentWorld?.updateUI();
             window.history.replaceState(null, this.lang.title, this.getUrlFromView());
+
+            //setTimeout(() => {new Markers().test();}, 1000);
         });
     }
 

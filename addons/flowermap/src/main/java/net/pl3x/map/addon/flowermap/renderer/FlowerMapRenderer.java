@@ -17,6 +17,7 @@ import net.pl3x.map.render.task.ScanTask;
 import net.pl3x.map.util.Colors;
 
 public class FlowerMapRenderer extends Renderer {
+    @SuppressWarnings("deprecation")
     private final RandomSource random = RandomSource.createThreadSafe();
     private final Map<BlockState, Integer> colorMap = new HashMap<>();
 

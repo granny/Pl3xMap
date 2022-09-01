@@ -22,11 +22,14 @@ export default class Pl3xmapLeafletMap extends L.Map {
             }),
             // always 0,0 center
             center: [0, 0],
-            // hides the leaflet attribution footer
-            attributionControl: false,
+            // show the attribution footer
+            attributionControl: true,
             // canvas is faster than default svg
             preferCanvas: true
         });
+
+        // sets the leaflet attribution prefix to our project page
+        this.attributionControl.setPrefix("<a href='https://modrinth.com/plugin/pl3xmap/'>Pl3xMap &copy; 2022</a>");
 
         this._pl3xmap = pl3xmap;
     }

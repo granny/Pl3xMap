@@ -2,6 +2,7 @@ export class UI {
     private _link: string = 'bottomright';
     private _coords: string = 'bottomcenter';
     private _blockinfo: string = 'bottomleft';
+    private _attribution: boolean = true;
 
     get link(): string {
         return this._link;
@@ -25,5 +26,13 @@ export class UI {
 
     set blockinfo(value: string) {
         this._blockinfo = value;
+    }
+
+    get attribution(): boolean {
+        return this._attribution;
+    }
+
+    set attribution(value: boolean) {
+        this._attribution = value;
     }
 }

@@ -123,7 +123,7 @@ export class Util {
     }
 
     public static toLatLng(x: number, z: number): L.LatLng {
-        return L.latLng(Util.pixelsToMeters(z), Util.pixelsToMeters(x));
+        return L.latLng(Util.pixelsToMeters(z + 0.5), Util.pixelsToMeters(x + 0.5));
     }
 
     public static toPoint(latlng: L.LatLng): L.Point {

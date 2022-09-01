@@ -83,6 +83,7 @@ export class World {
         this._ui.link = json.ui.link;
         this._ui.coords = json.ui.coords;
         this._ui.blockinfo = json.ui.blockinfo;
+        this._ui.attribution = !json.ui.hide_attributes;
 
         for (const renderer of this._renderers) {
             this._rendererLayers.set(renderer, new ReversedZoomTileLayer(this, renderer));
@@ -94,6 +95,17 @@ export class World {
         this._pl3xmap.linkControl = this._ui.link ? new LinkControl(this._pl3xmap, this._ui.link) : null;
         this._pl3xmap.coordsControl = this._ui.coords ? new CoordsControl(this._pl3xmap, this._ui.coords) : null;
         this._pl3xmap.blockInfoControl = this._ui.blockinfo ? new BlockInfoControl(this._pl3xmap, this._ui.blockinfo) : null;
+
+        const attributeDom = this.pl3xmap.map.attributionControl.getContainer();
+        if (attributeDom) {
+            if (this._ui.attribution) {
+                console.log("add");
+                attributeDom.style.display = "inline-block";
+            } else {
+                console.log("remove");
+                attributeDom.style.display = "none";
+            }
+        }
     }
 
     getTileLayer(renderer: string): ReversedZoomTileLayer | undefined {
@@ -193,5 +205,6 @@ export type WorldJSON = {
         link: string;
         coords: string;
         blockinfo: string;
+        hide_attributes: boolean;
     }
 }

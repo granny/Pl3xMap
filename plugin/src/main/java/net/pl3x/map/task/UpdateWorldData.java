@@ -66,6 +66,7 @@ public class UpdateWorldData extends BukkitRunnable {
             ui.put("link", config.UI_LINK);
             ui.put("coords", config.UI_COORDS);
             ui.put("blockinfo", config.UI_BLOCKINFO);
+            ui.put("hide_attributes", config.UI_HIDE_ATTRIBUTES);
 
             Map<String, Object> settings = new LinkedHashMap<>();
             settings.put("name", mapWorld.getName());

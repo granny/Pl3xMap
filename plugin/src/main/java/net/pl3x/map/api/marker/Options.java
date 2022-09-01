@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.marker.option.Fill;
+import net.pl3x.map.api.marker.option.Popup;
 import net.pl3x.map.api.marker.option.Stroke;
 import net.pl3x.map.api.marker.option.Tooltip;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ public class Options implements JsonSerializable {
     private Stroke stroke;
     private Fill fill;
     private Tooltip tooltip;
+    private Popup popup;
 
     /**
      * Create empty marker options.
@@ -31,10 +33,11 @@ public class Options implements JsonSerializable {
      * @param fill    fill rules
      * @param tooltip tooltip rules
      */
-    public Options(@Nullable Stroke stroke, @Nullable Fill fill, @Nullable Tooltip tooltip) {
+    public Options(@Nullable Stroke stroke, @Nullable Fill fill, @Nullable Tooltip tooltip, @Nullable Popup popup) {
         setStroke(stroke);
         setFill(fill);
         setTooltip(tooltip);
+        setPopup(popup);
     }
 
     /**
@@ -103,12 +106,35 @@ public class Options implements JsonSerializable {
         return this;
     }
 
+    /**
+     * Get popup rules.
+     *
+     * @return popup rules
+     */
+    @Nullable
+    public Popup getPopup() {
+        return this.popup;
+    }
+
+    /**
+     * Set new popup rules.
+     *
+     * @param popup new popup rules
+     * @return this marker options
+     */
+    @NotNull
+    public Options setPopup(@Nullable Popup popup) {
+        this.popup = popup;
+        return this;
+    }
+
     @Override
     @NotNull
     public JsonElement toJson() {
         JsonArray json = new JsonArray();
         json.add(getStroke() == null ? new JsonArray() : getStroke().toJson());
         json.add(getFill() == null ? new JsonArray() : getFill().toJson());
+        json.add(getPopup() == null ? new JsonArray() : getPopup().toJson());
         json.add(getTooltip() == null ? new JsonArray() : getTooltip().toJson());
         return json;
     }
@@ -127,155 +153,17 @@ public class Options implements JsonSerializable {
         Options other = (Options) o;
         return Objects.equals(getStroke(), other.getStroke())
                 && Objects.equals(getFill(), other.getFill())
-                && Objects.equals(getTooltip(), other.getTooltip());
+                && Objects.equals(getTooltip(), other.getTooltip())
+                && Objects.equals(getPopup(), other.getPopup());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStroke(), getFill(), getTooltip());
+        return Objects.hash(getStroke(), getFill(), getTooltip(), getPopup());
     }
 
     @Override
     public String toString() {
-        return "Options{fill=" + getFill() + ",stroke=" + getStroke() + ",tooltip=" + getTooltip() + "}";
-    }
-
-    /**
-     * Builder for {@link Options}
-     */
-    public static class Builder {
-        protected Stroke stroke = null;
-        protected Fill fill = null;
-        protected Tooltip tooltip = null;
-
-        /**
-         * Set the stroke weight.
-         * <p>
-         * Creates a new {@link Stroke} if none exists.
-         *
-         * @param weight stroke weight
-         * @return this builder
-         */
-        @NotNull
-        public Builder setStrokeWeight(int weight) {
-            if (this.stroke == null) {
-                this.stroke = new Stroke();
-            }
-            this.stroke.setWeight(weight);
-            return this;
-        }
-
-        /**
-         * Set the stroke color.
-         * <p>
-         * Creates a new {@link Stroke} if none exists.
-         *
-         * @param color argb color
-         * @return this builder
-         */
-        @NotNull
-        public Builder setStrokeColor(int color) {
-            if (this.stroke == null) {
-                this.stroke = new Stroke();
-            }
-            this.stroke.setColor(color);
-            return this;
-        }
-
-        /**
-         * Set the fill type.
-         * <p>
-         * Creates a new {@link Fill} if none exists.
-         *
-         * @param type fill type
-         * @return this builder
-         * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
-         */
-        @NotNull
-        public Builder setFillType(@NotNull Fill.Type type) {
-            if (this.fill == null) {
-                this.fill = new Fill();
-            }
-            this.fill.setType(type);
-            return this;
-        }
-
-        /**
-         * Set the fill color.
-         * <p>
-         * Creates a new {@link Fill} if none exists.
-         *
-         * @param color argb color
-         * @return this builder
-         */
-        @NotNull
-        public Builder setFillColor(int color) {
-            if (this.fill == null) {
-                this.fill = new Fill();
-            }
-            this.fill.setColor(color);
-            return this;
-        }
-
-        /**
-         * Set the tooltip type.
-         * <p>
-         * Creates a new {@link Tooltip} if none exists.
-         *
-         * @param type tooltip type
-         * @return this builder
-         */
-        @NotNull
-        public Builder setTooltipType(@NotNull Tooltip.Type type) {
-            if (this.tooltip == null) {
-                this.tooltip = new Tooltip();
-            }
-            this.tooltip.setType(type);
-            return this;
-        }
-
-        /**
-         * Set the tooltip string.
-         * <p>
-         * Creates a new {@link Tooltip} if none exists.
-         *
-         * @param string tooltip string
-         * @return this builder
-         */
-        @NotNull
-        public Builder setTooltipString(@NotNull String string) {
-            if (this.tooltip == null) {
-                this.tooltip = new Tooltip();
-            }
-            this.tooltip.setString(string);
-            return this;
-        }
-
-        /**
-         * Set the tooltip offset.
-         * <p>
-         * Creates a new {@link Tooltip} if none exists.
-         *
-         * @param offset tooltip offset
-         * @return this builder
-         */
-        @NotNull
-        public Builder setTooltipOffset(@NotNull Point offset) {
-            if (this.tooltip == null) {
-                this.tooltip = new Tooltip();
-            }
-            this.tooltip.setOffset(offset);
-            return this;
-        }
-
-        /**
-         * Create a new {@link Options} instance from this builder's current state.
-         *
-         * @return new marker options instance
-         */
-        @NotNull
-        public Options build() {
-            return new Options(this.stroke, this.fill, this.tooltip);
-        }
+        return "Options{fill=" + getFill() + ",stroke=" + getStroke() + ",tooltip=" + getTooltip() + ",popup=" + getPopup() + "}";
     }
 }

@@ -1,6 +1,5 @@
 package net.pl3x.map.api.marker.option;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
@@ -12,25 +11,47 @@ import org.jetbrains.annotations.Nullable;
  * Fill properties of a marker.
  */
 public class Fill implements JsonSerializable {
-    private Type type;
-    private int color;
+    private Boolean enabled = true;
+    private Type type = Type.EVENODD;
+    private Integer color = 0x333388FF;
 
     /**
      * Create a fill rule with default options.
      */
     public Fill() {
-        this(Type.EVENODD, 0x33FF0000);
     }
 
     /**
      * Create a fill rule.
      *
-     * @param type  fill type
      * @param color argb color
      */
-    public Fill(@NotNull Type type, int color) {
-        setType(type);
+    public Fill(int color) {
         setColor(color);
+    }
+
+    /**
+     * Whether to fill the path with color.
+     *
+     * @return true if fill is enabled
+     */
+    @Nullable
+    public Boolean isEnabled() {
+        return this.enabled;
+    }
+
+    /**
+     * Set whether to fill the path with color.
+     * <p>
+     * Setting to false will disable filling on polygons or circles.
+     *
+     * @param enabled whether fill is enabled
+     * @return this fill rule
+     */
+    @NotNull
+    public Fill setEnabled(@Nullable Boolean enabled) {
+        this.enabled = enabled;
+        return this;
     }
 
     /**
@@ -39,7 +60,7 @@ public class Fill implements JsonSerializable {
      * @return fill type
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
      */
-    @NotNull
+    @Nullable
     public Type getType() {
         return this.type;
     }
@@ -52,8 +73,7 @@ public class Fill implements JsonSerializable {
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
      */
     @NotNull
-    public Fill setType(@NotNull Type type) {
-        Preconditions.checkNotNull(type, "Fill type is null");
+    public Fill setType(@Nullable Type type) {
         this.type = type;
         return this;
     }
@@ -63,7 +83,8 @@ public class Fill implements JsonSerializable {
      *
      * @return argb color
      */
-    public int getColor() {
+    @Nullable
+    public Integer getColor() {
         return this.color;
     }
 
@@ -74,7 +95,7 @@ public class Fill implements JsonSerializable {
      * @return this fill rule
      */
     @NotNull
-    public Fill setColor(int color) {
+    public Fill setColor(@Nullable Integer color) {
         this.color = color;
         return this;
     }
@@ -83,7 +104,8 @@ public class Fill implements JsonSerializable {
     @NotNull
     public JsonElement toJson() {
         JsonArray json = new JsonArray();
-        json.add(getType().ordinal());
+        json.add(bool(isEnabled()));
+        json.add(enumeration(getType()));
         json.add(getColor());
         return json;
     }
@@ -100,18 +122,19 @@ public class Fill implements JsonSerializable {
             return false;
         }
         Fill other = (Fill) o;
-        return getType().equals(other.getType())
-                && getColor() == other.getColor();
+        return Objects.equals(isEnabled(), other.isEnabled())
+                && Objects.equals(getType(), other.getType())
+                && Objects.equals(getColor(), other.getColor());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getType(), getColor());
+        return Objects.hash(isEnabled(), getType(), getColor());
     }
 
     @Override
     public String toString() {
-        return "Fill{type=" + getType() + ",color=" + getColor() + "}";
+        return "Fill{enabled=" + isEnabled() + ",type=" + getType() + ",color=" + getColor() + "}";
     }
 
     /**
