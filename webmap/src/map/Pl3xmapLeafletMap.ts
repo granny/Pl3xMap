@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../Util";
+import {Util} from "../util/Util";
 import {World} from "../module/World";
 
 export default class Pl3xmapLeafletMap extends L.Map {

@@ -1,5 +1,5 @@
 import * as L from "leaflet";
-import {Util} from "./Util";
+import {Util} from "./util/Util";
 import {BlockInfoControl} from "./control/BlockInfoControl";
 import {CoordsControl} from "./control/CoordsControl";
 import {LinkControl} from "./control/LinkControl";

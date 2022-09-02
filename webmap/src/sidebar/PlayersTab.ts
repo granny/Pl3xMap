@@ -1,5 +1,5 @@
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../Util";
+import {Util} from "../util/Util";
 import BaseTab from "./BaseTab";
 import '../svg/players.svg';
 

@@ -1,5 +1,5 @@
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../Util";
+import {Util} from "../util/Util";
 import {BlockInfo, Palette} from "./BlockInfo";
 import {Spawn} from "./Spawn";
 import {Zoom} from "./Zoom";

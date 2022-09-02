@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../Util";
+import {Util} from "../util/Util";
 import {ControlBox} from "./ControlBox";
 import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
 

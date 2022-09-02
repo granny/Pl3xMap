@@ -1,5 +1,5 @@
 import * as L from "leaflet";
-import {Util} from "../../Util";
+import {Util} from "../../util/Util";
 import {MarkerOptions} from "./options/MarkerOptions";
 import {Marker} from "./Marker";
 import "../../lib/L.ellipse";

@@ -1,5 +1,5 @@
 import * as L from "leaflet";
-import {Pl3xMap} from "./Pl3xMap";
+import {Pl3xMap} from "../Pl3xMap";
 
 export class Util {
     private static readonly navigationKeys = new Set<string>([
@@ -141,5 +141,9 @@ export class Util {
     public static getScale() {
         const map = Pl3xMap.getInstance().map;
         return 1 / Math.pow(2, map.getMaxZoomOut());
+    }
+
+    public static isset(obj: unknown): boolean {
+        return typeof obj !== 'undefined';
     }
 }

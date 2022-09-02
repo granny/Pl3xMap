@@ -1,5 +1,6 @@
 import * as L from "leaflet";
 import {Color} from "../../../util/Color";
+import {Util} from "../../../util/Util";
 
 export class Stroke {
     private readonly _properties: L.PathOptions;
@@ -9,9 +10,9 @@ export class Stroke {
     constructor(data: unknown[]) {
         let props = {};
 
-        if (data[0]) props = {...props, stroke: data[0] as boolean};
-        if (data[1]) props = {...props, weight: data[1] as number};
-        if (data[2]) {
+        if (Util.isset(data[0])) props = {...props, stroke: data[0] as boolean};
+        if (Util.isset(data[1])) props = {...props, weight: data[1] as number};
+        if (Util.isset(data[2])) {
             const color = new Color(data[2] as number);
             props = {
                 ...props,
@@ -19,10 +20,10 @@ export class Stroke {
                 opacity: color.opacity
             };
         }
-        if (data[3]) props = {...props, lineCap: LineCap[data[3] as number] as L.LineCapShape};
-        if (data[4]) props = {...props, lineJoin: LineJoin[data[4] as number] as L.LineJoinShape};
-        if (data[5]) props = {...props, dashArray: data[5] as string};
-        if (data[6]) props = {...props, dashOffset: data[6] as string};
+        if (Util.isset(data[3])) props = {...props, lineCap: LineCap[data[3] as number] as L.LineCapShape};
+        if (Util.isset(data[4])) props = {...props, lineJoin: LineJoin[data[4] as number] as L.LineJoinShape};
+        if (Util.isset(data[5])) props = {...props, dashArray: data[5] as string};
+        if (Util.isset(data[6])) props = {...props, dashOffset: data[6] as string};
 
         this._properties = props;
     }
