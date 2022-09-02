@@ -144,6 +144,6 @@ export class Util {
     }
 
     public static isset(obj: unknown): boolean {
-        return typeof obj !== 'undefined';
+        return obj !== null && typeof obj !== 'undefined';
     }
 }
