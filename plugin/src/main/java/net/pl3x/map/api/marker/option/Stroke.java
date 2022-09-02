@@ -38,6 +38,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Whether to draw stroke along the path.
+     * <p>
+     * Defaults to '<code>true</code>' if null.
      *
      * @return true if stroke is enabled
      */
@@ -50,6 +52,8 @@ public class Stroke implements JsonSerializable {
      * Set whether to draw stroke along the path.
      * <p>
      * Setting to false will disable borders on polygons or circles.
+     * <p>
+     * Defaults to '<code>true</code>' if null.
      *
      * @param enabled whether stroke is enabled
      * @return this stroke rule
@@ -62,6 +66,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Get the weight of this stroke rule.
+     * <p>
+     * Defaults to '<code>3</code>' if null.
      *
      * @return stroke weight
      */
@@ -72,6 +78,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Set the weight for this stroke rule.
+     * <p>
+     * Defaults to '<code>3</code>' if null.
      *
      * @param weight new stroke weight
      * @return this stroke rule
@@ -84,6 +92,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Get the color of this stroke rule.
+     * <p>
+     * Defaults to '<code>#FF3388FF</code>' if null.
      *
      * @return argb color
      */
@@ -94,6 +104,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Set the color of this stroke rule.
+     * <p>
+     * Defaults to '<code>#FF3388FF</code>' if null.
      *
      * @param color argb color
      * @return this stroke rule
@@ -106,6 +118,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Get the shape to be used at the end of the stroke.
+     * <p>
+     * Defaults to '<code>{@link LineCapShape#ROUND}</code>' if null.
      *
      * @return line cap shape
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap">MDN stroke-linecap</a>
@@ -117,6 +131,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Set the shape to be used at the end of the stroke.
+     * <p>
+     * Defaults to '<code>{@link LineCapShape#ROUND}</code>' if null.
      *
      * @param lineCapShape line cap shape
      * @return this stroke rule
@@ -130,6 +146,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Get the shape to be used at the corners of the stroke.
+     * <p>
+     * Defaults to '<code>{@link LineJoinShape#ROUND}</code>' if null.
      *
      * @return line join shape
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin">MDN stroke-linejoin</a>
@@ -141,6 +159,8 @@ public class Stroke implements JsonSerializable {
 
     /**
      * Set the shape to be used at the corners of the stroke.
+     * <p>
+     * Defaults to '<code>{@link LineJoinShape#ROUND}</code>' if null.
      *
      * @param lineJoinShape line join shape
      * @return this stroke rule
@@ -175,7 +195,7 @@ public class Stroke implements JsonSerializable {
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray">MDN stroke-dasharray</a>
      */
     @NotNull
-    public Stroke setDashPatter(@Nullable String dashPattern) {
+    public Stroke setDashPattern(@Nullable String dashPattern) {
         this.dashPattern = dashPattern;
         return this;
     }

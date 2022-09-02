@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Icon marker.
+ * Represents an icon marker.
  */
 public class Icon extends Marker {
     public static Key DEFAULT_ICON = new Key("default_icon");
@@ -25,7 +25,7 @@ public class Icon extends Marker {
     private Point shadowOffset;
 
     /**
-     * Create a new default icon without shadow at 0,0.
+     * Create a new default icon at '<code>{@link Point#ZERO}</code>'.
      */
     public Icon() {
         this(Icon.DEFAULT_ICON, Point.ZERO, Point.ZERO);
@@ -89,7 +89,7 @@ public class Icon extends Marker {
     }
 
     /**
-     * Get the point on the map for this icon.
+     * Get the {@link Point} on the map for this icon.
      *
      * @return map location
      */
@@ -99,7 +99,7 @@ public class Icon extends Marker {
     }
 
     /**
-     * Set a new point on the map for this icon.
+     * Set a new {@link Point} on the map for this icon.
      *
      * @param point new point
      * @return this icon

@@ -10,14 +10,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Circle marker.
+ * Represents a circle marker.
  */
 public class Circle extends Marker {
     private Point center;
     private double radius;
 
     /**
-     * Create a new circle with default values.
+     * Create a new circle at '<code>{@link Point#ZERO}</code>' with radius of '<code>10</code>'.
      */
     public Circle() {
         this(Point.ZERO, 10);
@@ -36,7 +36,7 @@ public class Circle extends Marker {
     }
 
     /**
-     * Get the center point of this circle.
+     * Get the center {@link Point} of this circle.
      *
      * @return center point
      */
@@ -46,7 +46,7 @@ public class Circle extends Marker {
     }
 
     /**
-     * Set a new center point for this circle.
+     * Set a new center {@link Point} for this circle.
      *
      * @param center new center
      * @return this circle

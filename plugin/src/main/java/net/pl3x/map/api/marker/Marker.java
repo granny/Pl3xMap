@@ -1,5 +1,6 @@
 package net.pl3x.map.api.marker;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Base marker.
+ * Represents a map marker.
  */
 public abstract class Marker implements JsonSerializable {
     public static final Gson GSON = new GsonBuilder()
@@ -32,6 +33,7 @@ public abstract class Marker implements JsonSerializable {
      * @param type type of marker
      */
     public Marker(@NotNull String type) {
+        Preconditions.checkNotNull(type, "Marker type is null");
         this.type = type;
     }
 

@@ -1,5 +1,6 @@
 package net.pl3x.map.api.marker.type;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Polygon marker.
+ * Represents a polygon marker.
  */
 public class Polygon extends Marker {
     private final List<Poly> polys = new ArrayList<>();
@@ -28,12 +29,14 @@ public class Polygon extends Marker {
 
     @NotNull
     public Polygon addPoly(@NotNull Poly poly) {
+        Preconditions.checkNotNull(poly, "Polygon poly is null");
         this.polys.add(poly);
         return this;
     }
 
     @NotNull
     public Polygon removePoly(@NotNull Poly poly) {
+        Preconditions.checkNotNull(poly, "Polygon poly is null");
         this.polys.remove(poly);
         return this;
     }
@@ -78,7 +81,7 @@ public class Polygon extends Marker {
     }
 
     /**
-     * Represents a Polygon.
+     * Represents a polygon in a {@link Polygon}.
      * <p>
      * A polygon requires at least one {@link Ring} to represent
      * the outer polygon shape. Any additional rings will be used
@@ -94,6 +97,7 @@ public class Polygon extends Marker {
 
         @NotNull
         public Poly removeRing(@NotNull Ring ring) {
+            Preconditions.checkNotNull(ring, "Poly ring is null");
             this.rings.remove(ring);
             return this;
         }
@@ -137,20 +141,20 @@ public class Polygon extends Marker {
         }
 
         /**
-         * Represents a Polygon ring.
+         * Represents a ring in a {@link Poly}.
          * <p>
          * A ring is a list of points used to create a polygon shape.
-         * This ring could be used as a Polygon's outer ring, or as
+         * This ring could be used as a {@link Polygon}'s outer ring, or as
          * inner rings to punch holes into the outer ring.
          * <p>
-         * A minimum of 3 points is needed to create a valid and
+         * A minimum of 3 {@link Point}s are needed to create a valid and
          * visible polygon on the map.
          */
         public static class Ring implements JsonSerializable {
             private final List<Point> points = new ArrayList<>();
 
             /**
-             * Add a point in this ring.
+             * Add a {@link Point} in this ring.
              * <p>
              * Note: The last point you add does not need to be the
              * same as the first point you added.
@@ -164,19 +168,20 @@ public class Polygon extends Marker {
             }
 
             /**
-             * Remove a point from this ring.
+             * Remove a {@link Point} from this ring.
              *
              * @param point point to remove
              * @return this ring
              */
             @NotNull
             public Ring removePoint(@NotNull Point point) {
+                Preconditions.checkNotNull(point, "Ring point is null");
                 this.points.remove(point);
                 return this;
             }
 
             /**
-             * Get the points in this ring.
+             * Get the {@link Point}s in this ring.
              *
              * @return list of points
              */

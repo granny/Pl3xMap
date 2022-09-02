@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Marker options.
+ * Represents a {@link Marker}'s options.
  */
 public class Options implements JsonSerializable {
     private Stroke stroke;

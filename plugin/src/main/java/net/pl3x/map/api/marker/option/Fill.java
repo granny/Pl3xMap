@@ -32,6 +32,8 @@ public class Fill implements JsonSerializable {
 
     /**
      * Whether to fill the path with color.
+     * <p>
+     * Defaults to '<code>true</code>' if null.
      *
      * @return true if fill is enabled
      */
@@ -44,6 +46,8 @@ public class Fill implements JsonSerializable {
      * Set whether to fill the path with color.
      * <p>
      * Setting to false will disable filling on polygons or circles.
+     * <p>
+     * Defaults to '<code>true</code>' if null.
      *
      * @param enabled whether fill is enabled
      * @return this fill rule
@@ -56,6 +60,8 @@ public class Fill implements JsonSerializable {
 
     /**
      * Get the fill type of this fill rule.
+     * <p>
+     * Defaults to '<code>{@link Type#EVENODD}</code>' if null.
      *
      * @return fill type
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
@@ -67,6 +73,8 @@ public class Fill implements JsonSerializable {
 
     /**
      * Set a new fill type for this fill rule.
+     * <p>
+     * Defaults to '<code>{@link Type#EVENODD}</code>' if null.
      *
      * @param type new fill type
      * @return this fill rule
@@ -80,6 +88,8 @@ public class Fill implements JsonSerializable {
 
     /**
      * Get the fill color of this fill rule.
+     * <p>
+     * Defaults to '<code>{@link Stroke#getColor()}</code>' if null.
      *
      * @return argb color
      */
@@ -90,6 +100,8 @@ public class Fill implements JsonSerializable {
 
     /**
      * Set a new color for this fill rule.
+     * <p>
+     * Defaults to '<code>{@link Stroke#getColor()}</code>' if null.
      *
      * @param color new argb color
      * @return this fill rule

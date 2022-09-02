@@ -9,6 +9,10 @@ public class Mathf {
         return (t - a) / (b - a);
     }
 
+    public static double clamp(double min, double max, double value) {
+        return Math.min(Math.max(value, min), max);
+    }
+
     public static float clamp(float min, float max, float value) {
         return Math.min(Math.max(value, min), max);
     }

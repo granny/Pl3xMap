@@ -10,29 +10,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Rectangle marker.
+ * Represents a rectangle marker.
  */
 public class Rectangle extends Marker {
     private Point point1;
     private Point point2;
 
     /**
-     * Create a new rectangle at -5,-5 -> 5,5
+     * Create a new rectangle at '<code>new {@link Point}(-5, -5)</code>'
+     * to '<code>new {@link Point}(5, 5)</code>'
      */
     public Rectangle() {
         this(new Point(-5, -5), new Point(5, 5));
-    }
-
-    /**
-     * Create a new rectangle.
-     *
-     * @param x1 first x
-     * @param z1 first z
-     * @param x2 second x
-     * @param z2 second z
-     */
-    public Rectangle(int x1, int z1, int x2, int z2) {
-        this(new Point(x1, z1), new Point(x2, z2));
     }
 
     /**
@@ -45,14 +34,12 @@ public class Rectangle extends Marker {
      */
     public Rectangle(@NotNull Point point1, @NotNull Point point2) {
         super("rect");
-        Preconditions.checkNotNull(point1, "Rectangle point1 is null");
-        Preconditions.checkNotNull(point2, "Rectangle point2 is null");
         setPoint1(point1);
         setPoint2(point2);
     }
 
     /**
-     * Get the first point of this rectangle.
+     * Get the first {@link Point} of this rectangle.
      *
      * @return first point
      */
@@ -62,19 +49,20 @@ public class Rectangle extends Marker {
     }
 
     /**
-     * Set the first point of this rectangle.
+     * Set the first {@link Point} of this rectangle.
      *
      * @param point1 first point
      * @return this rectangle
      */
     @NotNull
     public Rectangle setPoint1(@NotNull Point point1) {
+        Preconditions.checkNotNull(point1, "Rectangle point1 is null");
         this.point1 = point1;
         return this;
     }
 
     /**
-     * Get the second point of this rectangle.
+     * Get the second {@link Point} of this rectangle.
      *
      * @return second point
      */
@@ -84,13 +72,14 @@ public class Rectangle extends Marker {
     }
 
     /**
-     * Set the second point of this rectangle.
+     * Set the second {@link Point} of this rectangle.
      *
      * @param point2 second point
      * @return this rectangle
      */
     @NotNull
     public Rectangle setPoint2(@NotNull Point point2) {
+        Preconditions.checkNotNull(point1, "Rectangle point2 is null");
         this.point2 = point2;
         return this;
     }

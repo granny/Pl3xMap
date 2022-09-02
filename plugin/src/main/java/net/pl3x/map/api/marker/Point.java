@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents a point on the map
+ * Represents a point on the map.
  */
 public class Point implements JsonSerializable {
     public static final Point ZERO = new Point(0, 0);
@@ -16,7 +16,7 @@ public class Point implements JsonSerializable {
     private int z;
 
     /**
-     * Create a new point
+     * Create a new point.
      *
      * @param x x coordinate
      * @param z z coordinate
@@ -27,7 +27,7 @@ public class Point implements JsonSerializable {
     }
 
     /**
-     * Get the x coordinate
+     * Get the x coordinate.
      *
      * @return x coordinate
      */
@@ -36,7 +36,7 @@ public class Point implements JsonSerializable {
     }
 
     /**
-     * Set the x coordinate
+     * Set the x coordinate.
      *
      * @param x x coordinate
      * @return this point
@@ -48,7 +48,7 @@ public class Point implements JsonSerializable {
     }
 
     /**
-     * Get the z coordinate
+     * Get the z coordinate.
      *
      * @return z coordinate
      */
@@ -57,7 +57,7 @@ public class Point implements JsonSerializable {
     }
 
     /**
-     * Set the z coordinate
+     * Set the z coordinate.
      *
      * @param z z coordinate
      * @return this point

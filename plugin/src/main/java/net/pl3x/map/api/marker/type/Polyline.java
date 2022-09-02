@@ -1,5 +1,6 @@
 package net.pl3x.map.api.marker.type;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Polyline marker.
+ * Represents a polyline marker.
  */
 public class Polyline extends Marker {
     private final List<Line> lines = new ArrayList<>();
@@ -28,12 +29,14 @@ public class Polyline extends Marker {
 
     @NotNull
     public Polyline addLine(@NotNull Line line) {
+        Preconditions.checkNotNull(line, "Polyline line is null");
         this.lines.add(line);
         return this;
     }
 
     @NotNull
     public Polyline removeLine(@NotNull Line line) {
+        Preconditions.checkNotNull(line, "Polyline line is null");
         this.lines.remove(line);
         return this;
     }
@@ -76,6 +79,9 @@ public class Polyline extends Marker {
         return "Polyline{lines=" + getLines() + ",options=" + getOptions() + "}";
     }
 
+    /**
+     * Represents a line in a {@link Polyline}
+     */
     public static class Line implements JsonSerializable {
         private final List<Point> points = new ArrayList<>();
 
@@ -86,6 +92,7 @@ public class Polyline extends Marker {
 
         @NotNull
         public Line removePoint(@NotNull Point point) {
+            Preconditions.checkNotNull(point, "Line point is null");
             this.points.remove(point);
             return this;
         }

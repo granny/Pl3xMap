@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Ellipse marker.
+ * Represents an ellipse marker.
  */
 public class Ellipse extends Marker {
     private Point center;
@@ -18,7 +18,8 @@ public class Ellipse extends Marker {
     private double radiusZ;
 
     /**
-     * Create a new ellipse at 0,0 with horizontal and vertical radius of 10.
+     * Create a new ellipse at '<code>{@link Point#ZERO}</code>' with
+     * horizontal and vertical radius of '<code>10</code>'.
      */
     public Ellipse() {
         this(Point.ZERO, 10, 10);
@@ -39,7 +40,7 @@ public class Ellipse extends Marker {
     }
 
     /**
-     * Get the center point of this ellipse.
+     * Get the center {@link Point} of this ellipse.
      *
      * @return center point
      */
@@ -49,9 +50,7 @@ public class Ellipse extends Marker {
     }
 
     /**
-     * Set a new center point for this ellipse.
-     * <p>
-     * Null value will set center to 0,0
+     * Set a new center {@link Point} for this ellipse.
      *
      * @param center new center
      * @return this ellipse

@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.util.Mathf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +32,7 @@ public class Tooltip implements JsonSerializable {
     }
 
     /**
-     * Get the string of this tooltip rule.
+     * Get the content of this tooltip rule.
      *
      * @return tooltip content
      */
@@ -58,7 +59,7 @@ public class Tooltip implements JsonSerializable {
     /**
      * Get the map pane where the tooltip will be added.
      * <p>
-     * Defaults to 'tooltipPane' if null.
+     * Defaults to '<code>tooltipPane</code>' if null.
      *
      * @return map pane
      */
@@ -70,7 +71,7 @@ public class Tooltip implements JsonSerializable {
     /**
      * Set the map pane where the tooltip will be added.
      * <p>
-     * Defaults to 'tooltipPane' if null.
+     * Defaults to '<code>tooltipPane</code>' if null.
      *
      * @param pane map pane
      * @return this tooltip rule
@@ -83,6 +84,8 @@ public class Tooltip implements JsonSerializable {
 
     /**
      * Get offset of this tooltip rule.
+     * <p>
+     * Defaults to '<code>{@link Point#ZERO}</code>' if null.
      *
      * @return tooltip offset from marker point
      */
@@ -92,7 +95,9 @@ public class Tooltip implements JsonSerializable {
     }
 
     /**
-     * Set offset of this tooltip rule from marker point
+     * Set offset of this tooltip rule from marker point.
+     * <p>
+     * Defaults to '<code>{@link Point#ZERO}</code>' if null.
      *
      * @param offset tooltip offset
      * @return this tooltip rule
@@ -103,47 +108,111 @@ public class Tooltip implements JsonSerializable {
         return this;
     }
 
+    /**
+     * Get the direction where to open the tooltip.
+     * <p>
+     * Defaults to '<code>{@link Direction#AUTO}</code>' if null.
+     *
+     * @return opening direction
+     */
     @Nullable
     public Direction getDirection() {
         return this.direction;
     }
 
+    /**
+     * Set the direction where to open the tooltip.
+     * <p>
+     * Defaults to '<code>{@link Direction#AUTO}</code>' if null.
+     *
+     * @param direction opening direction
+     * @return this tooltip rule
+     */
     @NotNull
     public Tooltip setDirection(@Nullable Direction direction) {
         this.direction = direction;
         return this;
     }
 
+    /**
+     * Get whether to open the tooltip permanently or only on mouseover.
+     * <p>
+     * Defaults to '<code>false</code>' if null.
+     *
+     * @return true if opened permanently
+     */
     @Nullable
     public Boolean isPermanent() {
         return this.permanent;
     }
 
+    /**
+     * Set whether to open the tooltip permanently or only on mouseover
+     * <p>
+     * Defaults to '<code>false</code>' if null.
+     *
+     * @param permanent opened permanently
+     * @return this tooltip rule
+     */
     @NotNull
     public Tooltip setPermanent(@Nullable Boolean permanent) {
         this.permanent = permanent;
         return this;
     }
 
+    /**
+     * Get whether the tooltip is sticky or not.
+     * <p>
+     * A sticky tooltip will stick to and follow the mouse instead of the anchor.
+     * <p>
+     * Defaults to '<code>false</code>' if null.
+     *
+     * @return sticky state
+     */
     @Nullable
     public Boolean isSticky() {
         return this.sticky;
     }
 
+    /**
+     * Set whether the tooltip is sticky or not.
+     * <p>
+     * A sticky tooltip will stick to and follow the mouse instead of the anchor.
+     * <p>
+     * Defaults to '<code>false</code>' if null.
+     *
+     * @param sticky sticky state
+     * @return this tooltip rule
+     */
     @NotNull
     public Tooltip setSticky(@Nullable Boolean sticky) {
         this.sticky = sticky;
         return this;
     }
 
+    /**
+     * Get the tooltip opacity percent.
+     * <p>
+     * Defaults to '<code>0.9D</code>' if null.
+     *
+     * @return tooltip opacity
+     */
     @Nullable
     public Double getOpacity() {
         return this.opacity;
     }
 
+    /**
+     * Set the tooltip opacity percent.
+     * <p>
+     * Defaults to '<code>0.9D</code>' if null.
+     *
+     * @param opacity tooltip opacity
+     * @return this tooltip rule
+     */
     @NotNull
     public Tooltip setOpacity(@Nullable Double opacity) {
-        this.opacity = opacity;
+        this.opacity = opacity == null ? null : Mathf.clamp(0D, 1D, opacity);
         return this;
     }
 
