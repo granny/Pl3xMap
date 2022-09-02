@@ -9,10 +9,10 @@ net.pl3x.map.api.httpd
 net.pl3x.map.api.image
 net.pl3x.map.api.image.io
 net.pl3x.map.api.iterator
-net.pl3x.map.api.marker
-net.pl3x.map.api.marker.layer
-net.pl3x.map.api.marker.option
-net.pl3x.map.api.marker.type
+net.pl3x.map.api.markers
+net.pl3x.map.api.markers.layer
+net.pl3x.map.api.markers.marker
+net.pl3x.map.api.markers.option
 net.pl3x.map.api.player
 net.pl3x.map.api.registry
 net.pl3x.map.command
