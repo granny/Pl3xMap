@@ -1,4 +1,4 @@
-package net.pl3x.map.api.marker.type;
+package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
@@ -6,8 +6,7 @@ import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.Key;
 import net.pl3x.map.api.Pl3xMap;
-import net.pl3x.map.api.marker.Marker;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.api.registry.IconRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
  * Represents an icon marker.
  */
 public class Icon extends Marker {
-    public static Key DEFAULT_ICON = new Key("default_icon");
-
     private Key image;
     private Point point;
     private Point offset;
@@ -25,39 +22,27 @@ public class Icon extends Marker {
     private Point shadowOffset;
 
     /**
-     * Create a new default icon at '<code>{@link Point#ZERO}</code>'.
+     * Create a new icon.
+     *
+     * @param image image key
+     * @param point icon point on map
      */
-    public Icon() {
-        this(Icon.DEFAULT_ICON, Point.ZERO, Point.ZERO);
+    public Icon(@NotNull Key image, @NotNull Point point) {
+        this(image, point, Point.ZERO);
     }
 
     /**
-     * Create a new icon without shadow.
+     * Create a new icon.
      *
      * @param image  image key
      * @param point  icon point on map
      * @param offset icon offset from point
      */
     public Icon(@NotNull Key image, @NotNull Point point, @Nullable Point offset) {
-        this(image, point, offset, null, null);
-    }
-
-    /**
-     * Create a new icon.
-     *
-     * @param image        image key
-     * @param point        icon point on map
-     * @param offset       icon offset from point
-     * @param shadow       shadow image key
-     * @param shadowOffset shadow offset from point
-     */
-    public Icon(@NotNull Key image, @NotNull Point point, @Nullable Point offset, @Nullable Key shadow, @Nullable Point shadowOffset) {
         super("icon");
         setImage(image);
         setPoint(point);
         setOffset(offset);
-        setShadow(shadow);
-        setShadowOffset(shadowOffset);
     }
 
     /**

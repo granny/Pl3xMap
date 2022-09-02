@@ -1,11 +1,11 @@
-package net.pl3x.map.api.marker.option;
+package net.pl3x.map.api.markers.option;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -449,14 +449,14 @@ public class Popup implements JsonSerializable {
         JsonArray json = new JsonArray();
         json.add(getContent());
         json.add(getPane());
-        json.add(point(getOffset()));
+        json.add(vec(getOffset()));
         json.add(getMaxWidth());
         json.add(getMinWidth());
         json.add(getMaxHeight());
         json.add(bool(shouldAutoPan()));
-        json.add(point(getAutoPanPaddingTopLeft()));
-        json.add(point(getAutoPanPaddingBottomRight()));
-        json.add(point(getAutoPanPadding()));
+        json.add(vec(getAutoPanPaddingTopLeft()));
+        json.add(vec(getAutoPanPaddingBottomRight()));
+        json.add(vec(getAutoPanPadding()));
         json.add(bool(shouldKeepInView()));
         json.add(bool(hasCloseButton()));
         json.add(bool(shouldAutoClose()));

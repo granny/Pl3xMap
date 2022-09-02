@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.pl3x.map.api.Key;
-import net.pl3x.map.api.marker.layer.Layer;
+import net.pl3x.map.api.markers.layer.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

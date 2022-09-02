@@ -1,11 +1,11 @@
-package net.pl3x.map.api.marker.option;
+package net.pl3x.map.api.markers.option;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.util.Mathf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -222,7 +222,7 @@ public class Tooltip implements JsonSerializable {
         JsonArray json = new JsonArray();
         json.add(getContent());
         json.add(getPane());
-        json.add(point(getOffset()));
+        json.add(vec(getOffset()));
         json.add(enumeration(getDirection()));
         json.add(bool(isPermanent()));
         json.add(bool(isSticky()));

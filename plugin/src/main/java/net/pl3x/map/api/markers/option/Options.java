@@ -1,13 +1,10 @@
-package net.pl3x.map.api.marker;
+package net.pl3x.map.api.markers.option;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
-import net.pl3x.map.api.marker.option.Fill;
-import net.pl3x.map.api.marker.option.Popup;
-import net.pl3x.map.api.marker.option.Stroke;
-import net.pl3x.map.api.marker.option.Tooltip;
+import net.pl3x.map.api.markers.marker.Marker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

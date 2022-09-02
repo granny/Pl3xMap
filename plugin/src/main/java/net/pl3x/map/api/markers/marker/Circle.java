@@ -1,11 +1,10 @@
-package net.pl3x.map.api.marker.type;
+package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.marker.Marker;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,13 +14,6 @@ import org.jetbrains.annotations.Nullable;
 public class Circle extends Marker {
     private Point center;
     private double radius;
-
-    /**
-     * Create a new circle at '<code>{@link Point#ZERO}</code>' with radius of '<code>10</code>'.
-     */
-    public Circle() {
-        this(Point.ZERO, 10);
-    }
 
     /**
      * Create a new circle.

@@ -5,7 +5,7 @@ import net.pl3x.map.api.Key;
 import net.pl3x.map.api.event.EventHandler;
 import net.pl3x.map.api.event.EventListener;
 import net.pl3x.map.api.event.world.WorldLoadedEvent;
-import net.pl3x.map.api.marker.layer.Layer;
+import net.pl3x.map.api.markers.layer.Layer;
 import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.world.MapWorld;
 

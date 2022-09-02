@@ -1,11 +1,11 @@
-package net.pl3x.map.api.marker.type;
+package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.marker.Marker;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.markers.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,29 +14,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Ellipse extends Marker {
     private Point center;
-    private double radiusX;
-    private double radiusZ;
-
-    /**
-     * Create a new ellipse at '<code>{@link Point#ZERO}</code>' with
-     * horizontal and vertical radius of '<code>10</code>'.
-     */
-    public Ellipse() {
-        this(Point.ZERO, 10, 10);
-    }
+    private Vector radius;
 
     /**
      * Create a new ellipse.
      *
-     * @param center  center location
-     * @param radiusX horizontal radius
-     * @param radiusZ vertical radius
+     * @param center center location
+     * @param radius radius
      */
-    public Ellipse(@NotNull Point center, double radiusX, double radiusZ) {
+    public Ellipse(@NotNull Point center, @NotNull Vector radius) {
         super("elli");
         setCenter(center);
-        setRadiusX(radiusX);
-        setRadiusZ(radiusZ);
+        setRadius(radius);
     }
 
     /**
@@ -63,44 +52,25 @@ public class Ellipse extends Marker {
     }
 
     /**
-     * Get the horizontal radius of this ellipse.
+     * Get the radius for this ellipse.
      *
-     * @return horizontal radius
+     * @return radius
      */
-    public double getRadiusX() {
-        return this.radiusX;
+    @NotNull
+    public Vector getRadius() {
+        return this.radius;
     }
 
     /**
-     * Set the horizontal radius for this ellipse.
+     * Set a new radius for this ellipse.
      *
-     * @param radius new horizontal radius
+     * @param radius new radius
      * @return this ellipse
      */
     @NotNull
-    public Ellipse setRadiusX(double radius) {
-        this.radiusX = radius;
-        return this;
-    }
-
-    /**
-     * Get the vertical radius of this ellipse.
-     *
-     * @return vertical radius
-     */
-    public double getRadiusZ() {
-        return this.radiusZ;
-    }
-
-    /**
-     * Set the vertical radius for this ellipse.
-     *
-     * @param radius new vertical radius
-     * @return this ellipse
-     */
-    @NotNull
-    public Ellipse setRadiusZ(double radius) {
-        this.radiusZ = radius;
+    public Ellipse setRadius(Vector radius) {
+        Preconditions.checkNotNull(radius, "Ellipse radius is null");
+        this.radius = radius;
         return this;
     }
 
@@ -110,8 +80,7 @@ public class Ellipse extends Marker {
         JsonArray data = new JsonArray();
         data.add(getCenter().toJson());
         data.add(getCenter().toJson());
-        data.add(getRadiusX());
-        data.add(getRadiusZ());
+        data.add(vec(getRadius()));
         return data;
     }
 
@@ -127,19 +96,18 @@ public class Ellipse extends Marker {
             return false;
         }
         Ellipse other = (Ellipse) o;
-        return Double.compare(getRadiusX(), other.getRadiusX()) == 0
-                && Double.compare(getRadiusZ(), other.getRadiusZ()) == 0
+        return Objects.equals(getRadius(), other.getRadius())
                 && Objects.equals(getCenter(), other.getCenter())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions(), getRadiusX(), getRadiusZ(), getCenter());
+        return Objects.hash(getOptions(), getCenter(), getRadius());
     }
 
     @Override
     public String toString() {
-        return "Ellipse{center=" + getCenter() + ",radiusX=" + getRadiusX() + "radiusZ=" + getRadiusZ() + ",options=" + getOptions() + "}";
+        return "Ellipse{center=" + getCenter() + ",radius=" + getRadius() + ",options=" + getOptions() + "}";
     }
 }

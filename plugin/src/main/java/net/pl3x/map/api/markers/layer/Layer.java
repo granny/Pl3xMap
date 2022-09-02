@@ -1,8 +1,8 @@
-package net.pl3x.map.api.marker.layer;
+package net.pl3x.map.api.markers.layer;
 
 import java.util.Collection;
 import net.pl3x.map.api.Key;
-import net.pl3x.map.api.marker.Marker;
+import net.pl3x.map.api.markers.marker.Marker;
 import org.jetbrains.annotations.NotNull;
 
 /**

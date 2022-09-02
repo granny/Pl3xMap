@@ -1,7 +1,7 @@
 package net.pl3x.map.api;
 
 import com.google.gson.JsonElement;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Vector;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,7 +24,7 @@ public interface JsonSerializable {
         return enumeration == null ? null : enumeration.ordinal();
     }
 
-    default JsonElement point(Point point) {
-        return point == null ? null : point.toJson();
+    default JsonElement vec(Vector vec) {
+        return vec == null ? null : vec.toJson();
     }
 }

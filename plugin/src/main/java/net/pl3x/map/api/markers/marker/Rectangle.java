@@ -1,11 +1,10 @@
-package net.pl3x.map.api.marker.type;
+package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.marker.Marker;
-import net.pl3x.map.api.marker.Point;
+import net.pl3x.map.api.markers.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,14 +14,6 @@ import org.jetbrains.annotations.Nullable;
 public class Rectangle extends Marker {
     private Point point1;
     private Point point2;
-
-    /**
-     * Create a new rectangle at '<code>new {@link Point}(-5, -5)</code>'
-     * to '<code>new {@link Point}(5, 5)</code>'
-     */
-    public Rectangle() {
-        this(new Point(-5, -5), new Point(5, 5));
-    }
 
     /**
      * Create a new rectangle.

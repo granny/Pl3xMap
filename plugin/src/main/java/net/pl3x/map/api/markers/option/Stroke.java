@@ -1,4 +1,4 @@
-package net.pl3x.map.api.marker.option;
+package net.pl3x.map.api.markers.option;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
