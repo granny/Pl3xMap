@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+// https://github.com/PurpurMC/Purpur#initial-setup
 
 L.SVG.include ({
     _updateEllipse: function (layer) {
-        var c = layer._point,
-            rx = layer._radiusX,
+        var rx = layer._radiusX,
             ry = layer._radiusY,
             phi = layer._tiltDeg,
             endPoint = layer._endPointParams;
@@ -40,6 +40,7 @@ L.Canvas.include ({
             r = layer._radiusX,
             s = (layer._radiusY || r) / r;
 
+        // https://github.com/jdfergason/Leaflet.Ellipse/commit/900d2904902da10248c23fe8d4fc022d3f68d70c
         if (this.hasOwnProperty('_drawnLayers')) {
             this._drawnlayers[layer._leaflet_id] = layer;
         } else if (this.hasOwnProperty('_layers')) {
@@ -47,7 +48,6 @@ L.Canvas.include ({
         } else {
             throw new Error("Cannot find property _drawnLayers or _layers");
         }
-
 
         ctx.save();
 
@@ -142,8 +142,11 @@ L.Ellipse = L.Path.extend({
             pointBelow = this._map.latLngToLayerPoint([latlng.lat - latRadius, latlng.lng]);
 
         this._point = this._map.latLngToLayerPoint(latlng);
-        this._radiusX = Math.max(this._point.x - pointLeft.x, 1);
-        this._radiusY = Math.max(pointBelow.y - this._point.y, 1);
+
+        // https://github.com/jdfergason/Leaflet.Ellipse/issues/10#issuecomment-348963516
+        this._radiusX = Math.abs(this._point.x - pointLeft.x);
+        this._radiusY = Math.abs(pointBelow.y - this._point.y);
+
         this._tilt = Math.PI * this._tiltDeg / 180;
         this._endPointParams = this._centerPointToEndPoint();
         this._updateBounds();
@@ -175,10 +178,18 @@ L.Ellipse = L.Path.extend({
     },
 
     _getLatRadius: function () {
+        // https://github.com/SlidEnergy/Leaflet.Ellipse/commit/11890f2ec425ec7f7755b991fd31016bd58f59be
+        if (!!this._map.options.crs.infinite) {
+            return this._mRadiusY;
+        }
         return (this._mRadiusY / 40075017) * 360;
     },
 
     _getLngRadius: function () {
+        // https://github.com/SlidEnergy/Leaflet.Ellipse/commit/11890f2ec425ec7f7755b991fd31016bd58f59be
+        if (!!this._map.options.crs.infinite) {
+            return this._mRadiusX;
+        }
         return ((this._mRadiusX / 40075017) * 360) / Math.cos((Math.PI / 180) * this._latlng.lat);
     },
 
@@ -225,6 +236,16 @@ L.Ellipse = L.Path.extend({
         var dy = p.y - this._point.y;
         var sumA = cos * dx + sin * dy;
         var sumB = sin * dx - cos * dy;
+
+        // if there is no fill, only use points where the stroke is
+        if (this.options.fill === false) {
+            var x = this._radiusX - this.options.weight;
+            var y = this._radiusY - this.options.weight;
+            if (sumA * sumA / (x * x) + sumB * sumB / (y * y) <= 1) {
+                return false;
+            }
+        }
+
         return sumA * sumA / (this._radiusX * this._radiusX)  + sumB * sumB / (this._radiusY * this._radiusY) <= 1;
     }
 });

@@ -21,6 +21,7 @@ export class Markers {
     test(): void {
         const testMarkers = [
             ["circ", [[0, 0], 10.0], [[1, 3, -65536, 1, 1, null, null], [1, 1, 872349696], [], []]],
+            ["elli", [[50, 50], [25, 50],25], [[1, 3, -65536, 1, 1, null, null], [0, 1, 0], [], []]],
             ["rect", [[0, 0], [20, 20]]],
             ["rect", [[30, 30], [40, 40]], [[], [], [], ["test1", null, null, 300, 50, null, 1, null, null, null, 0, 1, 1, 1, 1]]],
             ["icon", [[0, 0], "test", null, null, [13, 41], null, null, "shadow", null, null, [13, 41]], [[], [], ["test2", null, null, 2, 0, 0, 0.9], []]],
