@@ -27,17 +27,17 @@ public class WorldListener implements EventListener, Listener {
         event.getWorld().getLayerRegistry().unregister(WorldBorderLayer.KEY);
     }
 
-    @EventHandler
+    @org.bukkit.event.EventHandler
     public void on(WorldBorderBoundsChangeEvent event) {
         updateBorder(event);
     }
 
-    @EventHandler
+    @org.bukkit.event.EventHandler
     public void on(WorldBorderBoundsChangeFinishEvent event) {
         updateBorder(event);
     }
 
-    @EventHandler
+    @org.bukkit.event.EventHandler
     public void on(WorldBorderCenterChangeEvent event) {
         updateBorder(event);
     }
