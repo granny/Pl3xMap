@@ -1,6 +1,7 @@
 package net.pl3x.map.api.addon;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -19,6 +20,8 @@ import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.util.FileUtil;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.bukkit.plugin.java.PluginClassLoader;
 
 /**
  * Manages Pl3xMap addons
@@ -94,6 +97,20 @@ public class AddonManager {
 
                 Addon addon = clazz.getDeclaredConstructor().newInstance();
                 addon.info = info;
+
+                Field loaders = JavaPluginLoader.class.getDeclaredField("loaders");
+                loaders.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                List<PluginClassLoader> list = (List<PluginClassLoader>) loaders.get(Pl3xMapPlugin.getInstance().getPluginLoader());
+
+                Field field = PluginClassLoader.class.getDeclaredField("seenIllegalAccess");
+                field.setAccessible(true);
+
+                for (PluginClassLoader classLoader : list) {
+                    @SuppressWarnings("unchecked")
+                    Set<String> set = (Set<String>) field.get(classLoader);
+                    set.addAll(info.getDepends());
+                }
 
                 Logger.info(Lang.ADDON_ENABLING
                         .replace("<name>", info.getName())

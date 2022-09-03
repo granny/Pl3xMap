@@ -1,7 +1,10 @@
 package net.pl3x.map.api.addon;
 
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -14,6 +17,7 @@ public class AddonInfo {
     private final String version;
     private final String description;
     private final String author;
+    private final Set<String> depends = new HashSet<>();
 
     private final String main;
 
@@ -27,6 +31,12 @@ public class AddonInfo {
         this.author = (String) map.get("author");
 
         this.main = (String) map.get("main");
+
+        if (map.containsKey("depends")) {
+            @SuppressWarnings("unchecked")
+            List<String> list = (List<String>) map.get("depends");
+            this.depends.addAll(list);
+        }
     }
 
     /**
@@ -63,6 +73,22 @@ public class AddonInfo {
      */
     public String getAuthor() {
         return this.author;
+    }
+
+    /**
+     * Get list of dependency plugins.
+     * <p>
+     * This does not change the load order, or guarantee the
+     * dependency will be in the classpath at runtime.
+     * <p>
+     * It only suppresses the Bukkit warnings about Pl3xMap
+     * using class from other classloaders that are not in
+     * its own dependency list.
+     *
+     * @return dependencies
+     */
+    public Set<String> getDepends() {
+        return this.depends;
     }
 
     /**

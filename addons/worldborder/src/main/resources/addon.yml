@@ -3,3 +3,7 @@ main: "${group}.${name}"
 version: "${version}"
 description: "${description}"
 author: "BillyGalbreath"
+depends:
+  - Chunky
+  - ChunkyBorder
+  - WorldBorder
