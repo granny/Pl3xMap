@@ -11,13 +11,13 @@ import org.jetbrains.annotations.Nullable;
  * Stroke properties of a marker.
  */
 public class Stroke implements JsonSerializable {
-    private Boolean enabled = true;
-    private Integer weight = 3;
-    private Integer color = 0xFF3388FF;
-    private LineCapShape lineCapShape = LineCapShape.ROUND;
-    private LineJoinShape lineJoinShape = LineJoinShape.ROUND;
-    private String dashPattern = null;
-    private String dashOffset = null;
+    private Boolean enabled;
+    private Integer weight;
+    private Integer color;
+    private LineCapShape lineCapShape;
+    private LineJoinShape lineJoinShape;
+    private String dashPattern;
+    private String dashOffset;
 
     /**
      * Create a stroke rule with default options.

@@ -179,7 +179,7 @@ L.Ellipse = L.Path.extend({
 
     _getLatRadius: function () {
         // https://github.com/SlidEnergy/Leaflet.Ellipse/commit/11890f2ec425ec7f7755b991fd31016bd58f59be
-        if (!!this._map.options.crs.infinite) {
+        if (this._map.options.crs.infinite) {
             return this._mRadiusY;
         }
         return (this._mRadiusY / 40075017) * 360;
@@ -187,7 +187,7 @@ L.Ellipse = L.Path.extend({
 
     _getLngRadius: function () {
         // https://github.com/SlidEnergy/Leaflet.Ellipse/commit/11890f2ec425ec7f7755b991fd31016bd58f59be
-        if (!!this._map.options.crs.infinite) {
+        if (this._map.options.crs.infinite) {
             return this._mRadiusX;
         }
         return ((this._mRadiusX / 40075017) * 360) / Math.cos((Math.PI / 180) * this._latlng.lat);

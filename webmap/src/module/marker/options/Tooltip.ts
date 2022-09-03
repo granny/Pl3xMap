@@ -12,7 +12,7 @@ export class Tooltip {
 
         let props = {};
         if (Util.isset(data[1])) props = {...props, pane: data[1] as string};
-        if (Util.isset(data[2])) props = {...props, offset: data[2] as L.PointExpression};
+        if (Util.isset(data[2])) props = {...props, offset: data[2] as L.PointTuple};
         if (Util.isset(data[3])) props = {...props, direction: Direction[data[3] as number] as L.Direction};
         if (Util.isset(data[4])) props = {...props, permanent: data[4] as boolean};
         if (Util.isset(data[5])) props = {...props, sticky: data[5] as boolean};

@@ -5,14 +5,18 @@ import java.util.Collections;
 import net.pl3x.map.addon.worldborder.border.Border;
 import net.pl3x.map.addon.worldborder.border.BorderType;
 import net.pl3x.map.api.Key;
-import net.pl3x.map.api.markers.marker.Marker;
 import net.pl3x.map.api.markers.layer.Layer;
+import net.pl3x.map.api.markers.marker.Marker;
+import net.pl3x.map.api.markers.option.Fill;
+import net.pl3x.map.api.markers.option.Options;
+import net.pl3x.map.api.markers.option.Stroke;
 import net.pl3x.map.world.MapWorld;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldBorderLayer implements Layer {
+    public static final Key KEY = new Key("world-border");
+
     private final MapWorld mapWorld;
-    private final Key key;
     private final String label;
     private final int updateInterval;
     private final boolean showControls;
@@ -24,7 +28,6 @@ public class WorldBorderLayer implements Layer {
 
     public WorldBorderLayer(@NotNull MapWorld mapWorld) {
         this.mapWorld = mapWorld;
-        this.key = new Key("world-border");
         this.label = "World Border";
         this.updateInterval = 15;
         this.showControls = true;
@@ -47,10 +50,14 @@ public class WorldBorderLayer implements Layer {
         return this.border;
     }
 
+    public void clearBorder() {
+        this.border = null;
+    }
+
     @Override
     @NotNull
     public Key getKey() {
-        return this.key;
+        return KEY;
     }
 
     @Override
@@ -88,6 +95,13 @@ public class WorldBorderLayer implements Layer {
     @NotNull
     public Collection<Marker> getMarkers() {
         Marker marker = getBorder().getMarker();
-        return marker == null ? Collections.emptyList() : Collections.singletonList(marker);
+        if (marker == null) {
+            return Collections.emptyList();
+        }
+        marker.setOptions(new Options()
+                .setStroke(new Stroke().setColor(0xFFFF0000))
+                .setFill(new Fill().setEnabled(false))
+        );
+        return Collections.singletonList(marker);
     }
 }

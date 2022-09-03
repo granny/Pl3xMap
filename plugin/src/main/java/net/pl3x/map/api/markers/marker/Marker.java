@@ -27,7 +27,7 @@ public abstract class Marker implements JsonSerializable {
     public static final Gson GSON = new GsonBuilder()
             //.setPrettyPrinting()
             //.disableHtmlEscaping()
-            //.serializeNulls()
+            .serializeNulls()
             .registerTypeHierarchyAdapter(Marker.class, new Adapter())
             .setLenient()
             .create();
@@ -69,8 +69,16 @@ public abstract class Marker implements JsonSerializable {
         return new Icon(image, point);
     }
 
+    public static Marker polygon(@NotNull Point @NotNull ... points) {
+        return Polygon.of(Poly.of(Ring.of(points)));
+    }
+
     public static Marker polygon(@NotNull List<Point> points) {
         return Polygon.of(Poly.of(Ring.of(points)));
+    }
+
+    public static Marker polyline(@NotNull Point @NotNull ... points) {
+        return Polyline.of(Line.of(points));
     }
 
     public static Marker polyline(@NotNull List<Point> points) {

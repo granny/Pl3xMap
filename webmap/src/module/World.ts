@@ -8,6 +8,7 @@ import {CoordsControl} from "../control/CoordsControl";
 import {BlockInfoControl} from "../control/BlockInfoControl";
 import {UI} from "../options/UI";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
+import {Markers} from "./marker/Markers";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -40,6 +41,14 @@ export class World {
         if (this._loaded) {
             return Promise.resolve(this);
         }
+
+        const world = this;
+        Util.getJSON(`tiles/${this.name}/markers.json`)
+            .then((json) => {
+                Object.keys(json).forEach(function (name: string) {
+                    new Markers(world, name, json[name]);
+                });
+            });
 
         Util.getJSON(`tiles/${this.name}/biomes.gz`)
             .then((json: Palette[]) => {
@@ -99,10 +108,8 @@ export class World {
         const attributeDom = this.pl3xmap.map.attributionControl.getContainer();
         if (attributeDom) {
             if (this._ui.attribution) {
-                console.log("add");
                 attributeDom.style.display = "inline-block";
             } else {
-                console.log("remove");
                 attributeDom.style.display = "none";
             }
         }

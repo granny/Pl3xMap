@@ -122,12 +122,12 @@ export class Util {
         window.dispatchEvent(new CustomEvent(event, {detail}));
     }
 
-    public static toLatLng(x: number, z: number): L.LatLng {
-        return L.latLng(Util.pixelsToMeters(z + 0.5), Util.pixelsToMeters(x + 0.5));
+    public static toLatLng(point: L.PointTuple): L.LatLng {
+        return L.latLng(Util.pixelsToMeters(point[1] + 0.5), Util.pixelsToMeters(point[0] + 0.5));
     }
 
-    public static toPoint(latlng: L.LatLng): L.Point {
-        return L.point(Util.metersToPixels(latlng.lng), Util.metersToPixels(latlng.lat));
+    public static toPoint(latlng: L.LatLng): L.PointTuple {
+        return [Util.metersToPixels(latlng.lng), Util.metersToPixels(latlng.lat)];
     }
 
     public static pixelsToMeters(num: number): number {

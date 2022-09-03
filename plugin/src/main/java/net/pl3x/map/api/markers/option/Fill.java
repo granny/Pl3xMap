@@ -11,9 +11,9 @@ import org.jetbrains.annotations.Nullable;
  * Fill properties of a marker.
  */
 public class Fill implements JsonSerializable {
-    private Boolean enabled = true;
-    private Type type = Type.EVENODD;
-    private Integer color = 0x333388FF;
+    private Boolean enabled;
+    private Type type;
+    private Integer color;
 
     /**
      * Create a fill rule with default options.

@@ -8,16 +8,12 @@ export class Circle extends Marker {
     // [[0, 0], 10.0]
 
     constructor(data: unknown[], options: MarkerOptions | undefined) {
-        const center = L.point(data[0] as L.PointExpression);
-        const radius = data[1] as number;
-
-        const marker = L.circle(Util.toLatLng(center.x, center.y), {
+        const marker = L.circle(Util.toLatLng(data[0] as L.PointTuple), {
             ...options?.properties,
-            radius: Util.pixelsToMeters(radius),
+            radius: Util.pixelsToMeters(data[1] as number),
             interactive: true,
             attribution: undefined
         });
-
         super(marker);
     }
 }

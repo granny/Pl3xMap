@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * Popup properties of a marker.
  */
 public class Popup implements JsonSerializable {
-    private String content = "";
+    private String content;
     private String pane;
     private Point offset;
     private Integer maxWidth;

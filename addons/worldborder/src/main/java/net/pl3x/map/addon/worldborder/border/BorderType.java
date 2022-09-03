@@ -6,9 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 public enum BorderType {
-    VANILLA(VanillaBorder::new),
-    WORLDBORDER(VanillaBorder::new),
-    CHUNKY(VanillaBorder::new);
+    CHUNKY(ChunkyBorder::new),
+    WORLDBORDER(WBPluginBorder::new),
+    VANILLA(VanillaBorder::new);
 
     private final Function<MapWorld, Border> supplier;
 
@@ -22,11 +22,11 @@ public enum BorderType {
 
     public static BorderType get() {
         PluginManager pm = Bukkit.getPluginManager();
+        if (pm.isPluginEnabled("ChunkyBorder")) {
+            return CHUNKY;
+        }
         if (pm.isPluginEnabled("WorldBorder")) {
             return WORLDBORDER;
-        }
-        if (pm.isPluginEnabled("Chunky")) {
-            return CHUNKY;
         }
         return VANILLA;
     }

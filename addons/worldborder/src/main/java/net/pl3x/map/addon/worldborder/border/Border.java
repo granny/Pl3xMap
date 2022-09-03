@@ -9,9 +9,13 @@ public abstract class Border {
     private final MapWorld mapWorld;
     private final BorderType type;
 
+    protected Marker marker;
+
     public Border(@NotNull MapWorld mapWorld, BorderType type) {
         this.mapWorld = mapWorld;
         this.type = type;
+
+        update();
     }
 
     @NotNull
@@ -25,5 +29,9 @@ public abstract class Border {
     }
 
     @Nullable
-    public abstract Marker getMarker();
+    public Marker getMarker() {
+        return this.marker;
+    }
+
+    public abstract void update();
 }

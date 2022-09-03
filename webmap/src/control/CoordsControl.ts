@@ -23,7 +23,7 @@ export class CoordsControl extends ControlBox {
         this._dom = L.DomUtil.create('div', 'leaflet-control leaflet-control-panel leaflet-control-coordinates');
         this._dom.dataset.label = this._pl3xmap.lang.coordsLabel;
         map.addEventListener('mousemove', this.onEvent);
-        this.update(map, new L.Point(0, 0));
+        this.update(map, [0, 0]);
         return this._dom;
     }
 
@@ -31,9 +31,9 @@ export class CoordsControl extends ControlBox {
         map.removeEventListener('mousemove', this.onEvent);
     }
 
-    private update(map: Pl3xmapLeafletMap, point: L.Point): void {
-        this._x = Math.round(point.x) - 1;
-        this._z = Math.round(point.y) - 1;
+    private update(map: Pl3xmapLeafletMap, point: L.PointTuple): void {
+        this._x = Math.round(point[0]) - 1;
+        this._z = Math.round(point[1]) - 1;
         this._pl3xmap.blockInfoControl?.update(map);
         this._dom.innerHTML = this._pl3xmap.lang.coordsValue
             .replace(/<x>/g, this._x.toString().padStart(6, ' '))

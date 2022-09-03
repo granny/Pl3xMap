@@ -6,7 +6,6 @@ import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.api.markers.marker.Marker;
 import net.pl3x.map.world.MapWorld;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.popcraft.chunky.platform.util.Vector2;
 import org.popcraft.chunky.shape.AbstractEllipse;
 import org.popcraft.chunky.shape.AbstractPolygon;
@@ -21,14 +20,15 @@ public class ChunkyBorder extends Border {
     }
 
     @Override
-    @Nullable
-    public Marker getMarker() {
+    public void update() {
         BorderData border = ChunkyBorderProvider.get().getBorder(getMapWorld().getName()).orElse(null);
         if (border == null) {
-            return null;
+            this.marker = null;
+            return;
         }
 
         Shape shape = border.getBorder();
+
         if (shape instanceof AbstractPolygon polygon) {
             List<Vector2> allPoints = polygon.points();
             List<Point> points = allPoints.stream()
@@ -36,19 +36,21 @@ public class ChunkyBorder extends Border {
                     .collect(Collectors.toList());
             Vector2 lastPoint = allPoints.get(0);
             points.add(Point.of(lastPoint.getX(), lastPoint.getZ()));
-            return Marker.polyline(points);
+            this.marker = Marker.polyline(points);
+            return;
         }
 
         if (shape instanceof AbstractEllipse ellipse) {
             Vector2 center = ellipse.center();
             Vector2 radii = ellipse.radii();
             if (ellipse instanceof Circle) {
-                return Marker.circle(center.getX(), center.getZ(), radii.getX());
+                this.marker = Marker.circle(center.getX(), center.getZ(), radii.getX());
             } else {
-                return Marker.ellipse(center.getX(), center.getZ(), radii.getX(), radii.getZ());
+                this.marker = Marker.ellipse(center.getX(), center.getZ(), radii.getX(), radii.getZ());
             }
+            return;
         }
 
-        return null;
+        this.marker = null;
     }
 }

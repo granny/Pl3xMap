@@ -1,4 +1,4 @@
-import {LatLngExpression, Layer, PathOptions, Path, PointTuple, Point, LatLngBounds, LatLng} from "leaflet";
+import * as L from "leaflet";
 import {World} from "./module/World";
 
 interface OverlayAddedPayload {
@@ -18,14 +18,14 @@ declare global {
 }
 
 module "leaflet" {
-    export function ellipse(latLng: LatLngExpression, radii: PointTuple, tilt: number, options: PathOptions): Ellipse;
+    export function ellipse(latLng: L.LatLngExpression, radii: L.LatLngExpression, tilt: number, options: L.PathOptions): Ellipse;
 
-    interface Ellipse extends Path {
-        setRadius(radii: PointTuple): this;
-        getRadius(): Point;
+    interface Ellipse extends L.Path {
+        setRadius(radii: L.LatLngExpression): this;
+        getRadius(): L.PointTuple;
         setTilt(tilt: number): this;
-        getBounds(): LatLngBounds;
-        getLatLng(): LatLng;
-        setLatLng(latLng: LatLngExpression): this;
+        getBounds(): L.LatLngBounds;
+        getLatLng(): L.LatLng;
+        setLatLng(latLng: L.LatLngExpression): this;
     }
 }

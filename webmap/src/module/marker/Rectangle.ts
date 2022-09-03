@@ -8,12 +8,9 @@ export class Rectangle extends Marker {
     // [[0, 0], [20, 20]]
 
     constructor(data: unknown[], options: MarkerOptions | undefined) {
-        const point1 = L.point(data[0] as L.PointExpression);
-        const point2 = L.point(data[1] as L.PointExpression);
-
         const bounds = L.latLngBounds(
-            Util.toLatLng(point1.x, point1.y),
-            Util.toLatLng(point2.x, point2.y)
+            Util.toLatLng(data[0] as L.PointTuple),
+            Util.toLatLng(data[1] as L.PointTuple)
         );
 
         const marker = L.rectangle(bounds, {

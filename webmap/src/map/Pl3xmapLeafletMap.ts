@@ -56,7 +56,7 @@ export default class Pl3xmapLeafletMap extends L.Map {
     }
 
     centerOn(x: number, z: number, zoom: number) {
-        this.setView(Util.toLatLng(x, z), this.getMaxZoomOut() - zoom);
+        this.setView(Util.toLatLng([x, z]), this.getMaxZoomOut() - zoom);
     }
 
     getMaxZoomOut(): number {
