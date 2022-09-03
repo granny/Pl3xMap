@@ -1,7 +1,9 @@
 package net.pl3x.map.addon.worldborder.layer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import net.pl3x.map.addon.worldborder.border.Border;
 import net.pl3x.map.addon.worldborder.border.BorderType;
 import net.pl3x.map.api.Key;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WorldBorderLayer implements Layer {
     public static final Key KEY = new Key("world-border");
+    public static final List<Marker> EMPTY_LIST = new ArrayList<>();
 
     private final MapWorld mapWorld;
     private final String label;
@@ -96,7 +99,10 @@ public class WorldBorderLayer implements Layer {
     public Collection<Marker> getMarkers() {
         Marker marker = getBorder().getMarker();
         if (marker == null) {
-            return Collections.emptyList();
+            // we cannot use Collections.emptyList() because it
+            // is a private internal class and GSON will throw
+            // warnings when the object is serialized.
+            return EMPTY_LIST;
         }
         marker.setOptions(new Options()
                 .setStroke(new Stroke().setColor(0xFFFF0000))
