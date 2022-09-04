@@ -16,7 +16,7 @@
 
 // https://github.com/PurpurMC/Purpur#initial-setup
 
-L.SVG.include ({
+L.SVG.include({
     _updateEllipse: function (layer) {
         var rx = layer._radiusX,
             ry = layer._radiusY,
@@ -31,9 +31,11 @@ L.SVG.include ({
     }
 });
 
-L.Canvas.include ({
+L.Canvas.include({
     _updateEllipse: function (layer) {
-        if (layer._empty()) { return; }
+        if (layer._empty()) {
+            return;
+        }
 
         var p = layer._point,
             ctx = this._ctx,
@@ -53,7 +55,7 @@ L.Canvas.include ({
 
         ctx.translate(p.x, p.y);
         if (layer._tilt !== 0) {
-            ctx.rotate( layer._tilt );
+            ctx.rotate(layer._tilt);
         }
         if (s !== 1) {
             ctx.scale(1, s);
@@ -160,8 +162,8 @@ L.Ellipse = L.Path.extend({
         var cosSquare = cos * cos;
         var aSquare = this._radiusX * this._radiusX;
         var bSquare = this._radiusY * this._radiusY;
-        var halfWidth = Math.sqrt(aSquare*cosSquare+bSquare*sinSquare);
-        var halfHeight = Math.sqrt(aSquare*sinSquare+bSquare*cosSquare);
+        var halfWidth = Math.sqrt(aSquare * cosSquare + bSquare * sinSquare);
+        var halfHeight = Math.sqrt(aSquare * sinSquare + bSquare * cosSquare);
         var w = this._clickTolerance();
         var p = [halfWidth + w, halfHeight + w];
         this._pxBounds = new L.Bounds(this._point.subtract(p), this._point.add(p));
@@ -220,15 +222,17 @@ L.Ellipse = L.Path.extend({
         var largeArc = (delta > 180) ? 1 : 0;
         var sweep = (delta > 0) ? 1 : 0;
 
-        return {'x0': x0, 'y0': y0, 'tilt': phi, 'largeArc': largeArc,
-            'sweep': sweep, 'x1': x1, 'y1': y1};
+        return {
+            'x0': x0, 'y0': y0, 'tilt': phi, 'largeArc': largeArc,
+            'sweep': sweep, 'x1': x1, 'y1': y1
+        };
     },
 
     _empty: function () {
         return this._radiusX && this._radiusY && !this._renderer._bounds.intersects(this._pxBounds);
     },
 
-    _containsPoint : function (p) {
+    _containsPoint: function (p) {
         // http://stackoverflow.com/questions/7946187/point-and-ellipse-rotated-position-test-algorithm
         var sin = Math.sin(this._tilt);
         var cos = Math.cos(this._tilt);
@@ -246,7 +250,7 @@ L.Ellipse = L.Path.extend({
             }
         }
 
-        return sumA * sumA / (this._radiusX * this._radiusX)  + sumB * sumB / (this._radiusY * this._radiusY) <= 1;
+        return sumA * sumA / (this._radiusX * this._radiusX) + sumB * sumB / (this._radiusY * this._radiusY) <= 1;
     }
 });
 

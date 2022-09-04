@@ -80,8 +80,8 @@ export class Lang {
 
     set layersHeading(value: string) {
         this._layersHeading = value;
-    }   
-    
+    }
+
     get layersSkeleton(): string {
         return this._layersSkeleton;
     }
