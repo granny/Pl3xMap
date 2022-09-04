@@ -67,8 +67,8 @@ public class Image {
             int size = SIZE / step;
 
             Path filePath = dirPath.resolve(String.format(FILE_PATH,
-                    Mth.floor((double) this.regionX / step),
-                    Mth.floor((double) this.regionZ / step),
+                    (int) Math.floor((double) this.regionX / step),
+                    (int) Math.floor((double) this.regionZ / step),
                     this.io.extension()));
 
             ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));

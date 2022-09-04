@@ -120,8 +120,8 @@ public class PlayerTexture extends BukkitRunnable {
         int h = src.getHeight();
         double sin = Math.abs(Math.sin(angle));
         double cos = Math.abs(Math.cos(angle));
-        int newWidth = (int) Math.floor(w * cos + h * sin);
-        int newHeight = (int) Math.floor(h * cos + w * sin);
+        int newWidth = (int) (w * cos + h * sin);
+        int newHeight = (int) (h * cos + w * sin);
 
         BufferedImage dest = new BufferedImage(newWidth, newHeight, src.getType());
         Graphics2D g2d = dest.createGraphics();

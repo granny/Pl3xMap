@@ -1,33 +1,13 @@
 package net.pl3x.map.api.coordinate;
 
+import net.pl3x.map.api.markers.Point;
+
 /**
  * Represents coordinates
  */
-public abstract class Coordinate {
-    protected final int x;
-    protected final int z;
-
+public abstract class Coordinate extends Point {
     public Coordinate(int x, int z) {
-        this.x = x;
-        this.z = z;
-    }
-
-    /**
-     * Get the X value of this coordinate
-     *
-     * @return X coordinate value
-     */
-    public int getX() {
-        return this.x;
-    }
-
-    /**
-     * Get the Z value of this coordinate
-     *
-     * @return Z coordinate value
-     */
-    public int getZ() {
-        return this.z;
+        super(x, z);
     }
 
     /**
@@ -105,30 +85,6 @@ public abstract class Coordinate {
      */
     public RegionCoordinate getRegionCoordinate() {
         return new RegionCoordinate(getRegionX(), getRegionZ());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        if (this.getClass() != o.getClass()) {
-            return false;
-        }
-        Coordinate other = (Coordinate) o;
-        return this.x == other.x && this.z == other.z;
-    }
-
-    @Override
-    public int hashCode() {
-        int prime = 1543;
-        int result = 1;
-        result = prime * result + getX();
-        result = prime * result + getZ();
-        return result;
     }
 
     @Override

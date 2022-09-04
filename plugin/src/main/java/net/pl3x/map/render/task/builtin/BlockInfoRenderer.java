@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.pl3x.map.api.Pl3xMap;
@@ -66,8 +65,8 @@ public class BlockInfoRenderer extends Renderer {
             int size = Image.SIZE / step;
 
             Path filePath = dirPath.resolve(String.format(Image.FILE_PATH,
-                    Mth.floor((double) getRegion().getRegionX() / step),
-                    Mth.floor((double) getRegion().getRegionZ() / step),
+                    (int) Math.floor((double) getRegion().getRegionX() / step),
+                    (int) Math.floor((double) getRegion().getRegionZ() / step),
                     "pl3xmap.gz"));
 
             ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));

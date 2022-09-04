@@ -12,6 +12,7 @@ import net.pl3x.map.api.event.EventHandler;
 import net.pl3x.map.api.event.EventListener;
 import net.pl3x.map.api.event.world.WorldLoadedEvent;
 import net.pl3x.map.api.event.world.WorldUnloadedEvent;
+import net.pl3x.map.api.markers.Line;
 import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.api.markers.Vector;
 import net.pl3x.map.api.markers.layer.Layer;
@@ -43,12 +44,16 @@ public class MarkerTestAddon extends Addon implements EventListener {
     public void on(WorldLoadedEvent event) {
         MapWorld mapWorld = event.getWorld();
 
-        MARKERS.add(Marker.circle(Point.of(100, 100), 20));
-        MARKERS.add(Marker.ellipse(Point.of(100, 100), Vector.of(10, 20), 10D));
+        MARKERS.add(Marker.circle(Point.of(-100, 100), 20));
+        MARKERS.add(Marker.ellipse(Point.of(100, 100), Vector.of(10, 20), 45D));
         MARKERS.add(Marker.icon(Point.of(150, 50), ICON_KEY, 16));
-        //MARKERS.add(Marker.polyline());
+        MARKERS.add(Marker.polyline(Line.of(
+                Point.of(0, 0),
+                Point.of(50, 50),
+                Point.of(100, 0)
+        ).loop()));
         //MARKERS.add(Marker.polygon());
-        //MARKERS.add(Marker.rectangle());
+        MARKERS.add(Marker.rectangle(Point.of(-50, -50), Point.of(-20, 0)));
 
         mapWorld.getLayerRegistry().register(LAYER_KEY, new Layer() {
             @Override
