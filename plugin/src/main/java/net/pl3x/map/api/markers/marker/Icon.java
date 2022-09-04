@@ -1,13 +1,14 @@
 package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.Key;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.markers.Vector;
 import net.pl3x.map.api.registry.IconRegistry;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,40 +16,55 @@ import org.jetbrains.annotations.Nullable;
  * Represents an icon marker.
  */
 public class Icon extends Marker {
-    private Key image;
     private Point point;
-    private Point offset;
+    private Key image;
+    private Key retina;
+    private Vector size;
+    private Vector anchor;
     private Key shadow;
-    private Point shadowOffset;
+    private Key shadowRetina;
+    private Vector shadowSize;
+    private Vector shadowAnchor;
 
     /**
      * Create a new icon.
      *
-     * @param image image key
      * @param point icon point on map
+     * @param image image key
      */
-    public Icon(@NotNull Key image, @NotNull Point point) {
-        this(image, point, Point.ZERO);
+    public Icon(@NotNull Point point, @NotNull Key image) {
+        super("icon");
+        setPoint(point);
+        setImage(image);
     }
 
     /**
-     * Create a new icon.
+     * Get the {@link Point} on the map for this icon.
      *
-     * @param image  image key
-     * @param point  icon point on map
-     * @param offset icon offset from point
+     * @return point on map
      */
-    public Icon(@NotNull Key image, @NotNull Point point, @Nullable Point offset) {
-        super("icon");
-        setImage(image);
-        setPoint(point);
-        setOffset(offset);
+    @NotNull
+    public Point getPoint() {
+        return this.point;
+    }
+
+    /**
+     * Set a new {@link Point} on the map for this icon.
+     *
+     * @param point new point on map
+     * @return this icon
+     */
+    @NotNull
+    public Icon setPoint(@NotNull Point point) {
+        Preconditions.checkNotNull(point, "Icon point is null");
+        this.point = point;
+        return this;
     }
 
     /**
      * Get the image to use for this icon.
      *
-     * @return image key
+     * @return image
      * @see IconRegistry
      */
     @NotNull
@@ -57,11 +73,11 @@ public class Icon extends Marker {
     }
 
     /**
-     * Set the image key to use for this icon.
+     * Set the image to use for this icon.
      * <p>
      * Key must be registered with the icon registry.
      *
-     * @param image new image key
+     * @param image new image
      * @return this icon
      * @see IconRegistry
      */
@@ -74,56 +90,102 @@ public class Icon extends Marker {
     }
 
     /**
-     * Get the {@link Point} on the map for this icon.
-     *
-     * @return map location
-     */
-    @NotNull
-    public Point getPoint() {
-        return this.point;
-    }
-
-    /**
-     * Set a new {@link Point} on the map for this icon.
-     *
-     * @param point new point
-     * @return this icon
-     */
-    @NotNull
-    public Icon setPoint(@NotNull Point point) {
-        Preconditions.checkNotNull(point, "Icon point is null");
-        this.point = point;
-        return this;
-    }
-
-    /**
-     * Get the offset from the icon's point.
-     *
-     * @return icon offset
-     */
-    @NotNull
-    public Point getOffset() {
-        return this.offset;
-    }
-
-    /**
-     * Set the offset from the icon's point.
+     * Get the retina sized image to use for this icon.
      * <p>
-     * Setting a null offset will reset it to 0,0.
+     * This image will be used on retina devices.
+     * <p>
+     * Defaults to '<code>{@link #getImage()}</code>' if null.
      *
-     * @param offset new offset
+     * @return retina image
+     * @see IconRegistry
+     */
+    @Nullable
+    public Key getRetina() {
+        return this.retina;
+    }
+
+    /**
+     * Set the retina sized image to use for this icon.
+     * <p>
+     * This image will be used on retina devices.
+     * <p>
+     * Key must be registered with the icon registry.
+     * <p>
+     * Defaults to '<code>{@link #getImage()}</code>' if null.
+     *
+     * @param retina new retina image
      * @return this icon
+     * @see IconRegistry
      */
     @NotNull
-    public Icon setOffset(@Nullable Point offset) {
-        this.offset = offset == null ? Point.ZERO : offset;
+    public Icon setRetina(@Nullable Key retina) {
+        Preconditions.checkArgument(retina == null || Pl3xMap.api().getIconRegistry().get(retina) != null, String.format("Icon not in registry (%s)", retina));
+        this.retina = retina;
         return this;
     }
 
     /**
-     * Get shadow image of this icon, if one is set.
+     * Get the size of the image, in pixels.
+     * <p>
+     * Used for auto centering the image on '<code>{@link #getPoint()}</code>' if set.
      *
-     * @return shadow image key
+     * @return image size
+     */
+    @Nullable
+    public Vector getSize() {
+        return this.size;
+    }
+
+    /**
+     * Set the size of the image, in pixels.
+     * <p>
+     * Used for auto centering the image on '<code>{@link #getPoint()}</code>' if set.
+     *
+     * @param size new image size
+     * @return this icon
+     */
+    @NotNull
+    public Icon setSize(@Nullable Vector size) {
+        this.size = size;
+        return this;
+    }
+
+    /**
+     * Get the coordinates of the "tip" of the icon (relative to its top left corner).
+     * <p>
+     * The icon will be aligned so that this point is at {@link #getPoint()}.
+     * <p>
+     * Centered by default if '<code>{@link #getSize()}</code>' is also set.
+     *
+     * @return icon anchor
+     */
+    @Nullable
+    public Vector getAnchor() {
+        return this.anchor;
+    }
+
+    /**
+     * Set the coordinates of the "tip" of the icon (relative to its top left corner).
+     * <p>
+     * The icon will be aligned so that this point is at {@link #getPoint()}.
+     * <p>
+     * Centered by default if '<code>{@link #getSize()}</code>' is also set.
+     *
+     * @param anchor new anchor
+     * @return this icon
+     */
+    @NotNull
+    public Icon setAnchor(@Nullable Vector anchor) {
+        this.anchor = anchor;
+        return this;
+    }
+
+    /**
+     * Get shadow image of this icon.
+     * <p>
+     * No shadow image will be shown, if null.
+     *
+     * @return shadow image
      */
     @Nullable
     public Key getShadow() {
@@ -131,54 +193,130 @@ public class Icon extends Marker {
     }
 
     /**
-     * Set the shadow image key to use for this icon.
+     * Set the shadow image to use for this icon.
      * <p>
      * Key must be registered with the icon registry.
+     * <p>
+     * No shadow image will be shown, if null.
      *
-     * @param shadow new shadow image key
+     * @param shadow new shadow image
      * @return this icon
      * @see IconRegistry
      */
     @NotNull
     public Icon setShadow(@Nullable Key shadow) {
+        Preconditions.checkArgument(shadow == null || Pl3xMap.api().getIconRegistry().get(shadow) != null, String.format("Icon not in registry (%s)", shadow));
         this.shadow = shadow;
         return this;
     }
 
     /**
-     * Get the shadow offset from the icon's point.
+     * Get the retina sized shadow image to use for this icon.
+     * <p>
+     * This shadow image will be used on retina devices.
+     * <p>
+     * Key must be registered with the icon registry.
+     * <p>
+     * Defaults to '<code>{@link #getShadow()}</code>' if null.
      *
-     * @return shadow offset
+     * @return retina shadow image
+     * @see IconRegistry
      */
     @Nullable
-    public Point getShadowOffset() {
-        return this.shadowOffset;
+    public Key getShadowRetina() {
+        return this.shadowRetina;
     }
 
     /**
-     * Set the shadow offset from the icon's point.
+     * Set the retina sized shadow image to use for this icon.
+     * <p>
+     * This shadow image will be used on retina devices.
+     * <p>
+     * Key must be registered with the icon registry.
+     * <p>
+     * Defaults to '<code>{@link #getShadow()}</code>' if null.
      *
-     * @param shadowOffset new shadow offset
+     * @param shadowRetina new retina shadow image
+     * @return this icon
+     * @see IconRegistry
+     */
+    @NotNull
+    public Icon setShadowRetina(@Nullable Key shadowRetina) {
+        Preconditions.checkArgument(shadowRetina == null || Pl3xMap.api().getIconRegistry().get(shadowRetina) != null, String.format("Icon not in registry (%s)", shadowRetina));
+        this.shadowRetina = shadowRetina;
+        return this;
+    }
+
+    /**
+     * Get the size of the shadow image in pixels.
+     * <p>
+     * Used for auto centering the shadow image on '<code>{@link #getPoint()}</code>' if set.
+     *
+     * @return shadow image size
+     */
+    @Nullable
+    public Vector getShadowSize() {
+        return this.shadowSize;
+    }
+
+    /**
+     * Set the size of the shadow image in pixels.
+     * <p>
+     * Used for auto centering the shadow image on '<code>{@link #getPoint()}</code>' if set.
+     *
+     * @param shadowSize new shadow image size
      * @return this icon
      */
     @NotNull
-    public Icon setShadowOffset(@Nullable Point shadowOffset) {
-        this.shadowOffset = shadowOffset;
+    public Icon setShadowSize(@Nullable Vector shadowSize) {
+        this.shadowSize = shadowSize;
+        return this;
+    }
+
+    /**
+     * Get the coordinates of the "tip" of the shadow image (relative to its top left corner).
+     * <p>
+     * The icon will be aligned so that this point is at {@link #getPoint()}.
+     * <p>
+     * The same as {@link #getAnchor()} if null.
+     *
+     * @return icon anchor
+     */
+    @Nullable
+    public Vector getShadowAnchor() {
+        return this.shadowAnchor;
+    }
+
+    /**
+     * Set the coordinates of the "tip" of the shadow image (relative to its top left corner).
+     * <p>
+     * The shadow image will be aligned so that this point is at {@link #getPoint()}.
+     * <p>
+     * The same as {@link #getAnchor()} if null.
+     *
+     * @param shadowAnchor new anchor
+     * @return this icon
+     */
+    @NotNull
+    public Icon setShadowAnchor(@Nullable Vector shadowAnchor) {
+        this.shadowAnchor = shadowAnchor;
         return this;
     }
 
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray data = new JsonArray();
-        data.add(getImage().getKey());
-        data.add(getPoint().toJson());
-        data.add(getOffset().toJson());
-        if (getShadow() != null) {
-            data.add(getShadow().getKey());
-            data.add((getShadowOffset() == null ? Point.ZERO : getShadowOffset()).toJson());
-        }
-        return data;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getPoint());
+        wrapper.add(getImage());
+        wrapper.add(getRetina());
+        wrapper.add(getSize());
+        wrapper.add(getAnchor());
+        wrapper.add(getShadow());
+        wrapper.add(getShadowRetina());
+        wrapper.add(getShadowSize());
+        wrapper.add(getShadowAnchor());
+        return wrapper.getJsonArray();
     }
 
     @Override
@@ -193,24 +331,36 @@ public class Icon extends Marker {
             return false;
         }
         Icon other = (Icon) o;
-        return getImage().equals(other.getImage())
-                && getPoint().equals(other.getPoint())
-                && getOffset().equals(other.getOffset())
+        return getPoint().equals(other.getPoint())
+                && getImage().equals(other.getImage())
+                && Objects.equals(getRetina(), other.getRetina())
+                && Objects.equals(getSize(), other.getSize())
+                && Objects.equals(getAnchor(), other.getAnchor())
+                && Objects.equals(getShadow(), other.getShadow())
+                && Objects.equals(getShadowRetina(), other.getShadowRetina())
+                && Objects.equals(getShadowSize(), other.getShadowSize())
+                && Objects.equals(getShadowAnchor(), other.getShadowAnchor())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions(), getImage(), getPoint(), getOffset());
+        return Objects.hash(getPoint(), getImage(), getRetina(), getSize(), getAnchor(), getShadow(),
+                getShadowRetina(), getShadowAnchor(), getShadowSize(), getOptions());
     }
 
     @Override
     public String toString() {
-        return "Icon{image=" + getImage()
-                + ",point=" + getPoint()
-                + ",offset=" + getOffset()
+        return "Icon{"
+                + "point=" + getPoint()
+                + ",image=" + getImage()
+                + ",retina=" + getRetina()
+                + ",size=" + getSize()
+                + ",anchor=" + getAnchor()
                 + ",shadow=" + getShadow()
-                + ",shadowOffset=" + getShadowOffset()
+                + ",shadowRetina=" + getShadowRetina()
+                + ",shadowAnchor=" + getShadowAnchor()
+                + ",shadowSize=" + getShadowSize()
                 + ",options=" + getOptions()
                 + "}";
     }

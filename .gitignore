@@ -124,5 +124,6 @@ build
 # webmap crap
 /webmap/node_modules/
 /webmap/dist/
+/webmap/public/images/icon
 /webmap/public/tiles
 /plugin/src/main/resources/web/

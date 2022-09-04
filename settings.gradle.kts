@@ -23,6 +23,9 @@ setupSubproject("HeightmapsAddon") {
 setupSubproject("InhabitedAddon") {
     projectDir = file("addons/inhabited")
 }
+setupSubproject("MarkerTestAddon") {
+    projectDir = file("addons/markertest")
+}
 setupSubproject("WebpAddon") {
     projectDir = file("addons/webp")
 }

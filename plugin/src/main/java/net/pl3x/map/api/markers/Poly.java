@@ -1,14 +1,15 @@
 package net.pl3x.map.api.markers;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.markers.marker.Polygon;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * to cut out "holes" in the outer polygon.
  */
 public class Poly implements JsonSerializable {
-    private final Collection<Ring> rings = new ArrayList<>();
+    private final List<Ring> rings = new ArrayList<>();
 
     public Poly(@NotNull Ring ring) {
         addRing(ring);
@@ -47,7 +48,7 @@ public class Poly implements JsonSerializable {
     }
 
     @NotNull
-    public Collection<Ring> getRings() {
+    public List<Ring> getRings() {
         return this.rings;
     }
 
@@ -102,9 +103,9 @@ public class Poly implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        getRings().forEach(ring -> json.add(ring.toJson()));
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        getRings().forEach(wrapper::add);
+        return wrapper.getJsonArray();
     }
 
     @Override

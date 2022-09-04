@@ -1,18 +1,17 @@
 package net.pl3x.map.api.markers.option;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Popup properties of a marker.
  */
-public class Popup implements JsonSerializable {
+public class Popup extends Option {
     private String content;
     private String pane;
     private Point offset;
@@ -446,23 +445,23 @@ public class Popup implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        json.add(getContent());
-        json.add(getPane());
-        json.add(vec(getOffset()));
-        json.add(getMaxWidth());
-        json.add(getMinWidth());
-        json.add(getMaxHeight());
-        json.add(bool(shouldAutoPan()));
-        json.add(vec(getAutoPanPaddingTopLeft()));
-        json.add(vec(getAutoPanPaddingBottomRight()));
-        json.add(vec(getAutoPanPadding()));
-        json.add(bool(shouldKeepInView()));
-        json.add(bool(hasCloseButton()));
-        json.add(bool(shouldAutoClose()));
-        json.add(bool(shouldCloseOnEscapeKey()));
-        json.add(bool(shouldCloseOnClick()));
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getContent());
+        wrapper.add(getPane());
+        wrapper.add(getOffset());
+        wrapper.add(getMaxWidth());
+        wrapper.add(getMinWidth());
+        wrapper.add(getMaxHeight());
+        wrapper.add(shouldAutoPan());
+        wrapper.add(getAutoPanPaddingTopLeft());
+        wrapper.add(getAutoPanPaddingBottomRight());
+        wrapper.add(getAutoPanPadding());
+        wrapper.add(shouldKeepInView());
+        wrapper.add(hasCloseButton());
+        wrapper.add(shouldAutoClose());
+        wrapper.add(shouldCloseOnEscapeKey());
+        wrapper.add(shouldCloseOnClick());
+        return wrapper.getJsonArray();
     }
 
     @Override

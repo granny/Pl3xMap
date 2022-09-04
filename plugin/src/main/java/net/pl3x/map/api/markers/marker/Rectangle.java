@@ -1,10 +1,10 @@
 package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,10 +78,10 @@ public class Rectangle extends Marker {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray data = new JsonArray();
-        data.add(getPoint1().toJson());
-        data.add(getPoint2().toJson());
-        return data;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getPoint1());
+        wrapper.add(getPoint2());
+        return wrapper.getJsonArray();
     }
 
     @Override

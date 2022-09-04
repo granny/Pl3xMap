@@ -118,15 +118,19 @@ tasks {
         // Modrinth does not support arbitrary additional files
         additionalFiles.set(
             listOf(
-                rootProject.layout.buildDirectory.file("libs/${project(":FlowerMapAddon").name}-${project.version}.jar").get(),
-                rootProject.layout.buildDirectory.file("libs/${project(":HeightmapsAddon").name}-${project.version}.jar").get(),
-                rootProject.layout.buildDirectory.file("libs/${project(":InhabitedAddon").name}-${project.version}.jar").get(),
-                rootProject.layout.buildDirectory.file("libs/${project(":WebpAddon").name}-${project.version}.jar").get(),
-                //rootProject.layout.buildDirectory.file("libs/${project(":WorldBorderAddon").name}-${project.version}.jar").get(),
+                addonJar("FlowerMapAddon"),
+                addonJar("HeightmapsAddon"),
+                addonJar("InhabitedAddon"),
+                addonJar("WebpAddon"),
+                addonJar("WorldBorderAddon")
             )
         )
         gameVersions.addAll(listOf(minecraftVersion))
         loaders.addAll(listOf("paper", "purpur"))
         changelog.set(System.getenv("COMMIT_MESSAGE"))
     }
+}
+
+fun addonJar(name: String): RegularFile {
+    return rootProject.layout.buildDirectory.file("libs/${project(":${name}").name}-${project.version}.jar").get()
 }

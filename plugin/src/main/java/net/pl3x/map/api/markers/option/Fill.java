@@ -1,16 +1,15 @@
 package net.pl3x.map.api.markers.option;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.JsonSerializable;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Fill properties of a marker.
  */
-public class Fill implements JsonSerializable {
+public class Fill extends Option {
     private Boolean enabled;
     private Type type;
     private Integer color;
@@ -115,11 +114,11 @@ public class Fill implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        json.add(bool(isEnabled()));
-        json.add(enumeration(getType()));
-        json.add(getColor());
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(isEnabled());
+        wrapper.add(getType());
+        wrapper.add(getColor());
+        return wrapper.getJsonArray();
     }
 
     @Override

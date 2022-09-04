@@ -2,6 +2,7 @@ package net.pl3x.map.addon.worldborder.border;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import net.pl3x.map.api.markers.Line;
 import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.api.markers.marker.Marker;
 import net.pl3x.map.world.MapWorld;
@@ -30,13 +31,14 @@ public class ChunkyBorder extends Border {
         Shape shape = border.getBorder();
 
         if (shape instanceof AbstractPolygon polygon) {
-            List<Vector2> allPoints = polygon.points();
-            List<Point> points = allPoints.stream()
+            List<Point> points = polygon.points().stream()
                     .map(point -> Point.of(point.getX(), point.getZ()))
                     .collect(Collectors.toList());
-            Vector2 lastPoint = allPoints.get(0);
-            points.add(Point.of(lastPoint.getX(), lastPoint.getZ()));
-            this.marker = Marker.polyline(points);
+            Line line = new Line(points);
+            System.out.println(line);
+            System.out.println(points.get(0));
+            System.out.println(points.get(points.size() - 1));
+            this.marker = Marker.polyline(line.loop());
             return;
         }
 

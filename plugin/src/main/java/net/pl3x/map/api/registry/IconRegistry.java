@@ -1,5 +1,6 @@
 package net.pl3x.map.api.registry;
 
+import com.google.common.base.Preconditions;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,9 +46,7 @@ public class IconRegistry implements Registry<BufferedImage> {
     @Override
     @Nullable
     public BufferedImage register(@NotNull Key key, @NotNull BufferedImage image) {
-        if (get(key) != null) {
-            return null;
-        }
+        Preconditions.checkArgument(get(key) == null, "Image already registered for key '%s'", key.getKey());
         try {
             ImageIO.write(image, "png", getDir().resolve(key.getKey() + ".png").toFile());
         } catch (IOException e) {

@@ -1,16 +1,15 @@
 package net.pl3x.map.api.markers.option;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.JsonSerializable;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Stroke properties of a marker.
  */
-public class Stroke implements JsonSerializable {
+public class Stroke extends Option {
     private Boolean enabled;
     private Integer weight;
     private Integer color;
@@ -233,15 +232,15 @@ public class Stroke implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        json.add(bool(isEnabled()));
-        json.add(getWeight());
-        json.add(getColor());
-        json.add(enumeration(getLineCapShape()));
-        json.add(enumeration(getLineJoinShape()));
-        json.add(getDashPattern());
-        json.add(getDashOffset());
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(isEnabled());
+        wrapper.add(getWeight());
+        wrapper.add(getColor());
+        wrapper.add(getLineCapShape());
+        wrapper.add(getLineJoinShape());
+        wrapper.add(getDashPattern());
+        wrapper.add(getDashOffset());
+        return wrapper.getJsonArray();
     }
 
     @Override

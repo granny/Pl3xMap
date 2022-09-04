@@ -1,15 +1,19 @@
 package net.pl3x.map.api.markers;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import net.pl3x.map.api.JsonSerializable;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a point on the map.
  */
-public class Point extends Vector {
+public class Point implements JsonSerializable {
     public static final Point ZERO = new Point(0, 0);
+
+    private int x;
+    private int z;
 
     /**
      * Create a new point.
@@ -18,7 +22,8 @@ public class Point extends Vector {
      * @param z z coordinate
      */
     public Point(int x, int z) {
-        super(x, z);
+        this.x = x;
+        this.z = z;
     }
 
     public static Point of(int x, int z) {
@@ -29,13 +34,55 @@ public class Point extends Vector {
         return of((int) x, (int) z);
     }
 
+    /**
+     * Get the x coordinate.
+     *
+     * @return x coordinate
+     */
+    public int getX() {
+        return this.x;
+    }
+
+    /**
+     * Set the x coordinate.
+     *
+     * @param x x coordinate
+     * @return this point
+     */
+    @NotNull
+    public Point setX(int x) {
+        this.x = x;
+        return this;
+    }
+
+    /**
+     * Get the z coordinate.
+     *
+     * @return z coordinate
+     */
+    public int getZ() {
+        return this.z;
+    }
+
+    /**
+     * Set the z coordinate.
+     *
+     * @param z z coordinate
+     * @return this point
+     */
+    @NotNull
+    public Point setZ(int z) {
+        this.z = z;
+        return this;
+    }
+
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray(2);
-        json.add((int) getX());
-        json.add((int) getZ());
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getX());
+        wrapper.add(getZ());
+        return wrapper.getJsonArray();
     }
 
     @Override
@@ -57,13 +104,13 @@ public class Point extends Vector {
     public int hashCode() {
         int prime = 1543;
         int result = 1;
-        result = prime * result + (int) getX();
-        result = prime * result + (int) getZ();
+        result = prime * result + getX();
+        result = prime * result + getZ();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Point{x=" + (int) getX() + ",z=" + (int) getZ() + "}";
+        return "Point{x=" + getX() + ",z=" + getZ() + "}";
     }
 }

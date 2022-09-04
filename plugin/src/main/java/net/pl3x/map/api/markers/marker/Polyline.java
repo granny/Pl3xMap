@@ -1,13 +1,13 @@
 package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import net.pl3x.map.api.markers.Line;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,9 +104,9 @@ public class Polyline extends Marker {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        getLines().forEach(line -> json.add(line.toJson()));
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        getLines().forEach(wrapper::add);
+        return wrapper.getJsonArray();
     }
 
     @Override

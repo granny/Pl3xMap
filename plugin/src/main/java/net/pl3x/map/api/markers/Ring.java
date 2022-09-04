@@ -1,13 +1,14 @@
 package net.pl3x.map.api.markers;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.api.JsonSerializable;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * visible polygon on the map.
  */
 public class Ring implements JsonSerializable {
-    private final Collection<Point> points = new ArrayList<>();
+    private final List<Point> points = new ArrayList<>();
 
     public Ring(@NotNull Point point) {
         addPoint(point);
@@ -54,7 +55,7 @@ public class Ring implements JsonSerializable {
      * @return list of points
      */
     @NotNull
-    public Collection<Point> getPoints() {
+    public List<Point> getPoints() {
         return this.points;
     }
 
@@ -154,9 +155,9 @@ public class Ring implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        getPoints().forEach(point -> json.add(point.toJson()));
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        getPoints().forEach(wrapper::add);
+        return wrapper.getJsonArray();
     }
 
     @Override

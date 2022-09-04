@@ -18,11 +18,11 @@ declare global {
 }
 
 module "leaflet" {
-    export function ellipse(latLng: L.LatLngExpression, radii: L.LatLngExpression, tilt: number, options: L.PathOptions): Ellipse;
+    export function ellipse(latLng: L.LatLngExpression, radii: L.PointTuple, tilt: number, options: L.PathOptions): Ellipse;
 
     interface Ellipse extends L.Path {
-        setRadius(radii: L.LatLngExpression): this;
-        getRadius(): L.PointTuple;
+        setRadius(radii: L.PointTuple): this;
+        getRadius(): L.Point;
         setTilt(tilt: number): this;
         getBounds(): L.LatLngBounds;
         getLatLng(): L.LatLng;

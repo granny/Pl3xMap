@@ -1,8 +1,8 @@
 package net.pl3x.map.api.markers;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.pl3x.map.api.JsonSerializable;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,10 +14,10 @@ public class Vector implements JsonSerializable {
     private double z;
 
     /**
-     * Create a new point.
+     * Create a new vector.
      *
-     * @param x x coordinate
-     * @param z z coordinate
+     * @param x x
+     * @param z z
      */
     public Vector(double x, double z) {
         this.x = x;
@@ -33,18 +33,18 @@ public class Vector implements JsonSerializable {
     }
 
     /**
-     * Get the x coordinate.
+     * Get the x.
      *
-     * @return x coordinate
+     * @return x
      */
     public double getX() {
         return this.x;
     }
 
     /**
-     * Set the x coordinate.
+     * Set the x.
      *
-     * @param x x coordinate
+     * @param x x
      * @return this point
      */
     @NotNull
@@ -54,18 +54,18 @@ public class Vector implements JsonSerializable {
     }
 
     /**
-     * Get the z coordinate.
+     * Get the z.
      *
-     * @return z coordinate
+     * @return z
      */
     public double getZ() {
         return this.z;
     }
 
     /**
-     * Set the z coordinate.
+     * Set the z.
      *
-     * @param z z coordinate
+     * @param z z
      * @return this point
      */
     @NotNull
@@ -77,10 +77,10 @@ public class Vector implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray(2);
-        json.add(getX());
-        json.add(getZ());
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getX());
+        wrapper.add(getZ());
+        return wrapper.getJsonArray();
     }
 
     @Override

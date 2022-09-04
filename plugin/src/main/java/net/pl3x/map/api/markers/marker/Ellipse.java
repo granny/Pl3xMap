@@ -1,11 +1,11 @@
 package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.api.markers.Vector;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class Ellipse extends Marker {
     private Point center;
     private Vector radius;
+    private Double tilt;
 
     /**
      * Create a new ellipse.
@@ -26,6 +27,20 @@ public class Ellipse extends Marker {
         super("elli");
         setCenter(center);
         setRadius(radius);
+    }
+
+    /**
+     * Create a new ellipse.
+     *
+     * @param center center location
+     * @param radius radius
+     * @param tilt   tilt
+     */
+    public Ellipse(@NotNull Point center, @NotNull Vector radius, @Nullable Double tilt) {
+        super("elli");
+        setCenter(center);
+        setRadius(radius);
+        setTilt(tilt);
     }
 
     /**
@@ -68,20 +83,46 @@ public class Ellipse extends Marker {
      * @return this ellipse
      */
     @NotNull
-    public Ellipse setRadius(Vector radius) {
+    public Ellipse setRadius(@NotNull Vector radius) {
         Preconditions.checkNotNull(radius, "Ellipse radius is null");
         this.radius = radius;
+        return this;
+    }
+
+    /**
+     * Get the tilt of this ellipse, in degrees.
+     * <p>
+     * Defaults to '<code>0</code>' if null.
+     *
+     * @return tilt
+     */
+    @Nullable
+    public Double getTilt() {
+        return this.tilt;
+    }
+
+    /**
+     * Set the tilt of this ellipse, in degrees.
+     * <p>
+     * Defaults to '<code>0</code>' if null.
+     *
+     * @param tilt new tilt
+     * @return this ellipse
+     */
+    @NotNull
+    public Ellipse setTilt(@Nullable Double tilt) {
+        this.tilt = tilt;
         return this;
     }
 
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray data = new JsonArray();
-        data.add(getCenter().toJson());
-        data.add(getCenter().toJson());
-        data.add(vec(getRadius()));
-        return data;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getCenter());
+        wrapper.add(getRadius());
+        wrapper.add(getTilt());
+        return wrapper.getJsonArray();
     }
 
     @Override
@@ -98,16 +139,22 @@ public class Ellipse extends Marker {
         Ellipse other = (Ellipse) o;
         return Objects.equals(getRadius(), other.getRadius())
                 && Objects.equals(getCenter(), other.getCenter())
-                && Objects.equals(getOptions(), other.getOptions());
+                && Objects.equals(getOptions(), other.getOptions())
+                && Objects.equals(getTilt(), other.getTilt());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions(), getCenter(), getRadius());
+        return Objects.hash(getOptions(), getCenter(), getRadius(), getTilt());
     }
 
     @Override
     public String toString() {
-        return "Ellipse{center=" + getCenter() + ",radius=" + getRadius() + ",options=" + getOptions() + "}";
+        return "Ellipse{"
+                + "center=" + getCenter()
+                + ",radius=" + getRadius()
+                + ",tile=" + getTilt()
+                + ",options=" + getOptions()
+                + "}";
     }
 }

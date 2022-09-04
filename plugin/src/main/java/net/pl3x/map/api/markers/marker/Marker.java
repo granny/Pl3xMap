@@ -3,7 +3,6 @@ package net.pl3x.map.api.markers.marker;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -17,6 +16,7 @@ import net.pl3x.map.api.markers.Poly;
 import net.pl3x.map.api.markers.Ring;
 import net.pl3x.map.api.markers.Vector;
 import net.pl3x.map.api.markers.option.Options;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,16 +57,60 @@ public abstract class Marker implements JsonSerializable {
         return ellipse(Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ));
     }
 
+    public static Marker ellipse(double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+        return ellipse(Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ), tilt);
+    }
+
+    public static Marker ellipse(@NotNull Point center, double radiusX, double radiusZ) {
+        return ellipse(center, Vector.of(radiusX, radiusZ));
+    }
+
+    public static Marker ellipse(@NotNull Point center, double radiusX, double radiusZ, double tilt) {
+        return ellipse(center, Vector.of(radiusX, radiusZ), tilt);
+    }
+
+    public static Marker ellipse(double centerX, double centerZ, @NotNull Vector radius) {
+        return ellipse(Point.of(centerX, centerZ), radius);
+    }
+
+    public static Marker ellipse(double centerX, double centerZ, @NotNull Vector radius, double tilt) {
+        return ellipse(Point.of(centerX, centerZ), radius, tilt);
+    }
+
     public static Marker ellipse(@NotNull Point center, @NotNull Vector radius) {
-        return new Ellipse(center, radius);
+        return ellipse(center, radius, null);
     }
 
-    public static Marker icon(@NotNull Key image, double x, double z) {
-        return icon(image, Point.of(x, z));
+    public static Marker ellipse(@NotNull Point center, @NotNull Vector radius, @Nullable Double tilt) {
+        return new Ellipse(center, radius, tilt);
     }
 
-    public static Marker icon(@NotNull Key image, @NotNull Point point) {
-        return new Icon(image, point);
+    public static Marker icon(double x, double z, @NotNull Key image) {
+        return icon(Point.of(x, z), image);
+    }
+
+    public static Marker icon(double x, double z, @NotNull Key image, double size) {
+        return icon(Point.of(x, z), image, Vector.of(size, size));
+    }
+
+    public static Marker icon(double x, double z, @NotNull Key image, double sizeX, double sizeZ) {
+        return icon(Point.of(x, z), image, Vector.of(sizeX, sizeZ));
+    }
+
+    public static Marker icon(@NotNull Point point, @NotNull Key image) {
+        return icon(point, image, null);
+    }
+
+    public static Marker icon(@NotNull Point point, @NotNull Key image, double size) {
+        return icon(point, image, Vector.of(size, size));
+    }
+
+    public static Marker icon(@NotNull Point point, @NotNull Key image, double sizeX, double sizeZ) {
+        return icon(point, image, Vector.of(sizeX, sizeZ));
+    }
+
+    public static Marker icon(@NotNull Point point, @NotNull Key image, @Nullable Vector size) {
+        return new Icon(point, image).setSize(size);
     }
 
     public static Marker polygon(@NotNull Point @NotNull ... points) {
@@ -83,6 +127,18 @@ public abstract class Marker implements JsonSerializable {
 
     public static Marker polyline(@NotNull List<Point> points) {
         return Polyline.of(Line.of(points));
+    }
+
+    public static Marker polyline(@NotNull Line line) {
+        return Polyline.of(line);
+    }
+
+    public static Marker multiline(@NotNull Line @NotNull ... lines) {
+        return Polyline.of(lines);
+    }
+
+    public static Marker multiline(@NotNull List<Line> lines) {
+        return Polyline.of(lines);
     }
 
     public static Marker rectangle(double x1, double z1, double x2, double z2) {
@@ -145,13 +201,13 @@ public abstract class Marker implements JsonSerializable {
         @Override
         @NotNull
         public JsonElement serialize(@NotNull Marker marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
-            JsonArray json = new JsonArray();
-            json.add(marker.getType());
-            json.add(marker.toJson());
+            JsonArrayWrapper wrapper = new JsonArrayWrapper();
+            wrapper.add(marker.getType());
+            wrapper.add(marker);
             if (marker.getOptions() != null) {
-                json.add(marker.getOptions().toJson());
+                wrapper.add(marker.getOptions());
             }
-            return json;
+            return wrapper.getJsonArray();
         }
     }
 }

@@ -1,12 +1,13 @@
 package net.pl3x.map.api.markers;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.JsonSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * Represents a line.
  */
 public class Line implements JsonSerializable {
-    private final Collection<Point> points = new ArrayList<>();
+    private final List<Point> points = new ArrayList<>();
 
     public Line(@NotNull Point point) {
         addPoint(point);
@@ -42,13 +43,23 @@ public class Line implements JsonSerializable {
     }
 
     @NotNull
-    public Collection<Point> getPoints() {
+    public List<Point> getPoints() {
         return this.points;
     }
 
     @NotNull
     public Line clearPoints() {
         this.points.clear();
+        return this;
+    }
+
+    @NotNull
+    public Line loop() {
+        Preconditions.checkState(this.points.size() > 0, "No points to loop back on");
+        Point first = this.points.get(0);
+        Point last = this.points.get(this.points.size() - 1);
+        Preconditions.checkState(!first.equals(last), "First and last points are the same");
+        this.points.add(first);
         return this;
     }
 
@@ -97,9 +108,9 @@ public class Line implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        getPoints().forEach(point -> json.add(point.toJson()));
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        getPoints().forEach(wrapper::add);
+        return wrapper.getJsonArray();
     }
 
     @Override

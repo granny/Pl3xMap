@@ -1,11 +1,10 @@
 package net.pl3x.map.api.markers.option;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.util.Mathf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Tooltip properties of a marker.
  */
-public class Tooltip implements JsonSerializable {
+public class Tooltip extends Option {
     private String content;
     private String pane;
     private Point offset;
@@ -219,15 +218,15 @@ public class Tooltip implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray json = new JsonArray();
-        json.add(getContent());
-        json.add(getPane());
-        json.add(vec(getOffset()));
-        json.add(enumeration(getDirection()));
-        json.add(bool(isPermanent()));
-        json.add(bool(isSticky()));
-        json.add(getOpacity());
-        return json;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getContent());
+        wrapper.add(getPane());
+        wrapper.add(getOffset());
+        wrapper.add(getDirection());
+        wrapper.add(isPermanent());
+        wrapper.add(isSticky());
+        wrapper.add(getOpacity());
+        return wrapper.getJsonArray();
     }
 
     @Override

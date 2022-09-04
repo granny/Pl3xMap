@@ -1,10 +1,10 @@
 package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,10 +74,10 @@ public class Circle extends Marker {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArray data = new JsonArray();
-        data.add(getCenter().toJson());
-        data.add(getRadius());
-        return data;
+        JsonArrayWrapper wrapper = new JsonArrayWrapper();
+        wrapper.add(getCenter());
+        wrapper.add(getRadius());
+        return wrapper.getJsonArray();
     }
 
     @Override
