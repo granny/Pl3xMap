@@ -115,7 +115,6 @@ tasks {
         versionNumber.set("${project.version}")
         versionType.set("alpha")
         uploadFile.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar").get())
-        // Modrinth does not support arbitrary additional files
         additionalFiles.set(
             listOf(
                 addonJar("FlowerMapAddon"),
