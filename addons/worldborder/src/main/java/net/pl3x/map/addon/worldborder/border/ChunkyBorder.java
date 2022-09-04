@@ -34,11 +34,7 @@ public class ChunkyBorder extends Border {
             List<Point> points = polygon.points().stream()
                     .map(point -> Point.of(point.getX(), point.getZ()))
                     .collect(Collectors.toList());
-            Line line = new Line(points);
-            System.out.println(line);
-            System.out.println(points.get(0));
-            System.out.println(points.get(points.size() - 1));
-            this.marker = Marker.polyline(line.loop());
+            this.marker = Marker.polyline(new Line(points).loop());
             return;
         }
 
