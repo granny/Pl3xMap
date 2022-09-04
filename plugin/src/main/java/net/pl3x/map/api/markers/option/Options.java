@@ -2,9 +2,9 @@ package net.pl3x.map.api.markers.option;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
+import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.markers.marker.Marker;
-import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

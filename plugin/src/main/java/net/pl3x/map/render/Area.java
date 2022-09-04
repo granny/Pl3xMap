@@ -2,7 +2,6 @@ package net.pl3x.map.render;
 
 import net.minecraft.world.level.border.WorldBorder;
 import net.pl3x.map.api.coordinate.Coordinate;
-import net.pl3x.map.util.Mathf;
 
 public class Area {
     private final int minX;

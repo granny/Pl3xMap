@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import net.minecraft.util.Mth;
 import net.pl3x.map.api.coordinate.RegionCoordinate;
 import net.pl3x.map.api.image.io.IO;
 import net.pl3x.map.configuration.Config;

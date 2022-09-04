@@ -8,6 +8,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.List;
+import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.Key;
 import net.pl3x.map.api.markers.Line;
@@ -16,7 +17,6 @@ import net.pl3x.map.api.markers.Poly;
 import net.pl3x.map.api.markers.Ring;
 import net.pl3x.map.api.markers.Vector;
 import net.pl3x.map.api.markers.option.Options;
-import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

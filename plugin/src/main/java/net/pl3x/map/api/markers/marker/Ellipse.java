@@ -3,9 +3,9 @@ package net.pl3x.map.api.markers.marker;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.Objects;
+import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.markers.Point;
 import net.pl3x.map.api.markers.Vector;
-import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

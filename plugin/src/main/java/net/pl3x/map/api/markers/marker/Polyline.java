@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import net.pl3x.map.api.markers.Line;
 import net.pl3x.map.api.JsonArrayWrapper;
+import net.pl3x.map.api.markers.Line;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

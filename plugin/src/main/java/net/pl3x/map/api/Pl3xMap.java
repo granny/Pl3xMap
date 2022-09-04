@@ -7,7 +7,6 @@ import net.pl3x.map.api.httpd.IntegratedServer;
 import net.pl3x.map.api.player.PlayerManager;
 import net.pl3x.map.api.registry.EventRegistry;
 import net.pl3x.map.api.registry.IconRegistry;
-import net.pl3x.map.api.registry.LayerRegistry;
 import net.pl3x.map.render.task.RendererRegistry;
 import net.pl3x.map.world.WorldManager;
 

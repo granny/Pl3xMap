@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.markers.marker.Polygon;
-import net.pl3x.map.api.JsonArrayWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
