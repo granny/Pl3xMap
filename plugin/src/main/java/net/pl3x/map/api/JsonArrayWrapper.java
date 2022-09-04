@@ -91,13 +91,6 @@ public class JsonArrayWrapper {
     // Now let's finish with the existing stuff from JsonArray
 
     /**
-     * Creates a deep copy of this element and all its children
-     */
-    public JsonArray deepCopy() {
-        return getJsonArray().deepCopy();
-    }
-
-    /**
      * Adds the specified character to self.
      *
      * @param character the character that needs to be added to the array.
@@ -384,6 +377,13 @@ public class JsonArrayWrapper {
      */
     public boolean getAsBoolean() {
         return getJsonArray().getAsBoolean();
+    }
+
+    /**
+     * Creates a deep copy of this element and all its children
+     */
+    public JsonArray deepCopy() {
+        return getJsonArray().deepCopy();
     }
 
     @Override
