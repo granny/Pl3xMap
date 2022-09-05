@@ -63,7 +63,7 @@ public class Pl3xMapPlugin extends JavaPlugin implements Pl3xMap {
         try {
             Field logger = JavaPlugin.class.getDeclaredField("logger");
             logger.trySetAccessible();
-            logger.set(this, new Pl3xLogger());
+            logger.set(this, new Pl3xLogger(getName()));
         } catch (Throwable ignore) {
         }
 

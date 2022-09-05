@@ -1,10 +1,7 @@
 package net.pl3x.map.logger;
 
-import java.util.logging.Level;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.configuration.Config;
-import net.pl3x.map.configuration.Lang;
-import org.bukkit.Bukkit;
 
 public class Logger {
     public static void debug(String message) {
@@ -14,15 +11,15 @@ public class Logger {
     }
 
     public static void info(String message) {
-        Lang.send(Bukkit.getConsoleSender(), message);
+        log().info(message);
     }
 
     public static void warn(String message) {
-        log().log(Level.WARNING, message);
+        log().warning(message);
     }
 
     public static void severe(String message) {
-        log().log(Level.SEVERE, message);
+        log().severe(message);
     }
 
     public static java.util.logging.Logger log() {

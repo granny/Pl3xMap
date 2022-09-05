@@ -6,42 +6,33 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.Bukkit;
 
 public class Pl3xLogger extends Logger {
-    public Pl3xLogger() {
-        super("Pl3xMap", null);
-
+    public Pl3xLogger(String name) {
+        super(name, null);
         LogManager.getLogManager().addLogger(this);
-    }
-
-    @Override
-    public String getName() {
-        return "<dark_aqua>" + super.getName() + "</dark_aqua>";
     }
 
     @Override
     public void info(String msg) {
         // send through ConsoleSender so logger will strip colors before putting in log file
-        Lang.send(Bukkit.getConsoleSender(), parseMiniMessage(msg));
+        Lang.send(Bukkit.getConsoleSender(), HexFormattingConverter.SERIALIZER.serialize(MiniMessage.miniMessage().deserialize(msg)));
     }
 
-    private String parseMiniMessage(String miniMessage) {
-        Component component = MiniMessage.miniMessage().deserialize(miniMessage);
-        return HexFormattingConverter.SERIALIZER.serialize(component);
+    @Override
+    public void info(Supplier<String> msgSupplier) {
+        info(msgSupplier.get());
     }
 
     private void doLog(LogRecord lr) {
-        lr.setMessage(parseMiniMessage(lr.getMessage()));
-
-        // use colorless name for warnings and errors
-        if (lr.getLevel() == Level.WARNING || lr.getLevel() == Level.SEVERE) {
-            lr.setLoggerName(super.getName());
+        if (lr.getLevel() == Level.INFO) {
+            info(lr.getMessage());
+            return;
         }
-
+        lr.setLoggerName(getName());
         log(lr);
     }
 
