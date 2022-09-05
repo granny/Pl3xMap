@@ -5,7 +5,6 @@ import cloud.commandframework.bukkit.parsers.location.Location2D;
 import cloud.commandframework.bukkit.parsers.location.Location2DArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.CommandManager;
@@ -29,7 +28,7 @@ public class RadiusRenderCommand extends Pl3xMapCommand {
                 .argument(MapWorldArgument.of("world"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("radius").withMin(1).withMax(100000).build())
                 .argument(Location2DArgument.optional("center"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION))
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_RADIUSRENDER_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RADIUSRENDER_DESCRIPTION))
                 .permission("pl3xmap.command.radiusrender")
                 .handler(this::execute));
     }

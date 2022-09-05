@@ -36,7 +36,7 @@ public class ConfirmCommand extends Pl3xMapCommand {
         this.confirmationManager.registerConfirmationProcessor(getCommandManager());
 
         getCommandManager().registerSubcommand(builder -> builder.literal("confirm")
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_CONFIRM_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_CONFIRM_DESCRIPTION))
                 .permission("pl3xmap.command.confirm")
                 .handler(this.confirmationManager.createConfirmationExecutionHandler()));
     }

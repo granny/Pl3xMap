@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.commands.AddonCommand;
 import net.pl3x.map.command.commands.CancelRenderCommand;
@@ -28,17 +27,18 @@ import net.pl3x.map.command.commands.ReloadCommand;
 import net.pl3x.map.command.commands.ResetMapCommand;
 import net.pl3x.map.command.commands.ShowCommand;
 import net.pl3x.map.command.commands.StatusCommand;
-import net.pl3x.map.command.exception.CompletedSuccessfullyException;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.command.CommandSender;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
+    private Command.Builder<CommandSender> rootBuilder;
+
     public CommandManager(Pl3xMapPlugin plugin) throws Exception {
         super(plugin, CommandExecutionCoordinator.simpleCoordinator(), UnaryOperator.identity(), UnaryOperator.identity());
 
         if (hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             registerBrigadier();
-            CloudBrigadierManager<?, ?> brigManager = brigadierManager();
+            CloudBrigadierManager<CommandSender, ?> brigManager = brigadierManager();
             if (brigManager != null) {
                 brigManager.setNativeNumberSuggestions(false);
             }
@@ -70,8 +70,8 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         new MinecraftExceptionHandler<CommandSender>()
                 .withDefaultHandlers()
                 .withDecorator(component -> Component.text()
-                        .append(MiniMessage.miniMessage().deserialize(Lang.PREFIX_COMMAND)
-                                .hoverEvent(MiniMessage.miniMessage().deserialize(Lang.CLICK_FOR_HELP))
+                        .append(Lang.parse(Lang.PREFIX_COMMAND)
+                                .hoverEvent(Lang.parse(Lang.CLICK_FOR_HELP))
                                 .clickEvent(ClickEvent.runCommand("/map help")))
                         .append(component)
                         .build())
@@ -79,7 +79,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         var handler = Objects.requireNonNull(getExceptionHandler(CommandExecutionException.class));
         registerExceptionHandler(CommandExecutionException.class, (sender, exception) -> {
             Throwable cause = exception.getCause();
-            if (cause instanceof CompletedSuccessfullyException) {
+            if (cause instanceof Pl3xMapCommand.CompletedSuccessfullyException) {
                 return;
             }
             handler.accept(sender, exception);
@@ -91,11 +91,14 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
     }
 
     private Command.Builder<CommandSender> rootBuilder() {
-        return commandBuilder("map", "pl3xmap")
-                .permission("pl3xmap.command.map")
-                /* MinecraftHelp uses the MinecraftExtrasMetaKeys.DESCRIPTION meta,
-                 * this is just so we give Bukkit a description for our commands
-                 * in the Bukkit and EssentialsX '/help' command */
-                .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'");
+        if (this.rootBuilder == null) {
+            this.rootBuilder = commandBuilder("map", "pl3xmap")
+                    .permission("pl3xmap.command.map")
+                    /* MinecraftHelp uses the MinecraftExtrasMetaKeys.DESCRIPTION meta,
+                     * this is just so we give Bukkit a description for our commands
+                     * in the Bukkit and EssentialsX '/help' command */
+                    .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'");
+        }
+        return this.rootBuilder;
     }
 }

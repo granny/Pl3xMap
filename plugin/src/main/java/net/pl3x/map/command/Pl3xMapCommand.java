@@ -3,14 +3,12 @@ package net.pl3x.map.command;
 import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.minecraft.extras.RichDescription;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.api.Pl3xMap;
 import net.pl3x.map.api.player.MapPlayer;
 import net.pl3x.map.api.player.PlayerManager;
-import net.pl3x.map.command.exception.CompletedSuccessfullyException;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.world.MapWorld;
 import org.bukkit.World;
@@ -82,6 +80,9 @@ public abstract class Pl3xMapCommand {
     }
 
     public static RichDescription description(String miniMessage, TagResolver.Single... placeholders) {
-        return RichDescription.of(MiniMessage.miniMessage().deserialize(miniMessage, placeholders));
+        return RichDescription.of(Lang.parse(miniMessage, placeholders));
+    }
+
+    public static class CompletedSuccessfullyException extends IllegalArgumentException {
     }
 }

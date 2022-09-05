@@ -25,7 +25,7 @@ public class ResetMapCommand extends Pl3xMapCommand {
     public void register() {
         getCommandManager().registerSubcommand(builder -> builder.literal("resetmap")
                 .argument(MapWorldArgument.of("world"))
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_RESETMAP_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RESETMAP_DESCRIPTION))
                 .meta(CommandConfirmationManager.META_CONFIRMATION_REQUIRED, true)
                 .permission("pl3xmap.command.resetmap")
                 .handler(this::execute));

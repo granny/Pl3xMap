@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.configuration.Lang;
 import org.bukkit.Bukkit;
 
@@ -19,7 +18,7 @@ public class Pl3xLogger extends Logger {
     @Override
     public void info(String msg) {
         // send through ConsoleSender so logger will strip colors before putting in log file
-        Lang.send(Bukkit.getConsoleSender(), HexFormattingConverter.SERIALIZER.serialize(MiniMessage.miniMessage().deserialize(msg)));
+        Lang.send(Bukkit.getConsoleSender(), HexFormattingConverter.SERIALIZER.serialize(Lang.parse(msg)));
     }
 
     @Override

@@ -20,7 +20,7 @@ public class ReloadCommand extends Pl3xMapCommand {
     @Override
     public void register() {
         getCommandManager().registerSubcommand(builder -> builder.literal("reload")
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_RELOAD_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RELOAD_DESCRIPTION))
                 .permission("pl3xmap.command.reload")
                 .handler(this::execute));
     }

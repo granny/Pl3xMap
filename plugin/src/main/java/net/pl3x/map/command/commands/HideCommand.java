@@ -3,7 +3,6 @@ package net.pl3x.map.command.commands;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.api.player.MapPlayer;
@@ -20,12 +19,12 @@ public class HideCommand extends Pl3xMapCommand {
     @Override
     public void register() {
         getCommandManager().registerSubcommand(builder -> builder.literal("hide")
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_HIDE_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_HIDE_DESCRIPTION))
                 .permission("pl3xmap.command.hide")
                 .handler(this::execute));
         getCommandManager().registerSubcommand(builder -> builder.literal("hide")
                 .argument(SinglePlayerSelectorArgument.optional("player"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION))
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_HIDE_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_HIDE_DESCRIPTION))
                 .permission("pl3xmap.command.hide.others")
                 .handler(this::execute));
     }

@@ -18,12 +18,14 @@ public class Lang extends AbstractConfig {
     @Key("command.event.click-to-confirm")
     public static String CLICK_TO_CONFIRM = "Click to confirm";
 
-    @Key("addon.loading")
-    public static String ADDON_LOADING = "Loading addon <name>";
+    @Key("addon.enabling-all")
+    public static String ADDONS_ENABLING = "Enabling addons";
+    @Key("addon.disabling-all")
+    public static String ADDONS_DISABLING = "Disabling addons";
     @Key("addon.enabling")
-    public static String ADDON_ENABLING = "Enabling addon <name>";
+    public static String ADDON_ENABLING = " - <name> <version>";
     @Key("addon.disabling")
-    public static String ADDON_DISABLING = "Disabling addon <name>";
+    public static String ADDON_DISABLING = " - <name> <version>";
 
     @Key("command.argument.help-query")
     public static String COMMAND_ARGUMENT_HELP_QUERY_DESCRIPTION = "Help Query";

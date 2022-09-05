@@ -6,6 +6,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -24,7 +26,7 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.plugin.java.PluginClassLoader;
 
 /**
- * Manages Pl3xMap addons
+ * Manages Pl3xMap addons.
  */
 public class AddonManager {
     public static final Path ADDONS_DIR = FileUtil.PLUGIN_DIR.resolve("addons");
@@ -40,16 +42,16 @@ public class AddonManager {
     private final Map<String, Addon> loadedAddons = new TreeMap<>();
 
     /**
-     * Get a list of all loaded addons.
+     * Get the loaded addons.
      *
      * @return loaded addons
      */
-    public List<Addon> getAddons() {
-        return loadedAddons.values().stream().toList();
+    public Collection<Addon> getAddons() {
+        return Collections.unmodifiableCollection(this.loadedAddons.values());
     }
 
     /**
-     * Get a specific addon by name.
+     * Get as addon by name.
      *
      * @param name name of addon
      * @return addon
@@ -59,7 +61,7 @@ public class AddonManager {
     }
 
     /**
-     * Enable all addons
+     * Enable all addons.
      */
     public void enableAddons() {
         Set<Path> files;
@@ -70,6 +72,10 @@ public class AddonManager {
                     .collect(Collectors.toSet());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        if (!files.isEmpty()) {
+            Logger.info(Lang.ADDONS_ENABLING);
         }
 
         for (Path path : files) {
@@ -86,10 +92,6 @@ public class AddonManager {
                     Logger.warn("Addon is already loaded (" + info.getName() + ")");
                     continue;
                 }
-
-                Logger.debug(Lang.ADDON_LOADING
-                        .replace("<name>", info.getName())
-                        .replace("<version>", info.getVersion()));
 
                 URLClassLoader loader = new URLClassLoader(new URL[]{path.toFile().toURI().toURL()}, Pl3xMapPlugin.class.getClassLoader());
                 Class<?> jarClass = Class.forName(info.getMain(), true, loader);
@@ -126,9 +128,13 @@ public class AddonManager {
     }
 
     /**
-     * Disable all addons
+     * Disable all addons.
      */
     public void disableAddons() {
+        if (!this.loadedAddons.isEmpty()) {
+            Logger.info(Lang.ADDONS_DISABLING);
+        }
+
         Iterator<Map.Entry<String, Addon>> iter = this.loadedAddons.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, Addon> entry = iter.next();

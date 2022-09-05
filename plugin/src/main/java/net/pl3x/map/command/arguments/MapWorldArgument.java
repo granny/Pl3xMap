@@ -9,6 +9,7 @@ import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.api.Pl3xMap;
@@ -99,18 +100,23 @@ public class MapWorldArgument<C> extends CommandArgument<C, MapWorld> {
 
         @Override
         public String getMessage() {
-            return switch (this.reason) {
-                case NO_SUCH_WORLD ->
-                        MiniMessage.miniMessage().stripTags(Lang.ERROR_NO_SUCH_WORLD.replace("<world>", this.input));
-                case MAP_NOT_ENABLED ->
-                        MiniMessage.miniMessage().stripTags(Lang.ERROR_WORLD_DISABLED.replace("<world>", this.input));
-                //noinspection UnnecessaryDefault
-                default -> throw new IllegalArgumentException("Unknown MapWorld argument parse failure reason");
-            };
+            return MiniMessage.miniMessage().stripTags(this.reason.toString()).replace("<world>", this.input);
         }
 
         public enum FailureReason {
-            NO_SUCH_WORLD, MAP_NOT_ENABLED
+            NO_SUCH_WORLD(() -> Lang.ERROR_NO_SUCH_WORLD),
+            MAP_NOT_ENABLED(() -> Lang.ERROR_WORLD_DISABLED);
+
+            private final Supplier<String> supplier;
+
+            FailureReason(Supplier<String> supplier) {
+                this.supplier = supplier;
+            }
+
+            @Override
+            public String toString() {
+                return this.supplier.get();
+            }
         }
     }
 }

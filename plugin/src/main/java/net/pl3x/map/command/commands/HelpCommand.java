@@ -9,7 +9,6 @@ import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.pl3x.map.Pl3xMapPlugin;
 import net.pl3x.map.command.CommandManager;
 import net.pl3x.map.command.Pl3xMapCommand;
@@ -47,7 +46,7 @@ public class HelpCommand extends Pl3xMapCommand {
                 })
                 .build();
         getCommandManager().registerSubcommand(builder -> builder.literal("help")
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, MiniMessage.miniMessage().deserialize(Lang.COMMAND_HELP_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_HELP_DESCRIPTION))
                 .argument(helpQueryArgument, description(Lang.COMMAND_ARGUMENT_HELP_QUERY_DESCRIPTION))
                 .permission("pl3xmap.command.help")
                 .handler(this::execute));
