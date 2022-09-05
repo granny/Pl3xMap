@@ -18,7 +18,6 @@ net.pl3x.map.api.registry
 net.pl3x.map.command
 net.pl3x.map.command.arguments
 net.pl3x.map.command.commands
-net.pl3x.map.command.exception
 net.pl3x.map.configuration
 net.pl3x.map.httpd
 net.pl3x.map.logger
