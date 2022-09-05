@@ -5,7 +5,7 @@ import {Marker} from "./Marker";
 
 export class Rectangle extends Marker {
 
-    // [[0, 0], [20, 20]]
+    // [[0,0],[0,0]]
 
     constructor(data: unknown[], options: MarkerOptions | undefined) {
         const bounds = L.latLngBounds(

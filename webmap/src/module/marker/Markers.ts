@@ -6,6 +6,8 @@ import {MarkerOptions} from "./options/MarkerOptions";
 import {Circle} from "./Circle";
 import {Ellipse} from "./Ellipse";
 import {Icon} from "./Icon";
+import {MultiPolygon} from "./MultiPolygon";
+import {MultiPolyline} from "./MultiPolyline";
 import {Polygon} from "./Polygon";
 import {Polyline} from "./Polyline";
 import {Rectangle} from "./Rectangle";
@@ -15,6 +17,8 @@ export class Markers {
         "circ": (data: unknown[], options: MarkerOptions | undefined) => new Circle(data, options),
         "elli": (data: unknown[], options: MarkerOptions | undefined) => new Ellipse(data, options),
         "icon": (data: unknown[], options: MarkerOptions | undefined) => new Icon(data, options),
+        "multipoly": (data: unknown[], options: MarkerOptions | undefined) => new MultiPolygon(data, options),
+        "multiline": (data: unknown[], options: MarkerOptions | undefined) => new MultiPolyline(data, options),
         "poly": (data: unknown[], options: MarkerOptions | undefined) => new Polygon(data, options),
         "line": (data: unknown[], options: MarkerOptions | undefined) => new Polyline(data, options),
         "rect": (data: unknown[], options: MarkerOptions | undefined) => new Rectangle(data, options)

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.markers.Point;
+import net.pl3x.map.api.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,21 @@ public class Circle extends Marker {
     private Point center;
     private double radius;
 
+    private Circle() {
+        super("circ");
+    }
+
+    /**
+     * Create a new circle.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radius  circle radius
+     */
+    public Circle(double centerX, double centerZ, double radius) {
+        this(Point.of(centerX, centerZ), radius);
+    }
+
     /**
      * Create a new circle.
      *
@@ -22,9 +38,32 @@ public class Circle extends Marker {
      * @param radius circle radius
      */
     public Circle(@NotNull Point center, double radius) {
-        super("circ");
+        this();
         setCenter(center);
         setRadius(radius);
+    }
+
+    /**
+     * Create a new circle.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radius  circle radius
+     * @return a new circle
+     */
+    public static Circle of(double centerX, double centerZ, double radius) {
+        return new Circle(centerX, centerZ, radius);
+    }
+
+    /**
+     * Create a new circle.
+     *
+     * @param center center location
+     * @param radius circle radius
+     * @return a new circle
+     */
+    public static Circle of(@NotNull Point center, double radius) {
+        return new Circle(center, radius);
     }
 
     /**
@@ -69,6 +108,12 @@ public class Circle extends Marker {
     public Circle setRadius(double radius) {
         this.radius = radius;
         return this;
+    }
+
+    @Override
+    @NotNull
+    public Circle setOptions(@Nullable Options options) {
+        return (Circle) super.setOptions(options);
     }
 
     @Override

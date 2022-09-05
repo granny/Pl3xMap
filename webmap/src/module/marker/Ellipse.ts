@@ -5,6 +5,9 @@ import {Marker} from "./Marker";
 import "../../lib/L.ellipse";
 
 export class Ellipse extends Marker {
+
+    // [[0,0],[0,0],0]
+
     constructor(data: unknown[], options: MarkerOptions | undefined) {
         const center = data[0] as L.PointTuple;
         const radii = data[1] as L.PointTuple;

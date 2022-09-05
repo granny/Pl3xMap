@@ -1,20 +1,10 @@
 package net.pl3x.map.api.markers.marker;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import java.lang.reflect.Type;
 import java.util.List;
-import net.pl3x.map.api.JsonArrayWrapper;
 import net.pl3x.map.api.JsonSerializable;
 import net.pl3x.map.api.Key;
-import net.pl3x.map.api.markers.Line;
 import net.pl3x.map.api.markers.Point;
-import net.pl3x.map.api.markers.Poly;
-import net.pl3x.map.api.markers.Ring;
 import net.pl3x.map.api.markers.Vector;
 import net.pl3x.map.api.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
@@ -24,14 +14,6 @@ import org.jetbrains.annotations.Nullable;
  * Represents a map marker.
  */
 public abstract class Marker implements JsonSerializable {
-    public static final Gson GSON = new GsonBuilder()
-            //.setPrettyPrinting()
-            //.disableHtmlEscaping()
-            .serializeNulls()
-            .registerTypeHierarchyAdapter(Marker.class, new Adapter())
-            .setLenient()
-            .create();
-
     private final String type;
     private Options options = null;
 
@@ -45,108 +27,358 @@ public abstract class Marker implements JsonSerializable {
         this.type = type;
     }
 
-    public static Marker circle(double centerX, double centerZ, double radius) {
-        return circle(Point.of(centerX, centerZ), radius);
+    /**
+     * Create a new circle.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radius  circle radius
+     * @return a new circle
+     */
+    public static Circle circle(double centerX, double centerZ, double radius) {
+        return Circle.of(centerX, centerZ, radius);
     }
 
-    public static Marker circle(@NotNull Point center, double radius) {
-        return new Circle(center, radius);
+    /**
+     * Create a new circle.
+     *
+     * @param center center location
+     * @param radius circle radius
+     * @return a new circle
+     */
+    public static Circle circle(@NotNull Point center, double radius) {
+        return Circle.of(center, radius);
     }
 
-    public static Marker ellipse(double centerX, double centerZ, double radiusX, double radiusZ) {
-        return ellipse(Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ));
+    /**
+     * Create a new ellipse.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radiusX x radius
+     * @param radiusZ z radius
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(double centerX, double centerZ, double radiusX, double radiusZ) {
+        return Ellipse.of(centerX, centerZ, radiusX, radiusZ);
     }
 
-    public static Marker ellipse(double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
-        return ellipse(Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ), tilt);
+    /**
+     * Create a new ellipse.
+     *
+     * @param center  center location
+     * @param radiusX x radius
+     * @param radiusZ z radius
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(@NotNull Point center, double radiusX, double radiusZ) {
+        return Ellipse.of(center, radiusX, radiusZ);
     }
 
-    public static Marker ellipse(@NotNull Point center, double radiusX, double radiusZ) {
-        return ellipse(center, Vector.of(radiusX, radiusZ));
+    /**
+     * Create a new ellipse.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radius  radius
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(double centerX, double centerZ, @NotNull Vector radius) {
+        return Ellipse.of(centerX, centerZ, radius);
     }
 
-    public static Marker ellipse(@NotNull Point center, double radiusX, double radiusZ, double tilt) {
-        return ellipse(center, Vector.of(radiusX, radiusZ), tilt);
+    /**
+     * Create a new ellipse.
+     *
+     * @param center center location
+     * @param radius radius
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(@NotNull Point center, @NotNull Vector radius) {
+        return Ellipse.of(center, radius);
     }
 
-    public static Marker ellipse(double centerX, double centerZ, @NotNull Vector radius) {
-        return ellipse(Point.of(centerX, centerZ), radius);
+    /**
+     * Create a new ellipse.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radiusX x radius
+     * @param radiusZ z radius
+     * @param tilt    tilt
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+        return Ellipse.of(centerX, centerZ, radiusX, radiusZ, tilt);
     }
 
-    public static Marker ellipse(double centerX, double centerZ, @NotNull Vector radius, double tilt) {
-        return ellipse(Point.of(centerX, centerZ), radius, tilt);
+    /**
+     * Create a new ellipse.
+     *
+     * @param center  center location
+     * @param radiusX x radius
+     * @param radiusZ z radius
+     * @param tilt    tilt
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(@NotNull Point center, double radiusX, double radiusZ, double tilt) {
+        return Ellipse.of(center, radiusX, radiusZ, tilt);
     }
 
-    public static Marker ellipse(@NotNull Point center, @NotNull Vector radius) {
-        return ellipse(center, radius, null);
+    /**
+     * Create a new ellipse.
+     *
+     * @param centerX center x location
+     * @param centerZ center z location
+     * @param radius  radius
+     * @param tilt    tilt
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(double centerX, double centerZ, @NotNull Vector radius, double tilt) {
+        return Ellipse.of(centerX, centerZ, radius, tilt);
     }
 
-    public static Marker ellipse(@NotNull Point center, @NotNull Vector radius, @Nullable Double tilt) {
-        return new Ellipse(center, radius, tilt);
+    /**
+     * Create a new ellipse.
+     *
+     * @param center center location
+     * @param radius radius
+     * @param tilt   tilt
+     * @return a new ellipse
+     */
+    public static Ellipse ellipse(@NotNull Point center, @NotNull Vector radius, double tilt) {
+        return Ellipse.of(center, radius, tilt);
     }
 
-    public static Marker icon(double x, double z, @NotNull Key image) {
-        return icon(Point.of(x, z), image);
+    /**
+     * Create a new icon.
+     *
+     * @param x     icon x location on map
+     * @param z     icon z location on map
+     * @param image image key
+     * @return a new icon
+     */
+    public static Icon icon(double x, double z, @NotNull Key image) {
+        return Icon.of(x, z, image);
     }
 
-    public static Marker icon(double x, double z, @NotNull Key image, double size) {
-        return icon(Point.of(x, z), image, Vector.of(size, size));
+    /**
+     * Create a new icon.
+     *
+     * @param point icon location on map
+     * @param image image key
+     * @return a new icon
+     */
+    public static Icon icon(@NotNull Point point, @NotNull Key image) {
+        return Icon.of(point, image);
     }
 
-    public static Marker icon(double x, double z, @NotNull Key image, double sizeX, double sizeZ) {
-        return icon(Point.of(x, z), image, Vector.of(sizeX, sizeZ));
+    /**
+     * Create a new icon.
+     *
+     * @param x     icon x location on map
+     * @param z     icon z location on map
+     * @param image image key
+     * @param size  size of image
+     * @return a new icon
+     */
+    public static Icon icon(double x, double z, @NotNull Key image, double size) {
+        return Icon.of(x, z, image, size, size);
     }
 
-    public static Marker icon(@NotNull Point point, @NotNull Key image) {
-        return icon(point, image, null);
+    /**
+     * Create a new icon.
+     *
+     * @param x      icon x location on map
+     * @param z      icon z location on map
+     * @param image  image key
+     * @param width  width of image
+     * @param height height of image
+     * @return a new icon
+     */
+    public static Icon icon(double x, double z, @NotNull Key image, double width, double height) {
+        return Icon.of(x, z, image, width, height);
     }
 
-    public static Marker icon(@NotNull Point point, @NotNull Key image, double size) {
-        return icon(point, image, Vector.of(size, size));
+    /**
+     * Create a new icon.
+     *
+     * @param point icon location on map
+     * @param image image key
+     * @param size  size of image
+     * @return a new icon
+     */
+    public static Icon icon(@NotNull Point point, @NotNull Key image, double size) {
+        return Icon.of(point, image, size, size);
     }
 
-    public static Marker icon(@NotNull Point point, @NotNull Key image, double sizeX, double sizeZ) {
-        return icon(point, image, Vector.of(sizeX, sizeZ));
+    /**
+     * Create a new icon.
+     *
+     * @param point  icon location on map
+     * @param image  image key
+     * @param width  width of image
+     * @param height height of image
+     * @return a new icon
+     */
+    public static Icon icon(@NotNull Point point, @NotNull Key image, double width, double height) {
+        return Icon.of(point, image, width, height);
     }
 
-    public static Marker icon(@NotNull Point point, @NotNull Key image, @Nullable Vector size) {
-        return new Icon(point, image).setSize(size);
+    /**
+     * Create a new icon.
+     *
+     * @param point icon location on map
+     * @param image image key
+     * @param size  size of image
+     * @return a new icon
+     */
+    public static Icon icon(@NotNull Point point, @NotNull Key image, @Nullable Vector size) {
+        return Icon.of(point, image, size);
     }
 
-    public static Marker polygon(@NotNull Point @NotNull ... points) {
-        return Polygon.of(Poly.of(Ring.of(points)));
+    /**
+     * Create a new multi-polygon.
+     *
+     * @param polygon polygon to add
+     * @return a new multi-polygon
+     */
+    public static MultiPolygon multiPolygon(@NotNull Polygon polygon) {
+        return MultiPolygon.of(polygon);
     }
 
-    public static Marker polygon(@NotNull List<Point> points) {
-        return Polygon.of(Poly.of(Ring.of(points)));
+    /**
+     * Create a new multi-polygon.
+     *
+     * @param polygons polygons to add
+     * @return a new multi-polygon
+     */
+    public static MultiPolygon multiPolygon(@NotNull Polygon @NotNull ... polygons) {
+        return MultiPolygon.of(polygons);
     }
 
-    public static Marker polyline(@NotNull Point @NotNull ... points) {
-        return Polyline.of(Line.of(points));
+    /**
+     * Create a new multi-polygon.
+     *
+     * @param polygons polygons to add
+     * @return a new multi-polygon
+     */
+    public static MultiPolygon multiPolygon(@NotNull List<Polygon> polygons) {
+        return MultiPolygon.of(polygons);
     }
 
-    public static Marker polyline(@NotNull List<Point> points) {
-        return Polyline.of(Line.of(points));
+    /**
+     * Create a new multi-polyline.
+     *
+     * @param polyline polyline to add
+     * @return a new multi-polyline
+     */
+    public static MultiPolyline multiPolyline(@NotNull Polyline polyline) {
+        return MultiPolyline.of(polyline);
     }
 
-    public static Marker polyline(@NotNull Line line) {
-        return Polyline.of(line);
+    /**
+     * Create a new multi-polyline.
+     *
+     * @param polylines polylines to add
+     * @return a new multi-polyline
+     */
+    public static MultiPolyline multiPolyline(@NotNull Polyline @NotNull ... polylines) {
+        return MultiPolyline.of(polylines);
     }
 
-    public static Marker multiline(@NotNull Line @NotNull ... lines) {
-        return Polyline.of(lines);
+    /**
+     * Create a new multi-polyline.
+     *
+     * @param polylines polylines to add
+     * @return a new multi-polyline
+     */
+    public static MultiPolyline multiPolyline(@NotNull List<Polyline> polylines) {
+        return MultiPolyline.of(polylines);
     }
 
-    public static Marker multiline(@NotNull List<Line> lines) {
-        return Polyline.of(lines);
+    /**
+     * Create a new polygon.
+     *
+     * @param polyline polyline to add
+     * @return a new polygon
+     */
+    public static Polygon polygon(@NotNull Polyline polyline) {
+        return Polygon.of(polyline);
     }
 
-    public static Marker rectangle(double x1, double z1, double x2, double z2) {
-        return rectangle(Point.of(x1, z1), Point.of(x2, z2));
+    /**
+     * Create a new polygon.
+     *
+     * @param polylines polylines to add
+     * @return a new polygon
+     */
+    public static Polygon polygon(@NotNull Polyline @NotNull ... polylines) {
+        return Polygon.of(polylines);
     }
 
-    public static Marker rectangle(@NotNull Point point1, @NotNull Point point2) {
-        return new Rectangle(point1, point2);
+    /**
+     * Create a new polygon.
+     *
+     * @param polylines polylines to add
+     * @return a new polygon
+     */
+    public static Polygon polygon(@NotNull List<Polyline> polylines) {
+        return Polygon.of(polylines);
+    }
+
+    /**
+     * Create a new polyline.
+     *
+     * @param point point to add
+     * @return a new polyline
+     */
+    public static Polyline polyline(@NotNull Point point) {
+        return Polyline.of(point);
+    }
+
+    /**
+     * Create a new polyline.
+     *
+     * @param points points to add
+     * @return a new polyline
+     */
+    public static Polyline polyline(@NotNull Point @NotNull ... points) {
+        return Polyline.of(points);
+    }
+
+    /**
+     * Create a new polyline.
+     *
+     * @param points points to add
+     * @return a new polyline
+     */
+    public static Polyline polyline(@NotNull List<Point> points) {
+        return Polyline.of(points);
+    }
+
+    /**
+     * Create a new rectangle.
+     *
+     * @param x1 first x point
+     * @param z1 first z point
+     * @param x2 second x point
+     * @param z2 second z point
+     * @return a new rectangle
+     */
+    public static Rectangle rectangle(double x1, double z1, double x2, double z2) {
+        return Rectangle.of(x1, z1, x2, z2);
+    }
+
+    /**
+     * Create a new rectangle.
+     *
+     * @param point1 first point
+     * @param point2 second point
+     * @return a new rectangle
+     */
+    public static Rectangle rectangle(@NotNull Point point1, @NotNull Point point2) {
+        return Rectangle.of(point1, point2);
     }
 
     /**
@@ -185,29 +417,5 @@ public abstract class Marker implements JsonSerializable {
     public Marker setOptions(@Nullable Options options) {
         this.options = options;
         return this;
-    }
-
-    /**
-     * Serialize this marker into a json string.
-     *
-     * @return serialized json string
-     */
-    @NotNull
-    public String serialize() {
-        return GSON.toJson(this);
-    }
-
-    private static class Adapter implements JsonSerializer<Marker> {
-        @Override
-        @NotNull
-        public JsonElement serialize(@NotNull Marker marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
-            JsonArrayWrapper wrapper = new JsonArrayWrapper();
-            wrapper.add(marker.getType());
-            wrapper.add(marker);
-            if (marker.getOptions() != null) {
-                wrapper.add(marker.getOptions());
-            }
-            return wrapper.getJsonArray();
-        }
     }
 }

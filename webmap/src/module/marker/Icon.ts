@@ -5,7 +5,7 @@ import {Marker} from "./Marker";
 
 export class Icon extends Marker {
 
-    // [[0, 0], "iconUrl", null, null, null, null, null, null, null, null, null]
+    // [[0,0],"","",[0,0],[0,0],"","",[0,0],[0,0]]
 
     constructor(data: unknown[], options: MarkerOptions | undefined) {
         function url(image: string) {

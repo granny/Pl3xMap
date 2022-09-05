@@ -3,101 +3,187 @@ package net.pl3x.map.api.markers.marker;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.api.JsonArrayWrapper;
-import net.pl3x.map.api.markers.Poly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a polygon marker.
+ * <p>
+ * A polygon requires at least one {@link Polyline} for the
+ * outer polygon shape. Any additional polylines will be used
+ * to cut out "holes" in the outer polygon shape.
  */
 public class Polygon extends Marker {
-    private final Collection<Poly> polys = new ArrayList<>();
+    private final List<Polyline> polylines = new ArrayList<>();
 
     private Polygon() {
         super("poly");
     }
 
-    public Polygon(@NotNull Poly poly) {
+    /**
+     * Create a new polygon.
+     *
+     * @param polyline polyline to add
+     */
+    public Polygon(@NotNull Polyline polyline) {
         this();
-        addPoly(poly);
+        addPolyline(polyline);
     }
 
-    public Polygon(@NotNull Poly @NotNull ... polys) {
+    /**
+     * Create a new polygon.
+     *
+     * @param polylines polylines to add
+     */
+    public Polygon(@NotNull Polyline @NotNull ... polylines) {
         this();
-        addPoly(polys);
+        addPolyline(polylines);
     }
 
-    public Polygon(@NotNull Collection<Poly> polys) {
+    /**
+     * Create a new polygon.
+     *
+     * @param polylines polylines to add
+     */
+    public Polygon(@NotNull Collection<Polyline> polylines) {
         this();
-        addPoly(polys);
+        addPolyline(polylines);
     }
 
-    public static Polygon of(@NotNull Poly poly) {
-        return new Polygon(poly);
+    /**
+     * Create a new polygon.
+     *
+     * @param polyline polyline to add
+     * @return a new polygon
+     */
+    public static Polygon of(@NotNull Polyline polyline) {
+        return new Polygon(polyline);
     }
 
-    public static Polygon of(@NotNull Poly @NotNull ... polys) {
-        return new Polygon(polys);
+    /**
+     * Create a new polygon.
+     *
+     * @param polylines polylines to add
+     * @return a new polygon
+     */
+    public static Polygon of(@NotNull Polyline @NotNull ... polylines) {
+        return new Polygon(polylines);
     }
 
-    public static Polygon of(@NotNull Collection<Poly> polys) {
-        return new Polygon(polys);
+    /**
+     * Create a new polygon.
+     *
+     * @param polylines polylines to add
+     * @return a new polygon
+     */
+    public static Polygon of(@NotNull Collection<Polyline> polylines) {
+        return new Polygon(polylines);
     }
 
+    /**
+     * Get the list of polylines in this polygon.
+     *
+     * @return list of polylines
+     */
     @NotNull
-    public Collection<Poly> getPolys() {
-        return this.polys;
+    public List<Polyline> getPolylines() {
+        return this.polylines;
     }
 
+    /**
+     * Clear the list of polylines in this polygon.
+     *
+     * @return this polygon
+     */
     @NotNull
-    public Polygon clearPolys() {
-        this.polys.clear();
+    public Polygon clearPolylines() {
+        this.polylines.clear();
         return this;
     }
 
+    /**
+     * Add a polyline to this polygon.
+     *
+     * @param polyline polyline to remove
+     * @return this polygon
+     */
     @NotNull
-    public Polygon addPoly(@NotNull Poly poly) {
-        Preconditions.checkNotNull(poly, "Polygon poly is null");
-        this.polys.add(poly);
+    public Polygon addPolyline(@NotNull Polyline polyline) {
+        Preconditions.checkNotNull(polyline, "Poly polyline is null");
+        this.polylines.add(polyline);
         return this;
     }
 
+    /**
+     * Add polylines to this polygon.
+     *
+     * @param polylines polylines to remove
+     * @return this polygon
+     */
     @NotNull
-    public Polygon addPoly(@NotNull Poly @NotNull ... polys) {
-        Preconditions.checkNotNull(polys, "Polygon polys is null");
-        addPoly(Arrays.asList(polys));
+    public Polygon addPolyline(@NotNull Polyline @NotNull ... polylines) {
+        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        for (Polyline polyline : polylines) {
+            addPolyline(polyline);
+        }
         return this;
     }
 
+    /**
+     * Add polylines to this polygon.
+     *
+     * @param polylines polylines to remove
+     * @return this polygon
+     */
     @NotNull
-    public Polygon addPoly(@NotNull Collection<Poly> polys) {
-        Preconditions.checkNotNull(polys, "Polygon polys is null");
-        this.polys.addAll(polys);
+    public Polygon addPolyline(@NotNull Collection<Polyline> polylines) {
+        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        this.polylines.addAll(polylines);
         return this;
     }
 
+    /**
+     * Remove a polyline from this polygon.
+     *
+     * @param polyline polyline to remove
+     * @return this polygon
+     */
     @NotNull
-    public Polygon removePoly(@NotNull Poly poly) {
-        Preconditions.checkNotNull(poly, "Polygon poly is null");
-        this.polys.remove(poly);
+    public Polygon removeLine(@NotNull Polyline polyline) {
+        Preconditions.checkNotNull(polyline, "Poly polyline is null");
+        this.polylines.remove(polyline);
         return this;
     }
 
+    /**
+     * Remove polylines from this polygon.
+     *
+     * @param polylines polylines to remove
+     * @return this polygon
+     */
     @NotNull
-    public Polygon removePoly(@NotNull Poly @NotNull ... polys) {
-        Preconditions.checkNotNull(polys, "Polygon polys is null");
-        removePoly(Arrays.asList(polys));
+    public Polygon removeLine(@NotNull Polyline @NotNull ... polylines) {
+        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        for (Polyline polyline : polylines) {
+            removeLine(polyline);
+        }
         return this;
     }
 
+    /**
+     * Remove polylines from this polygon.
+     *
+     * @param polylines polylines to remove
+     * @return this polygon
+     */
     @NotNull
-    public Polygon removePoly(@NotNull Collection<Poly> polys) {
-        Preconditions.checkNotNull(polys, "Polygon polys is null");
-        this.polys.removeAll(polys);
+    public Polygon removeLine(@NotNull Collection<Polyline> polylines) {
+        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        this.polylines.removeAll(polylines);
         return this;
     }
 
@@ -105,7 +191,7 @@ public class Polygon extends Marker {
     @NotNull
     public JsonElement toJson() {
         JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        getPolys().forEach(wrapper::add);
+        getPolylines().forEach(wrapper::add);
         return wrapper.getJsonArray();
     }
 
@@ -121,17 +207,16 @@ public class Polygon extends Marker {
             return false;
         }
         Polygon other = (Polygon) o;
-        return Objects.equals(getPolys(), other.getPolys())
-                && Objects.equals(getOptions(), other.getOptions());
+        return Objects.equals(getPolylines(), other.getPolylines());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions());
+        return Objects.hash(getPolylines());
     }
 
     @Override
     public String toString() {
-        return "Polygon{polys=" + getPolys() + ",options=" + getOptions() + "}";
+        return "Polygon{polylines=" + getPolylines() + "}";
     }
 }
