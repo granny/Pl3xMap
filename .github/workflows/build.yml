@@ -44,7 +44,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: javadoc
           clean: true
-          folder: plugin/build/docs/javadoc
+          folder: common/build/docs/javadoc
           target-folder: ./
       - name: Publish to Modrinth
         run: ./gradlew modrinth --stacktrace
