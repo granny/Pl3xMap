@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly(project(":Pl3xMap"))
+    compileOnly(project(":Common"))
     compileOnly("org.popcraft", "chunky-common", "1.3.29")
     compileOnly("org.popcraft", "chunkyborder-common", "1.0.71")
     compileOnly("com.wimbli.WorldBorder", "WorldBorder", "1.9.10 (beta)")

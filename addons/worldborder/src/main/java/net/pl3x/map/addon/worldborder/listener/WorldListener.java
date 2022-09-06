@@ -4,15 +4,17 @@ import io.papermc.paper.event.world.border.WorldBorderBoundsChangeEvent;
 import io.papermc.paper.event.world.border.WorldBorderBoundsChangeFinishEvent;
 import io.papermc.paper.event.world.border.WorldBorderCenterChangeEvent;
 import io.papermc.paper.event.world.border.WorldBorderEvent;
+import net.minecraft.server.level.ServerLevel;
+import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.addon.worldborder.border.Border;
 import net.pl3x.map.addon.worldborder.layer.WorldBorderLayer;
-import net.pl3x.map.api.Pl3xMap;
-import net.pl3x.map.api.event.EventHandler;
-import net.pl3x.map.api.event.EventListener;
-import net.pl3x.map.api.event.world.WorldLoadedEvent;
-import net.pl3x.map.api.event.world.WorldUnloadedEvent;
-import net.pl3x.map.api.markers.layer.Layer;
+import net.pl3x.map.event.EventHandler;
+import net.pl3x.map.event.EventListener;
+import net.pl3x.map.event.world.WorldLoadedEvent;
+import net.pl3x.map.event.world.WorldUnloadedEvent;
+import net.pl3x.map.markers.layer.Layer;
 import net.pl3x.map.world.MapWorld;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.event.Listener;
 
 public class WorldListener implements EventListener, Listener {
@@ -43,7 +45,8 @@ public class WorldListener implements EventListener, Listener {
     }
 
     public void updateBorder(WorldBorderEvent event) {
-        MapWorld mapWorld = Pl3xMap.api().getWorldManager().getMapWorld(event.getWorld());
+        ServerLevel level = ((CraftWorld) event.getWorld()).getHandle();
+        MapWorld mapWorld = Pl3xMap.api().getWorldRegistry().get(level);
         if (mapWorld == null) {
             return;
         }

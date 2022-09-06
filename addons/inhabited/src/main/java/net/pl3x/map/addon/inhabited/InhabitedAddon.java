@@ -1,9 +1,9 @@
 package net.pl3x.map.addon.inhabited;
 
 import net.pl3x.map.addon.inhabited.renderer.InhabitedRenderer;
-import net.pl3x.map.api.Pl3xMap;
-import net.pl3x.map.api.addon.Addon;
-import net.pl3x.map.render.task.RendererRegistry;
+import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.addon.Addon;
+import net.pl3x.map.render.RendererRegistry;
 
 public class InhabitedAddon extends Addon {
     @Override

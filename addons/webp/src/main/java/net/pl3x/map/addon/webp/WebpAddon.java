@@ -1,8 +1,8 @@
 package net.pl3x.map.addon.webp;
 
 import net.pl3x.map.addon.webp.io.Webp;
-import net.pl3x.map.api.addon.Addon;
-import net.pl3x.map.api.image.io.IO;
+import net.pl3x.map.addon.Addon;
+import net.pl3x.map.image.io.IO;
 
 public class WebpAddon extends Addon {
     @Override

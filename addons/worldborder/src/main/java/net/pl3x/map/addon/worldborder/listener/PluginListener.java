@@ -1,11 +1,11 @@
 package net.pl3x.map.addon.worldborder.listener;
 
 import java.util.Locale;
+import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.addon.worldborder.border.BorderType;
 import net.pl3x.map.addon.worldborder.layer.WorldBorderLayer;
-import net.pl3x.map.api.Pl3xMap;
-import net.pl3x.map.api.event.EventHandler;
-import net.pl3x.map.api.markers.layer.Layer;
+import net.pl3x.map.event.EventHandler;
+import net.pl3x.map.markers.layer.Layer;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -28,7 +28,7 @@ public class PluginListener implements Listener {
         } catch (Throwable ignore) {
             return;
         }
-        Pl3xMap.api().getWorldManager().getMapWorlds().forEach(mapWorld -> {
+        Pl3xMap.api().getWorldRegistry().entries().forEach((key, mapWorld) -> {
             Layer layer = mapWorld.getLayerRegistry().get(WorldBorderLayer.KEY);
             if (layer instanceof WorldBorderLayer worldBorderLayer) {
                 worldBorderLayer.clearBorder();

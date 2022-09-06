@@ -3,5 +3,5 @@ version = rootProject.version
 description = "Pl3xMap addon that renders chunk inhabited times as a heatmap"
 
 dependencies {
-    compileOnly(project(":Pl3xMap"))
+    compileOnly(project(":Common"))
 }

@@ -3,5 +3,5 @@ version = rootProject.version
 description = "Pl3xMap addon that renders a flower map"
 
 dependencies {
-    compileOnly(project(":Pl3xMap"))
+    compileOnly(project(":Common"))
 }

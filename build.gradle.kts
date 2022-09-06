@@ -8,7 +8,7 @@ plugins {
 val minecraftVersion: String by project
 val paperVersion: String by project
 val buildNum = System.getenv("GITHUB_RUN_NUMBER") ?: "SNAPSHOT"
-version = "$minecraftVersion-$buildNum"
+project.version = "$minecraftVersion-$buildNum"
 
 dependencies {
     paperDevBundle(paperVersion)
@@ -28,10 +28,10 @@ tasks.register<Copy>("copyWebmap") {
     from("$rootDir/webmap/public")
     include("**/*")
     exclude("tiles*/")
-    into("$rootDir/plugin/src/main/resources/web")
+    into("$rootDir/common/src/main/resources/web")
     from("$rootDir/webmap/dist")
     include("**/*")
-    into("$rootDir/plugin/src/main/resources/web")
+    into("$rootDir/common/src/main/resources/web")
 }
 
 tasks.register<Exec>("npmInstall") {
@@ -53,6 +53,8 @@ subprojects {
         apply(plugin = "io.papermc.paperweight.userdev")
         apply(plugin = "com.github.johnrengelman.shadow")
 
+        val projectName = if (name == "Paper") rootProject.name else project.name
+
         java {
             toolchain.languageVersion.set(JavaLanguageVersion.of(17))
         }
@@ -68,10 +70,19 @@ subprojects {
         tasks {
             shadowJar {
                 from(rootProject.projectDir.resolve("LICENSE"))
+                exclude(
+                    "META-INF/maven/**",
+                    "META-INF/versions/**",
+                    "META-INF/LICENSE.txt"
+                )
+                minimize {
+                    // undertow does not like being minimized (UndertowLogger errors)
+                    exclude(dependency("io.undertow:.*:.*"))
+                }
             }
 
             reobfJar {
-                outputJar.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
+                outputJar.set(jar(projectName))
             }
 
             assemble {
@@ -96,7 +107,7 @@ subprojects {
                     )
                 ) {
                     expand(
-                        "name" to project.name,
+                        "name" to projectName,
                         "group" to project.group,
                         "version" to project.version,
                         "description" to project.description
@@ -114,14 +125,14 @@ tasks {
         versionName.set("${project.version}")
         versionNumber.set("${project.version}")
         versionType.set("alpha")
-        uploadFile.set(rootProject.layout.buildDirectory.file("libs/${project.name}-${project.version}.jar").get())
+        uploadFile.set(jar(rootProject.name))
         additionalFiles.set(
             listOf(
-                addonJar("FlowerMapAddon"),
-                addonJar("HeightmapsAddon"),
-                addonJar("InhabitedAddon"),
-                addonJar("WebpAddon"),
-                addonJar("WorldBorderAddon")
+                jar(project(":FlowerMapAddon").name),
+                jar(project(":HeightmapsAddon").name),
+                jar(project(":InhabitedAddon").name),
+                jar(project(":WebpAddon").name),
+                jar(project(":WorldBorderAddon").name)
             )
         )
         gameVersions.addAll(listOf(minecraftVersion))
@@ -130,6 +141,6 @@ tasks {
     }
 }
 
-fun addonJar(name: String): RegularFile {
-    return rootProject.layout.buildDirectory.file("libs/${project(":${name}").name}-${project.version}.jar").get()
+fun jar(name: String): RegularFile {
+    return rootProject.layout.buildDirectory.file("libs/${name}-${project.version}.jar").get()
 }

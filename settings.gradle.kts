@@ -7,12 +7,19 @@ pluginManagement {
 
 rootProject.name = "Pl3xMap"
 
-setupSubproject("Pl3xMap") {
-    projectDir = file("plugin")
+// Main project
+
+setupSubproject("Common") {
+    projectDir = file("common")
+}
+setupSubproject("Paper") {
+    projectDir = file("paper")
 }
 setupSubproject("WebMap") {
     projectDir = file("webmap")
 }
+
+// Addons
 
 setupSubproject("FlowerMapAddon") {
     projectDir = file("addons/flowermap")

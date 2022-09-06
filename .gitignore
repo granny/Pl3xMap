@@ -12,8 +12,8 @@ out/
 .classpath
 .project
 .settings/
-plugin/bin/
-api/bin/
+common/bin/
+paper/bin/
 
 # Compiled class file
 *.class
@@ -126,4 +126,4 @@ build
 /webmap/dist/
 /webmap/public/images/icon
 /webmap/public/tiles
-/plugin/src/main/resources/web/
+/common/src/main/resources/web/

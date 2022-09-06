@@ -3,5 +3,5 @@ version = rootProject.version
 description = "Pl3xMap addon that adds more heightmap types"
 
 dependencies {
-    compileOnly(project(":Pl3xMap"))
+    compileOnly(project(":Common"))
 }

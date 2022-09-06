@@ -3,5 +3,5 @@ version = rootProject.version
 description = "Pl3xMap addon that adds world border marker to maps"
 
 dependencies {
-    compileOnly(project(":Pl3xMap"))
+    compileOnly(project(":Common"))
 }

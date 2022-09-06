@@ -1,6 +1,6 @@
 package net.pl3x.map.addon.worldborder.border;
 
-import net.pl3x.map.api.markers.marker.Marker;
+import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.world.MapWorld;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

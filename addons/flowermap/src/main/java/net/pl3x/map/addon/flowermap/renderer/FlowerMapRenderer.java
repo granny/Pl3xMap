@@ -9,11 +9,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
-import net.pl3x.map.api.coordinate.RegionCoordinate;
-import net.pl3x.map.api.image.Image;
-import net.pl3x.map.render.task.Renderer;
-import net.pl3x.map.render.task.ScanData;
-import net.pl3x.map.render.task.ScanTask;
+import net.pl3x.map.coordinate.RegionCoordinate;
+import net.pl3x.map.image.Image;
+import net.pl3x.map.render.Renderer;
+import net.pl3x.map.render.ScanData;
+import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.util.Colors;
 
 public class FlowerMapRenderer extends Renderer {

@@ -2,8 +2,8 @@ package net.pl3x.map.addon.worldborder.border;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import net.pl3x.map.api.markers.Point;
-import net.pl3x.map.api.markers.marker.Marker;
+import net.pl3x.map.markers.Point;
+import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.world.MapWorld;
 import org.jetbrains.annotations.NotNull;
 import org.popcraft.chunky.platform.util.Vector2;
@@ -21,7 +21,7 @@ public class ChunkyBorder extends Border {
 
     @Override
     public void update() {
-        BorderData border = ChunkyBorderProvider.get().getBorder(getMapWorld().getName()).orElse(null);
+        BorderData border = ChunkyBorderProvider.get().getBorder(getMapWorld().getWorld().getName()).orElse(null);
         if (border == null) {
             this.marker = null;
             return;

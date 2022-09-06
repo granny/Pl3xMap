@@ -2,9 +2,9 @@ package net.pl3x.map.addon.worldborder.border;
 
 import com.wimbli.WorldBorder.BorderData;
 import com.wimbli.WorldBorder.WorldBorder;
-import net.pl3x.map.api.markers.Point;
-import net.pl3x.map.api.markers.Vector;
-import net.pl3x.map.api.markers.marker.Marker;
+import net.pl3x.map.markers.Point;
+import net.pl3x.map.markers.Vector;
+import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.world.MapWorld;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class WBPluginBorder extends Border {
 
     @Override
     public void update() {
-        BorderData border = WorldBorder.plugin.getWorldBorder(getMapWorld().getName());
+        BorderData border = WorldBorder.plugin.getWorldBorder(getMapWorld().getWorld().getName());
 
         double x = border.getX();
         double z = border.getZ();

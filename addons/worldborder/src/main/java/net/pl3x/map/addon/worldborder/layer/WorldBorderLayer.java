@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import net.pl3x.map.addon.worldborder.border.Border;
 import net.pl3x.map.addon.worldborder.border.BorderType;
-import net.pl3x.map.api.Key;
-import net.pl3x.map.api.markers.layer.Layer;
-import net.pl3x.map.api.markers.marker.Marker;
-import net.pl3x.map.api.markers.option.Fill;
-import net.pl3x.map.api.markers.option.Options;
-import net.pl3x.map.api.markers.option.Stroke;
+import net.pl3x.map.Key;
+import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.markers.marker.Marker;
+import net.pl3x.map.markers.option.Fill;
+import net.pl3x.map.markers.option.Options;
+import net.pl3x.map.markers.option.Stroke;
 import net.pl3x.map.world.MapWorld;
 import org.jetbrains.annotations.NotNull;
 

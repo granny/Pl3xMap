@@ -12,8 +12,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import net.pl3x.map.api.image.Image;
-import net.pl3x.map.api.image.io.IO;
+import net.pl3x.map.image.Image;
+import net.pl3x.map.image.io.IO;
 import net.pl3x.map.logger.Logger;
 
 public class Webp extends IO.Type {
