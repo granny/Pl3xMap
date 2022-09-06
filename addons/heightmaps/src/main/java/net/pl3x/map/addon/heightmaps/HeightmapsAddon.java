@@ -1,12 +1,12 @@
 package net.pl3x.map.addon.heightmaps;
 
+import net.pl3x.map.Key;
+import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.addon.Addon;
 import net.pl3x.map.addon.heightmaps.heightmap.EvenOddLowContrastHeightmap;
 import net.pl3x.map.addon.heightmaps.heightmap.EvenOddModernHeightmap;
 import net.pl3x.map.addon.heightmaps.heightmap.EvenOddOldSchoolHeightmap;
 import net.pl3x.map.addon.heightmaps.heightmap.LowContrastHeightmap;
-import net.pl3x.map.Key;
-import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.addon.Addon;
 import net.pl3x.map.heightmap.HeightmapRegistry;
 
 public class HeightmapsAddon extends Addon {
