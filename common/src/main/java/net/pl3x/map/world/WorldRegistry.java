@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.server.level.ServerLevel;
 import net.pl3x.map.Key;
-import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.event.world.WorldUnloadedEvent;
 import net.pl3x.map.registry.Registry;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +17,8 @@ public class WorldRegistry implements Registry<MapWorld> {
     private final Map<Key, MapWorld> mapWorlds = new ConcurrentHashMap<>();
 
     @Nullable
-    public MapWorld register(@NotNull World world, @NotNull WorldConfig config) {
-        MapWorld mapWorld = new MapWorld(world, config);
+    public MapWorld register(@NotNull World world) {
+        MapWorld mapWorld = new MapWorld(world);
         return register(world.getKey(), mapWorld);
     }
 

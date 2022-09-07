@@ -1,14 +1,13 @@
 package net.pl3x.map.configuration;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.pl3x.map.BiomeColorMap;
+import net.pl3x.map.BlockColorMap;
+import net.pl3x.map.util.FileUtil;
+import net.pl3x.map.world.MapWorld;
 
-public abstract class AdvancedConfig extends AbstractConfig {
+public class AdvancedConfig extends AbstractConfig {
     @Key("settings.event-listeners.BlockBreakEvent")
     @Comment("Triggers when a player breaks a block")
     public static boolean BLOCK_BREAK_EVENT = true;
@@ -124,13 +123,13 @@ public abstract class AdvancedConfig extends AbstractConfig {
             (sapling -> tree, mushroom->huge mushroom)""")
     public static boolean STRUCTURE_GROW_EVENT = true;
 
-    @Key("settings.colors.blocks")
+    //@Key("settings.colors.blocks")
     @Comment("""
             Each block has a specific color assigned to it. You can
             pick your own color here for any blocks you want to change.
             Any blocks _not_ in this list will use Mojang's color.
             Setting a color to black (#000000) will make it invisible.""")
-    public static Map<Block, Integer> BLOCK_COLORS = new LinkedHashMap<>() {{
+    public static BlockColorMap BLOCK_COLORS = new BlockColorMap() {{
         put(Blocks.ACACIA_BUTTON, 0x000000);
         put(Blocks.ACACIA_DOOR, 0xA85F3D);
         put(Blocks.ACACIA_FENCE, 0xA85A32);
@@ -1052,11 +1051,11 @@ public abstract class AdvancedConfig extends AbstractConfig {
         put(Blocks.ZOMBIE_WALL_HEAD, 0x52763F);
     }};
 
-    @Key("settings.colors.biomes")
+    //@Key("settings.colors.biomes")
     @Comment("""
             Each biome has a specific color assigned to it. You can
             pick your own color here for any biomes you want to change.""")
-    public static Map<ResourceKey<Biome>, Integer> BIOME_COLORS = new LinkedHashMap<>() {{
+    public static BiomeColorMap BIOME_COLORS = new BiomeColorMap() {{
         put(Biomes.THE_VOID, 0x000000);
         put(Biomes.PLAINS, 0x8DB360);
         put(Biomes.SUNFLOWER_PLAINS, 0xB5DB88);
@@ -1123,11 +1122,11 @@ public abstract class AdvancedConfig extends AbstractConfig {
     }};
     @Key("settings.color-overrides.biomes.grass")
     @Comment("Override grass colors per biome")
-    public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_GRASS = new LinkedHashMap<>();
+    public static BiomeColorMap COLOR_OVERRIDES_BIOME_GRASS = new BiomeColorMap();
 
     @Key("settings.color-overrides.biomes.foliage")
     @Comment("Override foliage (plant) colors per biome")
-    public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_FOLIAGE = new LinkedHashMap<>() {{
+    public static BiomeColorMap COLOR_OVERRIDES_BIOME_FOLIAGE = new BiomeColorMap() {{
         put(Biomes.DARK_FOREST, 0x1c7b07);
         put(Biomes.JUNGLE, 0x1f8907);
         put(Biomes.BAMBOO_JUNGLE, 0x1f8907);
@@ -1136,5 +1135,14 @@ public abstract class AdvancedConfig extends AbstractConfig {
 
     @Key("settings.color-overrides.biomes.water")
     @Comment("Override water colors per biome")
-    public static Map<ResourceKey<Biome>, Integer> COLOR_OVERRIDES_BIOME_WATER = new LinkedHashMap<>();
+    public static BiomeColorMap COLOR_OVERRIDES_BIOME_WATER = new BiomeColorMap();
+
+    private static final AdvancedConfig CONFIG = new AdvancedConfig();
+
+    public static void reload() {
+        // this has to extract before advanced config to load biome colors correctly
+        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
+
+        CONFIG.reload(FileUtil.MAIN_DIR.resolve("advanced.yml"), AdvancedConfig.class);
+    }
 }

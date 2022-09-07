@@ -6,6 +6,7 @@ val undertowVersion: String by rootProject
 
 dependencies {
     implementation("io.undertow", "undertow-core", undertowVersion)
+    implementation("com.github.Carleslc.Simple-YAML", "Simple-Yaml", "1.8.1")
 }
 
 tasks {

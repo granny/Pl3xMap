@@ -68,9 +68,9 @@ public class MapWorld {
     /**
      * Constructs a MapWorld for given world
      */
-    public MapWorld(World world, WorldConfig config) {
+    public MapWorld(World world) {
         this.world = world;
-        this.config = config;
+        this.config = new WorldConfig(world);
         this.layerRegistry = new LayerRegistry();
 
         String dirName = getWorld().getName().replace(":", "-");
@@ -80,6 +80,7 @@ public class MapWorld {
     }
 
     void init() {
+        getConfig().reload();
         try {
             if (!Files.exists(this.dataPath)) {
                 Files.createDirectories(this.dataPath);

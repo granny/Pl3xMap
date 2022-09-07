@@ -5,8 +5,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.util.FileUtil;
 
-public abstract class Lang extends AbstractConfig {
+public class Lang extends AbstractConfig {
     @Key("prefix.logger")
     public static String PREFIX_LOGGER = "[<dark_aqua>Pl3xMap</dark_aqua>] ";
     @Key("prefix.command")
@@ -206,6 +207,15 @@ public abstract class Lang extends AbstractConfig {
     public static String UI_LAYERS_HEADING = "Layers";
     @Key("ui.layers.skeleton")
     public static String UI_LAYERS_SKELETON = "No layers have been configured";
+
+    private static final Lang CONFIG = new Lang();
+
+    public static void reload() {
+        // extract locale from jar
+        FileUtil.extract("/locale/", FileUtil.LOCALE_DIR, false);
+
+        CONFIG.reload(FileUtil.LOCALE_DIR.resolve(Config.LANGUAGE_FILE), Lang.class);
+    }
 
     public static void send(Audience recipient, String msg, TagResolver.Single... placeholders) {
         send(recipient, true, msg, placeholders);

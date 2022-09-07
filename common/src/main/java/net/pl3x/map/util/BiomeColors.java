@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.function.Function;
 import javax.imageio.ImageIO;
 import net.minecraft.core.Registry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -102,6 +103,10 @@ public class BiomeColors {
             Biome biome = biomeRegistry.get(resourceKey);
             waterColors.put(biome, rgb);
         });
+    }
+
+    public static Registry<Biome> getBiomeRegistry() {
+        return  getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
     }
 
     public static Registry<Biome> getBiomeRegistry(ServerLevel level) {

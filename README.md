@@ -40,6 +40,7 @@ Downloads are available on Modrinth.
 **Scrimage** (_webp wrapper_) is licensed under the [Apache License, Version 2.0](https://github.com/sksamuel/scrimage/blob/master/LICENSE)  
 **Libwebp** (_webp binaries_) is licensed under the [BSD 3-Clause License](https://www.webmproject.org/license/software/)  
 **CLOUD** (_command framework_) is licensed under the [MIT License](https://github.com/Incendo/cloud/blob/master/LICENSE)  
+**Simple-YAML** (_yaml library_) is licensed under the [GNU General Public License v3.0](https://github.com/Carleslc/Simple-YAML/blob/master/LICENSE)  
 **bStats** (_usage metrics_) is licensed under the [MIT License](https://github.com/Bastian/bStats-Metrics/blob/master/LICENSE)
 
 ## bStats

@@ -2,7 +2,9 @@ package net.pl3x.map.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
+import net.pl3x.map.world.World;
 
 public class WorldConfig extends AbstractConfig {
     @Key("enabled")
@@ -158,8 +160,35 @@ public class WorldConfig extends AbstractConfig {
     @Comment("Show players' health in the nameplate")
     public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH = true;
 
+    private final World world;
+
+    public WorldConfig(World world) {
+        this.world = world;
+    }
+
     public void reload() {
+        reload(FileUtil.MAIN_DIR.resolve("config.yml"), WorldConfig.class);
+
         RENDER_BIOME_BLEND = Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
         RENDER_SKYLIGHT = Mathf.clamp(0, 15, RENDER_SKYLIGHT);
+    }
+
+    @Override
+    protected Object getClassObject() {
+        return this;
+    }
+
+    @Override
+    protected Object getValue(String path, Object def) {
+        if (getConfig().get("world-settings.default." + path) == null) {
+            getConfig().set("world-settings.default." + path, def);
+        }
+        return getConfig().get("world-settings." + this.world.getName() + "." + path,
+                getConfig().get("world-settings.default." + path));
+    }
+
+    @Override
+    protected void setComment(String path, String comment) {
+        getConfig().setComment("world-settings.default." + path, comment);
     }
 }

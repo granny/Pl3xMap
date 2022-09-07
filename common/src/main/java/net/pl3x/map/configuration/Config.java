@@ -1,6 +1,8 @@
 package net.pl3x.map.configuration;
 
-public abstract class Config extends AbstractConfig {
+import net.pl3x.map.util.FileUtil;
+
+public class Config extends AbstractConfig {
     @Key("settings.debug-mode")
     @Comment("""
             Extra logger output.
@@ -45,4 +47,10 @@ public abstract class Config extends AbstractConfig {
             The port the built-in web server listens to.
             Make sure the port is allocated if using Pterodactyl.""")
     public static int HTTPD_PORT = 8080;
+
+    private static final Config CONFIG = new Config();
+
+    public static void reload() {
+        CONFIG.reload(FileUtil.MAIN_DIR.resolve("config.yml"), Config.class);
+    }
 }

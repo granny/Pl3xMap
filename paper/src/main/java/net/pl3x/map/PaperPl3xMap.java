@@ -10,10 +10,9 @@ import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.addon.PaperAddonRegistry;
 import net.pl3x.map.command.CommandManager;
-import net.pl3x.map.configuration.BukkitAdvancedConfig;
-import net.pl3x.map.configuration.BukkitConfig;
-import net.pl3x.map.configuration.BukkitLang;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
+import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.event.EventRegistry;
 import net.pl3x.map.heightmap.HeightmapRegistry;
 import net.pl3x.map.httpd.IntegratedServer;
@@ -97,9 +96,9 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
 
         // load up configs
         saveDefaultConfig();
-        BukkitConfig.reload();
-        BukkitLang.reload();
-        BukkitAdvancedConfig.reload();
+        Config.reload();
+        Lang.reload();
+        AdvancedConfig.reload();
 
         // register built in tile image types
         IO.register("png", new Png());
