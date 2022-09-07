@@ -14,22 +14,10 @@ tasks {
     shadowJar {
         exclude(
             "dist_webp_binaries/**",
-            "META-INF/maven/**",
             "META-INF/LICENSE.txt",
             "META-INF/NOTICE.txt",
             "LICENSE.txt",
             "NOTICE.txt"
         )
-        minimize()
-        listOf(
-            "ar.com.hjg.pngj",
-            "com.adobe.internal.xmp",
-            "com.drew",
-            "com.sksamuel.scrimage",
-            "com.twelvemonkeys.imageio.color",
-            "org.apache.commons.io",
-            "org.apache.commons.lang3",
-            "profiles",
-        ).forEach { relocate(it, "thirdparty.$it") }
     }
 }

@@ -72,14 +72,11 @@ subprojects {
             shadowJar {
                 from(rootProject.projectDir.resolve("LICENSE"))
                 exclude(
-                    "META-INF/maven/**",
-                    "META-INF/versions/**",
-                    "META-INF/LICENSE.txt"
+                    "META-INF/LICENSE.txt",
+                    "META-INF/NOTICE.txt",
+                    "LICENSE.txt",
+                    "NOTICE.txt"
                 )
-                minimize {
-                    // undertow does not like being minimized (UndertowLogger errors)
-                    exclude(dependency("io.undertow:.*:.*"))
-                }
             }
 
             reobfJar {

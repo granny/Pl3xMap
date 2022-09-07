@@ -16,9 +16,13 @@ dependencies {
 
 tasks {
     shadowJar {
+        minimize {
+            // undertow does not like being minimized (UndertowLogger errors)
+            exclude(dependency("io.undertow:.*:.*"))
+        }
         listOf(
             "cloud.commandframework",
             "org.bstats"
-        ).forEach { relocate(it, "thirdparty.$it") }
+        ).forEach { relocate(it, "${project.group}.$it") }
     }
 }
