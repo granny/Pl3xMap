@@ -1,5 +1,10 @@
 net.pl3x.map
 net.pl3x.map.addon
+net.pl3x.map.command
+net.pl3x.map.command.argument
+net.pl3x.map.command.argument.parser
+net.pl3x.map.command.commands
+net.pl3x.map.command.exception
 net.pl3x.map.configuration
 net.pl3x.map.coordinate
 net.pl3x.map.event
