@@ -30,7 +30,17 @@ tasks {
         }
         listOf(
             "cloud.commandframework",
-            "org.bstats"
+            "io.leangen.geantyref",
+            //"io.undertow", // do not relocate!
+            //"net.kyori", // do not relocate!
+            "org.bstats",
+            "org.jboss.logging",
+            "org.jboss.threads",
+            "org.simpleyaml",
+            "org.wildfly.client",
+            "org.wildfly.common",
+            "org.yaml",
+            //"org.xnio", // do not relocate!
         ).forEach { relocate(it, "${project.group}.$it") }
     }
 }
