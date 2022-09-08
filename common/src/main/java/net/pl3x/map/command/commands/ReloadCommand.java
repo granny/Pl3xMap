@@ -1,6 +1,7 @@
 package net.pl3x.map.command.commands;
 
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.command.CommandHandler;
@@ -17,6 +18,7 @@ public class ReloadCommand extends Pl3xMapCommand {
 
     public void register() {
         getHandler().registerSubcommand(builder -> builder.literal("reload")
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RELOAD_DESCRIPTION))
                 .permission("pl3xmap.command.reload")
                 .handler(this::execute));
     }
