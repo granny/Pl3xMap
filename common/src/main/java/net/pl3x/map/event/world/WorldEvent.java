@@ -1,18 +1,18 @@
 package net.pl3x.map.event.world;
 
 import net.pl3x.map.event.Event;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class WorldEvent extends Event {
-    private final MapWorld mapWorld;
+    private final World world;
 
-    public WorldEvent(@NotNull MapWorld mapWorld) {
-        this.mapWorld = mapWorld;
+    public WorldEvent(@NotNull World world) {
+        this.world = world;
     }
 
     @NotNull
-    public MapWorld getWorld() {
-        return this.mapWorld;
+    public World getWorld() {
+        return this.world;
     }
 }

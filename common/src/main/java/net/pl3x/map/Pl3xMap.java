@@ -1,8 +1,8 @@
 package net.pl3x.map;
 
 import java.nio.file.Path;
-import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.addon.AddonRegistry;
+import net.pl3x.map.command.Console;
 import net.pl3x.map.event.EventRegistry;
 import net.pl3x.map.heightmap.HeightmapRegistry;
 import net.pl3x.map.httpd.IntegratedServer;
@@ -28,6 +28,12 @@ public interface Pl3xMap {
         return Provider.api();
     }
 
+    void enable();
+
+    void disable();
+
+    String getVersion();
+
     int getCurrentTick();
 
     @NotNull
@@ -36,7 +42,7 @@ public interface Pl3xMap {
     void saveResource(@NotNull String resourcePath, boolean replace);
 
     @NotNull
-    Audience getConsole();
+    Console getConsole();
 
     AddonRegistry getAddonRegistry();
 

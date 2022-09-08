@@ -12,14 +12,14 @@ import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.option.Fill;
 import net.pl3x.map.markers.option.Options;
 import net.pl3x.map.markers.option.Stroke;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldBorderLayer implements Layer {
     public static final Key KEY = new Key("world-border");
     public static final List<Marker> EMPTY_LIST = new ArrayList<>();
 
-    private final MapWorld mapWorld;
+    private final World world;
     private final String label;
     private final int updateInterval;
     private final boolean showControls;
@@ -29,8 +29,8 @@ public class WorldBorderLayer implements Layer {
 
     private Border border;
 
-    public WorldBorderLayer(@NotNull MapWorld mapWorld) {
-        this.mapWorld = mapWorld;
+    public WorldBorderLayer(@NotNull World world) {
+        this.world = world;
         this.label = "World Border";
         this.updateInterval = 15;
         this.showControls = true;
@@ -40,15 +40,15 @@ public class WorldBorderLayer implements Layer {
     }
 
     @NotNull
-    public MapWorld getMapWorld() {
-        return this.mapWorld;
+    public World getWorld() {
+        return this.world;
     }
 
     @NotNull
     public Border getBorder() {
         BorderType type = BorderType.get();
         if (this.border == null || type != this.border.getType()) {
-            this.border = type.create(getMapWorld());
+            this.border = type.create(getWorld());
         }
         return this.border;
     }

@@ -6,16 +6,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.player.MapPlayer;
-import net.pl3x.map.player.PlayerRegistry;
+import net.pl3x.map.markers.Point;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class UpdatePlayerData implements Runnable {
     private final Gson gson = new GsonBuilder()
@@ -29,55 +24,39 @@ public class UpdatePlayerData implements Runnable {
     public void run() {
         List<Object> players = new ArrayList<>();
 
-        PlayerRegistry playerRegistry = Pl3xMap.api().getPlayerRegistry();
+        Pl3xMap.api().getPlayerRegistry().entries().forEach((key, player) -> {
+            if (player.isNPC()) {
+                return;
+            }
+            if (player.isHidden()) {
+                return;
+            }
+            Map<String, Object> entry = new LinkedHashMap<>();
+            Point position = player.getPosition();
 
-        Pl3xMap.api().getWorldRegistry().entries().forEach((key, mapWorld) -> {
-            mapWorld.getWorld().getLevel().players().forEach(player -> {
-                if (mapWorld.getConfig().PLAYER_TRACKER_HIDE_SPECTATORS && playerRegistry.isSpectator(player)) {
-                    return;
-                }
-                if (mapWorld.getConfig().PLAYER_TRACKER_HIDE_INVISIBLE && player.isInvisible()) {
-                    return;
-                }
-                if (playerRegistry.isNPC(player)) {
-                    return;
-                }
-                MapPlayer mapPlayer = playerRegistry.getPlayer(player.getUUID());
-                if (mapPlayer.isHidden()) {
-                    return;
-                }
-                Map<String, Object> playerEntry = new LinkedHashMap<>();
-                BlockPos pos = player.blockPosition();
+            entry.put("name", player.getDecoratedName());
+            entry.put("uuid", player.getUUID().toString());
+            entry.put("world", player.getWorld().getName());
 
-                playerEntry.put("name", playerRegistry.decorateName(mapPlayer));
-                playerEntry.put("uuid", player.getUUID().toString().replace("-", ""));
-                playerEntry.put("world", mapWorld.getWorld().getName());
-
-                if (mapWorld.getConfig().PLAYER_TRACKER_ENABLED) {
-                    playerEntry.put("x", pos.getX());
-                    playerEntry.put("z", pos.getZ());
-                    playerEntry.put("yaw", player.getYHeadRot());
-                    if (mapWorld.getConfig().PLAYER_TRACKER_NAMEPLATE_SHOW_ARMOR) {
-                        playerEntry.put("armor", getArmorPoints(player));
-                    }
-                    if (mapWorld.getConfig().PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH) {
-                        playerEntry.put("health", (int) player.getHealth());
-                    }
+            if (player.getWorld().getConfig().PLAYER_TRACKER_ENABLED) {
+                entry.put("x", position.getX());
+                entry.put("z", position.getZ());
+                entry.put("yaw", player.getYaw());
+                if (player.getWorld().getConfig().PLAYER_TRACKER_NAMEPLATE_SHOW_ARMOR) {
+                    entry.put("armor", player.getArmorPoints());
                 }
+                if (player.getWorld().getConfig().PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH) {
+                    entry.put("health", player.getHealth());
+                }
+            }
 
-                players.add(playerEntry);
-            });
+            players.add(entry);
         });
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("max", MinecraftServer.getServer().getMaxPlayers());
         map.put("players", players);
 
-        FileUtil.write(this.gson.toJson(map), MapWorld.TILES_DIR.resolve("players.json"));
-    }
-
-    private static int getArmorPoints(ServerPlayer player) {
-        AttributeInstance attr = player.getAttribute(Attributes.ARMOR);
-        return attr == null ? 0 : (int) attr.getValue();
+        FileUtil.write(this.gson.toJson(map), World.TILES_DIR.resolve("players.json"));
     }
 }

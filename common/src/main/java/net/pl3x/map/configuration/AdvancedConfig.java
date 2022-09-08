@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.pl3x.map.BiomeColorMap;
 import net.pl3x.map.BlockColorMap;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class AdvancedConfig extends AbstractConfig {
     @Key("settings.event-listeners.BlockBreakEvent")
@@ -1141,7 +1141,7 @@ public class AdvancedConfig extends AbstractConfig {
 
     public static void reload() {
         // this has to extract before advanced config to load biome colors correctly
-        FileUtil.extract("/web/", MapWorld.WEB_DIR, !Config.WEB_DIR_READONLY);
+        FileUtil.extract("/web/", World.WEB_DIR, !Config.WEB_DIR_READONLY);
 
         CONFIG.reload(FileUtil.MAIN_DIR.resolve("advanced.yml"), AdvancedConfig.class);
     }

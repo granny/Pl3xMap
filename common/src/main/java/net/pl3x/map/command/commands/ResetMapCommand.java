@@ -6,64 +6,63 @@ import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import java.io.IOException;
 import java.nio.file.Path;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.pl3x.map.PaperPl3xMap;
-import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.CommandHandler;
 import net.pl3x.map.command.Pl3xMapCommand;
-import net.pl3x.map.command.arguments.MapWorldArgument;
+import net.pl3x.map.command.Sender;
+import net.pl3x.map.command.argument.WorldArgument;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
-import org.bukkit.command.CommandSender;
+import net.pl3x.map.world.World;
 
 public class ResetMapCommand extends Pl3xMapCommand {
-    public ResetMapCommand(PaperPl3xMap plugin, CommandManager commandManager) {
-        super(plugin, commandManager);
+    public ResetMapCommand(CommandHandler handler) {
+        super(handler);
     }
 
     @Override
     public void register() {
-        getCommandManager().registerSubcommand(builder -> builder.literal("resetmap")
-                .argument(MapWorldArgument.of("world"))
+        getHandler().registerSubcommand(builder -> builder.literal("resetmap")
+                .argument(WorldArgument.of(WorldArgument.WORLD))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RESETMAP_DESCRIPTION))
                 .meta(CommandConfirmationManager.META_CONFIRMATION_REQUIRED, true)
                 .permission("pl3xmap.command.resetmap")
                 .handler(this::execute));
     }
 
-    private void execute(CommandContext<CommandSender> context) {
-        CommandSender sender = context.getSender();
-        MapWorld mapWorld = resolveWorld(context);
+    private void execute(CommandContext<Sender> context) {
+        Sender sender = context.getSender();
+        World world = resolveWorld(context);
 
         // check for active renders first
-        if (mapWorld.hasActiveRender()) {
-            Lang.send(sender, Lang.COMMAND_RESETMAP_ACTIVE_RENDER,
-                    Placeholder.unparsed("world", mapWorld.getWorld().getName()));
+        if (world.hasActiveRender()) {
+            sender.send(Lang.COMMAND_RESETMAP_ACTIVE_RENDER,
+                    Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
             return;
         }
 
         // pause background render
-        mapWorld.setPaused(true);
+        world.setPaused(true);
 
         // delete all tiles for world
-        Path worldTilesDir = mapWorld.getTilesDir();
+        Path worldTilesDir = world.getTilesDir();
         try {
             FileUtil.deleteSubdirectories(worldTilesDir);
         } catch (IOException e) {
             // resume background render
-            mapWorld.setPaused(false);
+            world.setPaused(false);
             throw new IllegalStateException(Lang.COMMAND_RESETMAP_FAILED
-                    .replace("<world>", mapWorld.getWorld().getName()),
+                    .replace("<" + WorldArgument.WORLD + ">", world.getName()),
                     e);
         }
 
         // reset background render
-        mapWorld.stopBackgroundRender();
-        mapWorld.startBackgroundRender();
+        world.stopBackgroundRender();
+        world.startBackgroundRender();
 
         // resume background render
-        mapWorld.setPaused(false);
+        world.setPaused(false);
 
-        Lang.send(sender, Lang.COMMAND_RESETMAP_SUCCESS,
-                Placeholder.unparsed("world", mapWorld.getWorld().getName()));
+        sender.send(Lang.COMMAND_RESETMAP_SUCCESS,
+                Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
     }
 }

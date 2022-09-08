@@ -11,7 +11,6 @@ import net.pl3x.map.coordinate.RegionCoordinate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
@@ -141,32 +140,32 @@ public class BukkitWorldListener implements Listener {
     }
 
     private void markChunk(Location loc, boolean skipVisibilityCheck) {
-        MapWorld mapWorld = this.plugin.getWorldRegistry().get(loc.getWorld());
-        if (mapWorld == null) {
+        World world = this.plugin.getWorldRegistry().get(loc.getWorld());
+        if (world == null) {
             return;
         }
-        markChunk(mapWorld, loc, skipVisibilityCheck);
+        markChunk(world, loc, skipVisibilityCheck);
     }
 
-    private void markChunk(World world, List<Block> blocks) {
-        MapWorld mapWorld = this.plugin.getWorldRegistry().get(world);
-        if (mapWorld == null) {
+    private void markChunk(org.bukkit.World bukkitWorld, List<Block> blocks) {
+        World world = this.plugin.getWorldRegistry().get(bukkitWorld);
+        if (world == null) {
             return;
         }
-        blocks.forEach(block -> markChunk(mapWorld, block.getLocation(), false));
+        blocks.forEach(block -> markChunk(world, block.getLocation(), false));
     }
 
-    private void markChunk(World world, Collection<BlockState> states) {
-        MapWorld mapWorld = this.plugin.getWorldRegistry().get(world);
-        if (mapWorld == null) {
+    private void markChunk(org.bukkit.World bukkitWorld, Collection<BlockState> states) {
+        World world = this.plugin.getWorldRegistry().get(bukkitWorld);
+        if (world == null) {
             return;
         }
-        states.forEach(state -> markChunk(mapWorld, state.getLocation(), false));
+        states.forEach(state -> markChunk(world, state.getLocation(), false));
     }
 
-    private void markChunk(MapWorld mapWorld, Location loc, boolean skipVisibilityCheck) {
+    private void markChunk(World world, Location loc, boolean skipVisibilityCheck) {
         if (skipVisibilityCheck || locationVisible(loc)) {
-            mapWorld.addModifiedRegion(new RegionCoordinate(
+            world.addModifiedRegion(new RegionCoordinate(
                     Coordinate.blockToRegion(loc.getBlockX()),
                     Coordinate.blockToRegion(loc.getBlockZ())
             ));

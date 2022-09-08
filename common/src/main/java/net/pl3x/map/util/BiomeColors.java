@@ -22,7 +22,7 @@ import net.minecraft.world.level.material.Material;
 import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.coordinate.BlockCoordinate;
 import net.pl3x.map.render.ScanData;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class BiomeColors {
     private static final Set<Block> grassColorBlocks = ImmutableSet.of(
@@ -58,7 +58,7 @@ public class BiomeColors {
     private static final int[] mapFoliage;
 
     static {
-        Path imagesDir = MapWorld.WEB_DIR.resolve("images");
+        Path imagesDir = World.WEB_DIR.resolve("images");
         BufferedImage imgGrass, imgFoliage;
 
         try {
@@ -76,11 +76,11 @@ public class BiomeColors {
     private final Map<Biome, Integer> foliageColors = new HashMap<>();
     private final Map<Biome, Integer> waterColors = new HashMap<>();
 
-    private final MapWorld mapWorld;
+    private final World world;
 
-    public BiomeColors(MapWorld mapWorld) {
-        this.mapWorld = mapWorld;
-        Registry<Biome> biomeRegistry = getBiomeRegistry(mapWorld.getWorld().getLevel());
+    public BiomeColors(World world) {
+        this.world = world;
+        Registry<Biome> biomeRegistry = getBiomeRegistry(world.getLevel());
         for (Biome biome : biomeRegistry) {
             float temperature = Mathf.clamp(0.0F, 1.0F, biome.getBaseTemperature());
             float humidity = Mathf.clamp(0.0F, 1.0F, biome.getDownfall());
@@ -106,7 +106,7 @@ public class BiomeColors {
     }
 
     public static Registry<Biome> getBiomeRegistry() {
-        return  getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
+        return getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
     }
 
     public static Registry<Biome> getBiomeRegistry(ServerLevel level) {
@@ -160,15 +160,15 @@ public class BiomeColors {
     }
 
     public int getGrassColor(ScanData data, ScanData.Data scanData) {
-        if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, this::grassColorSampler);
+        if (this.world.getConfig().RENDER_BIOME_BLEND > 0) {
+            return sampleNeighbors(scanData, data.getCoordinate(), this.world.getConfig().RENDER_BIOME_BLEND, this::grassColorSampler);
         }
         return grassColorSampler(data);
     }
 
     public int getFoliageColor(ScanData data, ScanData.Data scanData) {
-        if (this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (data1) -> this.foliageColors.get(data1.getBlockBiome()));
+        if (this.world.getConfig().RENDER_BIOME_BLEND > 0) {
+            return sampleNeighbors(scanData, data.getCoordinate(), this.world.getConfig().RENDER_BIOME_BLEND, (data1) -> this.foliageColors.get(data1.getBlockBiome()));
         }
         return this.foliageColors.get(data.getBlockBiome());
     }
@@ -178,8 +178,8 @@ public class BiomeColors {
     }
 
     public int getWaterColor(ScanData data, ScanData.Data scanData, boolean blend) {
-        if (blend && this.mapWorld.getConfig().RENDER_BIOME_BLEND > 0) {
-            return this.sampleNeighbors(scanData, data.getCoordinate(), this.mapWorld.getConfig().RENDER_BIOME_BLEND, (data1) -> this.waterColors.get(data1.getFluidBiome() == null ? data1.getBlockBiome() : data1.getFluidBiome()));
+        if (blend && this.world.getConfig().RENDER_BIOME_BLEND > 0) {
+            return this.sampleNeighbors(scanData, data.getCoordinate(), this.world.getConfig().RENDER_BIOME_BLEND, (data1) -> this.waterColors.get(data1.getFluidBiome() == null ? data1.getBlockBiome() : data1.getFluidBiome()));
         }
         return this.waterColors.get(data.getFluidBiome());
     }

@@ -9,33 +9,32 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.pl3x.map.PaperPl3xMap;
-import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.CommandHandler;
 import net.pl3x.map.command.Pl3xMapCommand;
-import net.pl3x.map.command.arguments.MapWorldArgument;
+import net.pl3x.map.command.Sender;
+import net.pl3x.map.command.argument.WorldArgument;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.player.Player;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.render.job.progress.Progress;
-import net.pl3x.map.world.MapWorld;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import net.pl3x.map.world.World;
 
 public class StatusCommand extends Pl3xMapCommand {
-    public StatusCommand(PaperPl3xMap plugin, CommandManager commandManager) {
-        super(plugin, commandManager);
+    public StatusCommand(CommandHandler handler) {
+        super(handler);
     }
 
     @Override
     public void register() {
-        getCommandManager().registerSubcommand(builder -> builder.literal("status")
-                .argument(MapWorldArgument.of("world"))
-                .argument(StringArgument.<CommandSender>newBuilder("type").withSuggestionsProvider(this::suggestType).asOptional().build())
+        getHandler().registerSubcommand(builder -> builder.literal("status")
+                .argument(WorldArgument.of(WorldArgument.WORLD))
+                .argument(StringArgument.<Sender>newBuilder("type").withSuggestionsProvider(this::suggestType).asOptional().build())
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_STATUS_DESCRIPTION))
                 .permission("pl3xmap.command.status")
                 .handler(this::execute));
     }
 
-    private List<String> suggestType(CommandContext<CommandSender> context, String arg) {
+    private List<String> suggestType(CommandContext<Sender> context, String arg) {
         if (arg != null) {
             // only players can use bossbar
             return (context.getSender() instanceof Player ? Stream.of("chat", "bossbar") : Stream.of("chat"))
@@ -45,20 +44,20 @@ public class StatusCommand extends Pl3xMapCommand {
         return Collections.emptyList();
     }
 
-    private void execute(CommandContext<CommandSender> context) {
-        CommandSender sender = context.getSender();
-        MapWorld mapWorld = resolveWorld(context);
+    private void execute(CommandContext<Sender> context) {
+        Sender sender = context.getSender();
+        World world = resolveWorld(context);
         String type = context.getOrDefault("type", null);
 
-        Render render = mapWorld.getActiveRender();
+        Render render = world.getActiveRender();
         Progress progress = render != null ? render.getProgress() : null;
 
         // toggle it
         if (type != null) {
             // if we're not actively rendering anything there is nothing to show
             if (progress == null) {
-                Lang.send(sender, Lang.COMMAND_STATUS_NOT_RENDERING,
-                        Placeholder.unparsed("world", mapWorld.getWorld().getName())
+                sender.send(Lang.COMMAND_STATUS_NOT_RENDERING,
+                        Placeholder.unparsed(WorldArgument.WORLD, world.getName())
                 );
                 return;
             }
@@ -72,7 +71,7 @@ public class StatusCommand extends Pl3xMapCommand {
             } else if (arg.equals("bossbar")) {
                 // only players can use bossbars (obviously)
                 if (!(sender instanceof Player player)) {
-                    Lang.send(sender, Lang.COMMAND_STATUS_PLAYER_ONLY_FEATURE);
+                    sender.send(Lang.COMMAND_STATUS_PLAYER_ONLY_FEATURE);
                     return;
                 }
                 if (!progress.getBossbar().hide(player)) {
@@ -83,14 +82,14 @@ public class StatusCommand extends Pl3xMapCommand {
         }
 
         // no toggle? fine, show current status
-        Lang.send(sender, Lang.COMMAND_STATUS_RENDER,
-                Placeholder.unparsed("world", mapWorld.getWorld().getName()),
-                Placeholder.parsed("background", getStatus(mapWorld.hasBackgroundRender(), mapWorld.isPaused())),
-                Placeholder.parsed("foreground", getStatus(mapWorld.hasActiveRender(), mapWorld.isPaused()))
+        sender.send(Lang.COMMAND_STATUS_RENDER,
+                Placeholder.unparsed(WorldArgument.WORLD, world.getName()),
+                Placeholder.parsed("background", getStatus(world.hasBackgroundRender(), world.isPaused())),
+                Placeholder.parsed("foreground", getStatus(world.hasActiveRender(), world.isPaused()))
         );
 
-        if (progress != null && !mapWorld.isPaused()) {
-            Lang.send(sender, Lang.COMMAND_STATUS_RENDER_DETAILS,
+        if (progress != null && !world.isPaused()) {
+            sender.send(Lang.COMMAND_STATUS_RENDER_DETAILS,
                     Placeholder.unparsed("chunks_done", Long.toString(progress.getProcessedChunks().get())),
                     Placeholder.unparsed("chunks_total", Long.toString(progress.getTotalChunks())),
                     Placeholder.unparsed("percent", String.format("%.2f", progress.getPercent())),

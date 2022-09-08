@@ -19,7 +19,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.pl3x.map.coordinate.BlockCoordinate;
 import net.pl3x.map.image.Image;
 import net.pl3x.map.util.Colors;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class ScanData {
     private final ScanTask scanTask;
@@ -53,7 +53,7 @@ public class ScanData {
         return this.scanTask;
     }
 
-    public MapWorld getWorld() {
+    public World getWorld() {
         return this.scanTask.getWorld();
     }
 
@@ -103,11 +103,11 @@ public class ScanData {
 
     private void scan() {
         // if world has ceiling iterate down until we find air
-        if (getWorld().getWorld().getLevel().dimensionType().hasCeiling()) {
+        if (getWorld().getLevel().dimensionType().hasCeiling()) {
             do {
                 this.blockPos.move(Direction.DOWN);
                 this.blockState = this.chunk.getBlockState(this.blockPos);
-            } while (this.blockPos.getY() > getWorld().getWorld().getLevel().getMinBuildHeight() && !this.blockState.isAir());
+            } while (this.blockPos.getY() > getWorld().getLevel().getMinBuildHeight() && !this.blockState.isAir());
         }
 
         // iterate down until we find a renderable block
@@ -138,7 +138,7 @@ public class ScanData {
             if (blockColor > 0) {
                 break;
             }
-        } while (this.blockPos.getY() > getWorld().getWorld().getLevel().getMinBuildHeight());
+        } while (this.blockPos.getY() > getWorld().getLevel().getMinBuildHeight());
 
         // determine the biome of final block
         Holder<Biome> biome = this.scanTask.getChunkHelper().getBiome(getWorld(), this.chunk, this.blockPos);

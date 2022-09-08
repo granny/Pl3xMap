@@ -1,7 +1,7 @@
 package net.pl3x.map.addon.worldborder.border;
 
 import java.util.function.Function;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -10,14 +10,14 @@ public enum BorderType {
     WORLDBORDER(WBPluginBorder::new),
     VANILLA(VanillaBorder::new);
 
-    private final Function<MapWorld, Border> supplier;
+    private final Function<World, Border> supplier;
 
-    BorderType(Function<MapWorld, Border> supplier) {
+    BorderType(Function<World, Border> supplier) {
         this.supplier = supplier;
     }
 
-    public Border create(MapWorld mapWorld) {
-        return this.supplier.apply(mapWorld);
+    public Border create(World world) {
+        return this.supplier.apply(world);
     }
 
     public static BorderType get() {

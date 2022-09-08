@@ -11,6 +11,9 @@ dependencies {
     implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion) {
         exclude("net.kyori")
     }
+    implementation("net.kyori", "adventure-api", "4.11.0")
+    implementation("net.kyori", "adventure-platform-bukkit", "4.1.1")
+    implementation("net.kyori", "adventure-text-minimessage", "4.11.0")
     implementation("org.bstats", "bstats-bukkit", bstatsVersion)
 }
 

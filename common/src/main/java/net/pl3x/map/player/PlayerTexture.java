@@ -10,12 +10,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import javax.imageio.ImageIO;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerTexture implements Runnable {
-    private static final Path SKINS_2D_DIR = MapWorld.WEB_DIR.resolve("images/skins/2D");
-    private static final Path SKINS_3D_DIR = MapWorld.WEB_DIR.resolve("images/skins/3D");
+    private static final Path SKINS_2D_DIR = World.WEB_DIR.resolve("images/skins/2D");
+    private static final Path SKINS_3D_DIR = World.WEB_DIR.resolve("images/skins/3D");
 
     static {
         try {

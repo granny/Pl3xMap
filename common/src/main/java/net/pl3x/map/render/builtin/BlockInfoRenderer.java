@@ -21,7 +21,7 @@ import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.util.ByteUtil;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class BlockInfoRenderer extends Renderer {
     private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
@@ -52,9 +52,9 @@ public class BlockInfoRenderer extends Renderer {
 
     @Override
     public void saveData() {
-        MapWorld mapWorld = getScanTask().getWorld();
-        Path tilesDir = mapWorld.getTilesDir();
-        for (int zoom = 0; zoom <= mapWorld.getConfig().ZOOM_MAX_OUT; zoom++) {
+        World world = getScanTask().getWorld();
+        Path tilesDir = world.getTilesDir();
+        for (int zoom = 0; zoom <= world.getConfig().ZOOM_MAX_OUT; zoom++) {
             Path dirPath = tilesDir.resolve(String.format(Image.DIR_PATH, zoom, getName()));
 
             // create directories if they don't exist
@@ -123,7 +123,7 @@ public class BlockInfoRenderer extends Renderer {
 
     @Override
     public void scanData(RegionCoordinate region, ScanData.Data scanData) {
-        int minY = getWorld().getWorld().getLevel().getMinBuildHeight();
+        int minY = getWorld().getLevel().getMinBuildHeight();
 
         this.byteBuffer.clear();
 

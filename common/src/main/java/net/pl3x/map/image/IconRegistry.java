@@ -12,19 +12,19 @@ import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
 import net.pl3x.map.registry.Registry;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * The icon image registry.
  */
-public class IconRegistry implements Registry<BufferedImage> {
+public class IconRegistry extends Registry<BufferedImage> {
     private final Map<Key, BufferedImage> images = new ConcurrentHashMap<>();
     private final Path dir;
 
     public IconRegistry() {
-        this.dir = MapWorld.WEB_DIR.resolve("images/icon/registered/");
+        this.dir = World.WEB_DIR.resolve("images/icon/registered/");
         try {
             if (Files.exists(getDir())) {
                 FileUtil.deleteDirectory(getDir());
@@ -69,6 +69,11 @@ public class IconRegistry implements Registry<BufferedImage> {
             }
         }
         return image;
+    }
+
+    @Override
+    public void unregister() {
+        Collections.unmodifiableSet(this.entries.keySet()).forEach(this::unregister);
     }
 
     @Override

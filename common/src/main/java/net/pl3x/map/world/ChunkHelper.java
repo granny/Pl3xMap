@@ -44,7 +44,7 @@ public class ChunkHelper {
 
     public ChunkHelper(Render render) {
         this.render = render;
-        ServerLevel level = render.getMapWorld().getWorld().getLevel();
+        ServerLevel level = render.getWorld().getLevel();
         this.biomeRegistry = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY);
         this.minSection = WorldUtil.getMinLightSection(level);
         this.totalLightSections = WorldUtil.getMaxLightSection(level) - this.minSection + 1;
@@ -154,7 +154,7 @@ public class ChunkHelper {
     }
 
     // BiomeManager#getBiome
-    public Holder<Biome> getBiome(MapWorld mapWorld, ChunkAccess chunk, BlockPos pos) {
+    public Holder<Biome> getBiome(World world, ChunkAccess chunk, BlockPos pos) {
         int i = pos.getX() - 2;
         int j = pos.getY() - 2;
         int k = pos.getZ() - 2;
@@ -177,7 +177,7 @@ public class ChunkHelper {
             double h = bl ? d : d - 1.0D;
             double t = bl2 ? e : e - 1.0D;
             double u = bl3 ? f : f - 1.0D;
-            double v = getFiddledDistance(mapWorld.getWorld().getBiomeSeed(), q, r, s, h, t, u);
+            double v = getFiddledDistance(world.getBiomeSeed(), q, r, s, h, t, u);
             if (g > v) {
                 o = p;
                 g = v;
@@ -189,7 +189,7 @@ public class ChunkHelper {
         int y = (o & 1) == 0 ? n : n + 1;
         // had to copy this entire method just to change this... :3
         //noinspection SuspiciousNameCombination
-        return getNoiseBiome(mapWorld.getWorld().getLevel(), chunk, w, x, y);
+        return getNoiseBiome(world.getLevel(), chunk, w, x, y);
     }
 
     // BiomeManager#getFiddledDistance

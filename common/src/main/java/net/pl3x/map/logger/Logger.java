@@ -44,7 +44,7 @@ public class Logger {
         @Override
         public void info(String msg) {
             // send through ConsoleSender so logger will strip colors before putting in log file
-            Lang.send(Pl3xMap.api().getConsole(), Lang.parse(msg));
+            Pl3xMap.api().getConsole().send(Lang.parse(msg));
         }
 
         @Override

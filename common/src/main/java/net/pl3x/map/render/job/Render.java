@@ -6,16 +6,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.command.Sender;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.render.job.progress.Progress;
 import net.pl3x.map.util.BiomeColors;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public abstract class Render implements Runnable {
-    private final MapWorld mapWorld;
-    private final Audience starter;
+    private final World world;
+    private final Sender starter;
 
     private final ExecutorService renderExecutor;
     private final ExecutorService imageExecutor;
@@ -30,32 +30,32 @@ public abstract class Render implements Runnable {
 
     private boolean cancelled;
 
-    public Render(MapWorld mapWorld, Audience starter) {
-        this(mapWorld, starter, mapWorld.getWorld().getSpawn());
+    public Render(World world, Sender starter) {
+        this(world, starter, world.getSpawn());
     }
 
-    public Render(MapWorld mapWorld, Audience starter, Point spawn) {
-        this(mapWorld, starter, spawn.getX(), spawn.getZ());
+    public Render(World world, Sender starter, Point spawn) {
+        this(world, starter, spawn.getX(), spawn.getZ());
     }
 
-    public Render(MapWorld mapWorld, Audience starter, int centerX, int centerZ) {
-        this(mapWorld, starter, centerX, centerZ,
-                Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_THREADS),
+    public Render(World world, Sender starter, int centerX, int centerZ) {
+        this(world, starter, centerX, centerZ,
+                Executors.newFixedThreadPool(getThreads(world.getConfig().RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Render-%d").build()),
-                Executors.newFixedThreadPool(getThreads(mapWorld.getConfig().RENDER_THREADS),
+                Executors.newFixedThreadPool(getThreads(world.getConfig().RENDER_THREADS),
                         new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO-%d").build())
         );
     }
 
-    public Render(MapWorld mapWorld, Audience starter, int centerX, int centerZ, ExecutorService renderExecutor, ExecutorService imageExecutor) {
-        this.mapWorld = mapWorld;
+    public Render(World world, Sender starter, int centerX, int centerZ, ExecutorService renderExecutor, ExecutorService imageExecutor) {
+        this.world = world;
         this.starter = starter;
         this.progress = new Progress(this);
         this.centerX = centerX;
         this.centerZ = centerZ;
         this.renderExecutor = renderExecutor;
         this.imageExecutor = imageExecutor;
-        this.biomeColors = new BiomeColors(mapWorld);
+        this.biomeColors = new BiomeColors(world);
     }
 
     public ExecutorService getRenderExecutor() {
@@ -70,11 +70,11 @@ public abstract class Render implements Runnable {
         return this.scheduledProgress;
     }
 
-    public MapWorld getMapWorld() {
-        return this.mapWorld;
+    public World getWorld() {
+        return this.world;
     }
 
-    public Audience getStarter() {
+    public Sender getStarter() {
         return this.starter;
     }
 

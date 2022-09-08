@@ -1,37 +1,61 @@
 package net.pl3x.map.player;
 
-import java.util.UUID;
-import java.util.function.BiFunction;
-import net.minecraft.server.level.ServerPlayer;
+import java.util.Collections;
+import java.util.Map;
+import net.pl3x.map.Key;
+import net.pl3x.map.registry.Registry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages player specific data
  */
-public interface PlayerRegistry {
-    MapPlayer getPlayer(String name);
+public abstract class PlayerRegistry extends Registry<Player> {
+    @NotNull
+    public Player register(@NotNull Player player) {
+        return register(player.getKey(), player);
+    }
 
-    MapPlayer getPlayer(UUID uuid);
+    @Override
+    @NotNull
+    public Player register(@NotNull Key key, @NotNull Player player) {
+        if (this.entries.containsKey(key)) {
+            throw new IllegalArgumentException("Player is already loaded");
+        }
+        this.entries.put(player.getKey(), player);
+        return player;
+    }
 
-    void unloadPlayer(UUID uuid);
+    @Nullable
+    public Player unregister(@NotNull String name) {
+        return unregister(Player.createKey(name));
+    }
 
-    void unloadAll();
+    @Override
+    @Nullable
+    public Player unregister(@NotNull Key key) {
+        return this.entries.remove(key);
+    }
 
-    /**
-     * Function that is used to change player name in a player list
-     * <p>
-     * Multiple decorators can be registered at the same time, in that case the one with Integer.MAX_VALUE will be run as first
-     * These two values should be used only in addons that you do not plan to release for public use.
-     * <p>
-     * The function takes two arguments - the player and the output of previous decorator
-     *
-     * @param priority  Priority of decorator
-     * @param decorator Name decorator to register
-     */
-    void registerNameDecorator(int priority, BiFunction<MapPlayer, String, String> decorator);
+    @Override
+    public void unregister() {
+        Collections.unmodifiableSet(this.entries.keySet()).forEach(this::unregister);
+    }
 
-    String decorateName(MapPlayer player);
+    @Nullable
+    public Player get(String name) {
+        return get(Player.createKey(name));
+    }
 
-    boolean isNPC(ServerPlayer player);
+    @Override
+    @Nullable
+    public Player get(@NotNull Key key) {
+        return this.entries.get(key);
+    }
 
-    boolean isSpectator(ServerPlayer player);
+    @Override
+    @NotNull
+    public Map<Key, Player> entries() {
+        return Collections.unmodifiableMap(this.entries);
+    }
 }

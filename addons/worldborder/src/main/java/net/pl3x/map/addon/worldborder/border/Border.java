@@ -1,26 +1,26 @@
 package net.pl3x.map.addon.worldborder.border;
 
 import net.pl3x.map.markers.marker.Marker;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Border {
-    private final MapWorld mapWorld;
+    private final World world;
     private final BorderType type;
 
     protected Marker marker;
 
-    public Border(@NotNull MapWorld mapWorld, BorderType type) {
-        this.mapWorld = mapWorld;
+    public Border(@NotNull World world, BorderType type) {
+        this.world = world;
         this.type = type;
 
         update();
     }
 
     @NotNull
-    public MapWorld getMapWorld() {
-        return this.mapWorld;
+    public World getWorld() {
+        return this.world;
     }
 
     @NotNull

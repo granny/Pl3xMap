@@ -49,7 +49,7 @@ public class ProgressBossbar {
     public void update() {
         this.bossbar.progress(Math.min(Math.max(Mathf.inverseLerp(0F, 100F, this.progress.getPercent()), 0), 1));
         this.bossbar.name(Lang.parse(Lang.PROGRESS_BOSSBAR,
-                Placeholder.unparsed("world", this.progress.getRender().getMapWorld().getWorld().getName()),
+                Placeholder.unparsed("world", this.progress.getRender().getWorld().getName()),
                 Placeholder.unparsed("percent", String.format("%.2f", this.progress.getPercent())),
                 Placeholder.unparsed("eta", this.progress.getETA())
         ));

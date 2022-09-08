@@ -19,7 +19,7 @@ import net.pl3x.map.markers.layer.Layer;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.marker.Polygon;
 import net.pl3x.map.markers.marker.Polyline;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class MarkerTestAddon extends Addon implements EventListener {
@@ -43,7 +43,7 @@ public class MarkerTestAddon extends Addon implements EventListener {
 
     @EventHandler
     public void on(WorldLoadedEvent event) {
-        MapWorld mapWorld = event.getWorld();
+        World world = event.getWorld();
 
         MARKERS.add(Marker.circle(Point.of(-100, 100), 20));
         MARKERS.add(Marker.ellipse(Point.of(100, 100), Vector.of(10, 20), 45D));
@@ -91,7 +91,7 @@ public class MarkerTestAddon extends Addon implements EventListener {
         )));
         MARKERS.add(Marker.rectangle(Point.of(-50, -50), Point.of(-20, 0)));
 
-        mapWorld.getLayerRegistry().register(LAYER_KEY, new Layer() {
+        world.getLayerRegistry().register(LAYER_KEY, new Layer() {
             @Override
             public @NotNull Key getKey() {
                 return LAYER_KEY;
@@ -121,8 +121,8 @@ public class MarkerTestAddon extends Addon implements EventListener {
 
     @EventHandler
     public void on(WorldUnloadedEvent event) {
-        MapWorld mapWorld = event.getWorld();
-        mapWorld.getLayerRegistry().unregister(LAYER_KEY);
+        World world = event.getWorld();
+        world.getLayerRegistry().unregister(LAYER_KEY);
         Pl3xMap.api().getIconRegistry().unregister(ICON_KEY);
     }
 }

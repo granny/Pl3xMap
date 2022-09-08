@@ -14,7 +14,7 @@ import net.pl3x.map.render.job.Render;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.LightEngine;
 import net.pl3x.map.util.Mathf;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public abstract class Renderer {
     private final String name;
@@ -48,7 +48,7 @@ public abstract class Renderer {
         return this.scanTask.getRegion();
     }
 
-    public MapWorld getWorld() {
+    public World getWorld() {
         return this.scanTask.getWorld();
     }
 

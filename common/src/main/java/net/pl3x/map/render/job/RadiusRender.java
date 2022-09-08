@@ -4,10 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.command.Console;
+import net.pl3x.map.command.Sender;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.coordinate.ChunkCoordinate;
 import net.pl3x.map.coordinate.Coordinate;
@@ -18,14 +19,14 @@ import net.pl3x.map.render.Area;
 import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.render.job.progress.Progress;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class RadiusRender extends Render {
     private final int radius;
     private long timeStarted;
 
-    public RadiusRender(MapWorld mapWorld, Audience starter, int radius, int centerX, int centerZ) {
-        super(mapWorld, starter, centerX, centerZ);
+    public RadiusRender(World world, Sender starter, int radius, int centerX, int centerZ) {
+        super(world, starter, centerX, centerZ);
         this.radius = Coordinate.blockToChunk(radius);
     }
 
@@ -34,7 +35,7 @@ public class RadiusRender extends Render {
         this.timeStarted = System.currentTimeMillis();
 
         // notify we're getting things set up
-        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
+        getStarter().send(Lang.COMMAND_RADIUSRENDER_OBTAINING_CHUNKS);
 
         // find center chunk
         int chunkCenterX = Coordinate.blockToChunk(getCenterX());
@@ -45,7 +46,7 @@ public class RadiusRender extends Render {
 
         // get a list of all existing regions
         List<RegionCoordinate> regionFiles = new ArrayList<>();
-        List<Path> files = FileUtil.getRegionFiles(getMapWorld().getWorld().getLevel());
+        List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
         for (Path path : files) {
             // exit if cancelled
             if (isCancelled()) {
@@ -119,9 +120,9 @@ public class RadiusRender extends Render {
         getProgress().setTotalChunks(totalChunks);
 
         // notify what we found
-        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS
+        getStarter().send(Lang.COMMAND_RADIUSRENDER_FOUND_TOTAL_CHUNKS
                 .replace("<total>", Long.toString(getProgress().getTotalChunks())));
-        Lang.send(getStarter(), Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
+        getStarter().send(Lang.COMMAND_RADIUSRENDER_USE_STATUS_FOR_PROGRESS);
 
         // send the tasks to executor to run
         rendererTasks.forEach(getRenderExecutor()::submit);
@@ -130,10 +131,10 @@ public class RadiusRender extends Render {
     @Override
     public void onStart() {
         Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_STARTING,
-                Placeholder.unparsed("world", getMapWorld().getWorld().getName()));
-        Lang.send(getStarter(), component);
-        if (!getStarter().equals(Pl3xMap.api().getConsole())) {
-            Lang.send(Pl3xMap.api().getConsole(), component);
+                Placeholder.unparsed("world", getWorld().getName()));
+        getStarter().send(component);
+        if (!(getStarter() instanceof Console)) {
+            Pl3xMap.api().getConsole().send(component);
         }
     }
 
@@ -142,21 +143,21 @@ public class RadiusRender extends Render {
         long timeEnded = System.currentTimeMillis();
         String elapsed = Progress.formatMilliseconds(timeEnded - this.timeStarted);
         Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_FINISHED,
-                Placeholder.unparsed("world", getMapWorld().getWorld().getName()),
+                Placeholder.unparsed("world", getWorld().getName()),
                 Placeholder.parsed("elapsed", elapsed));
-        Lang.send(getStarter(), component);
-        if (!getStarter().equals(Pl3xMap.api().getConsole())) {
-            Lang.send(Pl3xMap.api().getConsole(), component);
+        getStarter().send(component);
+        if (!(getStarter() instanceof Console)) {
+            Pl3xMap.api().getConsole().send(component);
         }
     }
 
     @Override
     public void onCancel(boolean unloading) {
         Component component = Lang.parse(Lang.COMMAND_RADIUSRENDER_CANCELLED,
-                Placeholder.unparsed("world", getMapWorld().getWorld().getName()));
-        Lang.send(getStarter(), component);
-        if (!getStarter().equals(Pl3xMap.api().getConsole())) {
-            Lang.send(Pl3xMap.api().getConsole(), component);
+                Placeholder.unparsed("world", getWorld().getName()));
+        getStarter().send(component);
+        if (!(getStarter() instanceof Console)) {
+            Pl3xMap.api().getConsole().send(component);
         }
     }
 }

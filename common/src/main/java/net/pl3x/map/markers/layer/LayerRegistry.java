@@ -8,7 +8,7 @@ import net.pl3x.map.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LayerRegistry implements Registry<Layer> {
+public class LayerRegistry extends Registry<Layer> {
     private final Map<Key, Layer> layers = new ConcurrentHashMap<>();
 
     @Override
@@ -25,6 +25,11 @@ public class LayerRegistry implements Registry<Layer> {
     @Nullable
     public Layer unregister(@NotNull Key key) {
         return this.layers.remove(key);
+    }
+
+    @Override
+    public void unregister() {
+        this.layers.clear();
     }
 
     @Override

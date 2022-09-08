@@ -4,10 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.command.Console;
+import net.pl3x.map.command.Sender;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.coordinate.Coordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
@@ -17,13 +18,13 @@ import net.pl3x.map.render.Area;
 import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.render.job.progress.Progress;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class FullRender extends Render {
     private long timeStarted;
 
-    public FullRender(MapWorld mapWorld, Audience starter) {
-        super(mapWorld, starter);
+    public FullRender(World world, Sender starter) {
+        super(world, starter);
     }
 
     @Override
@@ -34,13 +35,13 @@ public class FullRender extends Render {
         LinkedHashMap<RegionCoordinate, Boolean> regionsToScan = new LinkedHashMap<>();
 
         // don't scan any chunks outside the world border
-        Area scannableArea = new Area(getMapWorld().getWorld().getLevel().getWorldBorder());
+        Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
 
         // check if we have any data to resume
-        LinkedHashMap<RegionCoordinate, Boolean> resumedMap = getMapWorld().getScannedRegions();
+        LinkedHashMap<RegionCoordinate, Boolean> resumedMap = getWorld().getScannedRegions();
         if (!resumedMap.isEmpty()) {
-            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_RESUMED_RENDERING,
-                    Placeholder.unparsed("world", getMapWorld().getWorld().getName()));
+            getStarter().send(Lang.COMMAND_FULLRENDER_RESUMED_RENDERING,
+                    Placeholder.unparsed("world", getWorld().getName()));
 
             // add regions from previous run
             regionsToScan.putAll(resumedMap);
@@ -48,14 +49,14 @@ public class FullRender extends Render {
             // start the progress output
             getProgress().showChat(getStarter());
         } else {
-            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
+            getStarter().send(Lang.COMMAND_FULLRENDER_OBTAINING_REGIONS);
 
             // max radius for spiral iterator will be determined by the farthest region file found
             int maxRadius = 0;
 
             // scan region folder for existing region files
             List<RegionCoordinate> regionFiles = new ArrayList<>();
-            List<Path> files = FileUtil.getRegionFiles(getMapWorld().getWorld().getLevel());
+            List<Path> files = FileUtil.getRegionFiles(getWorld().getLevel());
             for (Path path : files) {
                 if (isCancelled()) {
                     return;
@@ -129,7 +130,7 @@ public class FullRender extends Render {
             }
 
             // store all regions we're scanning in case we have to resume after restart
-            getMapWorld().setScannedRegions(regionsToScan);
+            getWorld().setScannedRegions(regionsToScan);
         }
 
         if (isCancelled()) {
@@ -158,17 +159,17 @@ public class FullRender extends Render {
 
         // notify what we found
         if (done < 1) {
-            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS,
+            getStarter().send(Lang.COMMAND_FULLRENDER_FOUND_TOTAL_REGIONS,
                     Placeholder.unparsed("total", Long.toString(getProgress().getTotalRegions())));
         } else {
             float percent = ((float) getProgress().getProcessedChunks().get() / (float) getProgress().getTotalChunks()) * 100.0F;
-            Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_RESUMED_TOTAL_REGIONS,
+            getStarter().send(Lang.COMMAND_FULLRENDER_RESUMED_TOTAL_REGIONS,
                     Placeholder.unparsed("total", Long.toString(getProgress().getTotalRegions())),
                     Placeholder.unparsed("done", Long.toString(done)),
                     Placeholder.unparsed("percent", String.format("%.2f", percent))
             );
         }
-        Lang.send(getStarter(), Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
+        getStarter().send(Lang.COMMAND_FULLRENDER_USE_STATUS_FOR_PROGRESS);
 
         // send the tasks to executor to run
         rendererTasks.forEach(getRenderExecutor()::submit);
@@ -177,10 +178,10 @@ public class FullRender extends Render {
     @Override
     public void onStart() {
         Component component = Lang.parse(Lang.COMMAND_FULLRENDER_STARTING,
-                Placeholder.unparsed("world", getMapWorld().getWorld().getName()));
-        Lang.send(getStarter(), component);
-        if (!getStarter().equals(Pl3xMap.api().getConsole())) {
-            Lang.send(Pl3xMap.api().getConsole(), component);
+                Placeholder.unparsed("world", getWorld().getName()));
+        getStarter().send(component);
+        if (!(getStarter() instanceof Console)) {
+            Pl3xMap.api().getConsole().send(component);
         }
     }
 
@@ -189,13 +190,13 @@ public class FullRender extends Render {
         long timeEnded = System.currentTimeMillis();
         String elapsed = Progress.formatMilliseconds(timeEnded - this.timeStarted);
         Component component = Lang.parse(Lang.COMMAND_FULLRENDER_FINISHED,
-                Placeholder.unparsed("world", getMapWorld().getWorld().getName()),
+                Placeholder.unparsed("world", getWorld().getName()),
                 Placeholder.parsed("elapsed", elapsed));
-        Lang.send(getStarter(), component);
-        if (!getStarter().equals(Pl3xMap.api().getConsole())) {
-            Lang.send(Pl3xMap.api().getConsole(), component);
+        getStarter().send(component);
+        if (!(getStarter() instanceof Console)) {
+            Pl3xMap.api().getConsole().send(component);
         }
-        getMapWorld().clearScannedRegions();
+        getWorld().clearScannedRegions();
     }
 
     @Override
@@ -205,11 +206,11 @@ public class FullRender extends Render {
             return;
         }
         Component component = Lang.parse(Lang.COMMAND_FULLRENDER_CANCELLED,
-                Placeholder.unparsed("world", getMapWorld().getWorld().getName()));
-        Lang.send(getStarter(), component);
-        if (!getStarter().equals(Pl3xMap.api().getConsole())) {
-            Lang.send(Pl3xMap.api().getConsole(), component);
+                Placeholder.unparsed("world", getWorld().getName()));
+        getStarter().send(component);
+        if (!(getStarter() instanceof Console)) {
+            Pl3xMap.api().getConsole().send(component);
         }
-        getMapWorld().clearScannedRegions();
+        getWorld().clearScannedRegions();
     }
 }

@@ -7,14 +7,14 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.render.Area;
 import net.pl3x.map.render.ScanTask;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class BackgroundRender extends Render {
     private static final ExecutorService BACKGROUND_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Pl3xMap-Background").build());
     private static final ExecutorService BACKGROUND_IO_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Pl3xMap-IO").build());
 
-    public BackgroundRender(MapWorld mapWorld) {
-        super(mapWorld, Pl3xMap.api().getConsole(), 0, 0, BACKGROUND_EXECUTOR, BACKGROUND_IO_EXECUTOR);
+    public BackgroundRender(World world) {
+        super(world, Pl3xMap.api().getConsole(), 0, 0, BACKGROUND_EXECUTOR, BACKGROUND_IO_EXECUTOR);
     }
 
     @Override
@@ -29,12 +29,12 @@ public class BackgroundRender extends Render {
     @Override
     public void render() {
         // don't scan any regions outside the world border
-        Area scannableArea = new Area(getMapWorld().getWorld().getLevel().getWorldBorder());
+        Area scannableArea = new Area(getWorld().getLevel().getWorldBorder());
 
         // send regions to executor to scan
         int count = 0;
-        while (getMapWorld().hasModifiedRegions() && count < getMapWorld().getConfig().RENDER_BACKGROUND_MAX_REGIONS_PER_INTERVAL) {
-            RegionCoordinate region = getMapWorld().getNextModifiedRegion();
+        while (getWorld().hasModifiedRegions() && count < getWorld().getConfig().RENDER_BACKGROUND_MAX_REGIONS_PER_INTERVAL) {
+            RegionCoordinate region = getWorld().getNextModifiedRegion();
             if (scannableArea.containsRegion(region.getRegionX(), region.getRegionZ())) {
                 ScanTask scanTask = new ScanTask(this, region, scannableArea);
                 getRenderExecutor().submit(scanTask);

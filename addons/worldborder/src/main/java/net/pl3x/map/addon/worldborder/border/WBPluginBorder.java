@@ -5,17 +5,17 @@ import com.wimbli.WorldBorder.WorldBorder;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
 import net.pl3x.map.markers.marker.Marker;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class WBPluginBorder extends Border {
-    public WBPluginBorder(@NotNull MapWorld mapWorld) {
-        super(mapWorld, BorderType.WORLDBORDER);
+    public WBPluginBorder(@NotNull World world) {
+        super(world, BorderType.WORLDBORDER);
     }
 
     @Override
     public void update() {
-        BorderData border = WorldBorder.plugin.getWorldBorder(getMapWorld().getWorld().getName());
+        BorderData border = WorldBorder.plugin.getWorldBorder(getWorld().getName());
 
         double x = border.getX();
         double z = border.getZ();

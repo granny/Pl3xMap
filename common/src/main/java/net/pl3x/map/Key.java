@@ -1,7 +1,8 @@
 package net.pl3x.map;
 
 import java.util.regex.Pattern;
-import net.minecraft.server.level.ServerLevel;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Simple string wrapper used to identify things.
@@ -21,7 +22,7 @@ public final class Key {
      *
      * @param key unique string
      */
-    public Key(String key) {
+    public Key(@NotNull String key) {
         if (!VALID_CHARS.matcher(key).matches()) {
             throw new IllegalArgumentException(String.format("Non [a-zA-Z0-9.:/_-] character in key '%s'", key));
         }
@@ -34,18 +35,9 @@ public final class Key {
      * @param key unique string
      * @return a new key
      */
-    public static Key of(String key) {
+    @NotNull
+    public static Key of(@NotNull String key) {
         return new Key(key);
-    }
-
-    /**
-     * Create a new key.
-     *
-     * @param level server level
-     * @return a new key
-     */
-    public static Key of(ServerLevel level) {
-        return new Key(level.dimension().location().toString());
     }
 
     /**
@@ -53,12 +45,13 @@ public final class Key {
      *
      * @return key string
      */
+    @NotNull
     public String getKey() {
         return this.key;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

@@ -28,8 +28,8 @@ public class PluginListener implements Listener {
         } catch (Throwable ignore) {
             return;
         }
-        Pl3xMap.api().getWorldRegistry().entries().forEach((key, mapWorld) -> {
-            Layer layer = mapWorld.getLayerRegistry().get(WorldBorderLayer.KEY);
+        Pl3xMap.api().getWorldRegistry().entries().forEach((key, world) -> {
+            Layer layer = world.getLayerRegistry().get(WorldBorderLayer.KEY);
             if (layer instanceof WorldBorderLayer worldBorderLayer) {
                 worldBorderLayer.clearBorder();
             }

@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.pl3x.map.command.Sender;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.render.job.Render;
 
@@ -25,7 +25,7 @@ public class Progress implements Runnable {
     private String eta = Lang.PROGRESS_ETA_UNKNOWN;
     private int stallCounter = 0;
 
-    private final Set<Audience> audience = new HashSet<>();
+    private final Set<Sender> senders = new HashSet<>();
     private final ProgressBossbar bossbar;
 
     public Progress(Render render) {
@@ -37,12 +37,12 @@ public class Progress implements Runnable {
         return this.render;
     }
 
-    public void showChat(Audience audience) {
-        this.audience.add(audience);
+    public void showChat(Sender audience) {
+        this.senders.add(audience);
     }
 
-    public boolean hideChat(Audience audience) {
-        return this.audience.remove(audience);
+    public boolean hideChat(Sender audience) {
+        return this.senders.remove(audience);
     }
 
     public ProgressBossbar getBossbar() {
@@ -96,8 +96,8 @@ public class Progress implements Runnable {
 
     public void finish() {
         getRender().getScheduledProgress().cancel(false);
-        if (this.render.getMapWorld().hasActiveRender()) {
-            this.render.getMapWorld().finishRender();
+        if (this.render.getWorld().hasActiveRender()) {
+            this.render.getWorld().finishRender();
             getBossbar().finish();
         } else {
             getBossbar().hideAll();
@@ -106,7 +106,7 @@ public class Progress implements Runnable {
 
     @Override
     public void run() {
-        if (this.render.getMapWorld().isPaused()) {
+        if (this.render.getWorld().isPaused()) {
             return;
         }
 
@@ -126,22 +126,22 @@ public class Progress implements Runnable {
 
         // check for stalled tasks
         if (this.stallCounter > 10) {
-            Lang.send(getRender().getStarter(), Lang.ERROR_RENDER_STALLED);
-            getRender().getMapWorld().cancelRender(false);
+            getRender().getStarter().send(Lang.ERROR_RENDER_STALLED);
+            getRender().getWorld().cancelRender(false);
             return;
         }
 
         // show progress to listeners
         Component component = Lang.parse(Lang.PROGRESS_CHAT,
-                Placeholder.unparsed("world", this.render.getMapWorld().getWorld().getName()),
+                Placeholder.unparsed("world", this.render.getWorld().getName()),
                 Placeholder.unparsed("processed_chunks", Long.toString(processedChunks)),
                 Placeholder.unparsed("total_chunks", Long.toString(getTotalChunks())),
                 Placeholder.unparsed("percent", String.format("%.2f", getPercent())),
                 Placeholder.unparsed("cps", String.format("%.2f", getCPS())),
                 Placeholder.unparsed("eta", getETA())
         );
-        for (Audience audience : this.audience) {
-            Lang.send(audience, component);
+        for (Sender sender : this.senders) {
+            sender.send(component);
         }
 
         // show to player bossbars

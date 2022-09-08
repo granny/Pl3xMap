@@ -7,9 +7,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import net.kyori.adventure.audience.Audience;
 import net.pl3x.map.addon.PaperAddonRegistry;
-import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.BukkitCommandManager;
+import net.pl3x.map.command.Console;
 import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
@@ -22,6 +22,7 @@ import net.pl3x.map.image.io.IO;
 import net.pl3x.map.image.io.Png;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.player.BukkitConsole;
 import net.pl3x.map.player.BukkitPlayerRegistry;
 import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.render.RendererRegistry;
@@ -41,6 +42,8 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
 
     private final ScheduledExecutorService playerDataExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("Pl3xMap-PlayerData").build());
     private final ScheduledExecutorService worldDataExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("Pl3xMap-WorldData").build());
+
+    private final BukkitConsole console = new BukkitConsole();
 
     private ScheduledFuture<?> playerDataTask;
     private ScheduledFuture<?> worldDataTask;
@@ -121,7 +124,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
 
         // register command manager
         try {
-            new CommandManager(this);
+            new BukkitCommandManager(this);
         } catch (Exception e) {
             Logger.warn("Failed to initialize command manager");
             e.printStackTrace();
@@ -143,6 +146,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         disable();
     }
 
+    @Override
     public void enable() {
         // register built-in heightmaps
         getHeightmapRegistry().init();
@@ -171,6 +175,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         this.worldDataTask = this.worldDataExecutor.scheduleAtFixedRate(new UpdateWorldData(), 1, 5, TimeUnit.SECONDS);
     }
 
+    @Override
     public void disable() {
         // stop updating player data
         if (this.playerDataTask != null) {
@@ -212,7 +217,12 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getIconRegistry().entries().forEach((key, image) -> getIconRegistry().unregister(key));
 
         // unload all players
-        getPlayerRegistry().unloadAll();
+        getPlayerRegistry().unregister();
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
     }
 
     @Override
@@ -228,8 +238,8 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
 
     @Override
     @NotNull
-    public Audience getConsole() {
-        return Bukkit.getConsoleSender();
+    public Console getConsole() {
+        return this.console;
     }
 
     @Override

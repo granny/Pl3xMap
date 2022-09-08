@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.marker.Marker;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.popcraft.chunky.platform.util.Vector2;
 import org.popcraft.chunky.shape.AbstractEllipse;
@@ -15,13 +15,13 @@ import org.popcraft.chunkyborder.BorderData;
 import org.popcraft.chunkyborder.ChunkyBorderProvider;
 
 public class ChunkyBorder extends Border {
-    public ChunkyBorder(@NotNull MapWorld mapWorld) {
-        super(mapWorld, BorderType.CHUNKY);
+    public ChunkyBorder(@NotNull World world) {
+        super(world, BorderType.CHUNKY);
     }
 
     @Override
     public void update() {
-        BorderData border = ChunkyBorderProvider.get().getBorder(getMapWorld().getWorld().getName()).orElse(null);
+        BorderData border = ChunkyBorderProvider.get().getBorder(getWorld().getName()).orElse(null);
         if (border == null) {
             this.marker = null;
             return;

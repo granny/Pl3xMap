@@ -16,7 +16,7 @@ import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.LogFilter;
 import net.pl3x.map.logger.Logger;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class UndertowServer implements IntegratedServer {
     private Undertow server;
@@ -29,7 +29,7 @@ public class UndertowServer implements IntegratedServer {
 
         try {
             ResourceManager resourceManager = PathResourceManager.builder()
-                    .setBase(Paths.get(MapWorld.WEB_DIR.toFile().getAbsolutePath()))
+                    .setBase(Paths.get(World.WEB_DIR.toFile().getAbsolutePath()))
                     .setETagFunction((path) -> {
                         try {
                             BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);

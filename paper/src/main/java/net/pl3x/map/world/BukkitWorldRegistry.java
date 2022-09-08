@@ -1,22 +1,21 @@
 package net.pl3x.map.world;
 
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BukkitWorldRegistry extends WorldRegistry {
     @Nullable
-    public MapWorld register(@NotNull org.bukkit.World bukkit) {
-        return register(new BukkitWorld(bukkit));
+    public World register(@NotNull org.bukkit.World world) {
+        return register(new BukkitWorld(world));
     }
 
     @Nullable
-    public MapWorld unregister(org.bukkit.World world) {
-        return unregister(((CraftWorld) world).getHandle());
+    public World unregister(@NotNull org.bukkit.World world) {
+        return unregister(world.getName());
     }
 
     @Nullable
-    public MapWorld get(org.bukkit.World world) {
-        return get(((CraftWorld) world).getHandle());
+    public World get(@NotNull org.bukkit.World world) {
+        return get(world.getName());
     }
 }

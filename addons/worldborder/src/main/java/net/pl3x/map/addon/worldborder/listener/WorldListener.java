@@ -13,15 +13,15 @@ import net.pl3x.map.event.EventListener;
 import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.event.world.WorldUnloadedEvent;
 import net.pl3x.map.markers.layer.Layer;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.event.Listener;
 
 public class WorldListener implements EventListener, Listener {
     @EventHandler
     public void onWorldLoaded(WorldLoadedEvent event) {
-        MapWorld mapWorld = event.getWorld();
-        mapWorld.getLayerRegistry().register(WorldBorderLayer.KEY, new WorldBorderLayer(mapWorld));
+        World world = event.getWorld();
+        world.getLayerRegistry().register(WorldBorderLayer.KEY, new WorldBorderLayer(world));
     }
 
     @EventHandler
@@ -46,12 +46,12 @@ public class WorldListener implements EventListener, Listener {
 
     public void updateBorder(WorldBorderEvent event) {
         ServerLevel level = ((CraftWorld) event.getWorld()).getHandle();
-        MapWorld mapWorld = Pl3xMap.api().getWorldRegistry().get(level);
-        if (mapWorld == null) {
+        World world = Pl3xMap.api().getWorldRegistry().get(level);
+        if (world == null) {
             return;
         }
 
-        Layer layer = mapWorld.getLayerRegistry().get(WorldBorderLayer.KEY);
+        Layer layer = world.getLayerRegistry().get(WorldBorderLayer.KEY);
         if (!(layer instanceof WorldBorderLayer borderLayer)) {
             return;
         }

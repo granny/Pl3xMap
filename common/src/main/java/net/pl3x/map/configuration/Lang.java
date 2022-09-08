@@ -1,11 +1,10 @@
 package net.pl3x.map.configuration;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.util.FileUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class Lang extends AbstractConfig {
     @Key("prefix.logger")
@@ -184,6 +183,8 @@ public class Lang extends AbstractConfig {
     public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
     @Key("error.no-such-world")
     public static String ERROR_NO_SUCH_WORLD = "<red>No such world <grey><world>";
+    @Key("error.point-invalid-format")
+    public static String ERROR_POINT_INVALID_FORMAT = "'<point>' is not a valid location. Required format is '<x> <z>'";
     @Key("error.world-disabled")
     public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <grey><world>";
     @Key("error.render-stalled")
@@ -217,32 +218,7 @@ public class Lang extends AbstractConfig {
         CONFIG.reload(FileUtil.LOCALE_DIR.resolve(Config.LANGUAGE_FILE), Lang.class);
     }
 
-    public static void send(Audience recipient, String msg, TagResolver.Single... placeholders) {
-        send(recipient, true, msg, placeholders);
-    }
-
-    public static void send(Audience recipient, boolean prefix, String msg, TagResolver.Single... placeholders) {
-        if (msg == null) {
-            return;
-        }
-        for (String part : msg.split("\n")) {
-            send(recipient, prefix, parse(part, placeholders));
-        }
-    }
-
-    public static void send(Audience recipient, Component component) {
-        send(recipient, true, component);
-    }
-
-    public static void send(Audience recipient, boolean prefix, Component component) {
-        if (recipient.equals(Pl3xMap.api().getConsole())) {
-            recipient.sendMessage(prefix ? parse(PREFIX_LOGGER).append(component) : component);
-        } else {
-            recipient.sendMessage(prefix ? parse(PREFIX_COMMAND).append(component) : component);
-        }
-    }
-
-    public static Component parse(String msg, TagResolver.Single... placeholders) {
+    public static Component parse(@NotNull String msg, @NotNull TagResolver.Single... placeholders) {
         return MiniMessage.miniMessage().deserialize(msg, placeholders);
     }
 }

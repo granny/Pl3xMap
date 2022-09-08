@@ -6,18 +6,17 @@ import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.pl3x.map.PaperPl3xMap;
-import net.pl3x.map.command.CommandManager;
+import net.pl3x.map.command.CommandHandler;
 import net.pl3x.map.command.Pl3xMapCommand;
+import net.pl3x.map.command.Sender;
 import net.pl3x.map.configuration.Lang;
-import org.bukkit.command.CommandSender;
 
 public class ConfirmCommand extends Pl3xMapCommand {
-    private final CommandConfirmationManager<CommandSender> confirmationManager = new CommandConfirmationManager<>(
+    private final CommandConfirmationManager<Sender> confirmationManager = new CommandConfirmationManager<>(
             15L,
             TimeUnit.SECONDS,
             context -> context.getCommandContext().getSender().sendMessage(confirmationRequiredMessage()),
-            sender -> Lang.send(sender, Lang.COMMAND_CONFIRM_NO_PENDING_MESSAGE)
+            sender -> sender.send(Lang.COMMAND_CONFIRM_NO_PENDING_MESSAGE)
     );
 
     private static ComponentLike confirmationRequiredMessage() {
@@ -26,15 +25,15 @@ public class ConfirmCommand extends Pl3xMapCommand {
                 .clickEvent(ClickEvent.runCommand("/map confirm"));
     }
 
-    public ConfirmCommand(PaperPl3xMap plugin, CommandManager commandManager) {
-        super(plugin, commandManager);
+    public ConfirmCommand(CommandHandler handler) {
+        super(handler);
     }
 
     @Override
     public void register() {
-        this.confirmationManager.registerConfirmationProcessor(getCommandManager());
+        this.confirmationManager.registerConfirmationProcessor(getHandler().getManager());
 
-        getCommandManager().registerSubcommand(builder -> builder.literal("confirm")
+        getHandler().registerSubcommand(builder -> builder.literal("confirm")
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_CONFIRM_DESCRIPTION))
                 .permission("pl3xmap.command.confirm")
                 .handler(this.confirmationManager.createConfirmationExecutionHandler()));

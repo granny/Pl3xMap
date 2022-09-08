@@ -10,14 +10,14 @@ import net.pl3x.map.coordinate.Coordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.render.job.Render;
 import net.pl3x.map.world.ChunkHelper;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class ScanTask implements Runnable {
     private final Render render;
     private final RegionCoordinate region;
     private final Area area;
 
-    private final MapWorld mapWorld;
+    private final World world;
     private final ChunkHelper chunkHelper;
 
     private final LinkedHashMap<String, Renderer> renderers = new LinkedHashMap<>();
@@ -29,12 +29,12 @@ public class ScanTask implements Runnable {
         this.region = region;
         this.area = area;
 
-        this.mapWorld = render.getMapWorld();
+        this.world = render.getWorld();
         this.chunkHelper = new ChunkHelper(render);
 
-        List<String> rendererNames = new ArrayList<>(this.mapWorld.getConfig().RENDER_RENDERERS);
+        List<String> rendererNames = new ArrayList<>(this.world.getConfig().RENDER_RENDERERS);
 
-        String blockInfo = this.mapWorld.getConfig().UI_BLOCKINFO;
+        String blockInfo = this.world.getConfig().UI_BLOCKINFO;
         if (blockInfo != null && !blockInfo.isEmpty()) {
             rendererNames.add("blockinfo");
         }
@@ -55,8 +55,8 @@ public class ScanTask implements Runnable {
         return this.region;
     }
 
-    public MapWorld getWorld() {
-        return this.mapWorld;
+    public World getWorld() {
+        return this.world;
     }
 
     public ChunkHelper getChunkHelper() {
@@ -95,7 +95,7 @@ public class ScanTask implements Runnable {
                 }
 
                 // pause here if we have to
-                while (this.mapWorld.isPaused()) {
+                while (this.world.isPaused()) {
                     this.render.sleep(500);
                 }
 
@@ -132,7 +132,7 @@ public class ScanTask implements Runnable {
         }
 
         // scan the chunk
-        ChunkAccess chunk = this.chunkHelper.getChunk(this.mapWorld.getWorld().getLevel(), chunkX, chunkZ);
+        ChunkAccess chunk = this.chunkHelper.getChunk(this.world.getLevel(), chunkX, chunkZ);
         if (chunk == null) {
             return;
         }

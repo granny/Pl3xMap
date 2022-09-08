@@ -1,6 +1,7 @@
 package net.pl3x.map.registry;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import net.pl3x.map.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +11,9 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> registry type
  */
-public interface Registry<T> {
+public abstract class Registry<T> {
+    protected final Map<Key, T> entries = new ConcurrentHashMap<>();
+
     /**
      * Register a new entry with the provided key.
      * <p>
@@ -21,7 +24,7 @@ public interface Registry<T> {
      * @return registered entry or null
      */
     @Nullable
-    T register(@NotNull Key key, @NotNull T entry);
+    public abstract T register(@NotNull Key key, @NotNull T entry);
 
     /**
      * Unregister the entry for the provided key.
@@ -32,7 +35,12 @@ public interface Registry<T> {
      * @return unregistered entry or null
      */
     @Nullable
-    T unregister(@NotNull Key key);
+    public abstract T unregister(@NotNull Key key);
+
+    /**
+     * Unregister all entries.
+     */
+    public abstract void unregister();
 
     /**
      * Get the registered entry for the provided key.
@@ -43,7 +51,7 @@ public interface Registry<T> {
      * @return registered entry or null
      */
     @Nullable
-    T get(@NotNull Key key);
+    public abstract T get(@NotNull Key key);
 
     /**
      * Get the registered entries
@@ -51,5 +59,5 @@ public interface Registry<T> {
      * @return map of registered entries
      */
     @NotNull
-    Map<Key, T> entries();
+    public abstract Map<Key, T> entries();
 }

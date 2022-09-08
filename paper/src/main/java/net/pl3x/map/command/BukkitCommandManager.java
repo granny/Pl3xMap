@@ -1,6 +1,8 @@
 package net.pl3x.map.command;
 
 import cloud.commandframework.Command;
+import cloud.commandframework.CommandHelpHandler;
+import cloud.commandframework.CommandManager;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.exceptions.CommandExecutionException;
@@ -28,17 +30,19 @@ import net.pl3x.map.command.commands.ResetMapCommand;
 import net.pl3x.map.command.commands.ShowCommand;
 import net.pl3x.map.command.commands.StatusCommand;
 import net.pl3x.map.configuration.Lang;
-import org.bukkit.command.CommandSender;
+import net.pl3x.map.player.BukkitSender;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
-public class CommandManager extends PaperCommandManager<CommandSender> {
-    private Command.Builder<CommandSender> rootBuilder;
+public class BukkitCommandManager extends PaperCommandManager<Sender> implements CommandHandler {
+    private Command.Builder<Sender> root;
 
-    public CommandManager(PaperPl3xMap plugin) throws Exception {
-        super(plugin, CommandExecutionCoordinator.simpleCoordinator(), UnaryOperator.identity(), UnaryOperator.identity());
+    public BukkitCommandManager(PaperPl3xMap plugin) throws Exception {
+        super(plugin, CommandExecutionCoordinator.simpleCoordinator(), BukkitSender::getSender, BukkitSender::getSender);
 
         if (hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             registerBrigadier();
-            CloudBrigadierManager<CommandSender, ?> brigManager = brigadierManager();
+            CloudBrigadierManager<Sender, ?> brigManager = brigadierManager();
             if (brigManager != null) {
                 brigManager.setNativeNumberSuggestions(false);
             }
@@ -48,26 +52,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
             registerAsynchronousCompletions();
         }
 
-        registerExceptionHandlers();
-
-        ImmutableList.of(
-                new AddonCommand(plugin, this),
-                new CancelRenderCommand(plugin, this),
-                new ConfirmCommand(plugin, this),
-                new FullRenderCommand(plugin, this),
-                new HelpCommand(plugin, this),
-                new HideCommand(plugin, this),
-                new PauseRenderCommand(plugin, this),
-                new RadiusRenderCommand(plugin, this),
-                new ReloadCommand(plugin, this),
-                new ResetMapCommand(plugin, this),
-                new ShowCommand(plugin, this),
-                new StatusCommand(plugin, this)
-        ).forEach(Pl3xMapCommand::register);
-    }
-
-    private void registerExceptionHandlers() {
-        new MinecraftExceptionHandler<CommandSender>()
+        new MinecraftExceptionHandler<Sender>()
                 .withDefaultHandlers()
                 .withDecorator(component -> Component.text()
                         .append(Lang.parse(Lang.PREFIX_COMMAND)
@@ -75,30 +60,61 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                                 .clickEvent(ClickEvent.runCommand("/map help")))
                         .append(component)
                         .build())
-                .apply(this, AudienceProvider.nativeAudience());
+                .apply(this, getAudience());
         var handler = Objects.requireNonNull(getExceptionHandler(CommandExecutionException.class));
-        registerExceptionHandler(CommandExecutionException.class, (sender, exception) -> {
-            Throwable cause = exception.getCause();
-            if (cause instanceof Pl3xMapCommand.CompletedSuccessfullyException) {
-                return;
-            }
-            handler.accept(sender, exception);
-        });
+        registerExceptionHandler(CommandExecutionException.class, handler);
+
+        ImmutableList.of(
+                new AddonCommand(this),
+                new CancelRenderCommand(this),
+                new ConfirmCommand(this),
+                new FullRenderCommand(this),
+                new HelpCommand(this),
+                new HideCommand(this),
+                new PauseRenderCommand(this),
+                new RadiusRenderCommand(this),
+                new ReloadCommand(this),
+                new ResetMapCommand(this),
+                new ShowCommand(this),
+                new StatusCommand(this)
+        ).forEach(Pl3xMapCommand::register);
     }
 
-    public void registerSubcommand(UnaryOperator<Command.Builder<CommandSender>> builderModifier) {
-        command(builderModifier.apply(rootBuilder()));
+    @NotNull
+    public CommandManager<Sender> getManager() {
+        return this;
     }
 
-    private Command.Builder<CommandSender> rootBuilder() {
-        if (this.rootBuilder == null) {
-            this.rootBuilder = commandBuilder("map", "pl3xmap")
+    @Override
+    @NonNull
+    public CommandManager<Sender> command(Command.@NotNull Builder<Sender> builder) {
+        return super.command(builder);
+    }
+
+    @Override
+    public void registerSubcommand(@NonNull UnaryOperator<Command.Builder<Sender>> builder) {
+        command(builder.apply(getRoot()));
+    }
+
+    @NonNull
+    public CommandHelpHandler<Sender> createHelpCommand() {
+        return createCommandHelpHandler();
+    }
+
+    @NotNull
+    public AudienceProvider<Sender> getAudience() {
+        return AudienceProvider.nativeAudience();
+    }
+
+    private Command.Builder<Sender> getRoot() {
+        if (this.root == null) {
+            this.root = commandBuilder("map", "pl3xmap")
                     .permission("pl3xmap.command.map")
                     /* MinecraftHelp uses the MinecraftExtrasMetaKeys.DESCRIPTION meta,
                      * this is just so we give Bukkit a description for our commands
                      * in the Bukkit and EssentialsX '/help' command */
                     .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'");
         }
-        return this.rootBuilder;
+        return this.root;
     }
 }

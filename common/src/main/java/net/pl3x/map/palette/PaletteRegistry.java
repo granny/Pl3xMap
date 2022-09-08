@@ -13,7 +13,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class PaletteRegistry {
     private static final Gson GSON = new GsonBuilder()
@@ -24,7 +24,7 @@ public class PaletteRegistry {
             .create();
 
     private static final Palette<Block> BLOCK_PALETTE = new Palette<>();
-    private static final Map<MapWorld, Palette<Biome>> BIOME_PALETTES = new HashMap<>();
+    private static final Map<World, Palette<Biome>> BIOME_PALETTES = new HashMap<>();
 
     public PaletteRegistry() {
         // create block palette
@@ -36,17 +36,17 @@ public class PaletteRegistry {
 
         // save global block palette
         try {
-            FileUtil.saveGzip(GSON.toJson(BLOCK_PALETTE.getMap()), MapWorld.TILES_DIR.resolve("blocks.gz"));
+            FileUtil.saveGzip(GSON.toJson(BLOCK_PALETTE.getMap()), World.TILES_DIR.resolve("blocks.gz"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void register(MapWorld mapWorld) {
+    public void register(World world) {
         Palette<Biome> palette = new Palette<>();
-        BIOME_PALETTES.put(mapWorld, palette);
+        BIOME_PALETTES.put(world, palette);
 
-        Registry<Biome> registry = BiomeColors.getBiomeRegistry(mapWorld.getWorld().getLevel());
+        Registry<Biome> registry = BiomeColors.getBiomeRegistry(world.getLevel());
         registry.forEach(biome -> {
             String name = name("biome", registry.getKey(biome));
             palette.add(biome, name);
@@ -54,14 +54,14 @@ public class PaletteRegistry {
         palette.lock();
 
         try {
-            FileUtil.saveGzip(GSON.toJson(palette.getMap()), mapWorld.getTilesDir().resolve("biomes.gz"));
+            FileUtil.saveGzip(GSON.toJson(palette.getMap()), world.getTilesDir().resolve("biomes.gz"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void unregister(MapWorld mapWorld) {
-        BIOME_PALETTES.remove(mapWorld);
+    public void unregister(World world) {
+        BIOME_PALETTES.remove(world);
     }
 
     private String name(String type, ResourceLocation key) {
@@ -72,7 +72,7 @@ public class PaletteRegistry {
         return BLOCK_PALETTE;
     }
 
-    public Palette<Biome> getBiomePalette(MapWorld world) {
+    public Palette<Biome> getBiomePalette(World world) {
         return BIOME_PALETTES.get(world);
     }
 }

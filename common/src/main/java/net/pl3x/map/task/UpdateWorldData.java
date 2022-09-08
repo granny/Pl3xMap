@@ -13,7 +13,7 @@ import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.util.FileUtil;
-import net.pl3x.map.world.MapWorld;
+import net.pl3x.map.world.World;
 
 public class UpdateWorldData implements Runnable {
     private final Gson gson = new GsonBuilder()
@@ -27,15 +27,15 @@ public class UpdateWorldData implements Runnable {
     public void run() {
         List<Map<String, Object>> worlds = new ArrayList<>();
 
-        Pl3xMap.api().getWorldRegistry().entries().forEach((key, mapWorld) -> {
-            WorldConfig config = mapWorld.getConfig();
+        Pl3xMap.api().getWorldRegistry().entries().forEach((key, world) -> {
+            WorldConfig config = world.getConfig();
 
             if (!config.ENABLED) {
                 return;
             }
 
             Map<String, Object> spawn = new LinkedHashMap<>();
-            Point point = mapWorld.getWorld().getSpawn();
+            Point point = world.getSpawn();
             spawn.put("x", point.getX());
             spawn.put("z", point.getZ());
 
@@ -67,7 +67,7 @@ public class UpdateWorldData implements Runnable {
             ui.put("hide_attributes", config.UI_HIDE_ATTRIBUTES);
 
             Map<String, Object> settings = new LinkedHashMap<>();
-            settings.put("name", mapWorld.getWorld().getName());
+            settings.put("name", world.getName());
             settings.put("renderers", config.RENDER_RENDERERS);
             settings.put("tiles_update_interval", config.RENDER_BACKGROUND_INTERVAL);
             settings.put("spawn", spawn);
@@ -75,13 +75,13 @@ public class UpdateWorldData implements Runnable {
             settings.put("player_tracker", playerTracker);
             settings.put("ui", ui);
 
-            FileUtil.write(this.gson.toJson(settings), mapWorld.getTilesDir().resolve("settings.json"));
+            FileUtil.write(this.gson.toJson(settings), world.getTilesDir().resolve("settings.json"));
 
             Map<String, Object> worldsList = new LinkedHashMap<>();
-            worldsList.put("name", mapWorld.getWorld().getName());
+            worldsList.put("name", world.getName());
             worldsList.put("display_name", config.DISPLAY_NAME
-                    .replace("<world>", mapWorld.getWorld().getName()));
-            worldsList.put("type", mapWorld.getWorld().getType().toString());
+                    .replace("<world>", world.getName()));
+            worldsList.put("type", world.getType().toString());
             worldsList.put("order", config.ORDER);
             worlds.add(worldsList);
         });
@@ -101,6 +101,6 @@ public class UpdateWorldData implements Runnable {
         map.put("format", Config.WEB_TILE_FORMAT);
         map.put("lang", lang);
 
-        FileUtil.write(this.gson.toJson(map), MapWorld.TILES_DIR.resolve("settings.json"));
+        FileUtil.write(this.gson.toJson(map), World.TILES_DIR.resolve("settings.json"));
     }
 }
