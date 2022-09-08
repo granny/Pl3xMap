@@ -16,6 +16,11 @@ dependencies {
 
 tasks {
     shadowJar {
+        from(
+            fileTree(project(":Common").projectDir).matching {
+                include("LICENSE*")
+            }
+        )
         minimize {
             // undertow does not like being minimized (UndertowLogger errors)
             exclude(dependency("io.undertow:.*:.*"))

@@ -9,15 +9,3 @@ dependencies {
     implementation("com.sksamuel.scrimage", "scrimage-core", scrimageVersion)
     implementation("com.sksamuel.scrimage", "scrimage-webp", scrimageVersion)
 }
-
-tasks {
-    shadowJar {
-        exclude(
-            "dist_webp_binaries/**",
-            "META-INF/LICENSE.txt",
-            "META-INF/NOTICE.txt",
-            "LICENSE.txt",
-            "NOTICE.txt"
-        )
-    }
-}

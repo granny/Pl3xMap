@@ -70,7 +70,12 @@ subprojects {
 
         tasks {
             shadowJar {
-                from(rootProject.projectDir.resolve("LICENSE"))
+                from(
+                    rootProject.projectDir.resolve("LICENSE"),
+                    fileTree(project.projectDir).matching {
+                        include("LICENSE*")
+                    }
+                )
                 exclude(
                     "META-INF/LICENSE.txt",
                     "META-INF/NOTICE.txt",

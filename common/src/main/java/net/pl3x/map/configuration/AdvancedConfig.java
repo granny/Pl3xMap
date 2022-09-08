@@ -123,7 +123,7 @@ public class AdvancedConfig extends AbstractConfig {
             (sapling -> tree, mushroom->huge mushroom)""")
     public static boolean STRUCTURE_GROW_EVENT = true;
 
-    //@Key("settings.colors.blocks")
+    @Key("settings.colors.blocks")
     @Comment("""
             Each block has a specific color assigned to it. You can
             pick your own color here for any blocks you want to change.
@@ -1051,7 +1051,7 @@ public class AdvancedConfig extends AbstractConfig {
         put(Blocks.ZOMBIE_WALL_HEAD, 0x52763F);
     }};
 
-    //@Key("settings.colors.biomes")
+    @Key("settings.colors.biomes")
     @Comment("""
             Each biome has a specific color assigned to it. You can
             pick your own color here for any biomes you want to change.""")

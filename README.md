@@ -32,24 +32,15 @@ Downloads are available on Modrinth.
 
 [![Download on Modrinth](https://i.imgur.com/5C4fVJC.png)](https://modrinth.com/mod/pl3xmap)
 
-## Licenses
-
-**Pl3xMap** (_this project_) is licensed under the [MIT License](https://github.com/BillyGalbreath/Pl3xMap/blob/v2/LICENSE)  
-**Leaflet** (_web ui frontend_) is licensed under the [BSD 2-Clause License](https://github.com/Leaflet/Leaflet/blob/master/LICENSE)  
-**Undertow** (_internal web server_) is licensed under the [Apache License, Version 2.0](https://github.com/undertow-io/undertow/blob/master/LICENSE.txt)  
-**Scrimage** (_webp wrapper_) is licensed under the [Apache License, Version 2.0](https://github.com/sksamuel/scrimage/blob/master/LICENSE)  
-**Libwebp** (_webp binaries_) is licensed under the [BSD 3-Clause License](https://www.webmproject.org/license/software/)  
-**CLOUD** (_command framework_) is licensed under the [MIT License](https://github.com/Incendo/cloud/blob/master/LICENSE)  
-**Simple-YAML** (_yaml library_) is licensed under the [GNU General Public License v3.0](https://github.com/Carleslc/Simple-YAML/blob/master/LICENSE)  
-**bStats** (_usage metrics_) is licensed under the [MIT License](https://github.com/Bastian/bStats-Metrics/blob/master/LICENSE)
-
 ## bStats
 
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/Pl3xMap.svg)](https://bstats.org/plugin/bukkit/Pl3xMap/10133)
 
 ## Building from source
 
-To build this project ensure npm is installed then just run the following command:
+To build this project ensure `npm` is installed.
+
+Then just run the following command:
 
 ```
 ./gradlew build
