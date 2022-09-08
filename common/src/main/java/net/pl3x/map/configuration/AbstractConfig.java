@@ -14,11 +14,6 @@ import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 public abstract class AbstractConfig {
-    static {
-        //ConfigurationSerialization.registerClass(BiomeColorMap.class);
-        //ConfigurationSerialization.registerClass(BlockColorMap.class);
-    }
-
     private YamlFile config;
 
     protected YamlFile getConfig() {
@@ -52,7 +47,7 @@ public abstract class AbstractConfig {
                 if (comment != null) {
                     setComment(key.value(), comment.value());
                 }
-            } catch (IllegalAccessException e) {
+            } catch (Throwable e) {
                 Logger.warn("Failed to load " + key.value() + " from " + path.getFileName().toString());
                 e.printStackTrace();
             }
