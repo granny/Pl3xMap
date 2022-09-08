@@ -479,15 +479,27 @@ public class Popup extends Option {
         return getContent().equals(other.getContent())
                 && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOffset(), other.getOffset())
-                && Objects.equals(getMaxWidth(), other.getMaxWidth())
+                && isSizeEqual(other)
+                && isPanningEqual(other)
+                && isClosingEqual(other);
+    }
+
+    private boolean isSizeEqual(Popup other) {
+        return Objects.equals(getMaxWidth(), other.getMaxWidth())
                 && Objects.equals(getMinWidth(), other.getMinWidth())
-                && Objects.equals(getMaxHeight(), other.getMaxHeight())
-                && Objects.equals(shouldAutoPan(), other.shouldAutoPan())
+                && Objects.equals(getMaxHeight(), other.getMaxHeight());
+    }
+
+    private boolean isPanningEqual(Popup other) {
+        return Objects.equals(shouldAutoPan(), other.shouldAutoPan())
                 && Objects.equals(getAutoPanPaddingTopLeft(), other.getAutoPanPaddingTopLeft())
                 && Objects.equals(getAutoPanPaddingBottomRight(), other.getAutoPanPaddingBottomRight())
                 && Objects.equals(getAutoPanPadding(), other.getAutoPanPadding())
-                && Objects.equals(shouldKeepInView(), other.shouldKeepInView())
-                && Objects.equals(hasCloseButton(), other.hasCloseButton())
+                && Objects.equals(shouldKeepInView(), other.shouldKeepInView());
+    }
+
+    private boolean isClosingEqual(Popup other) {
+        return Objects.equals(hasCloseButton(), other.hasCloseButton())
                 && Objects.equals(shouldAutoClose(), other.shouldAutoClose())
                 && Objects.equals(shouldCloseOnEscapeKey(), other.shouldCloseOnEscapeKey())
                 && Objects.equals(shouldCloseOnClick(), other.shouldCloseOnClick());
