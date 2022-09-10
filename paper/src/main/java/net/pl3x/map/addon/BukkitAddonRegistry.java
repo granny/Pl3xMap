@@ -22,22 +22,21 @@ public class BukkitAddonRegistry extends AddonRegistry {
 
             Addon addon = clazz.getDeclaredConstructor().newInstance();
 
-            Field infoField = Addon.class.getDeclaredField("info");
-            infoField.setAccessible(true);
-            infoField.set(addon, info);
-
-            Field loaders = JavaPluginLoader.class.getDeclaredField("loaders");
-            loaders.setAccessible(true);
-            @SuppressWarnings("unchecked")
-            List<PluginClassLoader> list = (List<PluginClassLoader>) loaders.get(PaperPl3xMap.getInstance().getPluginLoader());
-
-            Field field = PluginClassLoader.class.getDeclaredField("seenIllegalAccess");
-            field.setAccessible(true);
-
-            for (PluginClassLoader classLoader : list) {
+            Set<String> depends = info.getDepends();
+            if (!depends.isEmpty()) {
+                Field loaders = JavaPluginLoader.class.getDeclaredField("loaders");
+                loaders.setAccessible(true);
                 @SuppressWarnings("unchecked")
-                Set<String> set = (Set<String>) field.get(classLoader);
-                set.addAll(info.getDepends());
+                List<PluginClassLoader> list = (List<PluginClassLoader>) loaders.get(PaperPl3xMap.getInstance().getPluginLoader());
+
+                Field field = PluginClassLoader.class.getDeclaredField("seenIllegalAccess");
+                field.setAccessible(true);
+
+                for (PluginClassLoader classLoader : list) {
+                    @SuppressWarnings("unchecked")
+                    Set<String> set = (Set<String>) field.get(classLoader);
+                    set.addAll(depends);
+                }
             }
 
             return addon;

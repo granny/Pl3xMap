@@ -64,7 +64,10 @@ public abstract class AddonRegistry extends KeyedRegistry<Addon> {
                     continue;
                 }
 
-                register(createAddon(path, info));
+                Addon addon = createAddon(path, info);
+                addon.info = info;
+
+                register(addon);
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
@@ -89,7 +92,14 @@ public abstract class AddonRegistry extends KeyedRegistry<Addon> {
         Logger.info(Lang.ADDON_ENABLING
                 .replace("<name>", addon.getInfo().getName())
                 .replace("<version>", addon.getInfo().getVersion()));
-        addon.onEnable();
+        addon.enabled = true;
+        try {
+            addon.onEnable();
+        } catch (Throwable e) {
+            addon.enabled = false;
+            Logger.severe(String.format("Failed to enable %s addon", addon.getName()));
+            e.printStackTrace();
+        }
         this.entries.put(addon.getKey(), addon);
         return addon;
     }
@@ -111,6 +121,7 @@ public abstract class AddonRegistry extends KeyedRegistry<Addon> {
                     .replace("<name>", addon.getName())
                     .replace("<version>", addon.getVersion()));
             addon.onDisable();
+            addon.enabled = false;
         }
         return addon;
     }

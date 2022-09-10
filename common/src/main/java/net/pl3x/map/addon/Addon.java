@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * Represents a Pl3xMap addon.
  */
 public abstract class Addon extends Keyed {
-    private AddonInfo info;
+    AddonInfo info;
+    boolean enabled;
 
     public Addon() {
         super(Key.NONE);
@@ -60,5 +61,14 @@ public abstract class Addon extends Keyed {
     @NotNull
     public AddonInfo getInfo() {
         return this.info;
+    }
+
+    /**
+     * Check if addon is enabled.
+     *
+     * @return true if enabled
+     */
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }

@@ -79,16 +79,16 @@ public class AddonCommand extends Pl3xMapCommand {
                 hover.append(Lang.parse("\nDescription: <green><desc>",
                         Placeholder.unparsed("desc", info.getDescription())));
             }
-            //if (info.getWebsite() != null) {
-            //    hover.append(Lang.parse("\nWebsite: <green><url>",
-            //            Placeholder.unparsed("url", info.getWebsite())));
-            //}
+            if (info.getWebsite() != null) {
+                hover.append(Lang.parse("\nWebsite: <green><url>",
+                        Placeholder.unparsed("url", info.getWebsite())));
+            }
             if (info.getAuthor() != null) {
                 hover.append(Lang.parse("\nAuthor: <green><author>",
                         Placeholder.unparsed("author", info.getAuthor())));
             }
 
-            builder.append(Lang.parse((true/*addon.isEnabled()*/ ? "<green>" : "<red>") + info.getName())
+            builder.append(Lang.parse((addon.isEnabled() ? "<green>" : "<red>") + info.getName())
                     .hoverEvent(hover.build()));
         }
 
