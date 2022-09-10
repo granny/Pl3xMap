@@ -1,6 +1,5 @@
 package net.pl3x.map.world;
 
-import net.minecraft.server.level.ServerLevel;
 import net.pl3x.map.Key;
 import net.pl3x.map.event.world.WorldUnloadedEvent;
 import net.pl3x.map.registry.KeyedRegistry;
@@ -11,19 +10,6 @@ import org.jetbrains.annotations.Nullable;
  * Manages loaded worlds
  */
 public abstract class WorldRegistry extends KeyedRegistry<World> {
-    /**
-     * Unregister the specified world by level.
-     * <p>
-     * Will return null if world is not registered.
-     *
-     * @param level server level to unregister
-     * @return unregistered world or null
-     */
-    @Nullable
-    public World unregister(@NotNull ServerLevel level) {
-        return unregister(level.dimension().location().toString());
-    }
-
     /**
      * Unregister the specified world by name.
      * <p>
@@ -54,19 +40,6 @@ public abstract class WorldRegistry extends KeyedRegistry<World> {
             new WorldUnloadedEvent(world).callEvent();
         }
         return world;
-    }
-
-    /**
-     * Get the registered world by level.
-     * <p>
-     * Will return null if no world registered.
-     *
-     * @param level server level
-     * @return registered world or null
-     */
-    @Nullable
-    public World get(@NotNull ServerLevel level) {
-        return get(level.dimension().location().toString());
     }
 
     /**
