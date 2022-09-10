@@ -3,6 +3,7 @@ main: "${group}.${name}"
 version: "${version}"
 description: "${description}"
 author: "BillyGalbreath"
+website: "${website}"
 depends:
   - Chunky
   - ChunkyBorder

@@ -4,6 +4,7 @@ version: "${version}"
 api-version: "1.19"
 author: "BillyGalbreath"
 description: "${description}"
+website: "${website}"
 
 permissions:
   pl3xmap.command.map:

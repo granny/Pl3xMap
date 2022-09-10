@@ -113,7 +113,8 @@ subprojects {
                         "name" to projectName,
                         "group" to project.group,
                         "version" to project.version,
-                        "description" to project.description
+                        "description" to project.description,
+                        "website" to "https://modrinth.com/plugin/pl3xmap"
                     )
                 }
             }
