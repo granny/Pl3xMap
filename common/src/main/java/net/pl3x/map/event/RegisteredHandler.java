@@ -24,6 +24,7 @@ public class RegisteredHandler {
     }
 
     public void execute(@NotNull Event event) throws InvocationTargetException, IllegalAccessException {
+        getMethod().setAccessible(true);
         getMethod().invoke(getListener(), event);
     }
 
