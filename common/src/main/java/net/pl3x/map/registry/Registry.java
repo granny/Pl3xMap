@@ -1,5 +1,6 @@
 package net.pl3x.map.registry;
 
+import com.google.common.base.Preconditions;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,16 +17,37 @@ public class Registry<K, V> {
     protected final Map<K, V> entries = new ConcurrentHashMap<>();
 
     /**
+     * Gets existing value by key, or register new value if no value already registered.
+     *
+     * @param key   key
+     * @param value value to register
+     * @return existing value, or newly registered value
+     */
+    @NotNull
+    public V getOrRegister(@NotNull K key, @NotNull V value) {
+        Preconditions.checkNotNull(key);
+        Preconditions.checkNotNull(value);
+        V existing = get(key);
+        if (existing == null) {
+            register(key, value);
+            return value;
+        }
+        return existing;
+    }
+
+    /**
      * Register a new value with key.
      * <p>
      * Will return null if the key is already registered.
      *
-     * @param key   key to register
-     * @param value value to register
+     * @param key   key
+     * @param value value
      * @return registered value or null
      */
     @Nullable
     public V register(@NotNull K key, @NotNull V value) {
+        Preconditions.checkNotNull(key);
+        Preconditions.checkNotNull(value);
         if (this.entries.containsKey(key)) {
             return null;
         }
@@ -43,6 +65,7 @@ public class Registry<K, V> {
      */
     @Nullable
     public V unregister(@NotNull K key) {
+        Preconditions.checkNotNull(key);
         return this.entries.remove(key);
     }
 
@@ -60,6 +83,7 @@ public class Registry<K, V> {
      * @return true if entry is present
      */
     public boolean has(@NotNull K key) {
+        Preconditions.checkNotNull(key);
         return this.entries.containsKey(key);
     }
 
@@ -73,6 +97,7 @@ public class Registry<K, V> {
      */
     @Nullable
     public V get(@NotNull K key) {
+        Preconditions.checkNotNull(key);
         return this.entries.get(key);
     }
 

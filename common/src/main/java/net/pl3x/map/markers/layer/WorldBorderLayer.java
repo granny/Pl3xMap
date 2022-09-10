@@ -16,7 +16,6 @@ public class WorldBorderLayer extends SimpleLayer {
     public static final Key KEY = Key.of("pl3xmap-worldborder");
     private final World world;
 
-    private boolean useVanilla;
     private Options options;
 
     public WorldBorderLayer(@NotNull Key key, @NotNull World world, @NotNull Supplier<String> labelSupplier) {
@@ -27,16 +26,6 @@ public class WorldBorderLayer extends SimpleLayer {
     @NotNull
     public World getWorld() {
         return this.world;
-    }
-
-    public boolean useVanilla() {
-        return this.useVanilla;
-    }
-
-    @NotNull
-    public WorldBorderLayer setUseVanilla(boolean useVanilla) {
-        this.useVanilla = useVanilla;
-        return this;
     }
 
     @Nullable
@@ -53,10 +42,6 @@ public class WorldBorderLayer extends SimpleLayer {
     @Override
     @NotNull
     public Collection<Marker> getMarkers() {
-        return useVanilla() ? getVanillaBorderMarker() : super.getMarkers();
-    }
-
-    public Collection<Marker> getVanillaBorderMarker() {
         WorldBorder border = getWorld().getLevel().getWorldBorder();
 
         int x = (int) border.getCenterX();
