@@ -38,6 +38,9 @@ import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.markers.layer.WorldBorderLayer;
+import net.pl3x.map.markers.option.Options;
+import net.pl3x.map.markers.option.Stroke;
 import net.pl3x.map.palette.BiomePaletteRegistry;
 import net.pl3x.map.palette.Palette;
 import net.pl3x.map.palette.PaletteRegistry;
@@ -155,6 +158,16 @@ public abstract class World extends Keyed {
             FileUtil.saveGzip(GSON.toJson(getBiomePaletteRegistry().getMap()), getTilesDir().resolve("biomes.gz"));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        if (getConfig().WORLDBORDER_ENABLED) {
+            getLayerRegistry().register(new WorldBorderLayer(WorldBorderLayer.KEY, this, () -> "World Border")
+                    .setOptions(new Options().setStroke(new Stroke().setColor(0xFFFF0000)))
+                    .setUpdateInterval(15)
+                    .setShowControls(true)
+                    .setDefaultHidden(false)
+                    .setPriority(99)
+                    .setZIndex(99));
         }
 
         startMarkersTask();

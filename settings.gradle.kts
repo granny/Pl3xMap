@@ -36,9 +36,6 @@ setupSubproject("MarkerTest") {
 setupSubproject("Webp") {
     projectDir = file("addons/webp")
 }
-setupSubproject("WorldBorder") {
-    projectDir = file("addons/worldborder")
-}
 
 inline fun setupSubproject(name: String, block: ProjectDescriptor.() -> Unit) {
     include(name)

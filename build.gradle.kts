@@ -135,8 +135,7 @@ tasks {
                 jar(project(":FlowerMap").name),
                 jar(project(":Heightmaps").name),
                 jar(project(":Inhabited").name),
-                jar(project(":Webp").name),
-                jar(project(":WorldBorder").name)
+                jar(project(":Webp").name)
             )
         )
         gameVersions.addAll(listOf(minecraftVersion))

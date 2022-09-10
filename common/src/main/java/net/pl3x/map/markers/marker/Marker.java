@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class Marker implements JsonSerializable {
     private final String type;
-    private Options options = null;
+    private Options options;
 
     /**
      * Create a new marker.

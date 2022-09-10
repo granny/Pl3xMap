@@ -15,7 +15,7 @@ import net.pl3x.map.image.IconImage;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
-import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.markers.layer.SimpleLayer;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.marker.Polygon;
 import net.pl3x.map.markers.marker.Polyline;
@@ -91,32 +91,15 @@ public class MarkerTest extends Addon implements EventListener {
         )));
         MARKERS.add(Marker.rectangle(Point.of(-50, -50), Point.of(-20, 0)));
 
-        world.getLayerRegistry().register(new Layer(LAYER_KEY) {
-            @Override
-            public @NotNull Key getKey() {
-                return LAYER_KEY;
-            }
-
-            @Override
-            public @NotNull String getLabel() {
-                return "Marker Test";
-            }
-
-            @Override
-            public int getUpdateInterval() {
-                return 60;
-            }
-
-            @Override
-            public int getPriority() {
-                return 999;
-            }
-
-            @Override
-            public @NotNull Collection<Marker> getMarkers() {
-                return MARKERS;
-            }
-        });
+        world.getLayerRegistry().register(new SimpleLayer(LAYER_KEY, () -> "Marker Test") {
+                    @Override
+                    public @NotNull Collection<Marker> getMarkers() {
+                        return MARKERS;
+                    }
+                }
+                        .setUpdateInterval(60)
+                        .setPriority(999)
+        );
     }
 
     @EventHandler
