@@ -11,9 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import javax.imageio.ImageIO;
-import net.minecraft.core.Registry;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -80,8 +77,7 @@ public class BiomeColors {
 
     public BiomeColors(World world) {
         this.world = world;
-        Registry<Biome> biomeRegistry = getBiomeRegistry(world.getLevel());
-        for (Biome biome : biomeRegistry) {
+        for (Biome biome : world.getBiomeRegistry()) {
             float temperature = Mathf.clamp(0.0F, 1.0F, biome.getBaseTemperature());
             float humidity = Mathf.clamp(0.0F, 1.0F, biome.getDownfall());
             grassColors.put(biome, biome.getSpecialEffects().getGrassColorOverride()
@@ -92,25 +88,17 @@ public class BiomeColors {
         }
 
         AdvancedConfig.COLOR_OVERRIDES_BIOME_GRASS.forEach((resourceKey, rgb) -> {
-            Biome biome = biomeRegistry.get(resourceKey);
+            Biome biome = world.getBiomeRegistry().get(resourceKey);
             grassColors.put(biome, rgb);
         });
         AdvancedConfig.COLOR_OVERRIDES_BIOME_FOLIAGE.forEach((resourceKey, rgb) -> {
-            Biome biome = biomeRegistry.get(resourceKey);
+            Biome biome = world.getBiomeRegistry().get(resourceKey);
             foliageColors.put(biome, rgb);
         });
         AdvancedConfig.COLOR_OVERRIDES_BIOME_WATER.forEach((resourceKey, rgb) -> {
-            Biome biome = biomeRegistry.get(resourceKey);
+            Biome biome = world.getBiomeRegistry().get(resourceKey);
             waterColors.put(biome, rgb);
         });
-    }
-
-    public static Registry<Biome> getBiomeRegistry() {
-        return getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
-    }
-
-    public static Registry<Biome> getBiomeRegistry(ServerLevel level) {
-        return level.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
     }
 
     private static int[] getColorsFromImage(BufferedImage image) {

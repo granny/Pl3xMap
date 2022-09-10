@@ -1,16 +1,13 @@
 package net.pl3x.map.addon.heightmaps.heightmap;
 
-import net.pl3x.map.Key;
 import net.pl3x.map.coordinate.BlockCoordinate;
 import net.pl3x.map.heightmap.Heightmap;
 import net.pl3x.map.render.ScanData;
 import net.pl3x.map.util.Colors;
 
 public class EvenOddModernHeightmap extends Heightmap {
-    public static final Key KEY = new Key("even_odd_modern_heightmap");
-
     public EvenOddModernHeightmap() {
-        super(KEY);
+        super("even_odd_modern");
     }
 
     @Override

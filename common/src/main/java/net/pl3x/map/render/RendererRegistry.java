@@ -3,12 +3,12 @@ package net.pl3x.map.render;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import net.pl3x.map.Key;
-import net.pl3x.map.Registry;
+import net.pl3x.map.registry.KeyedRegistry;
 import net.pl3x.map.render.builtin.BasicRenderer;
 import net.pl3x.map.render.builtin.BiomeRenderer;
 import net.pl3x.map.render.builtin.BlockInfoRenderer;
 
-public class RendererRegistry extends Registry<RendererHolder> {
+public class RendererRegistry extends KeyedRegistry<RendererHolder> {
     public void register() {
         register(new RendererHolder(new Key("basic"), BasicRenderer.class));
         register(new RendererHolder(new Key("biomes"), BiomeRenderer.class));

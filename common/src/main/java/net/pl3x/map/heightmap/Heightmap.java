@@ -10,8 +10,8 @@ public abstract class Heightmap extends Keyed {
     public int[] x = new int[16];
     public int[] z = new int[16];
 
-    public Heightmap(Key key) {
-        super(key);
+    public Heightmap(String name) {
+        super(new Key(name + "-heightmap"));
     }
 
     public abstract int getColor(BlockCoordinate coordinate, ScanData data, ScanData.Data scanData);

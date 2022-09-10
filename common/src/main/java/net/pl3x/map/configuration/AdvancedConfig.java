@@ -6,11 +6,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.pl3x.map.util.BiomeColors;
 import net.pl3x.map.util.Colors;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
@@ -1183,7 +1183,9 @@ public class AdvancedConfig extends AbstractConfig {
             Map<Object, Object> sanitized = new LinkedHashMap<>();
             ConfigurationSection section = getConfig().getConfigurationSection(path);
             if (section != null) {
-                Registry<Biome> registry = BiomeColors.getBiomeRegistry();
+                @SuppressWarnings("resource")
+                ServerLevel level = MinecraftServer.getServer().getAllLevels().iterator().next();
+                Registry<Biome> registry = level.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
                 for (String key : section.getKeys(false)) {
                     String hex = section.getString(key);
                     if (hex == null) {

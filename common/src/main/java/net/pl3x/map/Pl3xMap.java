@@ -7,7 +7,7 @@ import net.pl3x.map.event.EventRegistry;
 import net.pl3x.map.heightmap.HeightmapRegistry;
 import net.pl3x.map.httpd.IntegratedServer;
 import net.pl3x.map.image.IconRegistry;
-import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.palette.BlockPaletteRegistry;
 import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.player.PlayerRegistry;
 import net.pl3x.map.render.RendererRegistry;
@@ -60,7 +60,7 @@ public interface Pl3xMap {
 
     IntegratedServer getIntegratedServer();
 
-    PaletteRegistry getPaletteRegistry();
+    BlockPaletteRegistry getBlockPaletteRegistry();
 
     PlayerRegistry getPlayerRegistry();
 

@@ -21,14 +21,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.Registry;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.coordinate.ChunkCoordinate;
@@ -37,6 +38,10 @@ import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.palette.BiomePaletteRegistry;
+import net.pl3x.map.palette.Palette;
+import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.registry.KeyedRegistry;
 import net.pl3x.map.render.job.BackgroundRender;
 import net.pl3x.map.render.job.FullRender;
 import net.pl3x.map.render.job.Render;
@@ -50,14 +55,23 @@ public abstract class World extends Keyed {
 
     private static final String DIRTY_CHUNKS = "dirty_chunks.json";
     private static final String SCANNED_REGIONS = "resume_render.json";
-    private static final Gson GSON = new GsonBuilder().enableComplexMapKeySerialization().create();
+
+    private static final Gson GSON = new GsonBuilder()
+            .enableComplexMapKeySerialization()
+            .disableHtmlEscaping()
+            .serializeNulls()
+            .setLenient()
+            .create();
 
     private final ServerLevel level;
     private final Type type;
     private final long seed;
 
     private final WorldConfig config;
-    private final Registry<Layer> layerRegistry;
+
+    private final BiomePaletteRegistry biomePaletteRegistry;
+    private final Registry<Biome> biomeRegistry;
+    private final KeyedRegistry<Layer> layerRegistry;
 
     private final Path dataPath;
     private final Path tilesPath;
@@ -83,7 +97,10 @@ public abstract class World extends Keyed {
         this.seed = BiomeManager.obfuscateSeed(level.getSeed());
 
         this.config = new WorldConfig(this);
-        this.layerRegistry = new Registry<>();
+
+        this.biomePaletteRegistry = new BiomePaletteRegistry();
+        this.biomeRegistry = level.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+        this.layerRegistry = new KeyedRegistry<>();
 
         String dirName = getName().replace(":", "-");
         this.dataPath = FileUtil.DATA_DIR.resolve(dirName);
@@ -127,6 +144,19 @@ public abstract class World extends Keyed {
             throw new IllegalStateException(String.format("Failed to create tiles directory for world '%s'", getName()), e);
         }
 
+        getBiomeRegistry().forEach(biome -> {
+            String name = PaletteRegistry.toName("biome", getBiomeRegistry().getKey(biome));
+            Palette index = new Palette(getBiomePaletteRegistry().size(), name);
+            getBiomePaletteRegistry().register(biome, index);
+        });
+        getBiomePaletteRegistry().lock();
+
+        try {
+            FileUtil.saveGzip(GSON.toJson(getBiomePaletteRegistry().getMap()), getTilesDir().resolve("biomes.gz"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         startMarkersTask();
         startBackgroundRender();
 
@@ -137,7 +167,6 @@ public abstract class World extends Keyed {
             startRender(new FullRender(this, Pl3xMap.api().getConsole()));
         }
 
-        Pl3xMap.api().getPaletteRegistry().register(this);
         new WorldLoadedEvent(this).callEvent();
         Logger.debug("<green>Loaded <world>"
                 .replace("<world>", getName()));
@@ -172,7 +201,15 @@ public abstract class World extends Keyed {
         return this.config;
     }
 
-    public Registry<Layer> getLayerRegistry() {
+    public BiomePaletteRegistry getBiomePaletteRegistry() {
+        return this.biomePaletteRegistry;
+    }
+
+    public Registry<Biome> getBiomeRegistry() {
+        return this.biomeRegistry;
+    }
+
+    public KeyedRegistry<Layer> getLayerRegistry() {
         return this.layerRegistry;
     }
 
@@ -374,8 +411,6 @@ public abstract class World extends Keyed {
 
         serializeDirtyChunks();
         serializeScannedRegions();
-
-        Pl3xMap.api().getPaletteRegistry().unregister(this);
     }
 
     /**

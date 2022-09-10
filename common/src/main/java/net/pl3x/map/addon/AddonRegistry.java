@@ -10,9 +10,9 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.pl3x.map.Key;
-import net.pl3x.map.Registry;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.logger.Logger;
+import net.pl3x.map.registry.KeyedRegistry;
 import net.pl3x.map.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Manages Pl3xMap addons.
  */
-public abstract class AddonRegistry extends Registry<Addon> {
+public abstract class AddonRegistry extends KeyedRegistry<Addon> {
     public static final Path ADDONS_DIR = FileUtil.MAIN_DIR.resolve("addons");
 
     static {
@@ -74,7 +74,7 @@ public abstract class AddonRegistry extends Registry<Addon> {
     /**
      * Register a new addon.
      * <p>
-     * Will return null if an addon is already registered.
+     * Will return null if the addon is already registered.
      *
      * @param addon addon to register
      * @return registered addon or null

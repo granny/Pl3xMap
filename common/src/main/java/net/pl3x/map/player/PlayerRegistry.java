@@ -1,12 +1,12 @@
 package net.pl3x.map.player;
 
-import net.pl3x.map.Registry;
+import net.pl3x.map.registry.KeyedRegistry;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages player specific data
  */
-public abstract class PlayerRegistry extends Registry<Player> {
+public abstract class PlayerRegistry extends KeyedRegistry<Player> {
     /**
      * Get the registered player by name.
      * <p>

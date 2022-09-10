@@ -33,7 +33,7 @@ public class MarkerTest extends Addon implements EventListener {
 
         try {
             //noinspection ConstantConditions
-            IconImage image = new IconImage(ICON_KEY, ImageIO.read(getClass().getResourceAsStream("/icons/x.png")));
+            IconImage image = new IconImage(ICON_KEY, ImageIO.read(getClass().getResourceAsStream("/icons/x.png")), "png");
             Pl3xMap.api().getIconRegistry().register(image);
         } catch (IOException e) {
             Logger.warn("Failed to register spawn icon");

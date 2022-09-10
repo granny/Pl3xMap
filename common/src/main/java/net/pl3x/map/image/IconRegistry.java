@@ -1,10 +1,11 @@
 package net.pl3x.map.image;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
-import net.pl3x.map.Registry;
+import net.pl3x.map.registry.KeyedRegistry;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The icon image registry.
  */
-public class IconRegistry extends Registry<IconImage> {
+public class IconRegistry extends KeyedRegistry<IconImage> {
     private final Path registeredDir;
 
     /**
@@ -42,8 +43,10 @@ public class IconRegistry extends Registry<IconImage> {
 
     /**
      * Register a new image.
+     * <p>
+     * Will return null if the image is already registered.
      *
-     * @param image image to register
+     * @param image image to register or null
      * @return registered image
      * @throws IllegalArgumentException if image is already registered
      * @throws IllegalStateException    if image failed to save to disk
@@ -52,10 +55,12 @@ public class IconRegistry extends Registry<IconImage> {
     @Nullable
     public IconImage register(@NotNull IconImage image) {
         if (this.entries.containsKey(image.getKey())) {
-            throw new IllegalArgumentException("Image already registered");
+            return null;
         }
         try {
-            ImageIO.write(image.getImage(), "png", getDir().resolve(image.getKey() + ".png").toFile());
+            String filename = image.getKey() + "." + image.getType();
+            File file = getDir().resolve(filename).toFile();
+            ImageIO.write(image.getImage(), image.getType(), file);
         } catch (Throwable e) {
             throw new IllegalStateException(String.format("Failed to save image '%s'", image.getKey()), e);
         }

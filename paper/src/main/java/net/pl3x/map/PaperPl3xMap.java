@@ -22,7 +22,7 @@ import net.pl3x.map.image.IconRegistry;
 import net.pl3x.map.image.io.IO;
 import net.pl3x.map.image.io.Png;
 import net.pl3x.map.logger.Logger;
-import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.palette.BlockPaletteRegistry;
 import net.pl3x.map.player.BukkitPlayerListener;
 import net.pl3x.map.player.BukkitPlayerRegistry;
 import net.pl3x.map.render.RendererRegistry;
@@ -56,7 +56,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
     private IntegratedServer integratedServer;
-    private PaletteRegistry paletteRegistry;
+    private BlockPaletteRegistry blockPaletteRegistry;
     private BukkitPlayerRegistry playerRegistry;
     private RendererRegistry rendererRegistry;
     private BukkitWorldRegistry worldRegistry;
@@ -120,7 +120,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
         this.integratedServer = new UndertowServer();
-        this.paletteRegistry = new PaletteRegistry();
+        this.blockPaletteRegistry = new BlockPaletteRegistry();
         this.playerRegistry = new BukkitPlayerRegistry();
         this.rendererRegistry = new RendererRegistry();
         this.worldRegistry = new BukkitWorldRegistry();
@@ -281,8 +281,8 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     }
 
     @Override
-    public PaletteRegistry getPaletteRegistry() {
-        return this.paletteRegistry;
+    public BlockPaletteRegistry getBlockPaletteRegistry() {
+        return this.blockPaletteRegistry;
     }
 
     @Override
