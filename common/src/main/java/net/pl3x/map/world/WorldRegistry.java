@@ -11,6 +11,20 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class WorldRegistry extends KeyedRegistry<World> {
     /**
+     * Register a new world.
+     * <p>
+     * Will return null if the world is already registered.
+     *
+     * @param world world to register
+     * @return registered world or null
+     */
+    public World register(@NotNull World world) {
+        super.register(world);
+        world.init();
+        return world;
+    }
+
+    /**
      * Unregister the specified world by name.
      * <p>
      * Will return null if world is not registered.

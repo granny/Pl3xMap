@@ -108,8 +108,6 @@ public abstract class World extends Keyed {
         String dirName = getName().replace(":", "-");
         this.dataPath = FileUtil.DATA_DIR.resolve(dirName);
         this.tilesPath = TILES_DIR.resolve(dirName);
-
-        init();
     }
 
     /**
