@@ -4,7 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
-import net.pl3x.map.registry.Registry;
+import net.pl3x.map.Registry;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;

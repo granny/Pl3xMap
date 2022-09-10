@@ -1,6 +1,6 @@
 package net.pl3x.map.player;
 
-import net.pl3x.map.registry.Registry;
+import net.pl3x.map.Registry;
 import org.jetbrains.annotations.Nullable;
 
 /**

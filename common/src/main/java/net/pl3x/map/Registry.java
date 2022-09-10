@@ -1,10 +1,8 @@
-package net.pl3x.map.registry;
+package net.pl3x.map;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import net.pl3x.map.Key;
-import net.pl3x.map.Keyed;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

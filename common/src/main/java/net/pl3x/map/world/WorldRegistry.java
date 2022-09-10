@@ -2,8 +2,8 @@ package net.pl3x.map.world;
 
 import net.minecraft.server.level.ServerLevel;
 import net.pl3x.map.Key;
+import net.pl3x.map.Registry;
 import net.pl3x.map.event.world.WorldUnloadedEvent;
-import net.pl3x.map.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
