@@ -152,7 +152,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     @Override
     public void enable() {
         // register built-in heightmaps
-        getHeightmapRegistry().init();
+        getHeightmapRegistry().register();
 
         // register built-in renderers
         getRendererRegistry().init();
@@ -211,7 +211,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getAddonRegistry().unregister();
 
         // unregister heightmaps
-        getHeightmapRegistry().unregisterAll();
+        getHeightmapRegistry().unregister();
 
         // unregister renderers
         getRendererRegistry().unregisterAll();
