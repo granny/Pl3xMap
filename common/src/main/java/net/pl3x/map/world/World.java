@@ -195,6 +195,15 @@ public abstract class World extends Keyed {
         return this.level;
     }
 
+    /**
+     * Get whether this world is enabled.
+     *
+     * @return true if enabled
+     */
+    public boolean isEnabled() {
+        return getConfig().ENABLED;
+    }
+
     @NotNull
     public Type getType() {
         return this.type;

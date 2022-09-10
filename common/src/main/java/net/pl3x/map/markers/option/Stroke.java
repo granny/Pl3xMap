@@ -25,6 +25,13 @@ public class Stroke extends Option {
     }
 
     /**
+     * Create a stroke rule with default enabled state.
+     */
+    public Stroke(boolean enabled) {
+        setEnabled(enabled);
+    }
+
+    /**
      * Create a stroke rule.
      *
      * @param weight stroke weight

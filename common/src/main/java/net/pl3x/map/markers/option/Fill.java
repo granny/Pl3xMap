@@ -21,6 +21,13 @@ public class Fill extends Option {
     }
 
     /**
+     * Create a fill rule with default enabled state.
+     */
+    public Fill(boolean enabled) {
+        setEnabled(enabled);
+    }
+
+    /**
      * Create a fill rule.
      *
      * @param color argb color
