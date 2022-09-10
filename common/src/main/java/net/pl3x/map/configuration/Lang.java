@@ -7,8 +7,6 @@ import net.pl3x.map.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class Lang extends AbstractConfig {
-    @Key("prefix.logger")
-    public static String PREFIX_LOGGER = "[<dark_aqua>Pl3xMap</dark_aqua>] ";
     @Key("prefix.command")
     public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
 

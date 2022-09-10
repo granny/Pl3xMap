@@ -77,7 +77,6 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(this);
-            return;
         }
     }
 

@@ -35,7 +35,9 @@ public class Logger {
 
     public static class Pl3xLogger extends java.util.logging.Logger {
         public Pl3xLogger(String name) {
-            super(name, null);
+            // name _must_ differ from plugin name or LogManager will not add this logger
+            // we simply add a zero width character to confuse it
+            super(name + "\u200B", null);
             LogManager.getLogManager().addLogger(this);
             // this filter lets us hide undertow/xnio/jboss messages to the logger
             ((org.apache.logging.log4j.core.Logger) org.apache.logging.log4j.LogManager.getRootLogger()).addFilter(new LogFilter());
