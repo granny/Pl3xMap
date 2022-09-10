@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import net.pl3x.map.addon.PaperAddonRegistry;
+import net.pl3x.map.addon.BukkitAddonRegistry;
 import net.pl3x.map.command.BukkitCommandManager;
 import net.pl3x.map.command.Console;
 import net.pl3x.map.configuration.AdvancedConfig;
@@ -51,7 +51,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     private BukkitPlayerListener playerListener;
     private BukkitWorldListener worldListener;
 
-    private PaperAddonRegistry addonRegistry;
+    private BukkitAddonRegistry addonRegistry;
     private EventRegistry eventRegistry;
     private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
@@ -115,7 +115,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getServer().getPluginManager().registerEvents(getWorldListener(), this);
 
         // setup managers
-        this.addonRegistry = new PaperAddonRegistry();
+        this.addonRegistry = new BukkitAddonRegistry();
         this.eventRegistry = new EventRegistry();
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
@@ -158,7 +158,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getRendererRegistry().init();
 
         // enable addons
-        getAddonRegistry().enableAddons();
+        getAddonRegistry().register();
 
         // start integrated server
         getIntegratedServer().startServer();
@@ -208,7 +208,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getIntegratedServer().stopServer();
 
         // disable addons
-        getAddonRegistry().disableAddons();
+        getAddonRegistry().unregister();
 
         // unregister heightmaps
         getHeightmapRegistry().unregisterAll();
@@ -256,7 +256,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     }
 
     @Override
-    public PaperAddonRegistry getAddonRegistry() {
+    public BukkitAddonRegistry getAddonRegistry() {
         return this.addonRegistry;
     }
 

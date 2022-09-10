@@ -1,12 +1,24 @@
 package net.pl3x.map.addon;
 
+import net.pl3x.map.Key;
+import net.pl3x.map.Keyed;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a Pl3xMap addon.
  */
-public abstract class Addon {
+public abstract class Addon extends Keyed {
     private AddonInfo info;
+
+    public Addon() {
+        super(Key.NONE);
+    }
+
+    @Override
+    @NotNull
+    public Key getKey() {
+        return getInfo().getKey();
+    }
 
     /**
      * Called when this addon is enabled.

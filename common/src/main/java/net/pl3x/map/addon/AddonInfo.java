@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.pl3x.map.Key;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -21,6 +23,8 @@ public class AddonInfo {
 
     private final String main;
 
+    private final Key key;
+
     public AddonInfo(InputStream stream) {
         Yaml yaml = new Yaml();
         Map<?, ?> map = yaml.load(stream);
@@ -31,6 +35,8 @@ public class AddonInfo {
         this.author = (String) map.get("author");
 
         this.main = (String) map.get("main");
+
+        this.key = new Key(getName());
 
         if (map.containsKey("depends")) {
             @SuppressWarnings("unchecked")
@@ -98,5 +104,15 @@ public class AddonInfo {
      */
     public String getMain() {
         return this.main;
+    }
+
+    /**
+     * Get the identifying key.
+     *
+     * @return the key
+     */
+    @NotNull
+    public Key getKey() {
+        return this.key;
     }
 }

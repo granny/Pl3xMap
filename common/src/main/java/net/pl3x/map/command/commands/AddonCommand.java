@@ -57,7 +57,7 @@ public class AddonCommand extends Pl3xMapCommand {
 
     @NotNull
     private Component getAddonList() {
-        List<Addon> addons = Pl3xMap.api().getAddonRegistry().getAddons().stream()
+        List<Addon> addons = Pl3xMap.api().getAddonRegistry().entries().values().stream()
                 .sorted(Comparator.comparing(addon -> addon.getName().toLowerCase())).toList();
 
         TextComponent.Builder builder = Component.text()
