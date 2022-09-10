@@ -155,7 +155,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getHeightmapRegistry().register();
 
         // register built-in renderers
-        getRendererRegistry().init();
+        getRendererRegistry().register();
 
         // enable addons
         getAddonRegistry().register();
@@ -214,7 +214,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getHeightmapRegistry().unregister();
 
         // unregister renderers
-        getRendererRegistry().unregisterAll();
+        getRendererRegistry().unregister();
 
         // unregister icons
         getIconRegistry().entries().forEach((key, image) -> getIconRegistry().unregister(key));
