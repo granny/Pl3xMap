@@ -54,6 +54,16 @@ public class Registry<K, V> {
     }
 
     /**
+     * Check if an entry is present for the provided key.
+     *
+     * @param key key
+     * @return true if entry is present
+     */
+    public boolean has(@NotNull K key) {
+        return this.entries.containsKey(key);
+    }
+
+    /**
      * Get the registered value for the provided key.
      * <p>
      * Will return null if no value registered with provided key.
