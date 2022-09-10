@@ -3,13 +3,9 @@
 
 # MarkerTest
 
-<big><b>MarkerTest is an addon for Pl3xMap that adds a few hardcoded markers to the map as a test.</b></big>
+<big><b>MarkerTest is an addon for Pl3xMap that adds a few random markers to the map as a test.</b></big>
 
 </div>
-
-## Downloads
-
-Coming soon..
 
 ## Installation
 

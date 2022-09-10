@@ -2,6 +2,7 @@ package net.pl3x.map.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.pl3x.map.logger.Logger;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.World;
@@ -171,6 +172,8 @@ public class WorldConfig extends AbstractConfig {
 
         RENDER_BIOME_BLEND = Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
         RENDER_SKYLIGHT = Mathf.clamp(0, 15, RENDER_SKYLIGHT);
+
+        Logger.info("Loaded world config " + this.world.getName());
     }
 
     @Override

@@ -1,6 +1,6 @@
 group = "net.pl3x.map.addon.webp"
 version = rootProject.version
-description = "Pl3xMap addon that adds webp tile image support"
+description = "Adds webp tile image support"
 
 val scrimageVersion: String by rootProject
 

@@ -131,11 +131,11 @@ tasks {
         uploadFile.set(jar(rootProject.name))
         additionalFiles.set(
             listOf(
-                jar(project(":FlowerMapAddon").name),
-                jar(project(":HeightmapsAddon").name),
-                jar(project(":InhabitedAddon").name),
-                jar(project(":WebpAddon").name),
-                jar(project(":WorldBorderAddon").name)
+                jar(project(":FlowerMap").name),
+                jar(project(":Heightmaps").name),
+                jar(project(":Inhabited").name),
+                jar(project(":Webp").name),
+                jar(project(":WorldBorder").name)
             )
         )
         gameVersions.addAll(listOf(minecraftVersion))

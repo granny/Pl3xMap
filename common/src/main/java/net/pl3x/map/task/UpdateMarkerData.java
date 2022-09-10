@@ -36,7 +36,7 @@ public class UpdateMarkerData implements Runnable {
         Map<String, Integer> layers = new HashMap<>();
 
         this.world.getLayerRegistry().entries().forEach((key, layer) -> {
-            layers.put(key.getKey(), layer.getUpdateInterval());
+            layers.put(key.toString(), layer.getUpdateInterval());
 
             long now = System.currentTimeMillis() / 1000;
             long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);

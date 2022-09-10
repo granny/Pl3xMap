@@ -7,10 +7,6 @@
 
 </div>
 
-## Downloads
-
-Coming soon..
-
 ## Installation
 
 1) Place the jar inside Pl3xMap's addon folder

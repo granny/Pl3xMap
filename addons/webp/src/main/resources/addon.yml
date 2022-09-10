@@ -1,5 +1,5 @@
 name: "${name}"
-main: "${group}.${name}"
+main: "${group}.${name}Addon"
 version: "${version}"
 description: "${description}"
 author: "BillyGalbreath"

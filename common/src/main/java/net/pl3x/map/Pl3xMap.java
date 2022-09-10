@@ -8,8 +8,10 @@ import net.pl3x.map.heightmap.HeightmapRegistry;
 import net.pl3x.map.httpd.IntegratedServer;
 import net.pl3x.map.image.IconRegistry;
 import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.player.PlayerRegistry;
 import net.pl3x.map.render.RendererRegistry;
+import net.pl3x.map.world.WorldListener;
 import net.pl3x.map.world.WorldRegistry;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +45,10 @@ public interface Pl3xMap {
 
     @NotNull
     Console getConsole();
+
+    PlayerListener getPlayerListener();
+
+    WorldListener getWorldListener();
 
     AddonRegistry getAddonRegistry();
 

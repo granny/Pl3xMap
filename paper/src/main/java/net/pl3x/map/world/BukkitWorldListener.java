@@ -48,7 +48,7 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.EventExecutor;
 
-public class BukkitWorldListener implements Listener {
+public class BukkitWorldListener implements WorldListener, Listener {
     private final PaperPl3xMap plugin;
     private final List<Listener> registeredListeners = new ArrayList<>();
 

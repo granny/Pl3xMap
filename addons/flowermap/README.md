@@ -12,10 +12,6 @@ shows a flower layer on your map. Idea inspired by the [FlowerMap mod](https://m
 
 [<img src="https://i.imgur.com/qG3n341.png" width="200">](https://i.imgur.com/qG3n341.png)
 
-## Downloads
-
-Coming soon..
-
 ## Installation
 
 1) Place the jar inside Pl3xMap's addon folder

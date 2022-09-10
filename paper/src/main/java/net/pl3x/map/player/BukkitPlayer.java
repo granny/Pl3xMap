@@ -1,5 +1,6 @@
 package net.pl3x.map.player;
 
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BukkitPlayer extends Player {
     private static final NamespacedKey HIDDEN_KEY = new NamespacedKey(PaperPl3xMap.getInstance(), "hidden");
@@ -26,8 +28,6 @@ public class BukkitPlayer extends Player {
     private final org.bukkit.entity.Player player;
 
     private Map<BiFunction<Player, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
-
-    private boolean hidden;
 
     public BukkitPlayer(org.bukkit.entity.Player player) {
         super(createKey(player.getName()));
@@ -84,6 +84,12 @@ public class BukkitPlayer extends Player {
     }
 
     @Override
+    @Nullable
+    public URL getSkin() {
+        return this.player.getPlayerProfile().getTextures().getSkin();
+    }
+
+    @Override
     public boolean isInvisible() {
         return this.player.isInvisible();
     }
@@ -100,21 +106,22 @@ public class BukkitPlayer extends Player {
 
     @Override
     public boolean isHidden() {
-        if (getWorld().getConfig().PLAYER_TRACKER_HIDE_SPECTATORS && isSpectator()) {
-            return true;
-        }
-        if (getWorld().getConfig().PLAYER_TRACKER_HIDE_INVISIBLE && isInvisible()) {
-            return true;
-        }
-        return this.hidden || this.player.getPersistentDataContainer().getOrDefault(HIDDEN_KEY, PersistentDataType.BYTE, (byte) 0) != 0;
+        return super.isHidden();
     }
 
     @Override
     public void setHidden(boolean hidden, boolean persistent) {
-        this.hidden = hidden;
-        if (persistent) {
-            this.player.getPersistentDataContainer().set(HIDDEN_KEY, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
-        }
+        super.setHidden(true, persistent);
+    }
+
+    @Override
+    public boolean isPersistentlyHidden() {
+        return this.player.getPersistentDataContainer().getOrDefault(HIDDEN_KEY, PersistentDataType.BYTE, (byte) 0) != 0;
+    }
+
+    @Override
+    public void setPersistentlyHidden(boolean hidden) {
+        this.player.getPersistentDataContainer().set(HIDDEN_KEY, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
     }
 
     @Override

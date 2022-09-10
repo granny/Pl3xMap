@@ -39,10 +39,6 @@ This heightmap mixes the builtin EVEN_ODD and the builtin MODERN heightmaps.
 This heightmap mixes the builtin EVEN_ODD and the builtin OLD_SCHOOL heightmaps.
 <br clear="right">
 
-## Downloads
-
-Coming soon..
-
 ## Installation
 
 1) Place the jar inside Pl3xMap's addon folder

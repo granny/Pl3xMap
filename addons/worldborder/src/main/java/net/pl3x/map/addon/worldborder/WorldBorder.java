@@ -7,7 +7,7 @@ import net.pl3x.map.addon.worldborder.listener.WorldListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-public class WorldBorderAddon extends Addon {
+public class WorldBorder extends Addon {
     @Override
     public void onEnable() {
         PluginListener pluginListener = new PluginListener();
@@ -15,6 +15,7 @@ public class WorldBorderAddon extends Addon {
 
         Plugin pl3xMap = Bukkit.getPluginManager().getPlugin("Pl3xMap");
 
+        //noinspection ConstantConditions
         Bukkit.getPluginManager().registerEvents(pluginListener, pl3xMap);
         Bukkit.getPluginManager().registerEvents(worldListener, pl3xMap);
         Pl3xMap.api().getEventRegistry().register(worldListener, this);

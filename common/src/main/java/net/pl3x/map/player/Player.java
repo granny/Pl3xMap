@@ -1,5 +1,6 @@
 package net.pl3x.map.player;
 
+import java.net.URL;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import net.kyori.adventure.text.ComponentLike;
@@ -9,8 +10,11 @@ import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Player extends Sender {
+    private boolean hidden;
+
     public Player(Key key) {
         super(key);
     }
@@ -45,6 +49,9 @@ public abstract class Player extends Sender {
     // AttributeInstance attr = player.getAttribute(Attributes.ARMOR);
     // return attr == null ? 0 : (int) attr.getValue();
 
+    @Nullable
+    public abstract URL getSkin();
+
     public abstract boolean isInvisible();
 
     public abstract boolean isNPC();
@@ -56,7 +63,18 @@ public abstract class Player extends Sender {
      *
      * @return True if player is hidden from the map
      */
-    public abstract boolean isHidden();
+    public boolean isHidden() {
+        if (this.hidden) {
+            return true;
+        }
+        if (getWorld().getConfig().PLAYER_TRACKER_HIDE_SPECTATORS && isSpectator()) {
+            return true;
+        }
+        if (getWorld().getConfig().PLAYER_TRACKER_HIDE_INVISIBLE && isInvisible()) {
+            return true;
+        }
+        return isPersistentlyHidden();
+    }
 
     /**
      * Set if a player is hidden from the map
@@ -64,7 +82,16 @@ public abstract class Player extends Sender {
      * @param hidden     True to hide, false to show
      * @param persistent True to persist this state
      */
-    public abstract void setHidden(boolean hidden, boolean persistent);
+    public void setHidden(boolean hidden, boolean persistent) {
+        this.hidden = hidden;
+        if (persistent) {
+            setPersistentlyHidden(hidden);
+        }
+    }
+
+    public abstract boolean isPersistentlyHidden();
+
+    public abstract void setPersistentlyHidden(boolean hidden);
 
     /**
      * Function that is used to change player name in a player list

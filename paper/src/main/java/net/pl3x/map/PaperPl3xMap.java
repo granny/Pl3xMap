@@ -23,8 +23,8 @@ import net.pl3x.map.image.io.Png;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.palette.PaletteRegistry;
 import net.pl3x.map.player.BukkitConsole;
+import net.pl3x.map.player.BukkitPlayerListener;
 import net.pl3x.map.player.BukkitPlayerRegistry;
-import net.pl3x.map.player.PlayerListener;
 import net.pl3x.map.render.RendererRegistry;
 import net.pl3x.map.task.UpdatePlayerData;
 import net.pl3x.map.task.UpdateWorldData;
@@ -48,6 +48,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     private ScheduledFuture<?> playerDataTask;
     private ScheduledFuture<?> worldDataTask;
 
+    private BukkitPlayerListener playerListener;
     private BukkitWorldListener worldListener;
 
     private PaperAddonRegistry addonRegistry;
@@ -106,10 +107,12 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         // register built in tile image types
         IO.register("png", new Png());
 
-        // register bukkit listeners
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        // register listeners
+        this.playerListener = new BukkitPlayerListener();
         this.worldListener = new BukkitWorldListener(this);
-        getServer().getPluginManager().registerEvents(this.worldListener, this);
+
+        getServer().getPluginManager().registerEvents(getPlayerListener(), this);
+        getServer().getPluginManager().registerEvents(getWorldListener(), this);
 
         // setup managers
         this.addonRegistry = new PaperAddonRegistry();
@@ -240,6 +243,16 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     @NotNull
     public Console getConsole() {
         return this.console;
+    }
+
+    @Override
+    public BukkitPlayerListener getPlayerListener() {
+        return this.playerListener;
+    }
+
+    @Override
+    public BukkitWorldListener getWorldListener() {
+        return this.worldListener;
     }
 
     @Override

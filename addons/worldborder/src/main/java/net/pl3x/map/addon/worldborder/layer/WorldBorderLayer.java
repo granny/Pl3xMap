@@ -15,7 +15,7 @@ import net.pl3x.map.markers.option.Stroke;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class WorldBorderLayer implements Layer {
+public class WorldBorderLayer extends Layer {
     public static final Key KEY = new Key("world-border");
     public static final List<Marker> EMPTY_LIST = new ArrayList<>();
 
@@ -30,6 +30,7 @@ public class WorldBorderLayer implements Layer {
     private Border border;
 
     public WorldBorderLayer(@NotNull World world) {
+        super(KEY);
         this.world = world;
         this.label = "World Border";
         this.updateInterval = 15;
@@ -55,12 +56,6 @@ public class WorldBorderLayer implements Layer {
 
     public void clearBorder() {
         this.border = null;
-    }
-
-    @Override
-    @NotNull
-    public Key getKey() {
-        return KEY;
     }
 
     @Override

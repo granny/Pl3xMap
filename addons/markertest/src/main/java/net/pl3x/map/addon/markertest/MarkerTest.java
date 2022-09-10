@@ -1,6 +1,5 @@
 package net.pl3x.map.addon.markertest;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +11,7 @@ import net.pl3x.map.event.EventHandler;
 import net.pl3x.map.event.EventListener;
 import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.event.world.WorldUnloadedEvent;
+import net.pl3x.map.image.IconImage;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
@@ -22,7 +22,7 @@ import net.pl3x.map.markers.marker.Polyline;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class MarkerTestAddon extends Addon implements EventListener {
+public class MarkerTest extends Addon implements EventListener {
     private static final Key LAYER_KEY = new Key("marker-test");
     private static final Key ICON_KEY = new Key("test-x-icon");
     private static final Collection<Marker> MARKERS = new HashSet<>();
@@ -33,8 +33,8 @@ public class MarkerTestAddon extends Addon implements EventListener {
 
         try {
             //noinspection ConstantConditions
-            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/icons/x.png"));
-            Pl3xMap.api().getIconRegistry().register(ICON_KEY, image);
+            IconImage image = new IconImage(ICON_KEY, ImageIO.read(getClass().getResourceAsStream("/icons/x.png")));
+            Pl3xMap.api().getIconRegistry().register(image);
         } catch (IOException e) {
             Logger.warn("Failed to register spawn icon");
             e.printStackTrace();
@@ -91,7 +91,7 @@ public class MarkerTestAddon extends Addon implements EventListener {
         )));
         MARKERS.add(Marker.rectangle(Point.of(-50, -50), Point.of(-20, 0)));
 
-        world.getLayerRegistry().register(LAYER_KEY, new Layer() {
+        world.getLayerRegistry().register(new Layer(LAYER_KEY) {
             @Override
             public @NotNull Key getKey() {
                 return LAYER_KEY;

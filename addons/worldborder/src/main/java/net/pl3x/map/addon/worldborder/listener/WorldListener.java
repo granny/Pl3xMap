@@ -21,7 +21,7 @@ public class WorldListener implements EventListener, Listener {
     @EventHandler
     public void onWorldLoaded(WorldLoadedEvent event) {
         World world = event.getWorld();
-        world.getLayerRegistry().register(WorldBorderLayer.KEY, new WorldBorderLayer(world));
+        world.getLayerRegistry().register(new WorldBorderLayer(world));
     }
 
     @EventHandler

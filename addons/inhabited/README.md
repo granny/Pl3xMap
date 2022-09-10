@@ -12,10 +12,6 @@ shows chunk inhabited time as a heatmap layer on your map.</b></big>
 
 [<img src="https://i.imgur.com/al8u5eC.png" width="200">](https://i.imgur.com/al8u5eC.png)
 
-## Downloads
-
-Coming soon..
-
 ## Installation
 
 1) Place the jar inside Pl3xMap's addon folder

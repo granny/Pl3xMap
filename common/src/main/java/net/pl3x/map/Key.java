@@ -40,16 +40,6 @@ public final class Key {
         return new Key(key);
     }
 
-    /**
-     * Get the key string for this key.
-     *
-     * @return key string
-     */
-    @NotNull
-    public String getKey() {
-        return this.key;
-    }
-
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
@@ -62,16 +52,16 @@ public final class Key {
             return false;
         }
         Key other = (Key) o;
-        return getKey().equals(other.getKey());
+        return toString().equals(other.toString());
     }
 
     @Override
     public int hashCode() {
-        return 31 + getKey().hashCode();
+        return 31 + toString().hashCode();
     }
 
     @Override
     public String toString() {
-        return getKey();
+        return this.key;
     }
 }

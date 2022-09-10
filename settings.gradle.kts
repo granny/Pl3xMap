@@ -21,22 +21,22 @@ setupSubproject("WebMap") {
 
 // Addons
 
-setupSubproject("FlowerMapAddon") {
+setupSubproject("FlowerMap") {
     projectDir = file("addons/flowermap")
 }
-setupSubproject("HeightmapsAddon") {
+setupSubproject("Heightmaps") {
     projectDir = file("addons/heightmaps")
 }
-setupSubproject("InhabitedAddon") {
+setupSubproject("Inhabited") {
     projectDir = file("addons/inhabited")
 }
-setupSubproject("MarkerTestAddon") {
+setupSubproject("MarkerTest") {
     projectDir = file("addons/markertest")
 }
-setupSubproject("WebpAddon") {
+setupSubproject("Webp") {
     projectDir = file("addons/webp")
 }
-setupSubproject("WorldBorderAddon") {
+setupSubproject("WorldBorder") {
     projectDir = file("addons/worldborder")
 }
 

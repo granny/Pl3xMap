@@ -29,9 +29,9 @@ public class PlayerTexture implements Runnable {
     private final UUID uuid;
     private final URL url;
 
-    public PlayerTexture(UUID uuid, URL url) {
-        this.uuid = uuid;
-        this.url = url;
+    public PlayerTexture(Player player) {
+        this.uuid = player.getUUID();
+        this.url = player.getSkin();
     }
 
     @Override

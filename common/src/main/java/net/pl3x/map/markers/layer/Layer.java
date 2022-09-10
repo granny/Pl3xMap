@@ -2,20 +2,22 @@ package net.pl3x.map.markers.layer;
 
 import java.util.Collection;
 import net.pl3x.map.Key;
+import net.pl3x.map.Keyed;
 import net.pl3x.map.markers.marker.Marker;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides Markers and other metadata which make up a Layer
  */
-public interface Layer {
+public abstract class Layer extends Keyed {
     /**
-     * Get the key of this Layer
+     * Create a layer.
      *
-     * @return layer key
+     * @param key key for object
      */
-    @NotNull
-    Key getKey();
+    public Layer(@NotNull Key key) {
+        super(key);
+    }
 
     /**
      * Get the label of this Layer, shown in the control box
@@ -23,14 +25,14 @@ public interface Layer {
      * @return layer label
      */
     @NotNull
-    String getLabel();
+    public abstract String getLabel();
 
     /**
      * Get this layer's update interval (in seconds).
      *
      * @return update interval
      */
-    int getUpdateInterval();
+    public abstract int getUpdateInterval();
 
     /**
      * Whether to show this Layer in the control box
@@ -39,7 +41,7 @@ public interface Layer {
      *
      * @return true if showing controls
      */
-    default boolean showControls() {
+    public boolean showControls() {
         return true;
     }
 
@@ -50,7 +52,7 @@ public interface Layer {
      *
      * @return true if hidden by default
      */
-    default boolean defaultHidden() {
+    public boolean defaultHidden() {
         return false;
     }
 
@@ -61,7 +63,7 @@ public interface Layer {
      *
      * @return layer priority
      */
-    int getPriority();
+    public abstract int getPriority();
 
     /**
      * Indexed z-index for this Layer. Used in determining what layers are visually on top of other layers
@@ -72,7 +74,7 @@ public interface Layer {
      *
      * @return layer z-index
      */
-    default int getZIndex() {
+    public int getZIndex() {
         return this.getPriority();
     }
 
@@ -82,5 +84,5 @@ public interface Layer {
      * @return markers to display
      */
     @NotNull
-    Collection<Marker> getMarkers();
+    public abstract Collection<Marker> getMarkers();
 }

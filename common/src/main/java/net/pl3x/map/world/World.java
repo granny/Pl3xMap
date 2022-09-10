@@ -35,7 +35,8 @@ import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
-import net.pl3x.map.markers.layer.LayerRegistry;
+import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.registry.Registry;
 import net.pl3x.map.render.job.BackgroundRender;
 import net.pl3x.map.render.job.FullRender;
 import net.pl3x.map.render.job.Render;
@@ -56,7 +57,7 @@ public abstract class World extends Keyed {
     private final long seed;
 
     private final WorldConfig config;
-    private final LayerRegistry layerRegistry;
+    private final Registry<Layer> layerRegistry;
 
     private final Path dataPath;
     private final Path tilesPath;
@@ -82,22 +83,13 @@ public abstract class World extends Keyed {
         this.seed = BiomeManager.obfuscateSeed(level.getSeed());
 
         this.config = new WorldConfig(this);
-        this.layerRegistry = new LayerRegistry();
+        this.layerRegistry = new Registry<>();
 
         String dirName = getName().replace(":", "-");
         this.dataPath = FileUtil.DATA_DIR.resolve(dirName);
         this.tilesPath = TILES_DIR.resolve(dirName);
-    }
 
-    /**
-     * Create a new key.
-     *
-     * @param level server level
-     * @return a new key
-     */
-    @NotNull
-    public static Key createKey(@NotNull ServerLevel level) {
-        return new Key(level.dimension().location().toString());
+        init();
     }
 
     /**
@@ -153,7 +145,7 @@ public abstract class World extends Keyed {
 
     @NotNull
     public String getName() {
-        return getKey().getKey();
+        return getKey().toString();
     }
 
     @NotNull
@@ -180,7 +172,7 @@ public abstract class World extends Keyed {
         return this.config;
     }
 
-    public LayerRegistry getLayerRegistry() {
+    public Registry<Layer> getLayerRegistry() {
         return this.layerRegistry;
     }
 

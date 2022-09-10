@@ -67,7 +67,7 @@ public class JsonArrayWrapper {
      * @param key the enum key needs to be added to the array.
      */
     public void add(Key key) {
-        getJsonArray().add(key == null ? null : key.getKey());
+        getJsonArray().add(key == null ? null : key.toString());
     }
 
     /**

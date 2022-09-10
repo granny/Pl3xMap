@@ -1,13 +1,7 @@
 package net.pl3x.map.image;
 
-import com.google.common.base.Preconditions;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
 import net.pl3x.map.registry.Registry;
@@ -19,18 +13,20 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The icon image registry.
  */
-public class IconRegistry extends Registry<BufferedImage> {
-    private final Map<Key, BufferedImage> images = new ConcurrentHashMap<>();
-    private final Path dir;
+public class IconRegistry extends Registry<IconImage> {
+    private final Path registeredDir;
 
+    /**
+     * Create a new image registry.
+     */
     public IconRegistry() {
-        this.dir = World.WEB_DIR.resolve("images/icon/registered/");
+        this.registeredDir = World.WEB_DIR.resolve("images/icon/registered/");
         try {
             if (Files.exists(getDir())) {
                 FileUtil.deleteDirectory(getDir());
             }
             Files.createDirectories(getDir());
-        } catch (IOException e) {
+        } catch (Throwable e) {
             throw new IllegalStateException("Failed to setup icon registry", e);
         }
     }
@@ -41,50 +37,52 @@ public class IconRegistry extends Registry<BufferedImage> {
      * @return icons directory
      */
     public Path getDir() {
-        return this.dir;
+        return this.registeredDir;
     }
 
+    /**
+     * Register a new image.
+     *
+     * @param image image to register
+     * @return registered image
+     * @throws IllegalArgumentException if image is already registered
+     * @throws IllegalStateException    if image failed to save to disk
+     */
     @Override
     @Nullable
-    public BufferedImage register(@NotNull Key key, @NotNull BufferedImage image) {
-        Preconditions.checkArgument(get(key) == null, "Image already registered for key '%s'", key.getKey());
-        try {
-            ImageIO.write(image, "png", getDir().resolve(key.getKey() + ".png").toFile());
-        } catch (IOException e) {
-            throw new IllegalStateException(String.format("Failed to write image for key '%s'", key.getKey()), e);
+    public IconImage register(@NotNull IconImage image) {
+        if (this.entries.containsKey(image.getKey())) {
+            throw new IllegalArgumentException("Image already registered");
         }
-        this.images.put(key, image);
+        try {
+            ImageIO.write(image.getImage(), "png", getDir().resolve(image.getKey() + ".png").toFile());
+        } catch (Throwable e) {
+            throw new IllegalStateException(String.format("Failed to save image '%s'", image.getKey()), e);
+        }
+        this.entries.put(image.getKey(), image);
         return image;
     }
 
+    /**
+     * Unregister the image for the provided key.
+     * <p>
+     * Will return null if no image registered with provided key.
+     *
+     * @param key key
+     * @return unregistered image or null
+     * @throws IllegalStateException if image failed to delete from disk
+     */
     @Override
     @Nullable
-    public BufferedImage unregister(@NotNull Key key) {
-        BufferedImage image = this.images.remove(key);
+    public IconImage unregister(@NotNull Key key) {
+        IconImage image = super.unregister(key);
         if (image != null) {
             try {
-                Files.delete(getDir().resolve(key.getKey() + ".png"));
-            } catch (IOException e) {
-                throw new IllegalStateException(String.format("Failed to delete image for key '%s'", key.getKey()), e);
+                Files.delete(getDir().resolve(key + ".png"));
+            } catch (Throwable e) {
+                throw new IllegalStateException(String.format("Failed to delete image for key '%s'", key), e);
             }
         }
         return image;
-    }
-
-    @Override
-    public void unregister() {
-        Collections.unmodifiableSet(this.entries.keySet()).forEach(this::unregister);
-    }
-
-    @Override
-    @Nullable
-    public BufferedImage get(@NotNull Key key) {
-        return this.images.get(key);
-    }
-
-    @Override
-    @NotNull
-    public Map<Key, BufferedImage> entries() {
-        return Collections.unmodifiableMap(this.images);
     }
 }

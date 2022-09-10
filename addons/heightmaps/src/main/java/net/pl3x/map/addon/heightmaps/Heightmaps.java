@@ -9,7 +9,7 @@ import net.pl3x.map.addon.heightmaps.heightmap.EvenOddOldSchoolHeightmap;
 import net.pl3x.map.addon.heightmaps.heightmap.LowContrastHeightmap;
 import net.pl3x.map.heightmap.HeightmapRegistry;
 
-public class HeightmapsAddon extends Addon {
+public class Heightmaps extends Addon {
     public static final Key EVEN_ODD_LOW_CONTRAST = new Key("even_odd_low_contrast_heightmap");
     public static final Key EVEN_ODD_MODERN = new Key("even_odd_modern_heightmap");
     public static final Key EVEN_ODD_OLD_SCHOOL = new Key("even_odd_old_school_heightmap");

@@ -1,6 +1,6 @@
 group = "net.pl3x.map.addon.worldborder"
 version = rootProject.version
-description = "Pl3xMap addon that adds world border marker to maps"
+description = "Adds world border markers"
 
 repositories {
     maven("https://repo.codemc.io/repository/maven-releases")

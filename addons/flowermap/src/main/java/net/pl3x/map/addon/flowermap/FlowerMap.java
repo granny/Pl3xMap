@@ -5,7 +5,7 @@ import net.pl3x.map.addon.Addon;
 import net.pl3x.map.addon.flowermap.renderer.FlowerMapRenderer;
 import net.pl3x.map.render.RendererRegistry;
 
-public class FlowerMapAddon extends Addon {
+public class FlowerMap extends Addon {
     @Override
     public void onEnable() {
         // register our custom renderer with Pl3xMap
