@@ -1183,7 +1183,7 @@ public class AdvancedConfig extends AbstractConfig {
             Map<Object, Object> sanitized = new LinkedHashMap<>();
             ConfigurationSection section = getConfig().getConfigurationSection(path);
             if (section != null) {
-                Registry<Biome> registry = BiomeColors.getBiomeRegistry(MinecraftServer.getServer().getAllLevels().iterator().next());
+                Registry<Biome> registry = BiomeColors.getBiomeRegistry();
                 for (String key : section.getKeys(false)) {
                     String hex = section.getString(key);
                     if (hex == null) {
