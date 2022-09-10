@@ -29,7 +29,7 @@ public class MarkerTest extends Addon implements EventListener {
 
     @Override
     public void onEnable() {
-        Pl3xMap.api().getEventRegistry().register(this, this);
+        Pl3xMap.api().getEventRegistry().register(this);
 
         try {
             //noinspection ConstantConditions

@@ -53,7 +53,7 @@ public class WorldBorderLayer extends SimpleLayer {
     @Override
     @NotNull
     public Collection<Marker> getMarkers() {
-        return useVanilla ? getVanillaBorderMarker() : super.getMarkers();
+        return useVanilla() ? getVanillaBorderMarker() : super.getMarkers();
     }
 
     public Collection<Marker> getVanillaBorderMarker() {

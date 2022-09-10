@@ -3,7 +3,6 @@ package net.pl3x.map.event;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import net.pl3x.map.addon.Addon;
 import net.pl3x.map.logger.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,15 +18,14 @@ public class EventRegistry {
         }
     }
 
-    public void register(@NotNull EventListener listener, @NotNull Addon addon) {
+    public void register(@NotNull EventListener listener) {
         for (Method method : listener.getClass().getMethods()) {
             if (method.getDeclaredAnnotation(EventHandler.class) == null) {
                 continue;
             }
             Class<?>[] params = method.getParameterTypes();
             if (params.length == 0) {
-                Logger.warn(String.format("Annotated EventListener for %s does not have an Event param %s@%s",
-                        addon.getName(), listener.getClass(), method.getName()));
+                Logger.warn(String.format("Annotated EventListener does not have an Event param %s@%s", listener.getClass(), method.getName()));
                 continue;
             }
             Class<?> event = params[0];
@@ -42,7 +40,7 @@ public class EventRegistry {
                 @SuppressWarnings("unchecked")
                 List<RegisteredHandler> list = (List<RegisteredHandler>) handlers.get(event);
 
-                RegisteredHandler handler = new RegisteredHandler(addon, listener, method);
+                RegisteredHandler handler = new RegisteredHandler(listener, method);
                 list.add(handler);
 
                 Logger.debug("Registered Event " + handler);
