@@ -282,7 +282,7 @@ public class Icon extends Marker {
      */
     @NotNull
     public Icon setRetina(@Nullable Key retina) {
-        Preconditions.checkArgument(retina == null || Pl3xMap.api().getIconRegistry().get(retina) != null, String.format("Icon not in registry (%s)", retina));
+        Preconditions.checkArgument(retina == null || Pl3xMap.api().getIconRegistry().has(retina), String.format("Icon not in registry (%s)", retina));
         this.retina = retina;
         return this;
     }
@@ -368,7 +368,7 @@ public class Icon extends Marker {
      */
     @NotNull
     public Icon setShadow(@Nullable Key shadow) {
-        Preconditions.checkArgument(shadow == null || Pl3xMap.api().getIconRegistry().get(shadow) != null, String.format("Icon not in registry (%s)", shadow));
+        Preconditions.checkArgument(shadow == null || Pl3xMap.api().getIconRegistry().has(shadow), String.format("Icon not in registry (%s)", shadow));
         this.shadow = shadow;
         return this;
     }
@@ -405,7 +405,7 @@ public class Icon extends Marker {
      */
     @NotNull
     public Icon setShadowRetina(@Nullable Key shadowRetina) {
-        Preconditions.checkArgument(shadowRetina == null || Pl3xMap.api().getIconRegistry().get(shadowRetina) != null, String.format("Icon not in registry (%s)", shadowRetina));
+        Preconditions.checkArgument(shadowRetina == null || Pl3xMap.api().getIconRegistry().has(shadowRetina), String.format("Icon not in registry (%s)", shadowRetina));
         this.shadowRetina = shadowRetina;
         return this;
     }
