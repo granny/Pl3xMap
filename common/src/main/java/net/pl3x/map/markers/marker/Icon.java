@@ -245,7 +245,7 @@ public class Icon extends Marker<Icon> {
      */
     @NotNull
     public Icon setImage(@NotNull Key image) {
-        Preconditions.checkNotNull(image, "Image key is null");
+        Preconditions.checkNotNull(image, "Icon key is null");
         Preconditions.checkNotNull(Pl3xMap.api().getIconRegistry().get(image), String.format("Icon not in registry (%s)", image));
         this.image = image;
         return this;

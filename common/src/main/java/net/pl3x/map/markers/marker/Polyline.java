@@ -161,7 +161,7 @@ public class Polyline extends Marker<Polyline> {
      */
     @NotNull
     public Polyline addPoint(@NotNull Point point) {
-        Preconditions.checkNotNull(point, "Line point is null");
+        Preconditions.checkNotNull(point, "Polyline point is null");
         this.points.add(point);
         return this;
     }
@@ -177,7 +177,7 @@ public class Polyline extends Marker<Polyline> {
      */
     @NotNull
     public Polyline addPoint(@NotNull Point @NotNull ... points) {
-        Preconditions.checkNotNull(points, "Line points is null");
+        Preconditions.checkNotNull(points, "Polyline points is null");
         for (Point point : points) {
             addPoint(point);
         }
@@ -195,7 +195,7 @@ public class Polyline extends Marker<Polyline> {
      */
     @NotNull
     public Polyline addPoint(@NotNull Collection<Point> points) {
-        Preconditions.checkNotNull(points, "Line points is null");
+        Preconditions.checkNotNull(points, "Polyline points is null");
         this.points.addAll(points);
         return this;
     }
@@ -208,7 +208,7 @@ public class Polyline extends Marker<Polyline> {
      */
     @NotNull
     public Polyline removePoint(@NotNull Point point) {
-        Preconditions.checkNotNull(point, "Line point is null");
+        Preconditions.checkNotNull(point, "Polyline point is null");
         this.points.remove(point);
         return this;
     }
@@ -221,7 +221,7 @@ public class Polyline extends Marker<Polyline> {
      */
     @NotNull
     public Polyline removePoint(@NotNull Point @NotNull ... points) {
-        Preconditions.checkNotNull(points, "Line points is null");
+        Preconditions.checkNotNull(points, "Polyline points is null");
         for (Point point : points) {
             removePoint(point);
         }
@@ -236,7 +236,7 @@ public class Polyline extends Marker<Polyline> {
      */
     @NotNull
     public Polyline removePoint(@NotNull Collection<Point> points) {
-        Preconditions.checkNotNull(points, "Line points is null");
+        Preconditions.checkNotNull(points, "Polyline points is null");
         this.points.removeAll(points);
         return this;
     }

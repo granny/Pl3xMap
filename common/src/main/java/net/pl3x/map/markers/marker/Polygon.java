@@ -113,7 +113,7 @@ public class Polygon extends Marker<Polygon> {
      */
     @NotNull
     public Polygon addPolyline(@NotNull Polyline polyline) {
-        Preconditions.checkNotNull(polyline, "Poly polyline is null");
+        Preconditions.checkNotNull(polyline, "Polygon polyline is null");
         this.polylines.add(polyline);
         return this;
     }
@@ -126,7 +126,7 @@ public class Polygon extends Marker<Polygon> {
      */
     @NotNull
     public Polygon addPolyline(@NotNull Polyline @NotNull ... polylines) {
-        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         for (Polyline polyline : polylines) {
             addPolyline(polyline);
         }
@@ -141,7 +141,7 @@ public class Polygon extends Marker<Polygon> {
      */
     @NotNull
     public Polygon addPolyline(@NotNull Collection<Polyline> polylines) {
-        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         this.polylines.addAll(polylines);
         return this;
     }
@@ -154,7 +154,7 @@ public class Polygon extends Marker<Polygon> {
      */
     @NotNull
     public Polygon removeLine(@NotNull Polyline polyline) {
-        Preconditions.checkNotNull(polyline, "Poly polyline is null");
+        Preconditions.checkNotNull(polyline, "Polygon polyline is null");
         this.polylines.remove(polyline);
         return this;
     }
@@ -167,7 +167,7 @@ public class Polygon extends Marker<Polygon> {
      */
     @NotNull
     public Polygon removeLine(@NotNull Polyline @NotNull ... polylines) {
-        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         for (Polyline polyline : polylines) {
             removeLine(polyline);
         }
@@ -182,7 +182,7 @@ public class Polygon extends Marker<Polygon> {
      */
     @NotNull
     public Polygon removeLine(@NotNull Collection<Polyline> polylines) {
-        Preconditions.checkNotNull(polylines, "Poly polylines is null");
+        Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         this.polylines.removeAll(polylines);
         return this;
     }
