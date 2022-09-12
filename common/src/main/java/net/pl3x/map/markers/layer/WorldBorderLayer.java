@@ -7,36 +7,24 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.pl3x.map.Key;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.marker.Marker;
-import net.pl3x.map.markers.option.Options;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class WorldBorderLayer extends SimpleLayer {
+/**
+ * Manages world border marker.
+ */
+public class WorldBorderLayer extends WorldLayer {
     public static final Key KEY = Key.of("pl3xmap-worldborder");
-    private final World world;
 
-    private Options options;
-
+    /**
+     * Create a new world border layer.
+     *
+     * @param key           key for layer
+     * @param world         world
+     * @param labelSupplier label
+     */
     public WorldBorderLayer(@NotNull Key key, @NotNull World world, @NotNull Supplier<String> labelSupplier) {
-        super(key, labelSupplier);
-        this.world = world;
-    }
-
-    @NotNull
-    public World getWorld() {
-        return this.world;
-    }
-
-    @Nullable
-    public Options getOptions() {
-        return this.options;
-    }
-
-    @NotNull
-    public WorldBorderLayer setOptions(@Nullable Options options) {
-        this.options = options;
-        return this;
+        super(key, world, labelSupplier);
     }
 
     @Override

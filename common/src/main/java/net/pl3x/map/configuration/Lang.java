@@ -198,6 +198,8 @@ public class Lang extends AbstractConfig {
     public static String UI_PLAYER_TRACKER = "Players";
     @Key("ui.players")
     public static String UI_PLAYERS = "Players (<online>/<max>)";
+    @Key("ui.world.spawn.tooltip")
+    public static String UI_WORLD_SPAWN = "Spawn";
     @Key("ui.worlds.heading")
     public static String UI_WORLDS_HEADING = "Worlds";
     @Key("ui.worlds.skeleton")

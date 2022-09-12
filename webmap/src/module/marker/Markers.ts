@@ -23,14 +23,18 @@ export class Markers {
         "line": (data: unknown[], options: MarkerOptions | undefined) => new Polyline(data, options),
         "rect": (data: unknown[], options: MarkerOptions | undefined) => new Rectangle(data, options)
     }
-    private _world: World;
-    private _name: string;
-    private _interval: number;
+    private readonly _world: World;
+    private readonly _name: string;
+    private readonly _layer: L.LayerGroup;
+    private readonly _interval: number;
 
     constructor(world: World, name: string, interval: number) {
         this._world = world;
         this._name = name;
+        this._layer = L.layerGroup();
         this._interval = interval;
+
+        this._layer.addTo(Pl3xMap.getInstance().map);
 
         this.update();
     }
@@ -40,9 +44,13 @@ export class Markers {
         Util.getJSON(`tiles/${this._world.name}/markers/${this._name}.json`)
             .then((json) => {
                 for (const index in Object.keys(json)) {
-                    Markers.parseMarker(json[index])?.addTo(Pl3xMap.getInstance().map);
+                    Markers.parseMarker(json[index])?.addTo(this._layer);
                 }
             });
+    }
+
+    clear(): void {
+        this._layer.removeFrom(Pl3xMap.getInstance().map);
     }
 
     static parseMarker(data: unknown[]): L.Layer | undefined {

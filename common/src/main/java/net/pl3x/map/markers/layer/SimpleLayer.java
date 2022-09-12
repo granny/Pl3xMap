@@ -11,6 +11,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a simple layer of markers and other metadata.
+ */
 public class SimpleLayer extends Layer {
     private final Map<Key, Marker<?>> markers = new ConcurrentHashMap<>();
 

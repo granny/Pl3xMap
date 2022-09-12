@@ -31,6 +31,7 @@ import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
+import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.coordinate.ChunkCoordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
@@ -38,6 +39,7 @@ import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.markers.layer.SpawnLayer;
 import net.pl3x.map.markers.layer.WorldBorderLayer;
 import net.pl3x.map.markers.option.Options;
 import net.pl3x.map.markers.option.Stroke;
@@ -158,7 +160,7 @@ public abstract class World extends Keyed {
             throw new RuntimeException(e);
         }
 
-        if (getConfig().WORLDBORDER_ENABLED) {
+        if (getConfig().WORLD_BORDER_ENABLED) {
             getLayerRegistry().register(new WorldBorderLayer(WorldBorderLayer.KEY, this, () -> "World Border")
                     .setOptions(new Options().setStroke(new Stroke().setColor(0xFFFF0000)))
                     .setUpdateInterval(15)
@@ -166,6 +168,11 @@ public abstract class World extends Keyed {
                     .setDefaultHidden(false)
                     .setPriority(99)
                     .setZIndex(99));
+        }
+
+        if (getConfig().WORLD_SPAWN_ENABLED) {
+            getLayerRegistry().register(new SpawnLayer(SpawnLayer.KEY, this, () -> Lang.UI_WORLD_SPAWN).setUpdateInterval(15)
+            );
         }
 
         startMarkersTask();

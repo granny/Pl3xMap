@@ -1,6 +1,7 @@
 package net.pl3x.map.addon.markertest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import javax.imageio.ImageIO;
@@ -32,9 +33,11 @@ public class MarkerTest extends Addon implements EventListener {
     public void onEnable() {
         Pl3xMap.api().getEventRegistry().register(this);
 
-        try {
-            //noinspection ConstantConditions
-            IconImage image = new IconImage(ICON_KEY, ImageIO.read(getClass().getResourceAsStream("/icons/x.png")), "png");
+        try (InputStream in = getClass().getResourceAsStream("/icons/x.png")) {
+            if (in == null) {
+                throw new RuntimeException("Could not read X image from jar!");
+            }
+            IconImage image = new IconImage(ICON_KEY, ImageIO.read(in), "png");
             Pl3xMap.api().getIconRegistry().register(image);
         } catch (IOException e) {
             Logger.warn("Failed to register spawn icon");

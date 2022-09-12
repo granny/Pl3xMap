@@ -24,6 +24,7 @@ export class World {
     private _zoom: Zoom = new Zoom(0, 0, 0);
     private _renderers: string[] = ['basic'];
     private _rendererLayers: Map<string, ReversedZoomTileLayer> = new Map();
+    private _markerLayers: Markers[] = [];
     private _loaded = false;
 
     private _biomePalette: Map<number, string> = new Map();
@@ -41,14 +42,6 @@ export class World {
         if (this._loaded) {
             return Promise.resolve(this);
         }
-
-        const world = this;
-        Util.getJSON(`tiles/${this.name}/markers.json`)
-            .then((json) => {
-                Object.keys(json).forEach(function (name: string) {
-                    new Markers(world, name, json[name]);
-                });
-            });
 
         Util.getJSON(`tiles/${this.name}/biomes.gz`)
             .then((json: Palette[]) => {
@@ -113,6 +106,15 @@ export class World {
                 attributeDom.style.display = "none";
             }
         }
+
+        const world = this;
+        const markerLayers = this.markerLayers;
+        Util.getJSON(`tiles/${this.name}/markers.json`)
+            .then((json) => {
+                Object.keys(json).forEach(function (name: string) {
+                    markerLayers.push(new Markers(world, name, json[name]));
+                });
+            });
     }
 
     getTileLayer(renderer: string): ReversedZoomTileLayer | undefined {
@@ -173,6 +175,10 @@ export class World {
             default:
                 return "url('images/sky/overworld.png')";
         }
+    }
+
+    get markerLayers(): Markers[] {
+        return this._markerLayers;
     }
 
     loadBlockInfo(zoom: number, x: number, z: number) {

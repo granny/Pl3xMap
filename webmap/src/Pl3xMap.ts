@@ -139,6 +139,7 @@ export class Pl3xMap {
             if (this._currentWorld !== world) {
                 worldChanged = rendererChanged = true;
                 this._rendererLayers.clear();
+                this._currentWorld?.markerLayers.forEach(layer => layer.clear())
                 this._map.world = world;
                 this._currentWorld = world;
 

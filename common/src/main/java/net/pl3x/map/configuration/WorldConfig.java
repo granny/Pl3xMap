@@ -123,9 +123,12 @@ public class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
-    @Key("markers.worldborder.enabled")
+    @Key("markers.world.spawn.enabled")
+    @Comment("Show the world spawn on the map")
+    public boolean WORLD_SPAWN_ENABLED = true;
+    @Key("markers.world.border.enabled")
     @Comment("Show the world border on the map")
-    public boolean WORLDBORDER_ENABLED = true;
+    public boolean WORLD_BORDER_ENABLED = true;
 
     @Key("player-tracker.enabled")
     @Comment("Enable the player tracker")
