@@ -21,7 +21,7 @@ public class FullRenderCommand extends Pl3xMapCommand {
     @Override
     public void register() {
         getHandler().registerSubcommand(builder -> builder.literal("fullrender")
-                .argument(WorldArgument.optional(WorldArgument.WORLD), description(Lang.COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION))
+                .argument(WorldArgument.optional("world"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_FULLRENDER_DESCRIPTION))
                 .permission("pl3xmap.command.fullrender")
                 .handler(this::execute));
@@ -29,11 +29,11 @@ public class FullRenderCommand extends Pl3xMapCommand {
 
     public void execute(CommandContext<Sender> context) {
         Sender sender = context.getSender();
-        World world = resolveWorld(context);
+        World world = WorldArgument.resolve(context, "world");
 
         if (world.hasActiveRender()) {
             sender.send(Lang.COMMAND_FULLRENDER_ALREADY_RENDERING,
-                    Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
+                    Placeholder.unparsed("world", world.getName()));
             return;
         }
 

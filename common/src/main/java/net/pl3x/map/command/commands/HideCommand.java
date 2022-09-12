@@ -22,7 +22,7 @@ public class HideCommand extends Pl3xMapCommand {
                 .permission("pl3xmap.command.hide")
                 .handler(this::execute));
         getHandler().registerSubcommand(builder -> builder.literal("hide")
-                .argument(PlayerArgument.optional(PlayerArgument.PLAYER), description(Lang.COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION))
+                .argument(PlayerArgument.optional("player"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_HIDE_DESCRIPTION))
                 .permission("pl3xmap.command.hide.others")
                 .handler(this::execute));
@@ -30,15 +30,15 @@ public class HideCommand extends Pl3xMapCommand {
 
     private void execute(CommandContext<Sender> context) {
         Sender sender = context.getSender();
-        Player player = resolvePlayer(context);
+        Player player = PlayerArgument.resolve(context, "player");
 
         if (player.isHidden()) {
             sender.send(Lang.COMMAND_HIDE_ALREADY_HIDDEN,
-                    Placeholder.unparsed(PlayerArgument.PLAYER, player.getName()));
+                    Placeholder.unparsed("player", player.getName()));
             return;
         }
         player.setHidden(true, true);
         sender.send(Lang.COMMAND_HIDE_SUCCESS,
-                Placeholder.unparsed(PlayerArgument.PLAYER, player.getName()));
+                Placeholder.unparsed("player", player.getName()));
     }
 }

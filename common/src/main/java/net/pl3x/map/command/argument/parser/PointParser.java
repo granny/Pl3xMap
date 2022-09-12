@@ -16,6 +16,11 @@ import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
+/**
+ * Parser that parses strings into {@link Point}s.
+ *
+ * @param <C> command sender type
+ */
 public class PointParser<C> implements ArgumentParser<C, Point> {
     @Override
     @NotNull

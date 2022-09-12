@@ -28,7 +28,7 @@ public class AddonInfo extends Keyed {
 
     private final Key key;
 
-    public AddonInfo(InputStream stream) {
+    AddonInfo(InputStream stream) {
         super(Key.NONE);
 
         Yaml yaml = new Yaml();

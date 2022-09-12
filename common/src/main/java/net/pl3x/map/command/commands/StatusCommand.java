@@ -27,7 +27,7 @@ public class StatusCommand extends Pl3xMapCommand {
     @Override
     public void register() {
         getHandler().registerSubcommand(builder -> builder.literal("status")
-                .argument(WorldArgument.of(WorldArgument.WORLD))
+                .argument(WorldArgument.of("world"))
                 .argument(StringArgument.<Sender>newBuilder("type").withSuggestionsProvider(this::suggestType).asOptional().build())
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_STATUS_DESCRIPTION))
                 .permission("pl3xmap.command.status")
@@ -46,7 +46,7 @@ public class StatusCommand extends Pl3xMapCommand {
 
     private void execute(CommandContext<Sender> context) {
         Sender sender = context.getSender();
-        World world = resolveWorld(context);
+        World world = WorldArgument.resolve(context, "world");
         String type = context.getOrDefault("type", null);
 
         Render render = world.getActiveRender();
@@ -57,7 +57,7 @@ public class StatusCommand extends Pl3xMapCommand {
             // if we're not actively rendering anything there is nothing to show
             if (progress == null) {
                 sender.send(Lang.COMMAND_STATUS_NOT_RENDERING,
-                        Placeholder.unparsed(WorldArgument.WORLD, world.getName())
+                        Placeholder.unparsed("world", world.getName())
                 );
                 return;
             }
@@ -83,7 +83,7 @@ public class StatusCommand extends Pl3xMapCommand {
 
         // no toggle? fine, show current status
         sender.send(Lang.COMMAND_STATUS_RENDER,
-                Placeholder.unparsed(WorldArgument.WORLD, world.getName()),
+                Placeholder.unparsed("world", world.getName()),
                 Placeholder.parsed("background", getStatus(world.hasBackgroundRender(), world.isPaused())),
                 Placeholder.parsed("foreground", getStatus(world.hasActiveRender(), world.isPaused()))
         );

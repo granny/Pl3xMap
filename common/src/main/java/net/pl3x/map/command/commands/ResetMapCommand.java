@@ -22,7 +22,7 @@ public class ResetMapCommand extends Pl3xMapCommand {
     @Override
     public void register() {
         getHandler().registerSubcommand(builder -> builder.literal("resetmap")
-                .argument(WorldArgument.of(WorldArgument.WORLD))
+                .argument(WorldArgument.of("world"))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RESETMAP_DESCRIPTION))
                 .meta(CommandConfirmationManager.META_CONFIRMATION_REQUIRED, true)
                 .permission("pl3xmap.command.resetmap")
@@ -31,12 +31,12 @@ public class ResetMapCommand extends Pl3xMapCommand {
 
     private void execute(CommandContext<Sender> context) {
         Sender sender = context.getSender();
-        World world = resolveWorld(context);
+        World world = WorldArgument.resolve(context, "world");
 
         // check for active renders first
         if (world.hasActiveRender()) {
             sender.send(Lang.COMMAND_RESETMAP_ACTIVE_RENDER,
-                    Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
+                    Placeholder.unparsed("world", world.getName()));
             return;
         }
 
@@ -51,7 +51,7 @@ public class ResetMapCommand extends Pl3xMapCommand {
             // resume background render
             world.setPaused(false);
             throw new IllegalStateException(Lang.COMMAND_RESETMAP_FAILED
-                    .replace("<" + WorldArgument.WORLD + ">", world.getName()),
+                    .replace("<" + "world" + ">", world.getName()),
                     e);
         }
 
@@ -63,6 +63,6 @@ public class ResetMapCommand extends Pl3xMapCommand {
         world.setPaused(false);
 
         sender.send(Lang.COMMAND_RESETMAP_SUCCESS,
-                Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
+                Placeholder.unparsed("world", world.getName()));
     }
 }

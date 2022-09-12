@@ -19,7 +19,7 @@ public class CancelRenderCommand extends Pl3xMapCommand {
     @Override
     public void register() {
         getHandler().registerSubcommand(builder -> builder.literal("cancelrender")
-                .argument(WorldArgument.optional(WorldArgument.WORLD), description(Lang.COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION))
+                .argument(WorldArgument.optional("world"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION))
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_CANCELRENDER_DESCRIPTION))
                 .permission("pl3xmap.command.cancelrender")
                 .handler(this::execute));
@@ -27,11 +27,11 @@ public class CancelRenderCommand extends Pl3xMapCommand {
 
     public void execute(CommandContext<Sender> context) {
         Sender sender = context.getSender();
-        World world = resolveWorld(context);
+        World world = WorldArgument.resolve(context, "world");
 
         if (!world.hasActiveRender()) {
             sender.send(Lang.COMMAND_CANCELRENDER_NOT_RENDERING,
-                    Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
+                    Placeholder.unparsed("world", world.getName()));
             return;
         }
 
@@ -39,7 +39,7 @@ public class CancelRenderCommand extends Pl3xMapCommand {
 
         if (sender instanceof Player) {
             sender.send(Lang.COMMAND_CANCELRENDER_SUCCESS,
-                    Placeholder.unparsed(WorldArgument.WORLD, world.getName()));
+                    Placeholder.unparsed("world", world.getName()));
         }
     }
 }

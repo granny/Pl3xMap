@@ -13,6 +13,9 @@ import javax.imageio.ImageIO;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Task to fetch and save a players skin.
+ */
 public class PlayerTexture implements Runnable {
     private static final Path SKINS_2D_DIR = World.WEB_DIR.resolve("images/skins/2D");
     private static final Path SKINS_3D_DIR = World.WEB_DIR.resolve("images/skins/3D");

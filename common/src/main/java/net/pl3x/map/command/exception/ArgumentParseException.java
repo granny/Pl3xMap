@@ -5,13 +5,16 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Thrown to indicate that a method has been passed an illegal or inappropriate command argument.
+ */
 public abstract class ArgumentParseException extends IllegalArgumentException {
     private final String input;
     private final String variable;
     private final Reason reason;
 
     /**
-     * Construct a new PointParseException
+     * Construct a new ArgumentParseException.
      *
      * @param input  Input
      * @param reason Failure reason
@@ -31,6 +34,9 @@ public abstract class ArgumentParseException extends IllegalArgumentException {
         return message;
     }
 
+    /**
+     * Failure reason for throwing the exception.
+     */
     public static class Reason {
         private final Supplier<String> supplier;
 

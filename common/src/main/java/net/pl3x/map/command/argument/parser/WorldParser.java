@@ -14,6 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
+/**
+ * Parser that parses strings into {@link World}s.
+ *
+ * @param <C> command sender type
+ */
 public class WorldParser<C> implements ArgumentParser<C, World> {
     @Override
     @NotNull
