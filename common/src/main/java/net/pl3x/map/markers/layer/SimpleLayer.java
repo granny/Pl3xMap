@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SimpleLayer extends Layer {
-    private final Map<Key, Marker> markers = new ConcurrentHashMap<>();
+    private final Map<Key, Marker<?>> markers = new ConcurrentHashMap<>();
 
     /**
      * Create a new simple layer.
@@ -25,7 +25,7 @@ public class SimpleLayer extends Layer {
 
     @Override
     @NotNull
-    public Collection<Marker> getMarkers() {
+    public Collection<Marker<?>> getMarkers() {
         return this.markers.values();
     }
 
@@ -37,7 +37,7 @@ public class SimpleLayer extends Layer {
      * @return this layer
      */
     @NotNull
-    public SimpleLayer addMarker(@NonNull Key key, @NotNull Marker marker) {
+    public SimpleLayer addMarker(@NonNull Key key, @NotNull Marker<?> marker) {
         this.markers.put(key, marker);
         return this;
     }
@@ -50,7 +50,7 @@ public class SimpleLayer extends Layer {
      * @return the existing marker or {@code null}
      */
     @Nullable
-    public Marker removeMarker(@NonNull Key key) {
+    public Marker<?> removeMarker(@NonNull Key key) {
         return this.markers.remove(key);
     }
 
@@ -69,7 +69,7 @@ public class SimpleLayer extends Layer {
      * @return registered markers
      */
     @NonNull
-    public Map<Key, Marker> registeredMarkers() {
+    public Map<Key, Marker<?>> registeredMarkers() {
         return Collections.unmodifiableMap(this.markers);
     }
 

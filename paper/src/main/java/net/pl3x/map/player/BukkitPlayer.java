@@ -105,16 +105,6 @@ public class BukkitPlayer extends Player {
     }
 
     @Override
-    public boolean isHidden() {
-        return super.isHidden();
-    }
-
-    @Override
-    public void setHidden(boolean hidden, boolean persistent) {
-        super.setHidden(true, persistent);
-    }
-
-    @Override
     public boolean isPersistentlyHidden() {
         return this.player.getPersistentDataContainer().getOrDefault(HIDDEN_KEY, PersistentDataType.BYTE, (byte) 0) != 0;
     }

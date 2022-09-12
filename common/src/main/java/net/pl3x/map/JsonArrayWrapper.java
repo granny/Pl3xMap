@@ -84,7 +84,7 @@ public class JsonArrayWrapper {
      *
      * @param option the option that needs to be added to the array.
      */
-    public void add(Option option) {
+    public void add(Option<?> option) {
         getJsonArray().add(option == null ? NULL_ARRAY : option.toJson());
     }
 
@@ -218,7 +218,7 @@ public class JsonArrayWrapper {
      *
      * @param i the index of the element that is being sought.
      * @return the element present at the ith index.
-     * @throws IndexOutOfBoundsException if i is negative or greater than or equal to the
+     * @throws IndexOutOfBoundsException if <code>i</code> is negative or greater than or equal to the
      *                                   {@link #size()} of the array.
      */
     public JsonElement get(int i) {

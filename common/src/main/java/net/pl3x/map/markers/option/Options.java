@@ -46,7 +46,7 @@ public class Options implements JsonSerializable {
     }
 
     @Nullable
-    static <T extends Option> T parse(@Nullable T option) {
+    static <T extends Option<T>> T parse(@Nullable T option) {
         return option == null || option.isDefault() ? null : option;
     }
 
@@ -220,42 +220,6 @@ public class Options implements JsonSerializable {
         }
 
         /**
-         * Set fill properties.
-         *
-         * @param fill fill properties
-         * @return this options builder
-         */
-        @NotNull
-        public Builder fill(@Nullable Fill fill) {
-            this.fill = parse(fill);
-            return this;
-        }
-
-        /**
-         * Set tooltip properties.
-         *
-         * @param tooltip tooltip properties
-         * @return this options builder
-         */
-        @NotNull
-        public Builder tooltip(@Nullable Tooltip tooltip) {
-            this.tooltip = parse(tooltip);
-            return this;
-        }
-
-        /**
-         * Set popup properties.
-         *
-         * @param popup popup properties
-         * @return this options builder
-         */
-        @NotNull
-        public Builder popup(@Nullable Popup popup) {
-            this.popup = parse(popup);
-            return this;
-        }
-
-        /**
          * Set whether to draw stroke along the path.
          * <p>
          * Setting to false will disable borders on polygons or circles.
@@ -396,6 +360,18 @@ public class Options implements JsonSerializable {
         }
 
         /**
+         * Set fill properties.
+         *
+         * @param fill fill properties
+         * @return this options builder
+         */
+        @NotNull
+        public Builder fill(@Nullable Fill fill) {
+            this.fill = parse(fill);
+            return this;
+        }
+
+        /**
          * Set whether to fill the path with color.
          * <p>
          * Setting to false will disable filling on polygons or circles.
@@ -452,6 +428,18 @@ public class Options implements JsonSerializable {
             if (this.fill.setColor(color).isDefault()) {
                 this.fill = null;
             }
+            return this;
+        }
+
+        /**
+         * Set tooltip properties.
+         *
+         * @param tooltip tooltip properties
+         * @return this options builder
+         */
+        @NotNull
+        public Builder tooltip(@Nullable Tooltip tooltip) {
+            this.tooltip = parse(tooltip);
             return this;
         }
 
@@ -589,6 +577,18 @@ public class Options implements JsonSerializable {
             if (this.tooltip.setOpacity(opacity).isDefault()) {
                 this.tooltip = null;
             }
+            return this;
+        }
+
+        /**
+         * Set popup properties.
+         *
+         * @param popup popup properties
+         * @return this options builder
+         */
+        @NotNull
+        public Builder popup(@Nullable Popup popup) {
+            this.popup = parse(popup);
             return this;
         }
 

@@ -14,8 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.Image;
-import net.pl3x.map.palette.BlockPaletteRegistry;
-import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.palette.Palette;
 import net.pl3x.map.render.Renderer;
 import net.pl3x.map.render.ScanData;
 import net.pl3x.map.render.ScanTask;
@@ -132,9 +131,6 @@ public class BlockInfoRenderer extends Renderer {
         this.byteBuffer.put(4, ByteUtil.toBytes(0x6D617001)); // map1
         this.byteBuffer.put(8, ByteUtil.toBytes(minY));
 
-        BlockPaletteRegistry blockPalette = Pl3xMap.api().getBlockPaletteRegistry();
-        PaletteRegistry<Biome> biomePalette = getWorld().getBiomePaletteRegistry();
-
         for (ScanData data : scanData.values()) {
             boolean fluid = data.getFluidPos() != null;
 
@@ -142,8 +138,11 @@ public class BlockInfoRenderer extends Renderer {
             Biome biome = fluid ? data.getFluidBiome() : data.getBlockBiome();
             BlockPos pos = fluid ? data.getFluidPos() : data.getBlockPos();
 
-            int blockIndex = Pl3xMap.api().getBlockPaletteRegistry().get(block).getIndex();
-            int biomeIndex = getWorld().getBiomePaletteRegistry().get(biome).getIndex();
+            Palette blockPalette = Pl3xMap.api().getBlockPaletteRegistry().get(block);
+            Palette biomePalette = getWorld().getBiomePaletteRegistry().get(biome);
+
+            int blockIndex = blockPalette == null ? 0 : blockPalette.getIndex();
+            int biomeIndex = biomePalette == null ? 0 : biomePalette.getIndex();
             int yPos = pos.getY() - minY; // ensure bottom starts at 0
 
             // 11111111111111111111111111111111 - 32 bits - (4294967295)

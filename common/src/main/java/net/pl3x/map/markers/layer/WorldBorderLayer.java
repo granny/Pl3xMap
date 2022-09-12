@@ -41,7 +41,7 @@ public class WorldBorderLayer extends SimpleLayer {
 
     @Override
     @NotNull
-    public Collection<Marker> getMarkers() {
+    public Collection<Marker<?>> getMarkers() {
         WorldBorder border = getWorld().getLevel().getWorldBorder();
 
         int x = (int) border.getCenterX();

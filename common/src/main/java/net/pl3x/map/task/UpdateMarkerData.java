@@ -50,10 +50,10 @@ public class UpdateMarkerData implements Runnable {
         FileUtil.write(this.gson.toJson(layers), this.world.getTilesDir().resolve("markers.json"));
     }
 
-    private static class Adapter implements JsonSerializer<Marker> {
+    private static class Adapter implements JsonSerializer<Marker<?>> {
         @Override
         @NotNull
-        public JsonElement serialize(@NotNull Marker marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
+        public JsonElement serialize(@NotNull Marker<?> marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
             JsonArrayWrapper wrapper = new JsonArrayWrapper();
             wrapper.add(marker.getType());
             wrapper.add(marker);

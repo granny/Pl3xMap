@@ -190,5 +190,5 @@ public abstract class Layer extends Keyed {
      * @return markers to display
      */
     @NotNull
-    public abstract Collection<Marker> getMarkers();
+    public abstract Collection<Marker<?>> getMarkers();
 }

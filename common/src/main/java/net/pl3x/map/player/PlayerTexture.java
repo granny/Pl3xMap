@@ -53,7 +53,7 @@ public class PlayerTexture implements Runnable {
     }
 
     @NotNull
-    private static BufferedImage get3DHead(@NotNull BufferedImage source) throws IOException {
+    private static BufferedImage get3DHead(@NotNull BufferedImage source) {
         // get parts
         BufferedImage left = getPart(source, 8, 8);
         BufferedImage right = getPart(source, 16, 8);

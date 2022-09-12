@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Pl3xMap {
     final class Provider {
-        static Pl3xMap api = null;
+        static Pl3xMap api;
 
         @NotNull
         public static Pl3xMap api() {

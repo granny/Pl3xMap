@@ -167,7 +167,7 @@ public class FileUtil {
     public static void saveGzip(byte[] bytes, Path file) throws IOException {
         try (
                 OutputStream fileOut = Files.newOutputStream(mkDirs(file));
-                GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
+                GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut)
         ) {
             gzipOut.write(bytes);
         }
@@ -176,7 +176,7 @@ public class FileUtil {
     public static void readGzip(Path file, ByteBuffer buffer) throws IOException {
         try (
                 InputStream fileIn = Files.newInputStream(file);
-                GZIPInputStream gzipIn = new GZIPInputStream(fileIn);
+                GZIPInputStream gzipIn = new GZIPInputStream(fileIn)
         ) {
             buffer.put(gzipIn.readAllBytes());
         }
