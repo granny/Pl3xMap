@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * outer polygon shape. Any additional polylines will be used
  * to cut out "holes" in the outer polygon shape.
  */
-public class Polygon extends Marker {
+public class Polygon extends Marker<Polygon> {
     private final List<Polyline> polylines = new ArrayList<>();
 
     private Polygon() {

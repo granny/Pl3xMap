@@ -1,6 +1,5 @@
 package net.pl3x.map.markers.option;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
@@ -11,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Popup properties of a marker.
  */
-public class Popup extends Option {
+public class Popup extends Option<Popup> {
     private String content;
     private String pane;
     private Point offset;
@@ -29,20 +28,28 @@ public class Popup extends Option {
     private Boolean closeOnClick;
 
     /**
+     * Create a popup rule with default options.
+     */
+    public Popup() {
+    }
+
+    /**
      * Create a popup rule.
      *
      * @param content popup content
      */
-    public Popup(@NotNull String content) {
+    public Popup(@Nullable String content) {
         setContent(content);
     }
 
     /**
      * Get the content of this popup rule.
+     * <p>
+     * If null, the popup rule is effectively disabled.
      *
      * @return popup content
      */
-    @NotNull
+    @Nullable
     public String getContent() {
         return this.content;
     }
@@ -51,13 +58,14 @@ public class Popup extends Option {
      * Set the content for this popup rule.
      * <p>
      * HTML is valid here.
+     * <p>
+     * If null, the popup rule is effectively disabled.
      *
      * @param content popup content
      * @return this popup rule
      */
     @NotNull
-    public Popup setContent(@NotNull String content) {
-        Preconditions.checkNotNull(content, "Popup content is null");
+    public Popup setContent(@Nullable String content) {
         this.content = content;
         return this;
     }
@@ -300,7 +308,7 @@ public class Popup extends Option {
      * Defaults to '<code>new {@link Point}(5, 5)</code>' if null.
      *
      * @param autoPanPadding padding margins
-     * @return padding margins
+     * @return this popup rule
      */
     @NotNull
     public Popup setAutoPanPadding(@Nullable Point autoPanPadding) {
@@ -443,6 +451,25 @@ public class Popup extends Option {
     }
 
     @Override
+    public boolean isDefault() {
+        return getContent() != null &&
+                getPane() != null &&
+                getOffset() != null &&
+                getMaxWidth() != null &&
+                getMinWidth() != null &&
+                getMaxHeight() != null &&
+                shouldAutoPan() != null &&
+                getAutoPanPaddingTopLeft() != null &&
+                getAutoPanPaddingBottomRight() != null &&
+                getAutoPanPadding() != null &&
+                shouldKeepInView() != null &&
+                hasCloseButton() != null &&
+                shouldAutoClose() != null &&
+                shouldCloseOnEscapeKey() != null &&
+                shouldCloseOnClick() != null;
+    }
+
+    @Override
     @NotNull
     public JsonElement toJson() {
         JsonArrayWrapper wrapper = new JsonArrayWrapper();
@@ -476,7 +503,7 @@ public class Popup extends Option {
             return false;
         }
         Popup other = (Popup) o;
-        return getContent().equals(other.getContent())
+        return Objects.equals(getContent(), other.getContent())
                 && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOffset(), other.getOffset())
                 && isSizeEqual(other)

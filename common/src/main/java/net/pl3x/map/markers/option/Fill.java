@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Fill properties of a marker.
  */
-public class Fill extends Option {
+public class Fill extends Option<Fill> {
     private Boolean enabled;
     private Type type;
     private Integer color;
@@ -21,7 +21,7 @@ public class Fill extends Option {
     }
 
     /**
-     * Create a fill rule with default enabled state.
+     * Create a fill rule.
      */
     public Fill(boolean enabled) {
         setEnabled(enabled);
@@ -116,6 +116,13 @@ public class Fill extends Option {
     public Fill setColor(@Nullable Integer color) {
         this.color = color;
         return this;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return isEnabled() != null &&
+                getType() != null &&
+                getColor() != null;
     }
 
     @Override

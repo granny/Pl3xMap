@@ -6,14 +6,13 @@ import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
-import net.pl3x.map.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents an ellipse marker.
  */
-public class Ellipse extends Marker {
+public class Ellipse extends Marker<Ellipse> {
     private Point center;
     private Vector radius;
     private Double tilt;
@@ -289,12 +288,6 @@ public class Ellipse extends Marker {
     public Ellipse setTilt(@Nullable Double tilt) {
         this.tilt = tilt;
         return this;
-    }
-
-    @Override
-    @NotNull
-    public Ellipse setOptions(@Nullable Options options) {
-        return (Ellipse) super.setOptions(options);
     }
 
     @Override

@@ -9,14 +9,13 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.image.IconRegistry;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
-import net.pl3x.map.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents an icon marker.
  */
-public class Icon extends Marker {
+public class Icon extends Marker<Icon> {
     private Point point;
     private Key image;
     private Key retina;
@@ -464,12 +463,6 @@ public class Icon extends Marker {
     public Icon setShadowAnchor(@Nullable Vector shadowAnchor) {
         this.shadowAnchor = shadowAnchor;
         return this;
-    }
-
-    @Override
-    @NotNull
-    public Icon setOptions(@Nullable Options options) {
-        return (Icon) super.setOptions(options);
     }
 
     @Override

@@ -7,14 +7,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
-import net.pl3x.map.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a multi-polyline marker.
  */
-public class MultiPolyline extends Marker {
+public class MultiPolyline extends Marker<MultiPolyline> {
     private final List<Polyline> polylines = new ArrayList<>();
 
     private MultiPolyline() {
@@ -182,12 +181,6 @@ public class MultiPolyline extends Marker {
         Preconditions.checkNotNull(polylines, "MultiPolyline polylines is null");
         this.polylines.removeAll(polylines);
         return this;
-    }
-
-    @Override
-    @NotNull
-    public MultiPolyline setOptions(@Nullable Options options) {
-        return (MultiPolyline) super.setOptions(options);
     }
 
     @Override

@@ -19,6 +19,7 @@ import net.pl3x.map.markers.layer.SimpleLayer;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.marker.Polygon;
 import net.pl3x.map.markers.marker.Polyline;
+import net.pl3x.map.markers.option.Options;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,23 +49,30 @@ public class MarkerTest extends Addon implements EventListener {
         MARKERS.add(Marker.circle(Point.of(-100, 100), 20));
         MARKERS.add(Marker.ellipse(Point.of(100, 100), Vector.of(10, 20), 45D));
         MARKERS.add(Marker.icon(Point.of(150, 50), ICON_KEY, 16));
-        MARKERS.add(Marker.multiPolygon(Polygon.of(
-                Polyline.of(
-                        Point.of(-200, 200),
-                        Point.of(-150, 200),
-                        Point.of(-175, 150)
-                ),
-                Polyline.of(
-                        Point.of(-300, 200),
-                        Point.of(-250, 200),
-                        Point.of(-275, 150)
-                ),
-                Polyline.of(
-                        Point.of(-400, 200),
-                        Point.of(-350, 200),
-                        Point.of(-375, 150)
+        MARKERS.add(Marker.multiPolygon()
+                .setOptions(Options.builder()
+                        .strokeColor(0xFFFF0000)
+                        .build()
                 )
-        )));
+                .clearPolygons()
+                .addPolygon(Polygon.of(
+                        Polyline.of(
+                                Point.of(-200, 200),
+                                Point.of(-150, 200),
+                                Point.of(-175, 150)
+                        ),
+                        Polyline.of(
+                                Point.of(-300, 200),
+                                Point.of(-250, 200),
+                                Point.of(-275, 150)
+                        ),
+                        Polyline.of(
+                                Point.of(-400, 200),
+                                Point.of(-350, 200),
+                                Point.of(-375, 150)
+                        )
+                ))
+        );
         MARKERS.add(Marker.multiPolyline(
                 Polyline.of(
                         Point.of(0, 200),

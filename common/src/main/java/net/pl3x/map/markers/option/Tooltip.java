@@ -1,6 +1,5 @@
 package net.pl3x.map.markers.option;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Tooltip properties of a marker.
  */
-public class Tooltip extends Option {
+public class Tooltip extends Option<Tooltip> {
     private String content;
     private String pane;
     private Point offset;
@@ -22,20 +21,28 @@ public class Tooltip extends Option {
     private Double opacity;
 
     /**
+     * Create a tooltip rule with default options.
+     */
+    public Tooltip() {
+    }
+
+    /**
      * Create a tooltip rule.
      *
      * @param string tooltip content
      */
-    public Tooltip(@NotNull String string) {
+    public Tooltip(@Nullable String string) {
         setContent(string);
     }
 
     /**
      * Get the content of this tooltip rule.
+     * <p>
+     * If null, the tooltip rule is effectively disabled.
      *
      * @return tooltip content
      */
-    @NotNull
+    @Nullable
     public String getContent() {
         return this.content;
     }
@@ -44,13 +51,14 @@ public class Tooltip extends Option {
      * Set the content for this tooltip rule.
      * <p>
      * HTML is valid here.
+     * <p>
+     * If null, the tooltip rule is effectively disabled.
      *
      * @param content tooltip content
      * @return this tooltip rule
      */
     @NotNull
-    public Tooltip setContent(@NotNull String content) {
-        Preconditions.checkNotNull(content, "Tooltip content is null");
+    public Tooltip setContent(@Nullable String content) {
         this.content = content;
         return this;
     }
@@ -216,6 +224,17 @@ public class Tooltip extends Option {
     }
 
     @Override
+    public boolean isDefault() {
+        return getContent() != null &&
+                getPane() != null &&
+                getOffset() != null &&
+                getDirection() != null &&
+                isPermanent() != null &&
+                isSticky() != null &&
+                getOpacity() != null;
+    }
+
+    @Override
     @NotNull
     public JsonElement toJson() {
         JsonArrayWrapper wrapper = new JsonArrayWrapper();
@@ -241,7 +260,7 @@ public class Tooltip extends Option {
             return false;
         }
         Tooltip other = (Tooltip) o;
-        return getContent().equals(other.getContent())
+        return Objects.equals(getContent(), other.getContent())
                 && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOffset(), other.getOffset())
                 && Objects.equals(getDirection(), other.getDirection())

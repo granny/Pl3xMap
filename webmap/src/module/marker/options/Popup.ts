@@ -8,7 +8,7 @@ export class Popup {
     // ["content", null, null, 300, 50, null, 1, null, null, null, false, true, true, true, true]
 
     constructor(data: unknown[]) {
-        this._content = data[0] as string;
+        this._content = Util.isset(data[0]) ? data[0] as string : "";
 
         let props: L.PopupOptions = {};
         if (Util.isset(data[1])) props = {...props, pane: data[1] as string};

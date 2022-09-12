@@ -5,14 +5,13 @@ import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
 import net.pl3x.map.markers.Point;
-import net.pl3x.map.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a rectangle marker.
  */
-public class Rectangle extends Marker {
+public class Rectangle extends Marker<Rectangle> {
     private Point point1;
     private Point point2;
 
@@ -112,12 +111,6 @@ public class Rectangle extends Marker {
         Preconditions.checkNotNull(point1, "Rectangle point2 is null");
         this.point2 = point2;
         return this;
-    }
-
-    @Override
-    @NotNull
-    public Rectangle setOptions(@Nullable Options options) {
-        return (Rectangle) super.setOptions(options);
     }
 
     @Override

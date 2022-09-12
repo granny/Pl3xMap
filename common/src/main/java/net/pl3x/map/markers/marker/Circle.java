@@ -5,14 +5,13 @@ import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
 import net.pl3x.map.markers.Point;
-import net.pl3x.map.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a circle marker.
  */
-public class Circle extends Marker {
+public class Circle extends Marker<Circle> {
     private Point center;
     private double radius;
 
@@ -108,12 +107,6 @@ public class Circle extends Marker {
     public Circle setRadius(double radius) {
         this.radius = radius;
         return this;
-    }
-
-    @Override
-    @NotNull
-    public Circle setOptions(@Nullable Options options) {
-        return (Circle) super.setOptions(options);
     }
 
     @Override

@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * The last point you add does not need to be the
  * same as the first point you added for a polygon.
  */
-public class Polyline extends Marker {
+public class Polyline extends Marker<Polyline> {
     private final List<Point> points = new ArrayList<>();
 
     private Polyline() {

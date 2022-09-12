@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a map marker.
  */
-public abstract class Marker implements JsonSerializable {
+public abstract class Marker<T extends Marker<T>> implements JsonSerializable {
     private final String type;
     private Options options;
 
@@ -414,8 +414,22 @@ public abstract class Marker implements JsonSerializable {
      * @return this marker
      */
     @NotNull
-    public Marker setOptions(@Nullable Options options) {
+    @SuppressWarnings("unchecked")
+    public T setOptions(@Nullable Options options) {
         this.options = options;
-        return this;
+        return (T) this;
+    }
+
+    /**
+     * Set new options for this marker.
+     * <p>
+     * Null options represents "default" values. See wiki about defaults.
+     *
+     * @param builder new options builder or null
+     * @return this marker
+     */
+    @NotNull
+    public T setOptions(@Nullable Options.Builder builder) {
+        return setOptions(builder == null ? null : builder.build());
     }
 }

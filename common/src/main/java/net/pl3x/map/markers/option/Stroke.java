@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Stroke properties of a marker.
  */
-public class Stroke extends Option {
+public class Stroke extends Option<Stroke> {
     private Boolean enabled;
     private Integer weight;
     private Integer color;
@@ -25,7 +25,7 @@ public class Stroke extends Option {
     }
 
     /**
-     * Create a stroke rule with default enabled state.
+     * Create a stroke rule.
      */
     public Stroke(boolean enabled) {
         setEnabled(enabled);
@@ -234,6 +234,17 @@ public class Stroke extends Option {
     public Stroke setDashOffset(@Nullable String dashOffset) {
         this.dashOffset = dashOffset;
         return this;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return isEnabled() != null &&
+                getWeight() != null &&
+                getColor() != null &&
+                getLineCapShape() != null &&
+                getLineJoinShape() != null &&
+                getDashPattern() != null &&
+                getDashOffset() != null;
     }
 
     @Override

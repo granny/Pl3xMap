@@ -8,7 +8,7 @@ export class Tooltip {
     // ["content", null, null, 2, 0, 0, 0.9]
 
     constructor(data: unknown[]) {
-        this._content = data[0] as string;
+        this._content = Util.isset(data[0]) ? data[0] as string : "";
 
         let props = {};
         if (Util.isset(data[1])) props = {...props, pane: data[1] as string};

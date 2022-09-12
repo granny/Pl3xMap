@@ -7,14 +7,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.JsonArrayWrapper;
-import net.pl3x.map.markers.option.Options;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a multi-polygon marker.
  */
-public class MultiPolygon extends Marker {
+public class MultiPolygon extends Marker<MultiPolygon> {
     private final List<Polygon> polygons = new ArrayList<>();
 
     private MultiPolygon() {
@@ -182,12 +181,6 @@ public class MultiPolygon extends Marker {
         Preconditions.checkNotNull(polygons, "MultiPolygon polygons is null");
         this.polygons.removeAll(polygons);
         return this;
-    }
-
-    @Override
-    @NotNull
-    public MultiPolygon setOptions(@Nullable Options options) {
-        return (MultiPolygon) super.setOptions(options);
     }
 
     @Override
