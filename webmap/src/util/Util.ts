@@ -123,7 +123,9 @@ export class Util {
     }
 
     public static toLatLng(point: L.PointTuple): L.LatLng {
-        return L.latLng(Util.pixelsToMeters(point[1] + 0.5), Util.pixelsToMeters(point[0] + 0.5));
+        const x = Number(point[0]) + 0.5;
+        const z = Number(point[1]) + 0.5;
+        return L.latLng(Util.pixelsToMeters(z), Util.pixelsToMeters(x));
     }
 
     public static toPoint(latlng: L.LatLng): L.PointTuple {
