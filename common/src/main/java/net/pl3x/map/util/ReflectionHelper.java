@@ -38,6 +38,9 @@ public class ReflectionHelper {
     private static final Consumer<String> onError = s -> {
     };
 
+    private ReflectionHelper() {
+    }
+
     public static LevelChunkSection createLevelChunkSection(int chunkYPos, CompoundTag chunkSectionNBT, Registry<Biome> biomeRegistry) {
         //noinspection ConstantConditions
         LevelChunkSection levelChunkSection = new LevelChunkSection(chunkYPos, biomeRegistry, null, null);

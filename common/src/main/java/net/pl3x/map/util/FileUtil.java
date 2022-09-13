@@ -35,6 +35,9 @@ public class FileUtil {
 
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.mca");
 
+    private FileUtil() {
+    }
+
     public static void extract(String filename, boolean replace) {
         if (!Files.exists(FileUtil.MAIN_DIR.resolve(filename))) {
             Pl3xMap.api().saveResource(filename, replace);

@@ -14,6 +14,9 @@ import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.render.ScanData;
 
 public class Colors {
+    private Colors() {
+    }
+
     public static int lerpRGB(int color0, int color1, float delta) {
         if (color0 == color1) return color0;
         if (delta >= 1F) return color1;

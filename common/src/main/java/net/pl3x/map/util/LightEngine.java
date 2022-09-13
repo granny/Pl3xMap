@@ -30,6 +30,9 @@ public class LightEngine {
         }
     }
 
+    private LightEngine() {
+    }
+
     public static int getBlockLightValue(ChunkAccess chunk, BlockPos pos) {
         final SWMRNibbleArray[] nibbles = chunk.getBlockNibbles();
         final int index = Mathf.clamp(0, nibbles.length - 1, Coordinate.blockToChunk(pos.getY()) - getMinLightSection());
