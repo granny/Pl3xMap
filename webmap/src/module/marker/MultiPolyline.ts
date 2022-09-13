@@ -1,14 +1,17 @@
 import * as L from "leaflet";
 import {Util} from "../../util/Util";
-import {MarkerOptions} from "./options/MarkerOptions";
-import {Marker} from "./Marker";
+import {Marker, Type} from "./Marker";
 
 export class MultiPolyline extends Marker {
 
     // [[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]
 
-    constructor(data: unknown[], options: MarkerOptions | undefined) {
+    constructor(type: Type) {
+        const data = type.data;
+        const options = type.options;
+
         const lines = [];
+
         for (const points of data as unknown[][]) {
             const line = [];
             for (const point of points) {
@@ -17,15 +20,16 @@ export class MultiPolyline extends Marker {
             lines.push(line);
         }
 
-        const marker = L.polyline(lines, {
-            ...options?.properties,
-            smoothFactor: 1.0,
-            noClip: false,
-            bubblingMouseEvents: true,
-            interactive: true,
-            attribution: undefined
-        });
-
-        super(marker);
+        super(L.polyline(
+            lines,
+            {
+                ...options?.properties,
+                smoothFactor: 1.0,
+                noClip: false,
+                bubblingMouseEvents: true,
+                interactive: true,
+                attribution: undefined
+            })
+        );
     }
 }

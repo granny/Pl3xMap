@@ -65,6 +65,10 @@ export default class WorldsTab extends BaseTab {
         input.name = 'world';
         input.checked = false;
         input.addEventListener('click', async (e: MouseEvent) => {
+            // reset browser url when changing worlds
+            // makes it autofocus on world spawn
+            window.history.replaceState(null, this._pl3xmap.lang.title, '?');
+            // change worlds
             this._pl3xmap.setCurrentMap(world).catch(() => {
                 e.preventDefault(); //Don't update radio button if switch fails
             });

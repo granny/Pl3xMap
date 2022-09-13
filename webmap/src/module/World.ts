@@ -6,9 +6,9 @@ import {Zoom} from "./Zoom";
 import {LinkControl} from "../control/LinkControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {BlockInfoControl} from "../control/BlockInfoControl";
+import {MarkerLayer} from "../layergroup/MarkerLayer";
 import {UI} from "../options/UI";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
-import {Markers} from "./marker/Markers";
 
 export class World {
     private readonly _pl3xmap: Pl3xMap;
@@ -24,7 +24,7 @@ export class World {
     private _zoom: Zoom = new Zoom(0, 0, 0);
     private _renderers: string[] = ['basic'];
     private _rendererLayers: Map<string, ReversedZoomTileLayer> = new Map();
-    private _markerLayers: Markers[] = [];
+    private _markerLayers: MarkerLayer[] = [];
     private _loaded = false;
 
     private _biomePalette: Map<number, string> = new Map();
@@ -92,27 +92,29 @@ export class World {
         }
     }
 
+    public unload(): void {
+        this._markerLayers.forEach(layer => layer.unload())
+    }
+
     public updateUI() {
         document.getElementById("map")!.style.background = this.background;
+
         this._pl3xmap.linkControl = this._ui.link ? new LinkControl(this._pl3xmap, this._ui.link) : null;
         this._pl3xmap.coordsControl = this._ui.coords ? new CoordsControl(this._pl3xmap, this._ui.coords) : null;
         this._pl3xmap.blockInfoControl = this._ui.blockinfo ? new BlockInfoControl(this._pl3xmap, this._ui.blockinfo) : null;
 
         const attributeDom = this.pl3xmap.map.attributionControl.getContainer();
         if (attributeDom) {
-            if (this._ui.attribution) {
-                attributeDom.style.display = "inline-block";
-            } else {
-                attributeDom.style.display = "none";
-            }
+            attributeDom.style.display = this._ui.attribution ? "inline-block" : "none";
         }
 
         const world = this;
-        const markerLayers = this.markerLayers;
+        const markerLayers = this._markerLayers;
+
         Util.getJSON(`tiles/${this.name}/markers.json`)
             .then((json) => {
                 Object.keys(json).forEach(function (name: string) {
-                    markerLayers.push(new Markers(world, name, json[name]));
+                    markerLayers.push(new MarkerLayer(name, world, json[name]));
                 });
             });
     }
@@ -175,10 +177,6 @@ export class World {
             default:
                 return "url('images/sky/overworld.png')";
         }
-    }
-
-    get markerLayers(): Markers[] {
-        return this._markerLayers;
     }
 
     loadBlockInfo(zoom: number, x: number, z: number) {

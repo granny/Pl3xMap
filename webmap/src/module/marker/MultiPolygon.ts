@@ -1,14 +1,17 @@
 import * as L from "leaflet";
-import {Marker} from "./Marker";
-import {MarkerOptions} from "./options/MarkerOptions";
+import {Marker, Type} from "./Marker";
 import {Util} from "../../util/Util";
 
 export class MultiPolygon extends Marker {
 
     // [[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]],[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]]
 
-    constructor(data: unknown[], options: MarkerOptions | undefined) {
+    constructor(type: Type) {
+        const data = type.data;
+        const options = type.options;
+
         const polys = [];
+
         for (const shape of data as unknown[][][]) {
             const poly = [];
             for (const points of shape) {
@@ -21,15 +24,16 @@ export class MultiPolygon extends Marker {
             polys.push(poly);
         }
 
-        const marker = L.polygon(polys, {
-            ...options?.properties,
-            smoothFactor: 1.0,
-            noClip: false,
-            bubblingMouseEvents: true,
-            interactive: true,
-            attribution: undefined
-        });
-
-        super(marker);
+        super(L.polygon(
+            polys,
+            {
+                ...options?.properties,
+                smoothFactor: 1.0,
+                noClip: false,
+                bubblingMouseEvents: true,
+                interactive: true,
+                attribution: undefined
+            })
+        );
     }
 }

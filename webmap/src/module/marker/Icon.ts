@@ -1,16 +1,18 @@
 import * as L from "leaflet";
 import {Util} from "../../util/Util";
-import {MarkerOptions} from "./options/MarkerOptions";
-import {Marker} from "./Marker";
+import {Marker, Type} from "./Marker";
 
 export class Icon extends Marker {
 
     // [[0,0],"","",[0,0],[0,0],"","",[0,0],[0,0]]
 
-    constructor(data: unknown[], options: MarkerOptions | undefined) {
+    constructor(type: Type) {
         function url(image: string) {
             return `images/icon/registered/${image}.png`;
         }
+
+        const data = type.data;
+        const options = type.options;
 
         let props = {};
 
@@ -29,12 +31,13 @@ export class Icon extends Marker {
         if (Util.isset(tooltipOffset)) props = {...props, tooltipAnchor: tooltipOffset as L.PointTuple};
         if (Util.isset(popupOffset)) props = {...props, popupAnchor: popupOffset as L.PointTuple};
 
-        const marker = L.marker(Util.toLatLng(data[0] as L.PointTuple), {
-            ...options?.properties,
-            icon: L.icon(props as L.IconOptions),
-            attribution: undefined
-        });
-
-        super(marker);
+        super(L.marker(
+            Util.toLatLng(data[0] as L.PointTuple),
+            {
+                ...options?.properties,
+                icon: L.icon(props as L.IconOptions),
+                attribution: undefined
+            })
+        );
     }
 }
