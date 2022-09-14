@@ -18,15 +18,19 @@ public final class BiomeRenderer extends Renderer {
     @Override
     public void scanData(RegionCoordinate region, ScanData.Data scanData) {
         for (ScanData data : scanData.values()) {
-            boolean fluid = data.getFluidPos() != null;
+            int pixelColor = 0;
 
-            // determine the biome
-            ResourceKey<Biome> biomeKey = fluid ? data.getFluidBiomeKey() : data.getBlockBiomeKey();
-            int pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, AdvancedConfig.BIOME_COLORS.getOrDefault(biomeKey, 0));
+            if (Colors.getRawBlockColor(data.getBlockState()) > 0) {
+                boolean fluid = data.getFluidPos() != null;
 
-            // work out the heightmap
-            if (!fluid) {
-                pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
+                // determine the biome
+                ResourceKey<Biome> biomeKey = fluid ? data.getFluidBiomeKey() : data.getBlockBiomeKey();
+                pixelColor = biomeKey == null ? 0 : Colors.setAlpha(0xFF, AdvancedConfig.BIOME_COLORS.getOrDefault(biomeKey, 0));
+
+                // work out the heightmap
+                if (!fluid) {
+                    pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
+                }
             }
 
             int pixelX = data.getCoordinate().getBlockX() & Image.SIZE - 1;
