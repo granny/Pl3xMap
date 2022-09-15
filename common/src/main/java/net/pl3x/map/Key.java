@@ -1,5 +1,6 @@
 package net.pl3x.map;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * name, for example {@code "myplugin_layer-1"}, would be good practice.
  */
 public final class Key {
-    private static final Pattern VALID_CHARS = Pattern.compile("^[a-zA-Z0-9.:/_-]+$");
+    private static final Pattern VALID_CHARS = Pattern.compile("^[a-zA-Z0-9._-]+[^.]$");
 
     public static final Key NONE = new Key("none");
 
@@ -24,7 +25,7 @@ public final class Key {
      */
     public Key(@NotNull String key) {
         if (!VALID_CHARS.matcher(key).matches()) {
-            throw new IllegalArgumentException(String.format("Non [a-zA-Z0-9.:/_-] character in key '%s'", key));
+            throw new IllegalArgumentException(String.format("Non [a-zA-Z0-9._-] character in key '%s'", key));
         }
         this.key = key;
     }
@@ -38,6 +39,17 @@ public final class Key {
     @NotNull
     public static Key of(@NotNull String key) {
         return new Key(key);
+    }
+
+    /**
+     * Create a new key.
+     *
+     * @param uuid uuid
+     * @return a new key
+     */
+    @NotNull
+    public static Key of(@NotNull UUID uuid) {
+        return new Key(uuid.toString());
     }
 
     @Override

@@ -25,11 +25,11 @@ public abstract class Player extends Sender {
     /**
      * Create a new key.
      *
-     * @param name player name
+     * @param uuid player uuid
      * @return a new key
      */
-    public static Key createKey(@NotNull String name) {
-        return Key.of("player:" + name);
+    public static Key createKey(@NotNull UUID uuid) {
+        return Key.of(uuid);
     }
 
     /**

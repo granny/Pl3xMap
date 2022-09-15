@@ -27,7 +27,7 @@ public class BukkitPlayerRegistry extends PlayerRegistry {
      */
     @Nullable
     public Player unregister(@NotNull org.bukkit.entity.Player player) {
-        Player p = get(player.getName());
+        Player p = get(player.getUniqueId());
         return p == null ? null : unregister(p);
     }
 
@@ -41,6 +41,6 @@ public class BukkitPlayerRegistry extends PlayerRegistry {
      */
     @Nullable
     public Player get(@NotNull org.bukkit.entity.Player player) {
-        return get(player.getName());
+        return get(player.getUniqueId());
     }
 }

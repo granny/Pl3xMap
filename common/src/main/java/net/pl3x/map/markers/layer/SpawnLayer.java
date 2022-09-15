@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * Manages world spawn marker.
  */
 public class SpawnLayer extends WorldLayer {
-    public static final Key KEY = Key.of("pl3xmap:spawn");
+    public static final Key KEY = Key.of("spawn-icon");
 
     /**
      * Create a new spawn layer.

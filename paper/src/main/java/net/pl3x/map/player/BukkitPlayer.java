@@ -30,7 +30,7 @@ public class BukkitPlayer extends Player {
     private Map<BiFunction<Player, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
 
     public BukkitPlayer(org.bukkit.entity.Player player) {
-        super(createKey(player.getName()));
+        super(createKey(player.getUniqueId()));
         this.player = player;
     }
 
