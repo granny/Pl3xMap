@@ -1,9 +1,10 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../util/Util";
 import {ControlBox} from "./ControlBox";
-import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
+import {createSVGIcon, toPoint} from "../util/Util";
+import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 import '../svg/link.svg';
+import {World} from "../world/World";
 
 export class LinkControl extends ControlBox {
     private readonly _dom: HTMLAnchorElement;
@@ -15,10 +16,10 @@ export class LinkControl extends ControlBox {
     constructor(pl3xmap: Pl3xMap, position: string) {
         super(pl3xmap, position);
         this._dom = L.DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
-        this._dom.appendChild(Util.createSVGIcon('link'));
+        this._dom.appendChild(createSVGIcon('link'));
     }
 
-    onAdd(map: Pl3xmapLeafletMap): HTMLAnchorElement {
+    onAdd(map: Pl3xMapLeafletMap): HTMLAnchorElement {
         map.addEventListener('moveend', this.onEvent);
         map.addEventListener('zoomend', this.onEvent);
         window.addEventListener('rendererselected', this.onEvent);
@@ -27,7 +28,7 @@ export class LinkControl extends ControlBox {
         return this._dom;
     }
 
-    onRemove(map: Pl3xmapLeafletMap): void {
+    onRemove(map: Pl3xMapLeafletMap): void {
         map.removeEventListener('moveend', this.onEvent);
         map.removeEventListener('zoomend', this.onEvent);
         window.removeEventListener("rendererselected", this.onEvent);
@@ -35,6 +36,20 @@ export class LinkControl extends ControlBox {
     }
 
     public update(): void {
-        this._dom.href = this._pl3xmap.currentWorld == null ? '' : this._pl3xmap.getUrlFromView();
+        const url = this.getUrlFromView(this._pl3xmap.worldManager.currentWorld);
+        this._dom.href = url;
+        window.history.replaceState(null, this._pl3xmap.settings!.lang.title, url);
+    }
+
+    public getUrlFromView(world?: World): string {
+        const center: L.PointTuple = toPoint(this._pl3xmap.map.getCenter());
+        const zoom: number = this._pl3xmap.map.getCurrentZoom();
+        const x: number = Math.floor(center[0]);
+        const z: number = Math.floor(center[1]);
+        let url = `?`;
+        if (world !== undefined) {
+            url += `world=${world.name}&renderer=${world.currentRenderer}`;
+        }
+        return `${url}&zoom=${zoom}&x=${x}&z=${z}`;
     }
 }

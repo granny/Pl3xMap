@@ -1,5 +1,5 @@
 import * as L from "leaflet";
-import {World} from "./module/World";
+import {World} from "./world/World";
 
 interface OverlayAddedPayload {
     layer: Layer;
@@ -12,7 +12,7 @@ declare global {
         worldadded: CustomEvent<World>;
         worldremoved: CustomEvent<World>;
         worldselected: CustomEvent<World>;
-        rendererselected: CustomEvent<string>;
+        rendererselected: CustomEvent<World>;
         overlayadded: CustomEvent<OverlayAddedPayload>;
     }
 }

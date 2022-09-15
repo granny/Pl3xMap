@@ -1,7 +1,7 @@
 import * as L from "leaflet";
-import {Util} from "../../util/Util";
 import {Marker, Type} from "./Marker";
-import "../../lib/L.ellipse";
+import {pixelsToMeters, toLatLng} from "../util/Util";
+import "../lib/L.ellipse";
 
 export class Ellipse extends Marker {
 
@@ -15,10 +15,10 @@ export class Ellipse extends Marker {
         const radii = data[1] as L.PointTuple;
 
         super(L.ellipse(
-            Util.toLatLng(center),
+            toLatLng(center),
             [
-                Util.pixelsToMeters(radii[0]),
-                Util.pixelsToMeters(radii[1])
+                pixelsToMeters(radii[0]),
+                pixelsToMeters(radii[1])
             ],
             data[2] as number, {
                 ...options?.properties

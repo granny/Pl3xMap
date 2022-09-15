@@ -1,17 +1,13 @@
 import * as L from "leaflet";
-import {BlockInfo} from "../module/BlockInfo";
-import {World} from "../module/World";
+import {Pl3xMap} from "../Pl3xMap";
+import {World} from "../world/World";
 
 export class ReversedZoomTileLayer extends L.TileLayer {
-    declare private _url: string;
     private readonly _world: World;
     private readonly _renderer: string;
 
-    // temporary storage for tile block info
-    private _blockInfos: Map<number, Map<string, BlockInfo>> = new Map();
-
-    constructor(world: World, renderer: string) {
-        super('', {
+    constructor(pl3xmap: Pl3xMap, world: World, renderer: string) {
+        super(`tiles/${world.name}/{z}/${renderer}/{x}_{y}.${Pl3xMap.instance.settings?.format}`, {
             // tile sizes match regions sizes (512 blocks x 512 blocks)
             tileSize: 512,
             // dont wrap tiles at edges
@@ -19,55 +15,33 @@ export class ReversedZoomTileLayer extends L.TileLayer {
             // the closest zoomed in possible (without stretching)
             // this is always 0. no exceptions!
             minNativeZoom: 0,
-            // the farthest possible out possible
-            maxNativeZoom: world!.zoom.maxOut,
+            // the farthest possible zoom out possible
+            maxNativeZoom: world.zoom.maxOut,
             // for extra zoom in, make higher than maxNativeZoom
             // this is the stretched tiles to zoom in further
-            maxZoom: world!.zoom.maxOut + world!.zoom.maxIn,
+            maxZoom: world.zoom.maxOut + world.zoom.maxIn,
             // we need to counter effect the higher maxZoom here
             // maxZoom + zoomOffset = maxNativeZoom
-            zoomOffset: -world!.zoom.maxIn
+            zoomOffset: -world.zoom.maxIn
         });
 
         this._world = world!;
         this._renderer = renderer;
-        this._url = this.determineUrl();
 
+        // when tiles load we need to load extra block info
         this.addEventListener("tileload", (event) => {
-            const zoom: number = this.world.pl3xmap.map.getMaxZoomOut() - event.coords.z;
-            const x: number = event.coords.x;
-            const z: number = event.coords.y;
-            this._world.loadBlockInfo(zoom, x, z);
+            const zoom: number = world.settings.zoom.maxOut - event.coords.z;
+            world.loadBlockInfo(zoom, event.coords.x, event.coords.y);
         });
+
+        // when tiles unload we need to remove the extra block info from memory
         this.addEventListener("tileunload", (event) => {
-            const zoom: number = this.world.pl3xmap.map.getMaxZoomOut() - event.coords.z;
-            const x: number = event.coords.x;
-            const z: number = event.coords.y;
-            this._blockInfos.get(zoom)?.delete(`${x}_${z}`);
+            const zoom: number = world.settings.zoom.maxOut - event.coords.z;
+            world.unsetBlockInfo(zoom, event.coords.x, event.coords.y);
         });
 
+        // push this layer to the back (leaflet defaults it to 1)
         this.setZIndex(0);
-    }
-
-    getBlockInfo(zoom: number, x: number, z: number): BlockInfo | undefined {
-        return this._blockInfos.get(zoom < 0 ? 0 : zoom)?.get(`${x}_${z}`);
-    }
-
-    setBlockInfo(zoom: number, x: number, z: number, blockInfo: BlockInfo | null): void {
-        let infoMap = this._blockInfos.get(zoom < 0 ? 0 : zoom);
-        if (infoMap == undefined) {
-            infoMap = new Map();
-            this._blockInfos.set(zoom, infoMap);
-        }
-        if (blockInfo == null) {
-            infoMap.delete(`${x}_${z}`);
-        } else {
-            infoMap.set(`${x}_${z}`, blockInfo);
-        }
-    }
-
-    private determineUrl() {
-        return `tiles/${this._world.name}/{z}/${this._renderer}/{x}_{y}.${this._world.format}`
     }
 
     _getZoomForUrl(): number {

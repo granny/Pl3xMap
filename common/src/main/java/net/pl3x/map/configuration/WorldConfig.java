@@ -92,9 +92,9 @@ public class WorldConfig extends AbstractConfig {
     @Comment("The display position for the blockinfo box")
     public String UI_BLOCKINFO = "bottomleft";
 
-    @Key("ui.hide-attributes")
-    @Comment("Hides the footer attributes")
-    public boolean UI_HIDE_ATTRIBUTES = false;
+    @Key("ui.attribution")
+    @Comment("Shows the footer attributes")
+    public boolean UI_ATTRIBUTION = true;
 
     @Key("ui.coords")
     @Comment("The display position for the coordinates box")

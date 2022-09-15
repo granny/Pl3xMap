@@ -1,17 +1,13 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../util/Util";
-import {World} from "../module/World";
+import {World} from "../world/World";
+import {createSVGIcon, handleKeyboardEvent} from "../util/Util";
 import BaseTab from "./BaseTab";
 import '../svg/maps.svg';
 
 interface WorldListItem {
-    input: HTMLInputElement;
-    label: HTMLLabelElement;
-
-    //TODO: Refreshless config updates?
-    icon?: HTMLImageElement;
-    name: HTMLSpanElement;
+    fieldset: HTMLFieldSetElement;
+    inputs: Map<string, HTMLInputElement>
 }
 
 export default class WorldsTab extends BaseTab {
@@ -22,15 +18,17 @@ export default class WorldsTab extends BaseTab {
     constructor(pl3xmap: Pl3xMap) {
         super(pl3xmap, 'worlds');
 
-        this._button.appendChild(Util.createSVGIcon('maps'));
-        this._button.setAttribute('aria-label', pl3xmap.lang.worldsHeading);
+        const lang = pl3xmap.settings!.lang;
+
+        this._button.appendChild(createSVGIcon('maps'));
+        this._button.setAttribute('aria-label', lang.worlds.label);
 
         const heading = L.DomUtil.create('h2', '', this._content);
-        heading.innerText = pl3xmap.lang.worldsHeading;
+        heading.innerText = lang.worlds.label;
         heading.id = 'worlds-heading';
 
         this._skeleton = L.DomUtil.create('p', '', this._content);
-        this._skeleton.innerText = pl3xmap.lang.worldsSkeleton;
+        this._skeleton.innerText = lang.worlds.value;
         this._skeleton.tabIndex = -1;
 
         this._list = L.DomUtil.create('fieldset', 'menu', this._content);
@@ -43,46 +41,53 @@ export default class WorldsTab extends BaseTab {
     private initEvents() {
         addEventListener('worldadded', (e: CustomEvent<World>) => this.createListItem(e.detail));
         addEventListener('worldremoved', (e: CustomEvent<World>) => this.removeListItem(e.detail)); //TODO: Refreshless config updates?
-        addEventListener('worldselected', (e: CustomEvent<World>) => {
-            if (this._worlds.has(e.detail)) {
-                this._worlds.get(e.detail)!.input.checked = true;
-            }
+        addEventListener('rendererselected', (e: CustomEvent<World>) => {
+            this._worlds.get(e.detail)!.inputs.get(e.detail.currentRenderer!)!.checked = true;
         });
 
         this._list.addEventListener('keydown', (e: KeyboardEvent) =>
-            Util.handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
+            handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
     }
 
     private createListItem(world: World) {
-        const input = L.DomUtil.create('input'),
-            label = L.DomUtil.create('label'),
-            //TODO Icon
-            name = L.DomUtil.create('span', '', label);
+        const fieldset = L.DomUtil.create('fieldset'),
+            legend = L.DomUtil.create('legend');
 
-        name.innerText = world.displayName;
-        input.id = label.htmlFor = `world-${world.name}`;
-        input.type = 'radio';
-        input.name = 'world';
-        input.checked = false;
-        input.addEventListener('click', async (e: MouseEvent) => {
-            // reset browser url when changing worlds
-            // makes it autofocus on world spawn
-            window.history.replaceState(null, this._pl3xmap.lang.title, '?');
-            // change worlds
-            this._pl3xmap.setCurrentMap(world).catch(() => {
-                e.preventDefault(); //Don't update radio button if switch fails
+        legend.innerText = world.displayName;
+        fieldset.appendChild(legend);
+
+        const inputs = new Map();
+
+        world.renderers.forEach(renderer => {
+            const input = L.DomUtil.create('input'),
+                label = L.DomUtil.create('label');
+
+            fieldset.appendChild(input);
+            fieldset.appendChild(label);
+
+            //icon.src = `images/icon/${renderer}.png`;
+            label.style.backgroundImage = `url('images/icon/${renderer}.png')`;
+            label.title = renderer;
+            input.id = label.htmlFor = `${world.name}-${renderer}`;
+            input.type = 'radio';
+            input.name = 'world';
+            input.checked = false;
+            input.addEventListener('click', async (e: MouseEvent) => {
+                this._pl3xmap.worldManager.setWorld(world, renderer)
+                    // Don't update radio button if switch fails
+                    .catch(() => e.preventDefault());
             });
+
+            inputs.set(renderer, input);
         });
 
         this._worlds.set(world, {
-            input,
-            label,
-            name,
+            fieldset,
+            inputs
         });
 
         this._skeleton.hidden = true;
-        this._list.appendChild(input);
-        this._list.appendChild(label);
+        this._list.appendChild(fieldset);
     }
 
     private removeListItem(world: World) {
@@ -92,8 +97,8 @@ export default class WorldsTab extends BaseTab {
             return;
         }
 
-        listItem.label.remove();
-        listItem.input.remove();
+        listItem.fieldset.remove();
+
         this._worlds.delete(world);
 
         if (!this._worlds.size) {

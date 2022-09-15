@@ -1,16 +1,16 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../util/Util";
-import {World} from "../module/World";
+import {toLatLng} from "../util/Util";
 
-export default class Pl3xmapLeafletMap extends L.Map {
+/**
+ * Represents the leaflet map.
+ */
+export default class Pl3xMapLeafletMap extends L.Map {
     declare _controlCorners: { [x: string]: HTMLDivElement; };
     declare _controlContainer?: HTMLElement;
     declare _container?: HTMLElement;
 
-    private _pl3xmap: Pl3xMap;
-    private _world: World | null = null;
-    private _rendererType: string = 'basic';
+    private readonly _pl3xmap: Pl3xMap;
 
     constructor(pl3xmap: Pl3xMap) {
         super('map', {
@@ -55,27 +55,15 @@ export default class Pl3xmapLeafletMap extends L.Map {
         createCorner('bottom', 'right');
     }
 
-    centerOn(x: number, z: number, zoom: number) {
-        this.setView(Util.toLatLng([x, z]), this.getMaxZoomOut() - zoom);
+    public centerOn(x: number, z: number, zoom: number) {
+        this.setView(toLatLng([x, z]), this.getMaxZoomOut() - zoom);
     }
 
-    getMaxZoomOut(): number {
-        return this.world?.zoom.maxOut ?? 0;
+    public getMaxZoomOut(): number {
+        return this._pl3xmap.worldManager.currentWorld?.zoom.maxOut ?? 0;
     }
 
-    getCurrentZoom(): number {
+    public getCurrentZoom(): number {
         return this.getMaxZoomOut() - this.getZoom();
-    }
-
-    get world(): World | null {
-        return this._world;
-    }
-
-    set world(world: World | null) {
-        this._world = world;
-    }
-
-    get rendererType(): string {
-        return this._rendererType;
     }
 }

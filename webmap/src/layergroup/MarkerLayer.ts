@@ -1,17 +1,17 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../util/Util";
-import {World} from "../module/World";
-import {Circle} from "../module/marker/Circle";
-import {Ellipse} from "../module/marker/Ellipse";
-import {Icon} from "../module/marker/Icon";
-import {MultiPolygon} from "../module/marker/MultiPolygon";
-import {MultiPolyline} from "../module/marker/MultiPolyline";
-import {Polygon} from "../module/marker/Polygon";
-import {Polyline} from "../module/marker/Polyline";
-import {Rectangle} from "../module/marker/Rectangle";
-import {MarkerOptions} from "../module/marker/options/MarkerOptions";
-import {Type} from "../module/marker/Marker";
+import {Circle} from "../marker/Circle";
+import {Ellipse} from "../marker/Ellipse";
+import {Icon} from "../marker/Icon";
+import {MultiPolygon} from "../marker/MultiPolygon";
+import {MultiPolyline} from "../marker/MultiPolyline";
+import {Polygon} from "../marker/Polygon";
+import {Polyline} from "../marker/Polyline";
+import {Rectangle} from "../marker/Rectangle";
+import {Type} from "../marker/Marker";
+import {MarkerOptions} from "../marker/options/MarkerOptions";
+import {World} from "../world/World";
+import {getJSON} from "../util/Util";
 
 export class MarkerLayer extends L.LayerGroup {
     private static readonly TYPES = {
@@ -40,15 +40,15 @@ export class MarkerLayer extends L.LayerGroup {
         this._world = world;
         this._interval = interval * 1000;
 
-        this.addTo(Pl3xMap.getInstance().map);
+        this.addTo(Pl3xMap.instance.map);
 
         this.update();
     }
 
     update(): void {
-        console.log("Update markers: " + this._name + " " + this._world.name);
+        //console.log("Update markers: " + this._name + " " + this._world.name);
 
-        Util.getJSON(`tiles/${this._world.name}/markers/${this._name}.json`)
+        getJSON(`tiles/${this._world.name}/markers/${this._name}.json`)
             .then((json) => {
                 this.clearLayers();
                 for (const index in Object.keys(json)) {
@@ -61,7 +61,7 @@ export class MarkerLayer extends L.LayerGroup {
     unload(): void {
         clearTimeout(this._timer);
         this.clearLayers();
-        this.removeFrom(Pl3xMap.getInstance().map);
+        this.removeFrom(Pl3xMap.instance.map);
     }
 
     parseMarker(data: unknown[]): L.Layer | undefined {

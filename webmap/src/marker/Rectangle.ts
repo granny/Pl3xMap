@@ -1,27 +1,20 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {Util} from "../../util/Util";
+import {toLatLng} from "../util/Util";
 
-export class Polygon extends Marker {
+export class Rectangle extends Marker {
 
-    // [[0,0],[0,0],[0,0]]
+    // [[0,0],[0,0]]
 
     constructor(type: Type) {
         const data = type.data;
         const options = type.options;
 
-        const poly = [];
-
-        for (const points of data as unknown[][]) {
-            const line = [];
-            for (const point of points) {
-                line.push(Util.toLatLng(point as L.PointTuple))
-            }
-            poly.push(line);
-        }
-
-        super(L.polygon(
-            poly,
+        super(L.rectangle(
+            L.latLngBounds(
+                toLatLng(data[0] as L.PointTuple),
+                toLatLng(data[1] as L.PointTuple)
+            ),
             {
                 ...options?.properties,
                 smoothFactor: 1.0,

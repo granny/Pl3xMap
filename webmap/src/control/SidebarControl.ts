@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import Pl3xmapLeafletMap from "../map/Pl3xmapLeafletMap";
+import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 import LayersTab from "../sidebar/LayersTab";
 import MarkersTab from "../sidebar/MarkersTab";
 import PlayersTab from "../sidebar/PlayersTab";
@@ -13,7 +13,7 @@ export interface SidebarTab {
 
     get id(): string;
 
-    onAdd?: (map: Pl3xmapLeafletMap) => void;
+    onAdd?: (map: Pl3xMapLeafletMap) => void;
     onActivate?: () => void;
     onDeactivate?: () => void;
 }
@@ -48,7 +48,7 @@ export default class SidebarControl extends L.Control {
         this.addTab(new MarkersTab(pl3xmap));
     }
 
-    onAdd(map: Pl3xmapLeafletMap) {
+    onAdd(map: Pl3xMapLeafletMap) {
         for (const tab of this._tabs) {
             if (tab.onAdd) {
                 tab.onAdd(map);

@@ -1,5 +1,5 @@
-import {Pl3xMap} from "../Pl3xMap";
 import {SidebarTab} from "../control/SidebarControl";
+import {Pl3xMap} from "../Pl3xMap";
 
 export default class BaseTab implements SidebarTab {
     protected readonly _pl3xmap: Pl3xMap;

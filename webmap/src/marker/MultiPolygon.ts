@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {Util} from "../../util/Util";
+import {toLatLng} from "../util/Util";
 
 export class MultiPolygon extends Marker {
 
@@ -17,7 +17,7 @@ export class MultiPolygon extends Marker {
             for (const points of shape) {
                 const line = [];
                 for (const point of points) {
-                    line.push(Util.toLatLng(point as L.PointTuple))
+                    line.push(toLatLng(point as L.PointTuple))
                 }
                 poly.push(line);
             }

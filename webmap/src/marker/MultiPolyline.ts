@@ -1,23 +1,27 @@
 import * as L from "leaflet";
-import {Util} from "../../util/Util";
 import {Marker, Type} from "./Marker";
+import {toLatLng} from "../util/Util";
 
-export class Polyline extends Marker {
+export class MultiPolyline extends Marker {
 
-    // [[0,0],[0,0],[0,0]]
+    // [[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]
 
     constructor(type: Type) {
         const data = type.data;
         const options = type.options;
 
-        const line = [];
+        const lines = [];
 
-        for (const point of data as unknown[]) {
-            line.push(Util.toLatLng(point as L.PointTuple))
+        for (const points of data as unknown[][]) {
+            const line = [];
+            for (const point of points) {
+                line.push(toLatLng(point as L.PointTuple))
+            }
+            lines.push(line);
         }
 
         super(L.polyline(
-            line,
+            lines,
             {
                 ...options?.properties,
                 smoothFactor: 1.0,

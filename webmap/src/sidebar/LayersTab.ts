@@ -1,7 +1,7 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Util} from "../util/Util";
 import {SidebarTab} from "../control/SidebarControl";
+import {createSVGIcon} from "../util/Util";
 import '../svg/layers.svg';
 
 interface LayerControlInput extends HTMLInputElement {
@@ -42,13 +42,14 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         this._button.type = 'button';
         this._button.setAttribute('aria-expanded', 'false');
         this._button.setAttribute('aria-controls', `sidebar__layers`);
-        this._button.appendChild(Util.createSVGIcon('layers'));
-        this._button.setAttribute('aria-label', pl3xmap.lang.layersHeading);
+        this._button.appendChild(createSVGIcon('layers'));
+        this._button.setAttribute('aria-label', pl3xmap.settings!.lang.layers.label);
 
         this._content.hidden = true;
         this._content.id = `sidebar__layers`;
         this._content.setAttribute('aria-hidden', 'true');
 
+        /* this can be removed?, renderers now in worlds tab
         //Remove base layers and repopulate from current world
         window.addEventListener('worldselected', (e) => {
             for (const layer of this._layers.filter(layer => !layer.overlay)) {
@@ -56,11 +57,12 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
             }
 
             for (const renderer of e.detail.renderers) {
-                this._addLayer(e.detail.getTileLayer(renderer)!, renderer, false);
+                this._addLayer(e.detail.getRendererLayer(renderer)!, renderer, false);
             }
 
             this._update();
         });
+        */
 
         window.addEventListener('overlayadded', (e) => {
             if (e.detail.showInControl) {
@@ -71,7 +73,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
 
     private _initLayout() {
         const heading = L.DomUtil.create('h2', '', this._content);
-        heading.innerText = this._pl3xmap.lang.layersHeading;
+        heading.innerText = this._pl3xmap.settings!.lang.layers.label;
         heading.id = 'layers-heading';
 
         const baseHeading = L.DomUtil.create('h3', '', this._baseContainer);
@@ -82,7 +84,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         overlayHeading.innerText = 'Overlays';
         overlayHeading.id = 'overlay-layers-heading';
 
-        this._skeleton.innerText = this._pl3xmap.lang.layersSkeleton;
+        this._skeleton.innerText = this._pl3xmap.settings!.lang.layers.value;
         this._skeleton.id = 'layers-skeleton';
         this._skeleton.tabIndex = -1;
 

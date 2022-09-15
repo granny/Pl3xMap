@@ -190,6 +190,10 @@ public class Lang extends AbstractConfig {
 
     @Key("ui.title")
     public static String UI_TITLE = "Pl3xMap";
+    @Key("ui.blockinfo.label")
+    public static String UI_BLOCKINFO_LABEL = "BlockInfo";
+    @Key("ui.blockinfo.value")
+    public static String UI_BLOCKINFO_VALUE = "<block><br /><biome>";
     @Key("ui.coords.label")
     public static String UI_COORDS_LABEL = "Coordinates";
     @Key("ui.coords.value")
@@ -200,14 +204,14 @@ public class Lang extends AbstractConfig {
     public static String UI_PLAYERS = "Players (<online>/<max>)";
     @Key("ui.world.spawn.tooltip")
     public static String UI_WORLD_SPAWN = "Spawn";
-    @Key("ui.worlds.heading")
-    public static String UI_WORLDS_HEADING = "Worlds";
-    @Key("ui.worlds.skeleton")
-    public static String UI_WORLDS_SKELETON = "No worlds have been configured";
-    @Key("ui.layers.heading")
-    public static String UI_LAYERS_HEADING = "Layers";
-    @Key("ui.layers.skeleton")
-    public static String UI_LAYERS_SKELETON = "No layers have been configured";
+    @Key("ui.worlds.label")
+    public static String UI_WORLDS_LABEL = "Worlds";
+    @Key("ui.worlds.value")
+    public static String UI_WORLDS_VALUE = "No worlds have been configured";
+    @Key("ui.layers.label")
+    public static String UI_LAYERS_LABEL = "Layers";
+    @Key("ui.layers.value")
+    public static String UI_LAYERS_VALUE = "No layers have been configured";
 
     private static final Lang CONFIG = new Lang();
 

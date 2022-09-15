@@ -168,13 +168,17 @@ img.leaflet-tile {
 
     & + label {
       @extend %button;
-      margin-bottom: 0.5rem;
+      margin: 0 4px 0 0;
       cursor: pointer;
-      padding: 0.8rem;
+      padding: 0;
+      width: 34px;
+      height: 34px;
+      background-size: 100%;
     }
 
     &:checked + label {
       @include button-pressed;
+      border-color: #000000;
     }
 
     &:focus + label {
