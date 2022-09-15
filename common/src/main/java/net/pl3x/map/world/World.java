@@ -399,7 +399,9 @@ public abstract class World extends Keyed {
             throw new IllegalStateException("Already rendering");
         }
 
-        stopBackgroundRender();
+        if (hasBackgroundRender()) {
+            stopBackgroundRender();
+        }
 
         this.activeRender = render;
         this.backgroundExecutor.submit(render);
