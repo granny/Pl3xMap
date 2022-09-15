@@ -69,7 +69,7 @@ public class WorldConfig extends AbstractConfig {
             Setting this too low may cause the background renderer to run
             non-stop. Setting this too high may cause a delay in seeing
             updates on your map. Use 0 value to disable this feature.""")
-    public int RENDER_BACKGROUND_INTERVAL = 5;
+    public int RENDER_BACKGROUND_INTERVAL = 0;
 
     @Key("render.background.max-chunks-per-interval")
     @Comment("""
