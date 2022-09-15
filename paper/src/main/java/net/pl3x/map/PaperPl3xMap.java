@@ -165,6 +165,9 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         // load up worlds already loaded in bukkit
         Bukkit.getWorlds().forEach(getWorldRegistry()::register);
 
+        // load up players already connected to the server
+        Bukkit.getOnlinePlayers().forEach(getPlayerRegistry()::register);
+
         // register events
         if (this.worldListener != null) {
             this.worldListener.registerEvents();

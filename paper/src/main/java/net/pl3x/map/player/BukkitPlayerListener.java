@@ -9,11 +9,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class BukkitPlayerListener implements PlayerListener, Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        onJoin(((BukkitPlayerRegistry) Pl3xMap.api().getPlayerRegistry()).register(event.getPlayer()));
+        BukkitPlayerRegistry registry = (BukkitPlayerRegistry) Pl3xMap.api().getPlayerRegistry();
+        onJoin(registry.register(event.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        onQuit(((BukkitPlayerRegistry) Pl3xMap.api().getPlayerRegistry()).unregister(event.getPlayer()));
+        BukkitPlayerRegistry registry = (BukkitPlayerRegistry) Pl3xMap.api().getPlayerRegistry();
+        onQuit(registry.unregister(event.getPlayer()));
     }
 }

@@ -13,10 +13,16 @@ public abstract class BukkitSender extends Sender {
     }
 
     public static Sender getSender(CommandSender sender) {
-        return sender instanceof org.bukkit.entity.Player player ? Pl3xMap.api().getPlayerRegistry().get(player.getUniqueId()) : Pl3xMap.api().getConsole();
+        if (sender instanceof org.bukkit.entity.Player player) {
+            return Pl3xMap.api().getPlayerRegistry().get(player.getUniqueId());
+        }
+        return Pl3xMap.api().getConsole();
     }
 
     public static CommandSender getSender(Sender sender) {
-        return sender instanceof net.pl3x.map.player.Player player ? ((BukkitPlayer) player).getPlayer() : Bukkit.getConsoleSender();
+        if (sender instanceof net.pl3x.map.player.Player player) {
+            return ((BukkitPlayer) player).getPlayer();
+        }
+        return Bukkit.getConsoleSender();
     }
 }
