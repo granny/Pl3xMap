@@ -1,13 +1,14 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
+import {Label} from "../settings/Lang";
 import {World} from "../world/World";
 
 export class ReversedZoomTileLayer extends L.TileLayer {
     private readonly _world: World;
-    private readonly _renderer: string;
+    private readonly _renderer: Label;
 
-    constructor(pl3xmap: Pl3xMap, world: World, renderer: string) {
-        super(`tiles/${world.name}/{z}/${renderer}/{x}_{y}.${Pl3xMap.instance.settings?.format}`, {
+    constructor(pl3xmap: Pl3xMap, world: World, renderer: Label) {
+        super(`tiles/${world.name}/{z}/${renderer.label}/{x}_{y}.${Pl3xMap.instance.settings?.format}`, {
             // tile sizes match regions sizes (512 blocks x 512 blocks)
             tileSize: 512,
             // dont wrap tiles at edges
@@ -55,7 +56,7 @@ export class ReversedZoomTileLayer extends L.TileLayer {
         return this._world;
     }
 
-    get renderer(): string {
+    get renderer(): Label {
         return this._renderer;
     }
 }

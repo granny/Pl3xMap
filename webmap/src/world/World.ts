@@ -1,8 +1,8 @@
-import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {MarkerLayer} from "../layergroup/MarkerLayer";
 import {BlockInfo} from "../palette/BlockInfo";
 import {Palette} from "../palette/Palette";
+import {Label} from "../settings/Lang";
 import {Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
 import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 import {WorldManager} from "./WorldManager";
@@ -15,10 +15,10 @@ export class World {
     private readonly _pl3xmap: Pl3xMap;
     private readonly _settings: WorldSettings;
 
-    private _currentRenderer?: string;
+    private _currentRenderer?: Label;
     private _currentRendererLayer?: ReversedZoomTileLayer;
 
-    private _rendererLayers: Map<string, ReversedZoomTileLayer> = new Map();
+    private _rendererLayers: Map<Label, ReversedZoomTileLayer> = new Map();
     private _markerLayers: MarkerLayer[] = [];
 
     private _biomePalette: Map<number, string> = new Map();
@@ -115,7 +115,7 @@ export class World {
         this.blockInfo.get(zoom)?.delete(`${x}_${z}`);
     }
 
-    public getRendererLayer(renderer: string): ReversedZoomTileLayer | undefined {
+    public getRendererLayer(renderer: Label): ReversedZoomTileLayer | undefined {
         return this._rendererLayers.get(renderer);
     }
 
@@ -123,11 +123,11 @@ export class World {
         return this._currentRendererLayer;
     }
 
-    get currentRenderer(): string | undefined {
+    get currentRenderer(): Label | undefined {
         return this._currentRenderer;
     }
 
-    public setRenderer(renderer: string): void {
+    public setRenderer(renderer: Label): void {
         this._currentRendererLayer?.remove();
         this._currentRenderer = this.settings.renderers.indexOf(renderer) > -1 ? renderer : this.settings.renderers[0] ?? 'basic';
         this._currentRendererLayer = this._rendererLayers.get(this._currentRenderer);
@@ -135,7 +135,7 @@ export class World {
         fireCustomEvent('rendererselected', this);
     }
 
-    public resetRenderer(renderer?: string): void {
+    public resetRenderer(renderer?: Label): void {
         this.setRenderer(renderer ?? this.settings.renderers[0]);
     }
 
@@ -159,7 +159,7 @@ export class World {
         return this.settings.order;
     }
 
-    get renderers(): string[] {
+    get renderers(): Label[] {
         return this.settings.renderers;
     }
 

@@ -7,7 +7,9 @@ export default class MarkersTab extends BaseTab {
     constructor(pl3xmap: Pl3xMap) {
         super(pl3xmap, 'markers');
 
+        const markers = pl3xmap.settings?.lang.markers;
+
         this._button.appendChild(createSVGIcon('marker_point'));
-        this._content.innerHTML = '<h2>//TODO</h2>'
+        this._content.innerHTML = `<h2>${markers?.label ?? 'Markers'}</h2>// TODO`;
     }
 }

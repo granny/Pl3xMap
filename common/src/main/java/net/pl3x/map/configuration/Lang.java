@@ -6,7 +6,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class Lang extends AbstractConfig {
+public final class Lang extends AbstractConfig {
     @Key("prefix.command")
     public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
 
@@ -188,6 +188,11 @@ public class Lang extends AbstractConfig {
     @Key("error.render-stalled")
     public static String ERROR_RENDER_STALLED = "<red>Render has stalled! Cancelling.";
 
+    @Key("ui.world.border")
+    public static String UI_WORLD_BORDER = "World Border";
+    @Key("ui.world.spawn")
+    public static String UI_WORLD_SPAWN = "Spawn";
+
     @Key("ui.title")
     public static String UI_TITLE = "Pl3xMap";
     @Key("ui.blockinfo.label")
@@ -198,12 +203,14 @@ public class Lang extends AbstractConfig {
     public static String UI_COORDS_LABEL = "Coordinates";
     @Key("ui.coords.value")
     public static String UI_COORDS_VALUE = "<x>, <y>, <z>";
-    @Key("ui.player-tracker")
-    public static String UI_PLAYER_TRACKER = "Players";
-    @Key("ui.players")
-    public static String UI_PLAYERS = "Players (<online>/<max>)";
-    @Key("ui.world.spawn.tooltip")
-    public static String UI_WORLD_SPAWN = "Spawn";
+    @Key("ui.markers.label")
+    public static String UI_MARKERS_LABEL = "Markers";
+    @Key("ui.markers.value")
+    public static String UI_MARKERS_VALUE = "No markers have been configured";
+    @Key("ui.players.label")
+    public static String UI_PLAYERS_LABEL = "Players";
+    @Key("ui.players.value")
+    public static String UI_PLAYERS_VALUE = "(<online>/<max>)";
     @Key("ui.worlds.label")
     public static String UI_WORLDS_LABEL = "Worlds";
     @Key("ui.worlds.value")

@@ -6,7 +6,7 @@ import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.World;
 
-public class WorldConfig extends AbstractConfig {
+public final class WorldConfig extends AbstractConfig {
     @Key("enabled")
     @Comment("Enables this world to be rendered on the map.")
     public boolean ENABLED = false;
@@ -123,49 +123,12 @@ public class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
-    @Key("markers.world.spawn.enabled")
-    @Comment("Show the world spawn on the map")
-    public boolean WORLD_SPAWN_ENABLED = true;
-    @Key("markers.world.border.enabled")
+    @Key("markers.world.border")
     @Comment("Show the world border on the map")
-    public boolean WORLD_BORDER_ENABLED = true;
-
-    @Key("player-tracker.enabled")
-    @Comment("Enable the player tracker")
-    public boolean PLAYER_TRACKER_ENABLED = true;
-    @Key("player-tracker.interval")
-    @Comment("How often (in seconds) to update the player tracker")
-    public int PLAYER_TRACKER_INTERVAL = 1;
-    @Key("player-tracker.controls.show")
-    @Comment("Should the player tracker control be shown")
-    public boolean PLAYER_TRACKER_SHOW_CONTROLS = true;
-    @Key("player-tracker.controls.hidden")
-    @Comment("Should the player layer be hidden by default")
-    public boolean PLAYER_TRACKER_DEFAULT_HIDDEN = false;
-    @Key("player-tracker.layer.priority")
-    @Comment("The priority of the player tracker layer")
-    public int PLAYER_TRACKER_PRIORITY = 0;
-    @Key("player-tracker.layer.z-index")
-    @Comment("The z-index of the player tracker layer")
-    public int PLAYER_TRACKER_Z_INDEX = 999;
-    @Key("player-tracker.hide-players.spectators")
-    @Comment("Hide spectators from the map")
-    public boolean PLAYER_TRACKER_HIDE_SPECTATORS = true;
-    @Key("player-tracker.hide-players.invisible")
-    @Comment("Hide invisible players from the map")
-    public boolean PLAYER_TRACKER_HIDE_INVISIBLE = true;
-    @Key("player-tracker.nameplate.enabled")
-    @Comment("Show players' nameplate by their icon")
-    public boolean PLAYER_TRACKER_NAMEPLATE_ENABLED = true;
-    @Key("player-tracker.nameplate.show-head")
-    @Comment("Show players' head in the nameplate")
-    public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_HEAD = true;
-    @Key("player-tracker.nameplate.show-armor")
-    @Comment("Show players' armor in the nameplate")
-    public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_ARMOR = true;
-    @Key("player-tracker.nameplate.show-health")
-    @Comment("Show players' health in the nameplate")
-    public boolean PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH = true;
+    public boolean WORLD_BORDER = true;
+    @Key("markers.world.spawn")
+    @Comment("Show the world spawn on the map")
+    public boolean WORLD_SPAWN = true;
 
     private final World world;
 

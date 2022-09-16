@@ -11,7 +11,7 @@ import {Rectangle} from "../marker/Rectangle";
 import {Type} from "../marker/Marker";
 import {MarkerOptions} from "../marker/options/MarkerOptions";
 import {World} from "../world/World";
-import {getJSON} from "../util/Util";
+import {fireCustomEvent, getJSON} from "../util/Util";
 
 export class MarkerLayer extends L.LayerGroup {
     private static readonly TYPES = {
@@ -25,36 +25,72 @@ export class MarkerLayer extends L.LayerGroup {
         "rect": (type: Type) => new Rectangle(type)
     }
 
-    private readonly _name: string;
-    private readonly _world: World;
-    private readonly _interval: number;
+    private readonly _key: string;
+    private readonly _label: string;
+    private readonly _updateInterval: number;
+    private readonly _showControls: boolean;
+    private readonly _defaultHidden: boolean;
+    private readonly _priority: number;
+    private readonly _zIndex: number;
 
     private _timer: NodeJS.Timeout | undefined;
 
-    constructor(name: string, world: World, interval: number) {
+    constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number) {
         super(undefined, {
             pane: undefined,
             attribution: undefined
         });
-        this._name = name;
-        this._world = world;
-        this._interval = interval * 1000;
+        this._key = key;
+        this._label = label;
+        this._updateInterval = interval * 1000;
+        this._showControls = showControls;
+        this._defaultHidden = defaultHidden;
+        this._priority = priority;
+        this._zIndex = zIndex;
 
         this.addTo(Pl3xMap.instance.map);
 
-        this.update();
+        fireCustomEvent("overlayadded", this);
     }
 
-    update(): void {
+    get key(): string {
+        return this._key;
+    };
+
+    get label(): string {
+        return this._label;
+    };
+
+    get updateInterval(): number {
+        return this._updateInterval;
+    };
+
+    get showControls(): boolean {
+        return this._showControls;
+    };
+
+    get defaultHidden(): boolean {
+        return this._defaultHidden;
+    };
+
+    get priority(): number {
+        return this._priority;
+    };
+
+    get zIndex(): number {
+        return this._zIndex;
+    };
+
+    update(world: World): void {
         //console.log("Update markers: " + this._name + " " + this._world.name);
 
-        getJSON(`tiles/${this._world.name}/markers/${this._name}.json`)
+        getJSON(`tiles/${world.name}/markers/${this._key}.json`)
             .then((json) => {
                 this.clearLayers();
                 for (const index in Object.keys(json)) {
                     this.parseMarker(json[index])?.addTo(this);
                 }
-                this._timer = setTimeout(() => this.update(), this._interval);
+                this._timer = setTimeout(() => this.update(world), this._updateInterval);
             });
     }
 

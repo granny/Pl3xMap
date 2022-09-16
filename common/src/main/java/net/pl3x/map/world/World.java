@@ -160,8 +160,8 @@ public abstract class World extends Keyed {
             throw new RuntimeException(e);
         }
 
-        if (getConfig().WORLD_BORDER_ENABLED) {
-            getLayerRegistry().register(new WorldBorderLayer(WorldBorderLayer.KEY, this, () -> "World Border")
+        if (getConfig().WORLD_BORDER) {
+            getLayerRegistry().register(new WorldBorderLayer(WorldBorderLayer.KEY, this, () -> Lang.UI_WORLD_BORDER)
                     .setOptions(new Options().setStroke(new Stroke().setColor(0xFFFF0000)))
                     .setUpdateInterval(15)
                     .setShowControls(true)
@@ -170,7 +170,7 @@ public abstract class World extends Keyed {
                     .setZIndex(99));
         }
 
-        if (getConfig().WORLD_SPAWN_ENABLED) {
+        if (getConfig().WORLD_SPAWN) {
             getLayerRegistry().register(new SpawnLayer(SpawnLayer.KEY, this, () -> Lang.UI_WORLD_SPAWN).setUpdateInterval(15)
             );
         }

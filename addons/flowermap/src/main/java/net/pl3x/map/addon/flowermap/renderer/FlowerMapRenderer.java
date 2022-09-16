@@ -12,6 +12,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.Image;
 import net.pl3x.map.render.Renderer;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.ScanData;
 import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.util.Colors;
@@ -21,8 +22,8 @@ public class FlowerMapRenderer extends Renderer {
     private final RandomSource random = RandomSource.createThreadSafe();
     private final Map<BlockState, Integer> colorMap = new HashMap<>();
 
-    public FlowerMapRenderer(String name, ScanTask scanTask) {
-        super(name, scanTask);
+    public FlowerMapRenderer(RendererHolder holder, ScanTask scanTask) {
+        super(holder, scanTask);
         this.colorMap.put(Blocks.DANDELION.defaultBlockState(), 0xFFFFFF00);
         this.colorMap.put(Blocks.POPPY.defaultBlockState(), 0xFFFF0000);
         this.colorMap.put(Blocks.ALLIUM.defaultBlockState(), 0xFF9900FF);

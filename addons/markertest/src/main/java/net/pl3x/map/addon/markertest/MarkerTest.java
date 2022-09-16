@@ -1,19 +1,19 @@
 package net.pl3x.map.addon.markertest;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.addon.Addon;
+import net.pl3x.map.configuration.Config;
 import net.pl3x.map.event.EventHandler;
 import net.pl3x.map.event.EventListener;
 import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.event.world.WorldUnloadedEvent;
 import net.pl3x.map.image.IconImage;
-import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
 import net.pl3x.map.markers.layer.SimpleLayer;
@@ -21,6 +21,7 @@ import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.marker.Polygon;
 import net.pl3x.map.markers.marker.Polyline;
 import net.pl3x.map.markers.option.Options;
+import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,18 +32,20 @@ public class MarkerTest extends Addon implements EventListener {
 
     @Override
     public void onEnable() {
-        Pl3xMap.api().getEventRegistry().register(this);
+        // copy icon to Pl3xMap's icon directory
+        FileUtil.extract(getClass(), "x.png", "web/images/icon/", !Config.WEB_DIR_READONLY);
 
-        try (InputStream in = getClass().getResourceAsStream("/icons/x.png")) {
-            if (in == null) {
-                throw new RuntimeException("Could not read X image from jar!");
-            }
-            IconImage image = new IconImage(ICON_KEY, ImageIO.read(in), "png");
+        // register icon
+        Path icon = World.WEB_DIR.resolve("images/icon/x.png");
+        try {
+            IconImage image = new IconImage(ICON_KEY, ImageIO.read(icon.toFile()), "png");
             Pl3xMap.api().getIconRegistry().register(image);
         } catch (IOException e) {
-            Logger.warn("Failed to register spawn icon");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+        // register event listener
+        Pl3xMap.api().getEventRegistry().register(this);
     }
 
     @EventHandler

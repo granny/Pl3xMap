@@ -1,8 +1,10 @@
 package net.pl3x.map.addon;
 
+import java.util.Objects;
 import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a Pl3xMap addon.
@@ -70,5 +72,36 @@ public abstract class Addon extends Keyed {
      */
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Addon other = (Addon) o;
+        return getKey() == other.getKey()
+                && getInfo().equals(other.getInfo())
+                && isEnabled() == other.isEnabled();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getKey(), getInfo(), isEnabled());
+    }
+
+    @Override
+    public String toString() {
+        return "Addon{"
+                + "key=" + getKey()
+                + ",info=" + getInfo()
+                + ",enabled=" + isEnabled()
+                + "}";
     }
 }

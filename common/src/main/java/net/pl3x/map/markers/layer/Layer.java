@@ -2,6 +2,7 @@ package net.pl3x.map.markers.layer;
 
 import com.google.common.base.Preconditions;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Supplier;
 import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
@@ -191,4 +192,43 @@ public abstract class Layer extends Keyed {
      */
     @NotNull
     public abstract Collection<Marker<?>> getMarkers();
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Layer other = (Layer) o;
+        return getKey() == other.getKey()
+                && getLabel().equals(other.getLabel())
+                && getUpdateInterval() == other.getUpdateInterval()
+                && shouldShowControls() == other.shouldShowControls()
+                && isDefaultHidden() == other.isDefaultHidden()
+                && getPriority() == other.getPriority()
+                && Objects.equals(getZIndex(), other.getZIndex());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getKey(), getLabel(), getUpdateInterval(), shouldShowControls(), isDefaultHidden(), getPriority(), getZIndex());
+    }
+
+    @Override
+    public String toString() {
+        return "Layer{"
+                + "key=" + getKey()
+                + ",label=" + getLabel()
+                + ",updateInterval=" + getUpdateInterval()
+                + ",showControls=" + shouldShowControls()
+                + ",defaultHidden=" + isDefaultHidden()
+                + ",priority=" + getPriority()
+                + ",zIndex=" + getZIndex()
+                + "}";
+    }
 }

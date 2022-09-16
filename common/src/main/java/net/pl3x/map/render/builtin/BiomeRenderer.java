@@ -6,13 +6,14 @@ import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.Image;
 import net.pl3x.map.render.Renderer;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.ScanData;
 import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.util.Colors;
 
 public final class BiomeRenderer extends Renderer {
-    public BiomeRenderer(String name, ScanTask scanTask) {
-        super(name, scanTask);
+    public BiomeRenderer(RendererHolder holder, ScanTask scanTask) {
+        super(holder, scanTask);
     }
 
     @Override

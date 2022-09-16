@@ -16,6 +16,7 @@ import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.Image;
 import net.pl3x.map.palette.Palette;
 import net.pl3x.map.render.Renderer;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.ScanData;
 import net.pl3x.map.render.ScanTask;
 import net.pl3x.map.util.ByteUtil;
@@ -28,15 +29,15 @@ public class BlockInfoRenderer extends Renderer {
 
     private ByteBuffer byteBuffer;
 
-    public BlockInfoRenderer(String name, ScanTask scanTask) {
-        super(name, scanTask);
+    public BlockInfoRenderer(RendererHolder holder, ScanTask scanTask) {
+        super(holder, scanTask);
     }
 
     @Override
     public void allocateData() {
         this.byteBuffer = ByteBuffer.allocate(Image.SIZE * Image.SIZE * 4 + 12);
         Path path = getScanTask().getWorld().getTilesDir()
-                .resolve(String.format(Image.DIR_PATH, 0, getName()))
+                .resolve(String.format(Image.DIR_PATH, 0, getKey()))
                 .resolve(String.format(Image.FILE_PATH,
                         getRegion().getRegionX(),
                         getRegion().getRegionZ(),
@@ -55,7 +56,7 @@ public class BlockInfoRenderer extends Renderer {
         World world = getScanTask().getWorld();
         Path tilesDir = world.getTilesDir();
         for (int zoom = 0; zoom <= world.getConfig().ZOOM_MAX_OUT; zoom++) {
-            Path dirPath = tilesDir.resolve(String.format(Image.DIR_PATH, zoom, getName()));
+            Path dirPath = tilesDir.resolve(String.format(Image.DIR_PATH, zoom, getKey()));
 
             // create directories if they don't exist
             FileUtil.createDirs(dirPath);

@@ -15,6 +15,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
@@ -38,9 +39,17 @@ public class FileUtil {
     private FileUtil() {
     }
 
-    public static void extract(String filename, boolean replace) {
-        if (!Files.exists(FileUtil.MAIN_DIR.resolve(filename))) {
-            Pl3xMap.api().saveResource(filename, replace);
+    public static void extract(Class<?> clazz, String filename, String outDir, boolean replace) {
+        try (InputStream in = clazz.getResourceAsStream("/" + filename)) {
+            if (in == null) {
+                throw new RuntimeException("Could not read icon image from jar!");
+            }
+            Path path = MAIN_DIR.resolve(outDir).resolve(filename);
+            if (!Files.exists(path) || replace) {
+                Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

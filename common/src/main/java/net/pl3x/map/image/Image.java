@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import net.pl3x.map.Key;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.io.IO;
@@ -23,7 +24,7 @@ public class Image {
     public static final String DIR_PATH = "%d/%s/";
     public static final String FILE_PATH = "%d_%d.%s";
 
-    private final String name;
+    private final Key id;
     private final World world;
     private final int regionX;
     private final int regionZ;
@@ -32,8 +33,8 @@ public class Image {
 
     private final IO.Type io;
 
-    public Image(String name, World world, int regionX, int regionZ) {
-        this.name = name;
+    public Image(Key id, World world, int regionX, int regionZ) {
+        this.id = id;
         this.world = world;
         this.regionX = regionX;
         this.regionZ = regionZ;
@@ -56,7 +57,7 @@ public class Image {
     public void saveToDisk() {
         Path worldDir = this.world.getTilesDir();
         for (int zoom = 0; zoom <= this.world.getConfig().ZOOM_MAX_OUT; zoom++) {
-            Path dirPath = worldDir.resolve(String.format(DIR_PATH, zoom, this.name));
+            Path dirPath = worldDir.resolve(String.format(DIR_PATH, zoom, this.id));
 
             // create directories if they don't exist
             FileUtil.createDirs(dirPath);
@@ -146,12 +147,12 @@ public class Image {
         private final RegionCoordinate region;
         private final Image image;
 
-        public Holder(String name, World world, RegionCoordinate region) {
+        public Holder(Key id, World world, RegionCoordinate region) {
             this.world = world;
             int regionX = region.getRegionX();
             int regionZ = region.getRegionZ();
             this.region = new RegionCoordinate(regionX, regionZ);
-            this.image = new Image(name, world, regionX, regionZ);
+            this.image = new Image(id, world, regionX, regionZ);
         }
 
         public Image getImage() {

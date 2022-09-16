@@ -17,19 +17,24 @@ import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.World;
 
 public abstract class Renderer {
+    private final Key key;
     private final String name;
     private final ScanTask scanTask;
-
     private final Heightmap heightmap;
 
     private Image.Holder imageHolder;
 
-    public Renderer(String name, ScanTask scanTask) {
-        this.name = name;
+    public Renderer(RendererHolder holder, ScanTask scanTask) {
+        this.key = holder.getKey();
+        this.name = holder.getName();
         this.scanTask = scanTask;
 
         Key key = new Key(getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT) + "-heightmap");
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
+    }
+
+    public Key getKey() {
+        return this.key;
     }
 
     public String getName() {
@@ -61,7 +66,7 @@ public abstract class Renderer {
     }
 
     public void allocateData() {
-        this.imageHolder = new Image.Holder(getName(), getWorld(), getRegion());
+        this.imageHolder = new Image.Holder(getKey(), getWorld(), getRegion());
     }
 
     public void saveData() {

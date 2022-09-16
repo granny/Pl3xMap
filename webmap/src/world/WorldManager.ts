@@ -3,6 +3,7 @@ import {BlockInfoControl} from "../control/BlockInfoControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {LinkControl} from "../control/LinkControl";
 import {MarkerLayer} from "../layergroup/MarkerLayer";
+import {Label} from "../settings/Lang";
 import {Settings} from "../settings/Settings";
 import {World} from "./World";
 import {fireCustomEvent, getJSON, getUrlParam} from "../util/Util";
@@ -51,7 +52,7 @@ export class WorldManager {
         return this._worlds.get(world);
     }
 
-    public async setWorld(world: World, renderer?: string): Promise<void> {
+    public async setWorld(world: World, renderer?: Label): Promise<void> {
         return world.load().then(() => {
             if (world === this._currentWorld && renderer === this._currentWorld.currentRenderer) {
                 return;
@@ -86,10 +87,11 @@ export class WorldManager {
 
             getJSON(`tiles/${world.name}/markers.json`)
                 .then((json) => {
-                    Object.keys(json).forEach((name: string) => {
-                        const layer = new MarkerLayer(name, world, json[name]);
-                        world.markerLayers.push(layer);
-                        layer.addTo(this._pl3xmap.map);
+                    (json as MarkerLayer[]).forEach((layer) => {
+                        const markerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex);
+                        world.markerLayers.push(markerLayer);
+                        markerLayer.addTo(this._pl3xmap.map);
+                        markerLayer.update(world);
                     });
                 });
         });

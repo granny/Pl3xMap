@@ -118,19 +118,11 @@ public abstract class Player extends Sender {
 
     /**
      * Get whether player is hidden from the map.
-     * <p>
-     * This method checks the tracker settings.
      *
      * @return true if player is hidden
      */
     public boolean isHidden() {
         if (this.hidden) {
-            return true;
-        }
-        if (getWorld().getConfig().PLAYER_TRACKER_HIDE_SPECTATORS && isSpectator()) {
-            return true;
-        }
-        if (getWorld().getConfig().PLAYER_TRACKER_HIDE_INVISIBLE && isInvisible()) {
             return true;
         }
         return isPersistentlyHidden();

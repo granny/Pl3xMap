@@ -1,5 +1,6 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
+import {Label} from "../settings/Lang";
 import {World} from "../world/World";
 import {createSVGIcon, handleKeyboardEvent} from "../util/Util";
 import BaseTab from "./BaseTab";
@@ -7,7 +8,7 @@ import '../svg/maps.svg';
 
 interface WorldListItem {
     fieldset: HTMLFieldSetElement;
-    inputs: Map<string, HTMLInputElement>
+    inputs: Map<Label, HTMLInputElement>
 }
 
 export default class WorldsTab extends BaseTab {
@@ -66,9 +67,9 @@ export default class WorldsTab extends BaseTab {
             fieldset.appendChild(label);
 
             //icon.src = `images/icon/${renderer}.png`;
-            label.style.backgroundImage = `url('images/icon/${renderer}.png')`;
-            label.title = renderer;
-            input.id = label.htmlFor = `${world.name}-${renderer}`;
+            label.style.backgroundImage = `url('images/icon/registered/${renderer.label}.png')`;
+            label.title = renderer.value;
+            input.id = label.htmlFor = `${world.name}-${renderer.label}`;
             input.type = 'radio';
             input.name = 'world';
             input.checked = false;

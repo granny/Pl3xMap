@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.pl3x.map.Key;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.coordinate.BlockCoordinate;
 import net.pl3x.map.coordinate.Coordinate;
@@ -16,11 +17,10 @@ public class ScanTask implements Runnable {
     private final Render render;
     private final RegionCoordinate region;
     private final Area area;
-
     private final World world;
     private final ChunkHelper chunkHelper;
 
-    private final LinkedHashMap<String, Renderer> renderers = new LinkedHashMap<>();
+    private final LinkedHashMap<Key, Renderer> renderers = new LinkedHashMap<>();
 
     private final ScanData.Data scanData = new ScanData.Data();
 
@@ -28,21 +28,25 @@ public class ScanTask implements Runnable {
         this.render = render;
         this.region = region;
         this.area = area;
-
         this.world = render.getWorld();
         this.chunkHelper = new ChunkHelper(render);
 
-        List<String> rendererNames = new ArrayList<>(this.world.getConfig().RENDER_RENDERERS);
+        List<RendererHolder> rendererHolders = new ArrayList<>();
+        Pl3xMap.api().getRendererRegistry().entries().forEach(((key, rendererHolder) -> {
+            if (this.world.getConfig().RENDER_RENDERERS.contains(rendererHolder.getKey().toString())) {
+                rendererHolders.add(rendererHolder);
+            }
+        }));
 
         String blockInfo = this.world.getConfig().UI_BLOCKINFO;
         if (blockInfo != null && !blockInfo.isEmpty()) {
-            rendererNames.add("blockinfo");
+            rendererHolders.add(Pl3xMap.api().getRendererRegistry().get(RendererRegistry.BLOCKINFO));
         }
 
-        rendererNames.forEach(name -> {
-            Renderer renderer = Pl3xMap.api().getRendererRegistry().createRenderer(name, this);
+        rendererHolders.forEach(holder -> {
+            Renderer renderer = Pl3xMap.api().getRendererRegistry().createRenderer(holder, this);
             if (renderer != null) {
-                this.renderers.put(name, renderer);
+                this.renderers.put(holder.getKey(), renderer);
             }
         });
     }
@@ -63,8 +67,8 @@ public class ScanTask implements Runnable {
         return this.chunkHelper;
     }
 
-    public Renderer getRenderer(String name) {
-        return this.renderers.get(name);
+    public Renderer getRenderer(Key id) {
+        return this.renderers.get(id);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class ScanTask implements Runnable {
 
     public void scanRegion() {
         // allocate images
-        this.renderers.forEach((name, renderer) -> renderer.allocateData());
+        this.renderers.forEach((id, renderer) -> renderer.allocateData());
 
         int x = this.region.getChunkX();
         int z = this.region.getChunkZ();
@@ -109,7 +113,7 @@ public class ScanTask implements Runnable {
         }
 
         // run the renderers on scanned data
-        this.renderers.forEach((name, renderer) -> renderer.scanData(this.region, this.scanData));
+        this.renderers.forEach((id, renderer) -> renderer.scanData(this.region, this.scanData));
 
         // save images to disk
         if (!this.render.isCancelled()) {
@@ -117,7 +121,7 @@ public class ScanTask implements Runnable {
             this.render.getImageExecutor().submit(() -> {
                 // surround in try/catch because executor eats exceptions
                 try {
-                    this.renderers.forEach((name, renderer) -> renderer.saveData());
+                    this.renderers.forEach((id, renderer) -> renderer.saveData());
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }

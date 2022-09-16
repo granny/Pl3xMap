@@ -7,6 +7,8 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.pl3x.map.Key;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.marker.Marker;
+import net.pl3x.map.markers.option.Options;
+import net.pl3x.map.markers.option.Tooltip;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * Manages world border marker.
  */
 public class WorldBorderLayer extends WorldLayer {
-    public static final Key KEY = Key.of("pl3xmap-worldborder");
+    public static final Key KEY = Key.of("worldborder");
 
     /**
      * Create a new world border layer.
@@ -42,6 +44,10 @@ public class WorldBorderLayer extends WorldLayer {
                 Point.of(x + r, z + r),
                 Point.of(x - r, z + r),
                 Point.of(x - r, z - r)
-        ).setOptions(getOptions()));
+        ).setOptions(Options.builder()
+                .tooltipContent(getLabel())
+                .tooltipDirection(Tooltip.Direction.TOP)
+                .build()
+        ));
     }
 }

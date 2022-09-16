@@ -3,6 +3,7 @@ package net.pl3x.map.player;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -149,5 +150,34 @@ public class BukkitPlayer extends Player {
     @Override
     public void hideBossBar(@NotNull BossBar bar) {
         this.player.hideBossBar(bar);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        BukkitPlayer other = (BukkitPlayer) o;
+        return getKey() == other.getKey()
+                && this.player == other.player;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getKey(), this.player);
+    }
+
+    @Override
+    public String toString() {
+        return "BukkitPlayer{"
+                + "key=" + getKey()
+                + ",player=" + getPlayer().getUniqueId()
+                + "}";
     }
 }

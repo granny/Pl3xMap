@@ -17,7 +17,7 @@ import net.pl3x.map.world.World;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.MemorySection;
 
-public class AdvancedConfig extends AbstractConfig {
+public final class AdvancedConfig extends AbstractConfig {
     @Key("settings.event-listeners.BlockBreakEvent")
     @Comment("Triggers when a player breaks a block")
     public static boolean BLOCK_BREAK_EVENT = true;

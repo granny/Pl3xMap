@@ -6,7 +6,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import net.pl3x.map.JsonArrayWrapper;
 import net.pl3x.map.Key;
@@ -17,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class UpdateMarkerData implements Runnable {
     private final Gson gson = new GsonBuilder()
-            //.setPrettyPrinting()
+            .setPrettyPrinting()
             //.disableHtmlEscaping()
             .serializeNulls()
             .registerTypeHierarchyAdapter(Marker.class, new Adapter())
@@ -33,10 +36,18 @@ public class UpdateMarkerData implements Runnable {
 
     @Override
     public void run() {
-        Map<String, Integer> layers = new HashMap<>();
+        List<Object> layers = new ArrayList<>();
 
         this.world.getLayerRegistry().entries().forEach((key, layer) -> {
-            layers.put(key.toString(), layer.getUpdateInterval());
+            Map<String, Object> details = new LinkedHashMap<>();
+            details.put("key", layer.getKey().toString());
+            details.put("label", layer.getLabel());
+            details.put("updateInterval", layer.getUpdateInterval());
+            details.put("showControls", layer.shouldShowControls());
+            details.put("defaultHidden", layer.isDefaultHidden());
+            details.put("priority", layer.getPriority());
+            details.put("zIndex", layer.getZIndex());
+            layers.add(details);
 
             long now = System.currentTimeMillis() / 1000;
             long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);

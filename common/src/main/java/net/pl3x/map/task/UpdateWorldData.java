@@ -12,6 +12,7 @@ import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.markers.Point;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 
@@ -27,7 +28,7 @@ public class UpdateWorldData implements Runnable {
     public void run() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
 
-        Pl3xMap.api().getWorldRegistry().entries().forEach((key, world) -> {
+        Pl3xMap.api().getWorldRegistry().entries().forEach((worldKey, world) -> {
             WorldConfig config = world.getConfig();
 
             if (!config.ENABLED) {
@@ -59,13 +60,21 @@ public class UpdateWorldData implements Runnable {
 
             FileUtil.write(this.gson.toJson(settings), world.getTilesDir().resolve("settings.json"));
 
+            List<Object> renderers = new ArrayList<>();
+            world.getConfig().RENDER_RENDERERS.forEach(renderer -> {
+                RendererHolder holder = Pl3xMap.api().getRendererRegistry().get(renderer);
+                if (holder != null) {
+                    renderers.add(Map.of("label", renderer, "value", holder.getName()));
+                }
+            });
+
             Map<String, Object> worldsList = new LinkedHashMap<>();
             worldsList.put("name", world.getName());
             worldsList.put("displayName", config.DISPLAY_NAME
                     .replace("<world>", world.getName()));
             worldsList.put("type", world.getType().toString());
             worldsList.put("order", config.ORDER);
-            worldsList.put("renderers", config.RENDER_RENDERERS);
+            worldsList.put("renderers", renderers);
             worldSettings.add(worldsList);
         });
 
@@ -74,11 +83,12 @@ public class UpdateWorldData implements Runnable {
 
         Map<String, Object> lang = new LinkedHashMap<>();
         lang.put("title", Lang.UI_TITLE);
-        lang.put("players", Lang.UI_PLAYERS);
-        lang.put("worlds", Map.of("label", Lang.UI_WORLDS_LABEL, "value", Lang.UI_WORLDS_VALUE));
-        lang.put("layers", Map.of("label", Lang.UI_LAYERS_LABEL, "value", Lang.UI_LAYERS_VALUE));
-        lang.put("coords", Map.of("label", Lang.UI_COORDS_LABEL, "value", Lang.UI_COORDS_VALUE));
         lang.put("blockInfo", Map.of("label", Lang.UI_BLOCKINFO_LABEL, "value", Lang.UI_BLOCKINFO_VALUE));
+        lang.put("coords", Map.of("label", Lang.UI_COORDS_LABEL, "value", Lang.UI_COORDS_VALUE));
+        lang.put("layers", Map.of("label", Lang.UI_LAYERS_LABEL, "value", Lang.UI_LAYERS_VALUE));
+        lang.put("markers", Map.of("label", Lang.UI_MARKERS_LABEL, "value", Lang.UI_MARKERS_VALUE));
+        lang.put("players", Map.of("label", Lang.UI_PLAYERS_LABEL, "value", Lang.UI_PLAYERS_VALUE));
+        lang.put("worlds", Map.of("label", Lang.UI_WORLDS_LABEL, "value", Lang.UI_WORLDS_VALUE));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("worldSettings", worldSettings);

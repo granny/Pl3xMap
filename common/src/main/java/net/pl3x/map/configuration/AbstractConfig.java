@@ -16,7 +16,7 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public abstract class AbstractConfig {
     private YamlFile config;
 
-    protected YamlFile getConfig() {
+    public YamlFile getConfig() {
         return this.config;
     }
 

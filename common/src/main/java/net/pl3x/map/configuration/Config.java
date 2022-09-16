@@ -2,7 +2,7 @@ package net.pl3x.map.configuration;
 
 import net.pl3x.map.util.FileUtil;
 
-public class Config extends AbstractConfig {
+public final class Config extends AbstractConfig {
     @Key("settings.debug-mode")
     @Comment("""
             Extra logger output.

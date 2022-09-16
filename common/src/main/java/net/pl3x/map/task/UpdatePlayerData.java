@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.server.MinecraftServer;
 import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.markers.Point;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 
@@ -25,30 +24,19 @@ public class UpdatePlayerData implements Runnable {
         List<Object> players = new ArrayList<>();
 
         Pl3xMap.api().getPlayerRegistry().entries().forEach((key, player) -> {
-            if (player.isNPC()) {
-                return;
-            }
             if (player.isHidden()) {
                 return;
             }
+
+            if (player.isNPC()) {
+                return;
+            }
+
             Map<String, Object> entry = new LinkedHashMap<>();
-            Point position = player.getPosition();
 
             entry.put("name", player.getDecoratedName());
             entry.put("uuid", player.getUUID().toString());
             entry.put("world", player.getWorld().getName());
-
-            if (player.getWorld().getConfig().PLAYER_TRACKER_ENABLED) {
-                entry.put("x", position.getX());
-                entry.put("z", position.getZ());
-                entry.put("yaw", player.getYaw());
-                if (player.getWorld().getConfig().PLAYER_TRACKER_NAMEPLATE_SHOW_ARMOR) {
-                    entry.put("armor", player.getArmorPoints());
-                }
-                if (player.getWorld().getConfig().PLAYER_TRACKER_NAMEPLATE_SHOW_HEALTH) {
-                    entry.put("health", player.getHealth());
-                }
-            }
 
             players.add(entry);
         });

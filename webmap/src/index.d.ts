@@ -1,11 +1,6 @@
 import * as L from "leaflet";
+import {MarkerLayer} from "./layergroup/MarkerLayer";
 import {World} from "./world/World";
-
-interface OverlayAddedPayload {
-    layer: Layer;
-    name: string;
-    showInControl: boolean;
-}
 
 declare global {
     interface WindowEventMap {
@@ -13,7 +8,7 @@ declare global {
         worldremoved: CustomEvent<World>;
         worldselected: CustomEvent<World>;
         rendererselected: CustomEvent<World>;
-        overlayadded: CustomEvent<OverlayAddedPayload>;
+        overlayadded: CustomEvent<MarkerLayer>;
     }
 }
 

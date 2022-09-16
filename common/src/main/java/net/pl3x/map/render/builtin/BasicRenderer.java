@@ -1,22 +1,24 @@
 package net.pl3x.map.render.builtin;
 
+import net.pl3x.map.Key;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.Image;
 import net.pl3x.map.render.Renderer;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.ScanData;
 import net.pl3x.map.render.ScanTask;
 
 public final class BasicRenderer extends Renderer {
     private Image.Holder lightImageHolder;
 
-    public BasicRenderer(String name, ScanTask scanTask) {
-        super(name, scanTask);
+    public BasicRenderer(RendererHolder holder, ScanTask scanTask) {
+        super(holder, scanTask);
     }
 
     @Override
     public void allocateData() {
         super.allocateData();
-        this.lightImageHolder = new Image.Holder("light", getWorld(), getRegion());
+        this.lightImageHolder = new Image.Holder(Key.of("light"), getWorld(), getRegion());
     }
 
     @Override

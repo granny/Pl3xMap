@@ -65,9 +65,10 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         */
 
         window.addEventListener('overlayadded', (e) => {
-            if (e.detail.showInControl) {
-                this.addOverlay(e.detail.layer, e.detail.name);
+            if (e.detail.showControls) {
+                this._addLayer(e.detail, e.detail.label, true);
             }
+            this._update();
         });
     }
 
