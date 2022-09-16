@@ -9,6 +9,7 @@ declare global {
         worldselected: CustomEvent<World>;
         rendererselected: CustomEvent<World>;
         overlayadded: CustomEvent<MarkerLayer>;
+        overlayremoved: CustomEvent<MarkerLayer>;
     }
 }
 

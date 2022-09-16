@@ -98,6 +98,7 @@ export class MarkerLayer extends L.LayerGroup {
         clearTimeout(this._timer);
         this.clearLayers();
         this.removeFrom(Pl3xMap.instance.map);
+        fireCustomEvent("overlayremoved", this);
     }
 
     parseMarker(data: unknown[]): L.Layer | undefined {

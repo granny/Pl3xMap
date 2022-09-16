@@ -81,6 +81,18 @@ export class World {
         this._currentRenderer = undefined;
     }
 
+    public loadMarkers() {
+        getJSON(`tiles/${this.name}/markers.json`)
+            .then((json) => {
+                (json as MarkerLayer[]).forEach((layer) => {
+                    const markerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex);
+                    this._markerLayers.push(markerLayer);
+                    markerLayer.addTo(this._pl3xmap.map);
+                    markerLayer.update(this);
+                });
+            });
+    }
+
     public loadBlockInfo(zoom: number, x: number, z: number) {
         if (!this.settings.ui.blockinfo) {
             return;

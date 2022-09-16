@@ -2,11 +2,10 @@ import {Pl3xMap} from "../Pl3xMap";
 import {BlockInfoControl} from "../control/BlockInfoControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {LinkControl} from "../control/LinkControl";
-import {MarkerLayer} from "../layergroup/MarkerLayer";
 import {Label} from "../settings/Lang";
 import {Settings} from "../settings/Settings";
 import {World} from "./World";
-import {fireCustomEvent, getJSON, getUrlParam} from "../util/Util";
+import {fireCustomEvent, getUrlParam} from "../util/Util";
 
 /**
  * The world manager. Manages all loaded worlds.
@@ -61,6 +60,8 @@ export class WorldManager {
             if (world !== this._currentWorld) {
                 this._currentWorld?.unload();
                 this._currentWorld = world;
+                world.loadMarkers();
+                fireCustomEvent('worldselected', world);
             }
 
             this._currentWorld.resetRenderer(renderer);
@@ -70,8 +71,6 @@ export class WorldManager {
                 getUrlParam('z', world.spawn.z),
                 getUrlParam('zoom', world.zoom.default)
             );
-
-            fireCustomEvent('worldselected', world);
 
             document.getElementById("map")!.style.background = world.background;
 
@@ -84,16 +83,6 @@ export class WorldManager {
             if (attributeDom) {
                 attributeDom.style.display = ui.attribution ? "inline-block" : "none";
             }
-
-            getJSON(`tiles/${world.name}/markers.json`)
-                .then((json) => {
-                    (json as MarkerLayer[]).forEach((layer) => {
-                        const markerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex);
-                        world.markerLayers.push(markerLayer);
-                        markerLayer.addTo(this._pl3xmap.map);
-                        markerLayer.update(world);
-                    });
-                });
         });
     }
 }

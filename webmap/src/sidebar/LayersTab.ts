@@ -20,7 +20,6 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     declare protected _layerControlInputs: HTMLInputElement[];
 
     declare protected _layers: LayerListItem[];
-    declare protected _addLayer: (layer: L.Layer, name: string, overlay: boolean) => this;
     declare protected _onInputClick: (e: Event) => void;
     declare protected _checkDisabledLayers: () => void;
 
@@ -49,25 +48,20 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         this._content.id = `sidebar__layers`;
         this._content.setAttribute('aria-hidden', 'true');
 
-        /* this can be removed?, renderers now in worlds tab
-        //Remove base layers and repopulate from current world
-        window.addEventListener('worldselected', (e) => {
-            for (const layer of this._layers.filter(layer => !layer.overlay)) {
-                this.removeLayer(layer.layer);
-            }
-
-            for (const renderer of e.detail.renderers) {
-                this._addLayer(e.detail.getRendererLayer(renderer)!, renderer, false);
-            }
-
-            this._update();
-        });
-        */
-
         window.addEventListener('overlayadded', (e) => {
             if (e.detail.showControls) {
-                this._addLayer(e.detail, e.detail.label, true);
+                this.addOverlay(e.detail, e.detail.label);
             }
+            this._update();
+        });
+
+        window.addEventListener('overlayremoved', (e) => {
+            this.removeLayer(e.detail);
+            this._update();
+        });
+
+        window.addEventListener('worldselected', (e) => {
+            this._layers = [];
             this._update();
         });
     }
