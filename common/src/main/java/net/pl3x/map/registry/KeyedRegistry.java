@@ -2,7 +2,6 @@ package net.pl3x.map.registry;
 
 import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -20,7 +19,10 @@ public class KeyedRegistry<T extends Keyed> extends Registry<Key, T> {
      * @return registered entry or null
      */
     @Nullable
-    public T register(@NotNull T entry) {
+    public T register(@Nullable T entry) {
+        if (entry == null) {
+            return null;
+        }
         if (this.entries.containsKey(entry.getKey())) {
             return null;
         }
@@ -37,7 +39,10 @@ public class KeyedRegistry<T extends Keyed> extends Registry<Key, T> {
      * @return unregistered entry or null
      */
     @Nullable
-    public T unregister(@NotNull T entry) {
+    public T unregister(@Nullable T entry) {
+        if (entry == null) {
+            return null;
+        }
         return unregister(entry.getKey());
     }
 }
