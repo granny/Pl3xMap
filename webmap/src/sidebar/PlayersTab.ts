@@ -24,6 +24,7 @@ export default class PlayersTab extends BaseTab {
 
         this._button.appendChild(createSVGIcon('players'));
         this._button.setAttribute('aria-label', lang.worlds.label);
+        this._button.title = lang.players.label;
 
         this._heading = L.DomUtil.create('h2', '', this._content);
         this._heading.innerText = lang.players.label;
@@ -62,10 +63,13 @@ export default class PlayersTab extends BaseTab {
         const online = String(isset(settings?.players) ? Object.keys(settings!.players).length : '???');
         const max = String(settings?.maxPlayers ?? '???');
 
-        this._heading.innerText = settings?.lang.players?.label
+        const title = settings?.lang.players?.label
                 .replace('<online>', online)
                 .replace('<max>', max)
             ?? 'Players';
+
+        this._heading.innerText = title;
+        this._button.title = title;
     }
 
     private createListItem(player: Player) {

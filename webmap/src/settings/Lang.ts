@@ -6,15 +6,17 @@ export class Lang {
     private readonly _coords: Label;
     private readonly _blockInfo: Label;
     private readonly _layers: Label;
+    private readonly _link: Label;
     private readonly _markers: Label;
     private readonly _players: Label;
     private readonly _worlds: Label;
 
-    constructor(title: string, coords: Label, blockInfo: Label, layers: Label, markers: Label, players: Label, worlds: Label) {
+    constructor(title: string, coords: Label, blockInfo: Label, layers: Label, link: Label, markers: Label, players: Label, worlds: Label) {
         this._title = title;
         this._coords = coords;
         this._blockInfo = blockInfo;
         this._layers = layers;
+        this._link = link;
         this._markers = markers;
         this._players = players;
         this._worlds = worlds;
@@ -34,6 +36,10 @@ export class Lang {
 
     get layers(): Label {
         return this._layers;
+    }
+
+    get link(): Label {
+        return this._link;
     }
 
     get markers(): Label {

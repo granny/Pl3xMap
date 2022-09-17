@@ -203,6 +203,10 @@ public final class Lang extends AbstractConfig {
     public static String UI_COORDS_LABEL = "Coordinates";
     @Key("ui.coords.value")
     public static String UI_COORDS_VALUE = "<x>, <y>, <z>";
+    @Key("ui.link.label")
+    public static String UI_LINK_LABEL = "Sharable Link";
+    @Key("ui.link.value")
+    public static String UI_LINK_VALUE = "";
     @Key("ui.markers.label")
     public static String UI_MARKERS_LABEL = "Markers";
     @Key("ui.markers.value")

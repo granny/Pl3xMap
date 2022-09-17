@@ -23,6 +23,7 @@ export default class WorldsTab extends BaseTab {
 
         this._button.appendChild(createSVGIcon('maps'));
         this._button.setAttribute('aria-label', lang.worlds.label);
+        this._button.title = lang.worlds.label;
 
         const heading = L.DomUtil.create('h2', '', this._content);
         heading.innerText = lang.worlds.label;

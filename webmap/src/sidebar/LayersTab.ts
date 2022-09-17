@@ -41,6 +41,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         this._button.setAttribute('aria-controls', `sidebar__layers`);
         this._button.appendChild(createSVGIcon('layers'));
         this._button.setAttribute('aria-label', pl3xmap.settings!.lang.layers.label);
+        this._button.title = pl3xmap.settings!.lang.layers.label;
 
         this._content.hidden = true;
         this._content.id = `sidebar__layers`;

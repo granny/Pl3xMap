@@ -38,6 +38,7 @@ export class LinkControl extends ControlBox {
     public update(): void {
         const url = this.getUrlFromView(this._pl3xmap.worldManager.currentWorld);
         this._dom.href = url;
+        this._dom.title = this._pl3xmap.settings?.lang.link.label ?? '';
         window.history.replaceState(null, this._pl3xmap.settings!.lang.title, url);
     }
 
@@ -48,7 +49,7 @@ export class LinkControl extends ControlBox {
         const z: number = Math.floor(center[1]);
         let url = `?`;
         if (world !== undefined) {
-            url += `world=${world.name}&renderer=${world.currentRenderer}`;
+            url += `world=${world.name}&renderer=${world.currentRenderer?.label ?? 'basic'}`;
         }
         return `${url}&zoom=${zoom}&x=${x}&z=${z}`;
     }
