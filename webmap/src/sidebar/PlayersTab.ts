@@ -78,7 +78,7 @@ export default class PlayersTab extends BaseTab {
         input.type = 'radio';
         input.name = 'player';
         input.checked = false;
-        input.addEventListener('click', async (e: MouseEvent) => {
+        input.addEventListener('click', async () => {
             // focus on player
         });
 

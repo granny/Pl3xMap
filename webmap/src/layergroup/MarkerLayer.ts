@@ -55,31 +55,31 @@ export class MarkerLayer extends L.LayerGroup {
 
     get key(): string {
         return this._key;
-    };
+    }
 
     get label(): string {
         return this._label;
-    };
+    }
 
     get updateInterval(): number {
         return this._updateInterval;
-    };
+    }
 
     get showControls(): boolean {
         return this._showControls;
-    };
+    }
 
     get defaultHidden(): boolean {
         return this._defaultHidden;
-    };
+    }
 
     get priority(): number {
         return this._priority;
-    };
+    }
 
     get zIndex(): number {
         return this._zIndex;
-    };
+    }
 
     update(world: World): void {
         //console.log("Update markers: " + this._name + " " + this._world.name);
