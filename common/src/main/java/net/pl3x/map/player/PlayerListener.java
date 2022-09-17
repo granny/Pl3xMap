@@ -20,7 +20,7 @@ public interface PlayerListener {
         if (player.isHidden()) {
             player.setHidden(true, false);
         }
-        new Thread(() -> new PlayerTexture(player)).start();
+        new PlayerTexture(player).start();
     }
 
     /**
