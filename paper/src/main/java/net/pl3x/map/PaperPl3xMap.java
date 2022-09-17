@@ -170,7 +170,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         }
 
         // start updating world data
-        this.settingsDataTask = this.settingsDataExecutor.scheduleAtFixedRate(new UpdateSettingsData(), 1, 5, TimeUnit.SECONDS);
+        this.settingsDataTask = this.settingsDataExecutor.scheduleAtFixedRate(new UpdateSettingsData(), 1, 1, TimeUnit.SECONDS);
     }
 
     @Override

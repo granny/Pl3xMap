@@ -1,5 +1,5 @@
 import {Lang} from "./Lang";
-import {Player} from "./Player";
+import {Player} from "../player/Player";
 import {WorldSettings} from "./WorldSettings";
 
 /**
@@ -9,7 +9,7 @@ export class Settings {
     private readonly _format: string;
     private readonly _maxPlayers: number;
     private readonly _lang: Lang;
-    private readonly _players: Player[] = [];
+    private readonly _players: Player[];
     private readonly _worldSettings: WorldSettings[];
 
     constructor(format: string, maxPlayers: number, lang: Lang, players: Player[], worldSettings: WorldSettings[]) {

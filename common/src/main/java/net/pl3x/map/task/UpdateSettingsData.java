@@ -41,6 +41,7 @@ public class UpdateSettingsData implements Runnable {
 
             entry.put("name", player.getDecoratedName());
             entry.put("uuid", player.getUUID().toString());
+            entry.put("displayName", player.getDecoratedName());
             entry.put("world", player.getWorld().getName());
 
             players.add(entry);

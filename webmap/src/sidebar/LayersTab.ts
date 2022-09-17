@@ -28,8 +28,6 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     protected _content: HTMLDivElement = L.DomUtil.create('div');
 
     protected _skeleton: HTMLParagraphElement = L.DomUtil.create('p');
-    protected _baseContainer: HTMLDivElement = L.DomUtil.create('div');
-    protected _baseLayersList: HTMLFieldSetElement = L.DomUtil.create('fieldset');
     protected _overlayContainer: HTMLDivElement = L.DomUtil.create('div');
     protected _overlaysList: HTMLFieldSetElement = L.DomUtil.create('fieldset');
 
@@ -71,30 +69,16 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         heading.innerText = this._pl3xmap.settings!.lang.layers.label;
         heading.id = 'layers-heading';
 
-        const baseHeading = L.DomUtil.create('h3', '', this._baseContainer);
-        baseHeading.innerText = 'Renderers';
-        baseHeading.id = 'base-layers-heading';
-
-        const overlayHeading = L.DomUtil.create('h3', '', this._overlayContainer);
-        overlayHeading.innerText = 'Overlays';
-        overlayHeading.id = 'overlay-layers-heading';
-
         this._skeleton.innerText = this._pl3xmap.settings!.lang.layers.value;
         this._skeleton.id = 'layers-skeleton';
         this._skeleton.tabIndex = -1;
 
-        this._baseLayersList.setAttribute('aria-labelledby', 'base-layers-heading');
         this._overlaysList.setAttribute('aria-labelledby', 'overlay-layers-heading');
-        this._baseLayersList.classList.add('menu');
-        this._baseLayersList.setAttribute('role', 'radiogroup');
         this._overlaysList.setAttribute('role', 'listbox');
 
-        this._baseContainer.hidden = this._overlayContainer.hidden = true;
-        this._baseContainer.appendChild(this._baseLayersList);
         this._overlayContainer.appendChild(this._overlaysList);
 
         this._content.appendChild(this._skeleton);
-        this._content.appendChild(this._baseContainer);
         this._content.appendChild(this._overlayContainer);
     }
 
@@ -103,7 +87,6 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
             return this;
         }
 
-        L.DomUtil.empty(this._baseLayersList);
         L.DomUtil.empty(this._overlaysList);
 
         this._layerControlInputs = [];
@@ -117,13 +100,6 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
             baseLayersCount += !layer.overlay ? 1 : 0;
         }
 
-        // Hide base layers section if there's only one layer.
-        if (this.options.hideSingleBase) {
-            this._baseContainer.hidden = baseLayersCount <= 1;
-        } else {
-            this._baseContainer.hidden = !baseLayersCount;
-        }
-
         this._overlayContainer.hidden = !overlaysCount;
         this._skeleton.hidden = !!(baseLayersCount || overlaysCount);
 
@@ -133,12 +109,12 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     private _addItem(layer: LayerListItem) {
         const label = L.DomUtil.create('label'),
             input = L.DomUtil.create('input') as LayerControlInput,
-            container = layer.overlay ? this._overlaysList : this._baseLayersList;
+            container = this._overlaysList;
 
-        input.type = layer.overlay ? 'checkbox' : 'radio';
-        input.name = layer.overlay ? 'overlays' : 'base';
+        input.type = 'checkbox';
+        input.name = 'overlays';
         input.layerId = L.Util.stamp(layer.layer);
-        input.id = label.htmlFor = `${layer.overlay ? 'overlay-' : 'base-'}${input.layerId}`;
+        input.id = label.htmlFor = `overlay-${input.layerId}`;
         input.defaultChecked = this._map.hasLayer(layer.layer);
 
         this._layerControlInputs.push(input);
@@ -165,9 +141,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     }
 
     onActivate() {
-        if (!this._baseContainer.hidden) {
-            (this._baseLayersList.querySelector('input:checked') as HTMLElement)!.focus();
-        } else if (!this._overlayContainer.hidden) {
+        if (!this._overlayContainer.hidden) {
             (this._overlaysList.querySelector('input') as HTMLElement)!.focus();
         } else {
             this._skeleton.focus();

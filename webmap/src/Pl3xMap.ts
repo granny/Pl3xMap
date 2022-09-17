@@ -1,5 +1,6 @@
-import {ControlManager} from "./control/ControlManager";
 import {Settings} from "./settings/Settings";
+import {ControlManager} from "./control/ControlManager";
+import {PlayerManager} from "./player/PlayerManager";
 import {WorldManager} from "./world/WorldManager";
 import {getJSON} from "./util/Util";
 import SidebarControl from "./control/SidebarControl";
@@ -19,9 +20,12 @@ export class Pl3xMap {
     private readonly _map: Pl3xMapLeafletMap;
 
     private readonly _controlManager: ControlManager;
+    private readonly _playerManager: PlayerManager;
     private readonly _worldManager: WorldManager;
 
     private _settings?: Settings;
+
+    private _timer: NodeJS.Timeout | undefined;
 
     constructor() {
         Pl3xMap._instance = this;
@@ -29,34 +33,46 @@ export class Pl3xMap {
         this._map = new Pl3xMapLeafletMap(this);
 
         this._controlManager = new ControlManager(this);
+        this._playerManager = new PlayerManager(this);
         this._worldManager = new WorldManager(this);
 
-        getJSON('tiles/settings.json').then((json) => this.init(json as Settings));
+        getJSON('tiles/settings.json').then((json) => {
+            this._settings = json as Settings;
+            document.title = this._settings.lang.title;
+            this.controlManager.sidebarControl = new SidebarControl(this);
+            const promise = this.worldManager.init(this._settings);
+            this.update();
+            return promise;
+        });
     }
 
     public static get instance(): Pl3xMap {
         return Pl3xMap._instance;
     }
 
-    private async init(settings: Settings) {
-        document.title = settings.lang.title;
-        this._settings = settings;
+    private update(): void {
+        getJSON('tiles/settings.json').then((json) => {
+            this._settings = json as Settings;
+            this.playerManager.update(this._settings);
 
-        this.controlManager.sidebarControl = new SidebarControl(this);
-
-        await this.worldManager.init(this._settings);
+            this._timer = setTimeout(() => this.update(), 1000);
+        });
     }
 
     get map(): Pl3xMapLeafletMap {
         return this._map;
     }
 
-    get worldManager(): WorldManager {
-        return this._worldManager;
-    }
-
     get controlManager(): ControlManager {
         return this._controlManager;
+    }
+
+    get playerManager(): PlayerManager {
+        return this._playerManager;
+    }
+
+    get worldManager(): WorldManager {
+        return this._worldManager;
     }
 
     get settings(): Settings | undefined {

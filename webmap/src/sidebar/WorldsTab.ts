@@ -73,6 +73,7 @@ export default class WorldsTab extends BaseTab {
             input.type = 'radio';
             input.name = 'world';
             input.checked = false;
+            input.classList.add("renderer");
             input.addEventListener('click', async (e: MouseEvent) => {
                 this._pl3xmap.worldManager.setWorld(world, renderer)
                     // Don't update radio button if switch fails

@@ -208,9 +208,9 @@ public final class Lang extends AbstractConfig {
     @Key("ui.markers.value")
     public static String UI_MARKERS_VALUE = "No markers have been configured";
     @Key("ui.players.label")
-    public static String UI_PLAYERS_LABEL = "Players";
+    public static String UI_PLAYERS_LABEL = "Players (<online>/<max>)";
     @Key("ui.players.value")
-    public static String UI_PLAYERS_VALUE = "(<online>/<max>)";
+    public static String UI_PLAYERS_VALUE = "No players are currently online";
     @Key("ui.worlds.label")
     public static String UI_WORLDS_LABEL = "Worlds";
     @Key("ui.worlds.value")

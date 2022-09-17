@@ -12,6 +12,7 @@ import {fireCustomEvent, getUrlParam} from "../util/Util";
  */
 export class WorldManager {
     private readonly _pl3xmap: Pl3xMap;
+
     private _worlds: Map<string, World> = new Map();
     private _currentWorld?: World;
 
