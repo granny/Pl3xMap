@@ -35,7 +35,7 @@ public class AddonInfo extends Keyed {
         Map<?, ?> map = yaml.load(stream);
 
         this.name = (String) map.get("name");
-        this.key = new Key(getName());
+        this.key = Key.of(getName());
         this.version = (String) map.get("version");
 
         this.description = (String) map.get("description");

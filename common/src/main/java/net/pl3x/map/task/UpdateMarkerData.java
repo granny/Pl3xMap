@@ -20,11 +20,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class UpdateMarkerData implements Runnable {
     private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            //.disableHtmlEscaping()
+            //.setPrettyPrinting()
+            .disableHtmlEscaping()
             .serializeNulls()
-            .registerTypeHierarchyAdapter(Marker.class, new Adapter())
             .setLenient()
+            .registerTypeHierarchyAdapter(Marker.class, new Adapter())
             .create();
 
     private final World world;

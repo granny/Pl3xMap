@@ -63,6 +63,7 @@ public abstract class World extends Keyed {
 
     private static final Gson GSON = new GsonBuilder()
             .enableComplexMapKeySerialization()
+            //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
             .setLenient()
@@ -120,7 +121,7 @@ public abstract class World extends Keyed {
      */
     @NotNull
     public static Key createKey(@NotNull String name) {
-        return new Key(name);
+        return Key.of(name);
     }
 
     public void init() {

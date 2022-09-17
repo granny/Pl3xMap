@@ -19,7 +19,7 @@ import net.pl3x.map.world.World;
 
 public class UpdateSettingsData implements Runnable {
     private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
+            //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
             .setLenient()

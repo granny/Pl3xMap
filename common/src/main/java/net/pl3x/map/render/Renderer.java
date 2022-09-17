@@ -29,7 +29,7 @@ public abstract class Renderer {
         this.name = holder.getName();
         this.scanTask = scanTask;
 
-        Key key = new Key(getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT) + "-heightmap");
+        Key key = Key.of(getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT));
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
     }
 

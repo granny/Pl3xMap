@@ -10,7 +10,7 @@ import net.pl3x.map.render.RendererRegistry;
 import net.pl3x.map.util.FileUtil;
 
 public class FlowerMap extends Addon {
-    public static final Key KEY = new Key("flowermap");
+    public static final Key KEY = Key.of("flowermap");
 
     @Override
     public void onEnable() {

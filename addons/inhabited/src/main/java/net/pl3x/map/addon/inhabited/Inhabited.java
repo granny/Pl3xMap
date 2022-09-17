@@ -10,7 +10,7 @@ import net.pl3x.map.render.RendererRegistry;
 import net.pl3x.map.util.FileUtil;
 
 public class Inhabited extends Addon {
-    public static final Key KEY = new Key("inhabited");
+    public static final Key KEY = Key.of("inhabited");
 
     @Override
     public void onEnable() {

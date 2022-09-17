@@ -26,8 +26,8 @@ import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class MarkerTest extends Addon implements EventListener {
-    private static final Key LAYER_KEY = new Key("marker-test");
-    private static final Key ICON_KEY = new Key("test-x-icon");
+    private static final Key LAYER_KEY = Key.of("marker-test");
+    private static final Key ICON_KEY = Key.of("test-x-icon");
     private static final Collection<Marker<?>> MARKERS = new HashSet<>();
 
     @Override

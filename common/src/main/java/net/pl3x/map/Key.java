@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public final class Key {
     private static final Pattern VALID_CHARS = Pattern.compile("^[a-zA-Z0-9._-]+[^.]$");
 
-    public static final Key NONE = new Key("none");
+    public static final Key NONE = Key.of("none");
 
     private final String key;
 
@@ -49,7 +49,7 @@ public final class Key {
      */
     @NotNull
     public static Key of(@NotNull UUID uuid) {
-        return new Key(uuid.toString());
+        return Key.of(uuid.toString());
     }
 
     @Override
