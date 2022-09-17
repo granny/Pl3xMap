@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.image.IconImage;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.option.Options;
@@ -20,6 +21,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SpawnLayer extends WorldLayer {
     public static final Key KEY = Key.of("spawn");
+
+    /**
+     * Create a new spawn layer.
+     *
+     * @param world world
+     */
+    public SpawnLayer(@NotNull World world) {
+        this(KEY, world, () -> Lang.UI_LAYER_SPAWN);
+        setUpdateInterval(15);
+    }
 
     /**
      * Create a new spawn layer.

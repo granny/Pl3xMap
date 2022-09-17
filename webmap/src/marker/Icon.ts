@@ -1,10 +1,16 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
 import {isset, toCenteredLatLng} from "../util/Util";
+import "../lib/L.rotated";
+
+interface ExtendedMarkerOptions extends L.MarkerOptions {
+    rotationAngle?: number | undefined;
+    rotationOrigin?: string | undefined;
+}
 
 export class Icon extends Marker {
 
-    // [[0,0],"","",[0,0],[0,0],"","",[0,0],[0,0]]
+    // [[0,0],"","",[0,0],[0,0],"","",[0,0],[0,0],0,""]
 
     constructor(type: Type) {
         function url(image: string) {
@@ -35,9 +41,11 @@ export class Icon extends Marker {
             toCenteredLatLng(data[0] as L.PointTuple),
             {
                 ...options?.properties,
+                rotationAngle: data[9] as number,
+                rotationOrigin: data[10] as string,
                 icon: L.icon(props as L.IconOptions),
                 attribution: undefined
-            })
+            } as ExtendedMarkerOptions)
         );
     }
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.function.Supplier;
 import net.minecraft.world.level.border.WorldBorder;
 import net.pl3x.map.Key;
+import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.markers.option.Options;
@@ -17,6 +18,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WorldBorderLayer extends WorldLayer {
     public static final Key KEY = Key.of("worldborder");
+
+    /**
+     * Create a new world border layer.
+     *
+     * @param world world
+     */
+    public WorldBorderLayer(@NotNull World world) {
+        this(KEY, world, () -> Lang.UI_LAYER_WORLDBORDER);
+        setUpdateInterval(15);
+        setShowControls(true);
+        setDefaultHidden(false);
+        setPriority(99);
+        setZIndex(99);
+        setOptions(Options.builder()
+                .strokeColor(0xFFFF0000)
+                .tooltipContent(getLabel())
+                .tooltipSticky(true)
+                .tooltipDirection(Tooltip.Direction.TOP)
+                .build());
+    }
 
     /**
      * Create a new world border layer.

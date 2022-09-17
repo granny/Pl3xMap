@@ -21,6 +21,8 @@ public class Icon extends Marker<Icon> {
     private Key retina;
     private Vector size;
     private Vector anchor;
+    private Double rotationAngle;
+    private String rotationOrigin;
     private Key shadow;
     private Key shadowRetina;
     private Vector shadowSize;
@@ -343,6 +345,60 @@ public class Icon extends Marker<Icon> {
     }
 
     /**
+     * Get the rotation angle, in degrees, clockwise.
+     * <p>
+     * Defaults to '<code>0</code>' if null.
+     *
+     * @return angle of rotation
+     */
+    @Nullable
+    public Double getRotationAngle() {
+        return this.rotationAngle;
+    }
+
+    /**
+     * Set the rotation angle, in degrees, clockwise.
+     * <p>
+     * Defaults to '<code>0</code>' if null.
+     *
+     * @param rotationAngle angle of rotation
+     * @return this icon
+     */
+    @NotNull
+    public Icon setRotationAngle(@Nullable Double rotationAngle) {
+        this.rotationAngle = rotationAngle;
+        return this;
+    }
+
+    /**
+     * Get the rotation origin, as a transform-origin CSS rule.
+     * <p>
+     * Defaults to '<code>bottom center</code>' if null.
+     *
+     * @return origin of rotation
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin">MDN transform-origin</a>
+     */
+    @Nullable
+    public String getRotationOrigin() {
+        return this.rotationOrigin;
+    }
+
+    /**
+     * Set the rotation origin, as a transform-origin CSS rule.
+     * <p>
+     * Defaults to '<code>bottom center</code>' if null.
+     *
+     * @param rotationOrigin origin of rotation
+     * @return this icon
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin">MDN transform-origin</a>
+     */
+    @NotNull
+    public Icon setRotationOrigin(@Nullable String rotationOrigin) {
+        this.rotationOrigin = rotationOrigin;
+        return this;
+    }
+
+    /**
      * Get shadow image of this icon.
      * <p>
      * No shadow image will be shown, if null.
@@ -478,6 +534,8 @@ public class Icon extends Marker<Icon> {
         wrapper.add(getShadowRetina());
         wrapper.add(getShadowSize());
         wrapper.add(getShadowAnchor());
+        wrapper.add(getRotationAngle());
+        wrapper.add(getRotationOrigin());
         return wrapper.getJsonArray();
     }
 
@@ -498,6 +556,8 @@ public class Icon extends Marker<Icon> {
                 && Objects.equals(getRetina(), other.getRetina())
                 && Objects.equals(getSize(), other.getSize())
                 && Objects.equals(getAnchor(), other.getAnchor())
+                && Objects.equals(getRotationAngle(), other.getRotationAngle())
+                && Objects.equals(getRotationOrigin(), other.getRotationOrigin())
                 && Objects.equals(getShadow(), other.getShadow())
                 && Objects.equals(getShadowRetina(), other.getShadowRetina())
                 && Objects.equals(getShadowSize(), other.getShadowSize())
@@ -507,8 +567,8 @@ public class Icon extends Marker<Icon> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPoint(), getImage(), getRetina(), getSize(), getAnchor(), getShadow(),
-                getShadowRetina(), getShadowAnchor(), getShadowSize(), getOptions());
+        return Objects.hash(getPoint(), getImage(), getRetina(), getSize(), getAnchor(), getRotationAngle(),
+                getRotationOrigin(), getShadow(), getShadowRetina(), getShadowAnchor(), getShadowSize(), getOptions());
     }
 
     @Override
@@ -519,6 +579,8 @@ public class Icon extends Marker<Icon> {
                 + ",retina=" + getRetina()
                 + ",size=" + getSize()
                 + ",anchor=" + getAnchor()
+                + ",rotationAngle=" + getRotationAngle()
+                + ",rotationOrigin=" + getRotationOrigin()
                 + ",shadow=" + getShadow()
                 + ",shadowRetina=" + getShadowRetina()
                 + ",shadowAnchor=" + getShadowAnchor()

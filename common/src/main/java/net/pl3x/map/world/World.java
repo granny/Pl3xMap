@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,7 +32,6 @@ import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
-import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.coordinate.ChunkCoordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
@@ -39,13 +39,13 @@ import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.layer.Layer;
+import net.pl3x.map.markers.layer.PlayersLayer;
 import net.pl3x.map.markers.layer.SpawnLayer;
 import net.pl3x.map.markers.layer.WorldBorderLayer;
-import net.pl3x.map.markers.option.Options;
-import net.pl3x.map.markers.option.Stroke;
 import net.pl3x.map.palette.BiomePaletteRegistry;
 import net.pl3x.map.palette.Palette;
 import net.pl3x.map.palette.PaletteRegistry;
+import net.pl3x.map.player.Player;
 import net.pl3x.map.registry.KeyedRegistry;
 import net.pl3x.map.render.job.BackgroundRender;
 import net.pl3x.map.render.job.FullRender;
@@ -161,19 +161,16 @@ public abstract class World extends Keyed {
             throw new RuntimeException(e);
         }
 
-        if (getConfig().WORLD_BORDER) {
-            getLayerRegistry().register(new WorldBorderLayer(WorldBorderLayer.KEY, this, () -> Lang.UI_WORLD_BORDER)
-                    .setOptions(new Options().setStroke(new Stroke().setColor(0xFFFF0000)))
-                    .setUpdateInterval(15)
-                    .setShowControls(true)
-                    .setDefaultHidden(false)
-                    .setPriority(99)
-                    .setZIndex(99));
+        if (getConfig().MARKERS_WORLDBORDER) {
+            getLayerRegistry().register(new WorldBorderLayer(this));
         }
 
-        if (getConfig().WORLD_SPAWN) {
-            getLayerRegistry().register(new SpawnLayer(SpawnLayer.KEY, this, () -> Lang.UI_WORLD_SPAWN).setUpdateInterval(15)
-            );
+        if (getConfig().MARKERS_SPAWN) {
+            getLayerRegistry().register(new SpawnLayer(this));
+        }
+
+        if (getConfig().MARKERS_PLAYERS) {
+            getLayerRegistry().register(new PlayersLayer(this));
         }
 
         startMarkersTask();
@@ -223,6 +220,9 @@ public abstract class World extends Keyed {
     public Point getSpawn() {
         return Point.of(getLevel().getSharedSpawnPos());
     }
+
+    @NotNull
+    public abstract Collection<Player> getPlayers();
 
     @NotNull
     public WorldConfig getConfig() {

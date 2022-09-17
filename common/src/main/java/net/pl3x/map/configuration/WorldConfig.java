@@ -123,12 +123,15 @@ public final class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
-    @Key("markers.world.border")
-    @Comment("Show the world border on the map")
-    public boolean WORLD_BORDER = true;
-    @Key("markers.world.spawn")
+    @Key("markers.players")
+    @Comment("Show online players on the map")
+    public boolean MARKERS_PLAYERS = true;
+    @Key("markers.spawn")
     @Comment("Show the world spawn on the map")
-    public boolean WORLD_SPAWN = true;
+    public boolean MARKERS_SPAWN = true;
+    @Key("markers.worldborder")
+    @Comment("Show the world border on the map")
+    public boolean MARKERS_WORLDBORDER = true;
 
     private final World world;
 

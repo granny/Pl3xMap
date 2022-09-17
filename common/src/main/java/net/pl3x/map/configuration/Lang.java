@@ -188,10 +188,12 @@ public final class Lang extends AbstractConfig {
     @Key("error.render-stalled")
     public static String ERROR_RENDER_STALLED = "<red>Render has stalled! Cancelling.";
 
-    @Key("ui.world.border")
-    public static String UI_WORLD_BORDER = "World Border";
-    @Key("ui.world.spawn")
-    public static String UI_WORLD_SPAWN = "Spawn";
+    @Key("ui.layer.players")
+    public static String UI_LAYER_PLAYERS = "World Border";
+    @Key("ui.layer.spawn")
+    public static String UI_LAYER_SPAWN = "Spawn";
+    @Key("ui.layer.worldborder")
+    public static String UI_LAYER_WORLDBORDER = "World Border";
 
     @Key("ui.title")
     public static String UI_TITLE = "Pl3xMap";
