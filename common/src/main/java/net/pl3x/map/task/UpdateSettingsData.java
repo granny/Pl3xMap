@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.server.MinecraftServer;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
@@ -16,7 +17,7 @@ import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 
-public class UpdateWorldData implements Runnable {
+public class UpdateSettingsData implements Runnable {
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
@@ -26,8 +27,26 @@ public class UpdateWorldData implements Runnable {
 
     @Override
     public void run() {
-        List<Map<String, Object>> worldSettings = new ArrayList<>();
+        List<Object> players = new ArrayList<>();
+        Pl3xMap.api().getPlayerRegistry().entries().forEach((key, player) -> {
+            if (player.isHidden()) {
+                return;
+            }
 
+            if (player.isNPC()) {
+                return;
+            }
+
+            Map<String, Object> entry = new LinkedHashMap<>();
+
+            entry.put("name", player.getDecoratedName());
+            entry.put("uuid", player.getUUID().toString());
+            entry.put("world", player.getWorld().getName());
+
+            players.add(entry);
+        });
+
+        List<Map<String, Object>> worldSettings = new ArrayList<>();
         Pl3xMap.api().getWorldRegistry().entries().forEach((worldKey, world) -> {
             WorldConfig config = world.getConfig();
 
@@ -91,9 +110,11 @@ public class UpdateWorldData implements Runnable {
         lang.put("worlds", Map.of("label", Lang.UI_WORLDS_LABEL, "value", Lang.UI_WORLDS_VALUE));
 
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("worldSettings", worldSettings);
         map.put("format", Config.WEB_TILE_FORMAT);
+        map.put("maxPlayers", MinecraftServer.getServer().getMaxPlayers());
         map.put("lang", lang);
+        map.put("players", players);
+        map.put("worldSettings", worldSettings);
 
         FileUtil.write(this.gson.toJson(map), World.TILES_DIR.resolve("settings.json"));
     }

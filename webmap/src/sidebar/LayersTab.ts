@@ -60,7 +60,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
             this._update();
         });
 
-        window.addEventListener('worldselected', (e) => {
+        window.addEventListener('worldselected', () => {
             this._layers = [];
             this._update();
         });

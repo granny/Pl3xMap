@@ -26,8 +26,7 @@ import net.pl3x.map.palette.BlockPaletteRegistry;
 import net.pl3x.map.player.BukkitPlayerListener;
 import net.pl3x.map.player.BukkitPlayerRegistry;
 import net.pl3x.map.render.RendererRegistry;
-import net.pl3x.map.task.UpdatePlayerData;
-import net.pl3x.map.task.UpdateWorldData;
+import net.pl3x.map.task.UpdateSettingsData;
 import net.pl3x.map.world.BukkitWorldListener;
 import net.pl3x.map.world.BukkitWorldRegistry;
 import org.apache.commons.lang.BooleanUtils;
@@ -40,13 +39,10 @@ import org.jetbrains.annotations.NotNull;
 public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     private static PaperPl3xMap INSTANCE;
 
-    private final ScheduledExecutorService playerDataExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("Pl3xMap-PlayerData").build());
-    private final ScheduledExecutorService worldDataExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("Pl3xMap-WorldData").build());
+    private final ScheduledExecutorService settingsDataExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("Pl3xMap-WorldData").build());
+    private ScheduledFuture<?> settingsDataTask;
 
     private final BukkitConsole console = new BukkitConsole();
-
-    private ScheduledFuture<?> playerDataTask;
-    private ScheduledFuture<?> worldDataTask;
 
     private BukkitPlayerListener playerListener;
     private BukkitWorldListener worldListener;
@@ -173,29 +169,18 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
             this.worldListener.registerEvents();
         }
 
-        // start updating player data
-        this.playerDataTask = this.playerDataExecutor.scheduleAtFixedRate(new UpdatePlayerData(), 1, 1, TimeUnit.SECONDS);
-
         // start updating world data
-        this.worldDataTask = this.worldDataExecutor.scheduleAtFixedRate(new UpdateWorldData(), 1, 5, TimeUnit.SECONDS);
+        this.settingsDataTask = this.settingsDataExecutor.scheduleAtFixedRate(new UpdateSettingsData(), 1, 5, TimeUnit.SECONDS);
     }
 
     @Override
     public void disable() {
-        // stop updating player data
-        if (this.playerDataTask != null) {
-            if (!this.playerDataTask.isCancelled()) {
-                this.playerDataTask.cancel(false);
-            }
-            this.playerDataTask = null;
-        }
-
         // stop updating world data
-        if (this.worldDataTask != null) {
-            if (!this.worldDataTask.isCancelled()) {
-                this.worldDataTask.cancel(false);
+        if (this.settingsDataTask != null) {
+            if (!this.settingsDataTask.isCancelled()) {
+                this.settingsDataTask.cancel(false);
             }
-            this.worldDataTask = null;
+            this.settingsDataTask = null;
         }
 
         // unregister world events
