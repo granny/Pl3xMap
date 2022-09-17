@@ -1,28 +1,33 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {pixelsToMeters, toCenteredLatLng} from "../util/Util";
+import {Point} from "../util/Point";
+import {isset, pixelsToMeters, toCenteredLatLng} from "../util/Util";
 import "../lib/L.ellipse";
 
+interface EllipseOptions extends L.PolylineOptions {
+    key: string;
+    center: Point;
+    radius: Point;
+    tilt?: number;
+}
+
 export class Ellipse extends Marker {
-
-    // [[0,0],[0,0],0]
-
     constructor(type: Type) {
-        const data = type.data;
-        const options = type.options;
+        const data = type.data as unknown as EllipseOptions;
 
-        const center = data[0] as L.PointTuple;
-        const radii = data[1] as L.PointTuple;
-
-        super(L.ellipse(
-            toCenteredLatLng(center),
+        super(data.key, L.ellipse(
+            toCenteredLatLng(data.center),
             [
-                pixelsToMeters(radii[0]),
-                pixelsToMeters(radii[1])
+                pixelsToMeters(data.radius.x),
+                pixelsToMeters(data.radius.z)
             ],
-            data[2] as number, {
-                ...options?.properties
+            isset(data.tilt) ? data.tilt! : 0,
+            {
+                ...type.options?.properties
             })
         );
+    }
+
+    public update(raw: unknown[]): void {
     }
 }

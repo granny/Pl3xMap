@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
+import net.pl3x.map.Key;
 import net.pl3x.map.markers.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +30,8 @@ import org.jetbrains.annotations.Nullable;
 public class Polyline extends Marker<Polyline> {
     private final List<Point> points = new ArrayList<>();
 
-    private Polyline() {
-        super("line");
+    private Polyline(@NotNull Key key) {
+        super("line", key);
     }
 
     /**
@@ -39,10 +40,11 @@ public class Polyline extends Marker<Polyline> {
      * The last point you add does not need to be the
      * same as the first point you added for a polygon.
      *
+     * @param key   identifying key
      * @param point point to add
      */
-    public Polyline(@NotNull Point point) {
-        this();
+    public Polyline(@NotNull Key key, @NotNull Point point) {
+        this(key);
         addPoint(point);
     }
 
@@ -52,10 +54,11 @@ public class Polyline extends Marker<Polyline> {
      * The last point you add does not need to be the
      * same as the first point you added for a polygon.
      *
+     * @param key    identifying key
      * @param points points to add
      */
-    public Polyline(@NotNull Point @NotNull ... points) {
-        this();
+    public Polyline(@NotNull Key key, @NotNull Point @NotNull ... points) {
+        this(key);
         addPoint(points);
     }
 
@@ -65,10 +68,11 @@ public class Polyline extends Marker<Polyline> {
      * The last point you add does not need to be the
      * same as the first point you added for a polygon.
      *
+     * @param key    identifying key
      * @param points points to add
      */
-    public Polyline(@NotNull Collection<Point> points) {
-        this();
+    public Polyline(@NotNull Key key, @NotNull Collection<Point> points) {
+        this(key);
         addPoint(points);
     }
 
@@ -78,11 +82,12 @@ public class Polyline extends Marker<Polyline> {
      * The last point you add does not need to be the
      * same as the first point you added for a polygon.
      *
+     * @param key   identifying key
      * @param point point to add
      * @return a new line
      */
-    public static Polyline of(@NotNull Point point) {
-        return new Polyline(point);
+    public static Polyline of(@NotNull Key key, @NotNull Point point) {
+        return new Polyline(key, point);
     }
 
     /**
@@ -91,11 +96,12 @@ public class Polyline extends Marker<Polyline> {
      * The last point you add does not need to be the
      * same as the first point you added for a polygon.
      *
+     * @param key    identifying key
      * @param points points to add
      * @return a new line
      */
-    public static Polyline of(@NotNull Point @NotNull ... points) {
-        return new Polyline(points);
+    public static Polyline of(@NotNull Key key, @NotNull Point @NotNull ... points) {
+        return new Polyline(key, points);
     }
 
     /**
@@ -104,11 +110,12 @@ public class Polyline extends Marker<Polyline> {
      * The last point you add does not need to be the
      * same as the first point you added for a polygon.
      *
+     * @param key    identifying key
      * @param points points to add
      * @return a new line
      */
-    public static Polyline of(@NotNull Collection<Point> points) {
-        return new Polyline(points);
+    public static Polyline of(@NotNull Key key, @NotNull Collection<Point> points) {
+        return new Polyline(key, points);
     }
 
     /**
@@ -244,9 +251,10 @@ public class Polyline extends Marker<Polyline> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        getPoints().forEach(wrapper::add);
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("points", getPoints());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -261,16 +269,22 @@ public class Polyline extends Marker<Polyline> {
             return false;
         }
         Polyline other = (Polyline) o;
-        return Objects.equals(getPoints(), other.getPoints());
+        return getKey().equals(other.getKey())
+                && Objects.equals(getPoints(), other.getPoints())
+                && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPoints());
+        return Objects.hash(getKey(), getPoints(), getOptions());
     }
 
     @Override
     public String toString() {
-        return "Line{points=" + getPoints() + "}";
+        return "Line{"
+                + "key=" + getKey()
+                + ",points=" + getPoints()
+                + ",options=" + getOptions()
+                + "}";
     }
 }

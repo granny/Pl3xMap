@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
+import net.pl3x.map.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,68 +21,74 @@ import org.jetbrains.annotations.Nullable;
 public class Polygon extends Marker<Polygon> {
     private final List<Polyline> polylines = new ArrayList<>();
 
-    private Polygon() {
-        super("poly");
+    private Polygon(@NotNull Key key) {
+        super("poly", key);
     }
 
     /**
      * Create a new polygon.
      *
+     * @param key      identifying key
      * @param polyline polyline to add
      */
-    public Polygon(@NotNull Polyline polyline) {
-        this();
+    public Polygon(@NotNull Key key, @NotNull Polyline polyline) {
+        this(key);
         addPolyline(polyline);
     }
 
     /**
      * Create a new polygon.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      */
-    public Polygon(@NotNull Polyline @NotNull ... polylines) {
-        this();
+    public Polygon(@NotNull Key key, @NotNull Polyline @NotNull ... polylines) {
+        this(key);
         addPolyline(polylines);
     }
 
     /**
      * Create a new polygon.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      */
-    public Polygon(@NotNull Collection<Polyline> polylines) {
-        this();
+    public Polygon(@NotNull Key key, @NotNull Collection<Polyline> polylines) {
+        this(key);
         addPolyline(polylines);
     }
 
     /**
      * Create a new polygon.
      *
+     * @param key      identifying key
      * @param polyline polyline to add
      * @return a new polygon
      */
-    public static Polygon of(@NotNull Polyline polyline) {
-        return new Polygon(polyline);
+    public static Polygon of(@NotNull Key key, @NotNull Polyline polyline) {
+        return new Polygon(key, polyline);
     }
 
     /**
      * Create a new polygon.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      * @return a new polygon
      */
-    public static Polygon of(@NotNull Polyline @NotNull ... polylines) {
-        return new Polygon(polylines);
+    public static Polygon of(@NotNull Key key, @NotNull Polyline @NotNull ... polylines) {
+        return new Polygon(key, polylines);
     }
 
     /**
      * Create a new polygon.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      * @return a new polygon
      */
-    public static Polygon of(@NotNull Collection<Polyline> polylines) {
-        return new Polygon(polylines);
+    public static Polygon of(@NotNull Key key, @NotNull Collection<Polyline> polylines) {
+        return new Polygon(key, polylines);
     }
 
     /**
@@ -190,9 +197,10 @@ public class Polygon extends Marker<Polygon> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        getPolylines().forEach(wrapper::add);
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("polylines", getPolylines());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -207,16 +215,22 @@ public class Polygon extends Marker<Polygon> {
             return false;
         }
         Polygon other = (Polygon) o;
-        return Objects.equals(getPolylines(), other.getPolylines());
+        return getKey().equals(other.getKey())
+                && Objects.equals(getPolylines(), other.getPolylines())
+                && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPolylines());
+        return Objects.hash(getKey(), getPolylines(), getOptions());
     }
 
     @Override
     public String toString() {
-        return "Polygon{polylines=" + getPolylines() + "}";
+        return "Polygon{"
+                + "key=" + getKey()
+                + ",polylines=" + getPolylines()
+                + ",options=" + getOptions()
+                + "}";
     }
 }

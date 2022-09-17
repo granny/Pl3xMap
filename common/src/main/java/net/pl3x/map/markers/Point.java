@@ -2,7 +2,7 @@ package net.pl3x.map.markers;
 
 import com.google.gson.JsonElement;
 import net.minecraft.core.BlockPos;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import net.pl3x.map.JsonSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,10 +104,10 @@ public class Point implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getX());
-        wrapper.add(getZ());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("x", getX());
+        wrapper.addProperty("z", getZ());
+        return wrapper.getJsonObject();
     }
 
     @Override

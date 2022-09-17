@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import net.pl3x.map.Key;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.util.FileUtil;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class UpdateMarkerData implements Runnable {
     private final Gson gson = new GsonBuilder()
-            //.setPrettyPrinting()
+            .setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
             .setLenient()
@@ -65,13 +65,11 @@ public class UpdateMarkerData implements Runnable {
         @Override
         @NotNull
         public JsonElement serialize(@NotNull Marker<?> marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
-            JsonArrayWrapper wrapper = new JsonArrayWrapper();
-            wrapper.add(marker.getType());
-            wrapper.add(marker);
-            if (marker.getOptions() != null) {
-                wrapper.add(marker.getOptions());
-            }
-            return wrapper.getJsonArray();
+            JsonObjectWrapper wrapper = new JsonObjectWrapper();
+            wrapper.addProperty("type", marker.getType());
+            wrapper.addProperty("data", marker);
+            wrapper.addProperty("options", marker.getOptions());
+            return wrapper.getJsonObject();
         }
     }
 }

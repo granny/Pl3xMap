@@ -2,7 +2,7 @@ package net.pl3x.map.markers.option;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.util.Mathf;
 import org.jetbrains.annotations.NotNull;
@@ -237,15 +237,15 @@ public class Tooltip extends Option<Tooltip> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getContent());
-        wrapper.add(getPane());
-        wrapper.add(getOffset());
-        wrapper.add(getDirection());
-        wrapper.add(isPermanent());
-        wrapper.add(isSticky());
-        wrapper.add(getOpacity());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("content", getContent());
+        wrapper.addProperty("pane", getPane());
+        wrapper.addProperty("offset", getOffset());
+        wrapper.addProperty("direction", getDirection());
+        wrapper.addProperty("permanent", isPermanent());
+        wrapper.addProperty("sticky", isSticky());
+        wrapper.addProperty("opacity", getOpacity());
+        return wrapper.getJsonObject();
     }
 
     @Override

@@ -8,10 +8,16 @@ import {MultiPolyline} from "../marker/MultiPolyline";
 import {Polygon} from "../marker/Polygon";
 import {Polyline} from "../marker/Polyline";
 import {Rectangle} from "../marker/Rectangle";
-import {Type} from "../marker/Marker";
-import {MarkerOptions} from "../marker/options/MarkerOptions";
+import {Marker, Type} from "../marker/Marker";
+import {MarkerOptions, Options} from "../marker/options/MarkerOptions";
 import {World} from "../world/World";
-import {fireCustomEvent, getJSON} from "../util/Util";
+import {fireCustomEvent, getJSON, isset} from "../util/Util";
+
+interface MarkerData {
+    type: string;
+    data: unknown[];
+    options: Options;
+}
 
 export class MarkerLayer extends L.LayerGroup {
     private static readonly TYPES = {
@@ -33,6 +39,8 @@ export class MarkerLayer extends L.LayerGroup {
     private readonly _priority: number;
     private readonly _zIndex: number;
 
+    private readonly _markers: Map<string, Marker> = new Map();
+
     private _timer: NodeJS.Timeout | undefined;
 
     constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number) {
@@ -42,7 +50,7 @@ export class MarkerLayer extends L.LayerGroup {
         });
         this._key = key;
         this._label = label;
-        this._updateInterval = interval * 1000;
+        this._updateInterval = (interval < 1 ? 1 : interval) * 1000;
         this._showControls = showControls;
         this._defaultHidden = defaultHidden;
         this._priority = priority;
@@ -86,10 +94,42 @@ export class MarkerLayer extends L.LayerGroup {
 
         getJSON(`tiles/${world.name}/markers/${this._key}.json`)
             .then((json) => {
-                this.clearLayers();
+                //this.clearLayers();
+                const toRemove: Set<string> = new Set(this._markers.keys());
+
+
                 for (const index in Object.keys(json)) {
-                    this.parseMarker(json[index])?.addTo(this);
+                    const existing = this._markers.get(json[index].data.key);
+                    if (existing) {
+                        // update
+                        const data = json[index];
+                        const options = isset(data.options) ? new MarkerOptions(data.options) : undefined;
+                        existing.update(data.data, options);
+                        // do not remove this marker
+                        toRemove.delete(existing.key);
+                    } else {
+                        // new marker
+                        const marker = this.parseMarker(json[index]);
+                        if (marker) {
+                            this._markers.set(marker.key, marker);
+                            marker.marker.addTo(this);
+
+                            // inform the events
+                            fireCustomEvent('markeradded', marker);
+                        }
+                    }
                 }
+
+                toRemove.forEach(key => {
+                    // remove players not in updated settings file
+                    const marker = this._markers.get(key);
+                    if (marker) {
+                        this._markers.delete(key);
+                        marker.marker.remove();
+                        fireCustomEvent('markerremoved', marker);
+                    }
+                });
+
                 this._timer = setTimeout(() => this.update(world), this._updateInterval);
             });
     }
@@ -101,20 +141,20 @@ export class MarkerLayer extends L.LayerGroup {
         fireCustomEvent("overlayremoved", this);
     }
 
-    parseMarker(data: unknown[]): L.Layer | undefined {
-        const options = data.length > 2 ? new MarkerOptions(data[2] as unknown[]) : undefined;
+    private parseMarker(data: MarkerData): Marker | undefined {
+        const options = isset(data.options) ? new MarkerOptions(data.options) : undefined;
 
-        const type = MarkerLayer.TYPES[data[0] as keyof typeof MarkerLayer.TYPES];
-        const marker = type ? type(new Type(data[1] as unknown[], options)).marker : undefined;
+        const type = MarkerLayer.TYPES[data.type as keyof typeof MarkerLayer.TYPES];
+        const marker = type ? type(new Type(data.data as unknown[], options)) : undefined;
 
-        if (marker) {
+        if (marker?.marker) {
             const popup = options?.popup;
             const tooltip = options?.tooltip;
             if (popup) {
-                marker.bindPopup(() => popup.content, popup.properties);
+                marker.marker.bindPopup(() => popup.content, popup.properties);
             }
             if (tooltip) {
-                marker.bindTooltip(() => tooltip.content, tooltip.properties);
+                marker.marker.bindTooltip(() => tooltip.content, tooltip.properties);
             }
         }
 

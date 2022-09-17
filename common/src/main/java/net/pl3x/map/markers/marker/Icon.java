@@ -3,7 +3,7 @@ package net.pl3x.map.markers.marker;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import net.pl3x.map.Key;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.image.IconRegistry;
@@ -28,88 +28,111 @@ public class Icon extends Marker<Icon> {
     private Vector shadowSize;
     private Vector shadowAnchor;
 
-    private Icon() {
-        super("icon");
+    private Icon(@NotNull Key key) {
+        super("icon", key);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param x     icon x location on map
      * @param z     icon z location on map
      * @param image image key
      */
-    public Icon(double x, double z, @NotNull Key image) {
-        this(Point.of(x, z), image);
+    public Icon(@NotNull Key key, double x, double z, @NotNull Key image) {
+        this(key);
+        setPoint(Point.of(x, z));
+        setImage(image);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param point icon location on map
      * @param image image key
      */
-    public Icon(@NotNull Point point, @NotNull Key image) {
-        this(point, image, null);
+    public Icon(@NotNull Key key, @NotNull Point point, @NotNull Key image) {
+        this(key);
+        setPoint(point);
+        setImage(image);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param x     icon x location on map
      * @param z     icon z location on map
      * @param image image key
      * @param size  size of image
      */
-    public Icon(double x, double z, @NotNull Key image, double size) {
-        this(Point.of(x, z), image, Vector.of(size, size));
+    public Icon(@NotNull Key key, double x, double z, @NotNull Key image, double size) {
+        this(key);
+        setPoint(Point.of(x, z));
+        setImage(image);
+        setSize(Vector.of(size, size));
     }
 
     /**
      * Create a new icon.
      *
+     * @param key    identifying key
      * @param x      icon x location on map
      * @param z      icon z location on map
      * @param image  image key
      * @param width  width of image
      * @param height height of image
      */
-    public Icon(double x, double z, @NotNull Key image, double width, double height) {
-        this(Point.of(x, z), image, Vector.of(width, height));
+    public Icon(@NotNull Key key, double x, double z, @NotNull Key image, double width, double height) {
+        this(key);
+        setPoint(Point.of(x, z));
+        setImage(image);
+        setSize(Vector.of(width, height));
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param point icon location on map
      * @param image image key
      * @param size  size of image
      */
-    public Icon(@NotNull Point point, @NotNull Key image, double size) {
-        this(point, image, Vector.of(size, size));
+    public Icon(@NotNull Key key, @NotNull Point point, @NotNull Key image, double size) {
+        this(key);
+        setPoint(point);
+        setImage(image);
+        setSize(Vector.of(size, size));
     }
 
     /**
      * Create a new icon.
      *
+     * @param key    identifying key
      * @param point  icon location on map
      * @param image  image key
      * @param width  width of image
      * @param height height of image
      */
-    public Icon(@NotNull Point point, @NotNull Key image, double width, double height) {
-        this(point, image, Vector.of(width, height));
+    public Icon(@NotNull Key key, @NotNull Point point, @NotNull Key image, double width, double height) {
+        this(key);
+        setPoint(point);
+        setImage(image);
+        setSize(Vector.of(width, height));
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param point icon location on map
      * @param image image key
      * @param size  size of image
      */
-    public Icon(@NotNull Point point, @NotNull Key image, @Nullable Vector size) {
-        this();
+    public Icon(@NotNull Key key, @NotNull Point point, @NotNull Key image, @Nullable Vector size) {
+        this(key);
         setPoint(point);
         setImage(image);
         setSize(size);
@@ -118,42 +141,46 @@ public class Icon extends Marker<Icon> {
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param x     icon x location on map
      * @param z     icon z location on map
      * @param image image key
      * @return a new icon
      */
-    public static Icon of(double x, double z, @NotNull Key image) {
-        return icon(Point.of(x, z), image);
+    public static Icon of(@NotNull Key key, double x, double z, @NotNull Key image) {
+        return new Icon(key, x, z, image);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param point icon location on map
      * @param image image key
      * @return a new icon
      */
-    public static Icon of(@NotNull Point point, @NotNull Key image) {
-        return icon(point, image, null);
+    public static Icon of(@NotNull Key key, @NotNull Point point, @NotNull Key image) {
+        return new Icon(key, point, image);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param x     icon x location on map
      * @param z     icon z location on map
      * @param image image key
      * @param size  size of image
      * @return a new icon
      */
-    public static Icon of(double x, double z, @NotNull Key image, double size) {
-        return icon(Point.of(x, z), image, Vector.of(size, size));
+    public static Icon of(@NotNull Key key, double x, double z, @NotNull Key image, double size) {
+        return new Icon(key, x, z, image, size);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key    identifying key
      * @param x      icon x location on map
      * @param z      icon z location on map
      * @param image  image key
@@ -161,45 +188,48 @@ public class Icon extends Marker<Icon> {
      * @param height height of image
      * @return a new icon
      */
-    public static Icon of(double x, double z, @NotNull Key image, double width, double height) {
-        return icon(Point.of(x, z), image, Vector.of(width, height));
+    public static Icon of(@NotNull Key key, double x, double z, @NotNull Key image, double width, double height) {
+        return new Icon(key, x, z, image, width, height);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param point icon location on map
      * @param image image key
      * @param size  size of image
      * @return a new icon
      */
-    public static Icon of(@NotNull Point point, @NotNull Key image, double size) {
-        return icon(point, image, Vector.of(size, size));
+    public static Icon of(@NotNull Key key, @NotNull Point point, @NotNull Key image, double size) {
+        return new Icon(key, point, image, size);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key    identifying key
      * @param point  icon location on map
      * @param image  image key
      * @param width  width of image
      * @param height height of image
      * @return a new icon
      */
-    public static Icon of(@NotNull Point point, @NotNull Key image, double width, double height) {
-        return icon(point, image, Vector.of(width, height));
+    public static Icon of(@NotNull Key key, @NotNull Point point, @NotNull Key image, double width, double height) {
+        return new Icon(key, point, image, width, height);
     }
 
     /**
      * Create a new icon.
      *
+     * @param key   identifying key
      * @param point icon location on map
      * @param image image key
      * @param size  size of image
      * @return a new icon
      */
-    public static Icon of(@NotNull Point point, @NotNull Key image, @Nullable Vector size) {
-        return new Icon(point, image).setSize(size);
+    public static Icon of(@NotNull Key key, @NotNull Point point, @NotNull Key image, @Nullable Vector size) {
+        return new Icon(key, point, image, size);
     }
 
     /**
@@ -524,19 +554,20 @@ public class Icon extends Marker<Icon> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getPoint());
-        wrapper.add(getImage());
-        wrapper.add(getRetina());
-        wrapper.add(getSize());
-        wrapper.add(getAnchor());
-        wrapper.add(getShadow());
-        wrapper.add(getShadowRetina());
-        wrapper.add(getShadowSize());
-        wrapper.add(getShadowAnchor());
-        wrapper.add(getRotationAngle());
-        wrapper.add(getRotationOrigin());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("point", getPoint());
+        wrapper.addProperty("image", getImage());
+        wrapper.addProperty("retina", getRetina());
+        wrapper.addProperty("size", getSize());
+        wrapper.addProperty("anchor", getAnchor());
+        wrapper.addProperty("shadow", getShadow());
+        wrapper.addProperty("shadowRetina", getShadowRetina());
+        wrapper.addProperty("shadowSize", getShadowSize());
+        wrapper.addProperty("shadowAnchor", getShadowAnchor());
+        wrapper.addProperty("rotationAngle", getRotationAngle());
+        wrapper.addProperty("rotationOrigin", getRotationOrigin());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -551,7 +582,8 @@ public class Icon extends Marker<Icon> {
             return false;
         }
         Icon other = (Icon) o;
-        return getPoint().equals(other.getPoint())
+        return getKey().equals(other.getKey())
+                && getPoint().equals(other.getPoint())
                 && getImage().equals(other.getImage())
                 && Objects.equals(getRetina(), other.getRetina())
                 && Objects.equals(getSize(), other.getSize())
@@ -567,14 +599,15 @@ public class Icon extends Marker<Icon> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPoint(), getImage(), getRetina(), getSize(), getAnchor(), getRotationAngle(),
+        return Objects.hash(getKey(), getPoint(), getImage(), getRetina(), getSize(), getAnchor(), getRotationAngle(),
                 getRotationOrigin(), getShadow(), getShadowRetina(), getShadowAnchor(), getShadowSize(), getOptions());
     }
 
     @Override
     public String toString() {
         return "Icon{"
-                + "point=" + getPoint()
+                + "key=" + getKey()
+                + ",point=" + getPoint()
                 + ",image=" + getImage()
                 + ",retina=" + getRetina()
                 + ",size=" + getSize()

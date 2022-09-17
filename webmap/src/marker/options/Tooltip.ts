@@ -1,22 +1,31 @@
 import * as L from "leaflet";
+import {Point} from "../../util/Point";
 import {isset} from "../../util/Util";
+
+export interface TooltipOptions {
+    content?: string;
+    pane?: string;
+    offset?: Point;
+    direction?: number;
+    permanent?: boolean;
+    sticky?: boolean;
+    opacity?: number;
+}
 
 export class Tooltip {
     private readonly _content: string;
     private readonly _properties: L.TooltipOptions;
 
-    // ["content", null, null, 2, 0, 0, 0.9]
-
-    constructor(data: unknown[]) {
-        this._content = isset(data[0]) ? data[0] as string : "";
+    constructor(data: TooltipOptions) {
+        this._content = isset(data.content) ? data.content! : "";
 
         let props = {};
-        if (isset(data[1])) props = {...props, pane: data[1] as string};
-        if (isset(data[2])) props = {...props, offset: data[2] as L.PointTuple};
-        if (isset(data[3])) props = {...props, direction: Direction[data[3] as number] as L.Direction};
-        if (isset(data[4])) props = {...props, permanent: data[4] as boolean};
-        if (isset(data[5])) props = {...props, sticky: data[5] as boolean};
-        if (isset(data[6])) props = {...props, opacity: data[6] as number};
+        if (isset(data.pane)) props = {...props, pane: data.pane};
+        if (isset(data.offset)) props = {...props, offset: [data.offset!.x, data.offset!.z]};
+        if (isset(data.direction)) props = {...props, direction: Direction[data.direction!]};
+        if (isset(data.permanent)) props = {...props, permanent: data.permanent};
+        if (isset(data.sticky)) props = {...props, sticky: data.sticky};
+        if (isset(data.opacity)) props = {...props, opacity: data.opacity};
         this._properties = props;
     }
 

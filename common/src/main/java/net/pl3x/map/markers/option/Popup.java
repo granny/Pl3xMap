@@ -2,7 +2,7 @@ package net.pl3x.map.markers.option;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import net.pl3x.map.markers.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -472,23 +472,23 @@ public class Popup extends Option<Popup> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getContent());
-        wrapper.add(getPane());
-        wrapper.add(getOffset());
-        wrapper.add(getMaxWidth());
-        wrapper.add(getMinWidth());
-        wrapper.add(getMaxHeight());
-        wrapper.add(shouldAutoPan());
-        wrapper.add(getAutoPanPaddingTopLeft());
-        wrapper.add(getAutoPanPaddingBottomRight());
-        wrapper.add(getAutoPanPadding());
-        wrapper.add(shouldKeepInView());
-        wrapper.add(hasCloseButton());
-        wrapper.add(shouldAutoClose());
-        wrapper.add(shouldCloseOnEscapeKey());
-        wrapper.add(shouldCloseOnClick());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("content", getContent());
+        wrapper.addProperty("pane", getPane());
+        wrapper.addProperty("offset", getOffset());
+        wrapper.addProperty("maxWidth", getMaxWidth());
+        wrapper.addProperty("minWidth", getMinWidth());
+        wrapper.addProperty("maxHeight", getMaxHeight());
+        wrapper.addProperty("autoPan", shouldAutoPan());
+        wrapper.addProperty("autoPanPaddingTopLeft", getAutoPanPaddingTopLeft());
+        wrapper.addProperty("autoPanPaddingBottomRight", getAutoPanPaddingBottomRight());
+        wrapper.addProperty("autoPanPadding", getAutoPanPadding());
+        wrapper.addProperty("keepInView", shouldKeepInView());
+        wrapper.addProperty("closeButton", hasCloseButton());
+        wrapper.addProperty("autoClose", shouldAutoClose());
+        wrapper.addProperty("closeOnEscapeKey", shouldCloseOnEscapeKey());
+        wrapper.addProperty("closeOnClick", shouldCloseOnClick());
+        return wrapper.getJsonObject();
     }
 
     @Override

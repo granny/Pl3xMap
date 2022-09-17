@@ -1,23 +1,33 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
+import {Point} from "../util/Point";
 import {pixelsToMeters, toCenteredLatLng} from "../util/Util";
 
+interface CircleOptions extends L.PolylineOptions {
+    key: string;
+    center: Point;
+    radius: number;
+}
+
 export class Circle extends Marker {
-
-    // [[0,0],0]
-
     constructor(type: Type) {
-        const data = type.data;
-        const options = type.options;
+        const data = type.data as unknown as CircleOptions;
 
-        super(L.circle(
-            toCenteredLatLng(data[0] as L.PointTuple),
+        super(data.key, L.circle(
+            toCenteredLatLng(data.center),
             {
-                ...options?.properties,
-                radius: pixelsToMeters(data[1] as number),
+                ...type.options?.properties,
+                radius: pixelsToMeters(data.radius),
                 interactive: true,
                 attribution: undefined
             })
         );
+    }
+
+    public update(raw: unknown[]): void {
+        const data = raw as unknown as CircleOptions;
+        const circle = this.marker as L.Circle;
+        circle.setLatLng(toCenteredLatLng(data.center));
+        circle.setRadius(pixelsToMeters(data.radius));
     }
 }

@@ -60,6 +60,7 @@ public class WorldBorderLayer extends WorldLayer {
         int r = (int) border.getSize() / 2;
 
         return Collections.singletonList(Marker.polyline(
+                KEY,
                 Point.of(x - r, z - r),
                 Point.of(x + r, z - r),
                 Point.of(x + r, z + r),

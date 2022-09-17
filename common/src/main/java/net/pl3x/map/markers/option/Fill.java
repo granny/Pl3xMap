@@ -2,7 +2,7 @@ package net.pl3x.map.markers.option;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -128,11 +128,11 @@ public class Fill extends Option<Fill> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(isEnabled());
-        wrapper.add(getType());
-        wrapper.add(getColor());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("enabled", isEnabled());
+        wrapper.addProperty("type", getType());
+        wrapper.addProperty("color", getColor());
+        return wrapper.getJsonObject();
     }
 
     @Override

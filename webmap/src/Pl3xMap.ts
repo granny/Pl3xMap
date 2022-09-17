@@ -32,6 +32,8 @@ export class Pl3xMap {
 
         this._map = new Pl3xMapLeafletMap(this);
 
+        this._map.createPane("nameplates").style.zIndex = '1000';
+
         this._controlManager = new ControlManager(this);
         this._playerManager = new PlayerManager(this);
         this._worldManager = new WorldManager(this);

@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
+import net.pl3x.map.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,68 +17,74 @@ import org.jetbrains.annotations.Nullable;
 public class MultiPolygon extends Marker<MultiPolygon> {
     private final List<Polygon> polygons = new ArrayList<>();
 
-    private MultiPolygon() {
-        super("multipoly");
+    private MultiPolygon(@NotNull Key key) {
+        super("multipoly", key);
     }
 
     /**
      * Create a new multi-polygon.
      *
+     * @param key     identifying key
      * @param polygon polygon to add
      */
-    public MultiPolygon(@NotNull Polygon polygon) {
-        this();
+    public MultiPolygon(@NotNull Key key, @NotNull Polygon polygon) {
+        this(key);
         addPolygon(polygon);
     }
 
     /**
      * Create a new multi-polygon.
      *
+     * @param key      identifying key
      * @param polygons polygons to add
      */
-    public MultiPolygon(@NotNull Polygon @NotNull ... polygons) {
-        this();
+    public MultiPolygon(@NotNull Key key, @NotNull Polygon @NotNull ... polygons) {
+        this(key);
         addPolygon(polygons);
     }
 
     /**
      * Create a new multi-polygon.
      *
+     * @param key      identifying key
      * @param polygons polygons to add
      */
-    public MultiPolygon(@NotNull Collection<Polygon> polygons) {
-        this();
+    public MultiPolygon(@NotNull Key key, @NotNull Collection<Polygon> polygons) {
+        this(key);
         addPolygon(polygons);
     }
 
     /**
      * Create a new multi-polygon.
      *
+     * @param key     identifying key
      * @param polygon polygon to add
      * @return a new multi-polygon
      */
-    public static MultiPolygon of(@NotNull Polygon polygon) {
-        return new MultiPolygon(polygon);
+    public static MultiPolygon of(@NotNull Key key, @NotNull Polygon polygon) {
+        return new MultiPolygon(key, polygon);
     }
 
     /**
      * Create a new multi-polygon.
      *
+     * @param key      identifying key
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    public static MultiPolygon of(@NotNull Polygon @NotNull ... polygons) {
-        return new MultiPolygon(polygons);
+    public static MultiPolygon of(@NotNull Key key, @NotNull Polygon @NotNull ... polygons) {
+        return new MultiPolygon(key, polygons);
     }
 
     /**
      * Create a new multi-polygon.
      *
+     * @param key      identifying key
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    public static MultiPolygon of(@NotNull Collection<Polygon> polygons) {
-        return new MultiPolygon(polygons);
+    public static MultiPolygon of(@NotNull Key key, @NotNull Collection<Polygon> polygons) {
+        return new MultiPolygon(key, polygons);
     }
 
     /**
@@ -186,9 +193,10 @@ public class MultiPolygon extends Marker<MultiPolygon> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        getPolygons().forEach(wrapper::add);
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("polygons", getPolygons());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -203,17 +211,22 @@ public class MultiPolygon extends Marker<MultiPolygon> {
             return false;
         }
         MultiPolygon other = (MultiPolygon) o;
-        return Objects.equals(getPolygons(), other.getPolygons())
+        return getKey().equals(other.getKey())
+                && Objects.equals(getPolygons(), other.getPolygons())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions());
+        return Objects.hash(getKey(), getPolygons(), getOptions());
     }
 
     @Override
     public String toString() {
-        return "MultiPolygon{polygons=" + getPolygons() + ",options=" + getOptions() + "}";
+        return "MultiPolygon{"
+                + "key=" + getKey()
+                + ",polygons=" + getPolygons()
+                + ",options=" + getOptions()
+                + "}";
     }
 }

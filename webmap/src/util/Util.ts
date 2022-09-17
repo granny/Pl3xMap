@@ -1,5 +1,6 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
+import {Point} from "./Point";
 
 export function createSVGIcon(icon: string): DocumentFragment {
     const template = document.createElement('template');
@@ -45,8 +46,8 @@ export function getUrlParam<T>(query: string, def: T): T {
  * @param point marker point
  * @returns block centered latlng
  */
-export function toCenteredLatLng(point: L.PointTuple): L.LatLng {
-    return toLatLng([Number(point[0]) + 0.5, Number(point[1]) + 0.5]);
+export function toCenteredLatLng(point: Point): L.LatLng {
+    return toLatLng([point.x + 0.5, point.z + 0.5]);
 }
 
 export function toLatLng(point: L.PointTuple): L.LatLng {

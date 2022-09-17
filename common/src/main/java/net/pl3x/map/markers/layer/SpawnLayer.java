@@ -55,7 +55,7 @@ public class SpawnLayer extends WorldLayer {
     @NotNull
     public Collection<Marker<?>> getMarkers() {
         return Collections.singletonList(Marker.icon(
-                getWorld().getSpawn(), KEY, 16
+                KEY, getWorld().getSpawn(), KEY, 16
         ).setOptions(Options.builder()
                 .tooltipContent(getLabel())
                 .tooltipDirection(Tooltip.Direction.TOP)

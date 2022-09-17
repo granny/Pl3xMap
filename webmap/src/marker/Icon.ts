@@ -1,51 +1,70 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
+import {MarkerOptions} from "./options/MarkerOptions";
+import {Point} from "../util/Point";
 import {isset, toCenteredLatLng} from "../util/Util";
 import "../lib/L.rotated";
 
-interface ExtendedMarkerOptions extends L.MarkerOptions {
-    rotationAngle?: number | undefined;
-    rotationOrigin?: string | undefined;
+interface IconOptions extends L.MarkerOptions {
+    key: string;
+    point: Point;
+    image: string;
+    retina?: string;
+    size?: Point;
+    anchor?: Point;
+    shadow?: string;
+    shadowRetina?: string;
+    shadowSize?: Point;
+    shadowAnchor?: Point;
+    rotationAngle?: number;
+    rotationOrigin?: string;
 }
 
 export class Icon extends Marker {
-
-    // [[0,0],"","",[0,0],[0,0],"","",[0,0],[0,0],0,""]
-
     constructor(type: Type) {
         function url(image: string) {
             return `images/icon/registered/${image}.png`;
         }
 
-        const data = type.data;
-        const options = type.options;
+        const data = type.data as unknown as IconOptions;
 
         let props = {};
+        if (isset(data.image)) props = {...props, iconUrl: url(data.image)};
+        if (isset(data.retina)) props = {...props, iconRetinaUrl: url(data.retina!)};
+        if (isset(data.size)) props = {...props, iconSize: [data.size!.x, data.size!.z]};
+        if (isset(data.anchor)) props = {...props, iconAnchor: [data.anchor!.x, data.anchor!.z]};
+        if (isset(data.shadow)) props = {...props, shadowUrl: url(data.shadow!)};
+        if (isset(data.shadowRetina)) props = {...props, shadowRetinaUrl: url(data.shadowRetina!)};
+        if (isset(data.shadowSize)) props = {...props, shadowSize: [data.shadowSize!.x, data.shadowSize!.z]};
+        if (isset(data.shadowAnchor)) props = {...props, shadowAnchor: [data.shadowAnchor!.x, data.shadowAnchor!.z]};
 
-        if (isset(data[1])) props = {...props, iconUrl: url(data[1] as string)};
-        if (isset(data[2])) props = {...props, iconRetinaUrl: url(data[2] as string)};
-        if (isset(data[3])) props = {...props, iconSize: data[3] as L.PointTuple};
-        if (isset(data[4])) props = {...props, iconAnchor: data[4] as L.PointTuple};
-        if (isset(data[5])) props = {...props, shadowUrl: url(data[5] as string)};
-        if (isset(data[6])) props = {...props, shadowRetinaUrl: url(data[6] as string)};
-        if (isset(data[7])) props = {...props, shadowSize: data[7] as L.PointTuple};
-        if (isset(data[8])) props = {...props, shadowAnchor: data[8] as L.PointTuple};
+        const tooltipOffset = type.options?.tooltip?.properties?.offset;
+        const popupOffset = type.options?.popup?.properties?.offset;
 
-        const tooltipOffset = options?.tooltip?.properties?.offset;
-        const popupOffset = options?.popup?.properties?.offset;
+        if (isset(tooltipOffset)) props = {...props, tooltipAnchor: tooltipOffset};
+        if (isset(popupOffset)) props = {...props, popupAnchor: popupOffset};
 
-        if (isset(tooltipOffset)) props = {...props, tooltipAnchor: tooltipOffset as L.PointTuple};
-        if (isset(popupOffset)) props = {...props, popupAnchor: popupOffset as L.PointTuple};
-
-        super(L.marker(
-            toCenteredLatLng(data[0] as L.PointTuple),
+        super(data.key, L.marker(
+            toCenteredLatLng(data.point),
             {
-                ...options?.properties,
-                rotationAngle: data[9] as number,
-                rotationOrigin: data[10] as string,
+                ...type.options?.properties,
+                rotationAngle: data.rotationAngle,
+                rotationOrigin: data.rotationOrigin,
                 icon: L.icon(props as L.IconOptions),
                 attribution: undefined
-            } as ExtendedMarkerOptions)
+            } as IconOptions)
         );
+    }
+
+    public update(raw: unknown[], options?: MarkerOptions): void {
+        const data = raw as unknown as IconOptions;
+        const icon = this.marker as L.Marker;
+        icon.setLatLng(toCenteredLatLng(data.point));
+        const iconOptions = icon.options as IconOptions;
+        iconOptions.rotationAngle = data.rotationAngle;
+        iconOptions.rotationOrigin = data.rotationOrigin;
+        if (options?.tooltip?.content) {
+            icon.setTooltipContent(options?.tooltip?.content);
+        }
     }
 }

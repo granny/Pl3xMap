@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
+import net.pl3x.map.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,68 +17,74 @@ import org.jetbrains.annotations.Nullable;
 public class MultiPolyline extends Marker<MultiPolyline> {
     private final List<Polyline> polylines = new ArrayList<>();
 
-    private MultiPolyline() {
-        super("multiline");
+    private MultiPolyline(@NotNull Key key) {
+        super("multiline", key);
     }
 
     /**
      * Create a new multi-polyline.
      *
+     * @param key      identifying key
      * @param polyline polyline to add
      */
-    public MultiPolyline(@NotNull Polyline polyline) {
-        this();
+    public MultiPolyline(@NotNull Key key, @NotNull Polyline polyline) {
+        this(key);
         addPolyline(polyline);
     }
 
     /**
      * Create a new multi-polyline.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      */
-    public MultiPolyline(@NotNull Polyline @NotNull ... polylines) {
-        this();
+    public MultiPolyline(@NotNull Key key, @NotNull Polyline @NotNull ... polylines) {
+        this(key);
         addPolyline(polylines);
     }
 
     /**
      * Create a new multi-polyline.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      */
-    public MultiPolyline(@NotNull Collection<Polyline> polylines) {
-        this();
+    public MultiPolyline(@NotNull Key key, @NotNull Collection<Polyline> polylines) {
+        this(key);
         addPolyline(polylines);
     }
 
     /**
      * Create a new multi-polyline.
      *
+     * @param key      identifying key
      * @param polyline polyline to add
      * @return a new multi-polyline
      */
-    public static MultiPolyline of(@NotNull Polyline polyline) {
-        return new MultiPolyline(polyline);
+    public static MultiPolyline of(@NotNull Key key, @NotNull Polyline polyline) {
+        return new MultiPolyline(key, polyline);
     }
 
     /**
      * Create a new multi-polyline.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    public static MultiPolyline of(@NotNull Polyline @NotNull ... polylines) {
-        return new MultiPolyline(polylines);
+    public static MultiPolyline of(@NotNull Key key, @NotNull Polyline @NotNull ... polylines) {
+        return new MultiPolyline(key, polylines);
     }
 
     /**
      * Create a new multi-polyline.
      *
+     * @param key       identifying key
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    public static MultiPolyline of(@NotNull Collection<Polyline> polylines) {
-        return new MultiPolyline(polylines);
+    public static MultiPolyline of(@NotNull Key key, @NotNull Collection<Polyline> polylines) {
+        return new MultiPolyline(key, polylines);
     }
 
     /**
@@ -186,9 +193,10 @@ public class MultiPolyline extends Marker<MultiPolyline> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        getPolylines().forEach(wrapper::add);
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("polylines", getPolylines());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -203,16 +211,22 @@ public class MultiPolyline extends Marker<MultiPolyline> {
             return false;
         }
         MultiPolyline other = (MultiPolyline) o;
-        return Objects.equals(getOptions(), other.getOptions());
+        return getKey().equals(other.getKey())
+                && Objects.equals(getPolylines(), other.getPolylines())
+                && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions());
+        return Objects.hash(getKey(), getPolylines(), getOptions());
     }
 
     @Override
     public String toString() {
-        return "MultiPolyline{polylines=" + getPolylines() + ",options=" + getOptions() + "}";
+        return "MultiPolyline{"
+                + "key=" + getKey()
+                + ",polylines=" + getPolylines()
+                + ",options=" + getOptions()
+                + "}";
     }
 }

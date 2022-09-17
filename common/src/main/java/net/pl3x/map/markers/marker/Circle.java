@@ -3,7 +3,8 @@ package net.pl3x.map.markers.marker;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
+import net.pl3x.map.Key;
 import net.pl3x.map.markers.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,29 +16,33 @@ public class Circle extends Marker<Circle> {
     private Point center;
     private double radius;
 
-    private Circle() {
-        super("circ");
+    private Circle(@NotNull Key key) {
+        super("circ", key);
     }
 
     /**
      * Create a new circle.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radius  circle radius
      */
-    public Circle(double centerX, double centerZ, double radius) {
-        this(Point.of(centerX, centerZ), radius);
+    public Circle(@NotNull Key key, double centerX, double centerZ, double radius) {
+        this(key);
+        setCenter(Point.of(centerX, centerZ));
+        setRadius(radius);
     }
 
     /**
      * Create a new circle.
      *
+     * @param key    identifying key
      * @param center center location
      * @param radius circle radius
      */
-    public Circle(@NotNull Point center, double radius) {
-        this();
+    public Circle(@NotNull Key key, @NotNull Point center, double radius) {
+        this(key);
         setCenter(center);
         setRadius(radius);
     }
@@ -45,24 +50,26 @@ public class Circle extends Marker<Circle> {
     /**
      * Create a new circle.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radius  circle radius
      * @return a new circle
      */
-    public static Circle of(double centerX, double centerZ, double radius) {
-        return new Circle(centerX, centerZ, radius);
+    public static Circle of(@NotNull Key key, double centerX, double centerZ, double radius) {
+        return new Circle(key, centerX, centerZ, radius);
     }
 
     /**
      * Create a new circle.
      *
+     * @param key    identifying key
      * @param center center location
      * @param radius circle radius
      * @return a new circle
      */
-    public static Circle of(@NotNull Point center, double radius) {
-        return new Circle(center, radius);
+    public static Circle of(@NotNull Key key, @NotNull Point center, double radius) {
+        return new Circle(key, center, radius);
     }
 
     /**
@@ -112,10 +119,11 @@ public class Circle extends Marker<Circle> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getCenter());
-        wrapper.add(getRadius());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("center", getCenter());
+        wrapper.addProperty("radius", getRadius());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -130,18 +138,24 @@ public class Circle extends Marker<Circle> {
             return false;
         }
         Circle other = (Circle) o;
-        return Double.compare(getRadius(), other.getRadius()) == 0
+        return getKey().equals(other.getKey())
+                && Double.compare(getRadius(), other.getRadius()) == 0
                 && Objects.equals(getCenter(), other.getCenter())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions(), getRadius(), getCenter());
+        return Objects.hash(getKey(), getOptions(), getRadius(), getCenter());
     }
 
     @Override
     public String toString() {
-        return "Circle{center=" + getCenter() + ",radius=" + getRadius() + ",options=" + getOptions() + "}";
+        return "Circle{"
+                + "key=" + getKey()
+                + ",center=" + getCenter()
+                + ",radius=" + getRadius()
+                + ",options=" + getOptions()
+                + "}";
     }
 }

@@ -1,22 +1,25 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
+import {Point} from "../util/Point";
 import {toCenteredLatLng} from "../util/Util";
 
+interface RectangleOptions extends L.PolylineOptions {
+    key: string;
+    point1: Point;
+    point2: Point;
+}
+
 export class Rectangle extends Marker {
-
-    // [[0,0],[0,0]]
-
     constructor(type: Type) {
-        const data = type.data;
-        const options = type.options;
+        const data = type.data as unknown as RectangleOptions;
 
-        super(L.rectangle(
+        super(data.key, L.rectangle(
             L.latLngBounds(
-                toCenteredLatLng(data[0] as L.PointTuple),
-                toCenteredLatLng(data[1] as L.PointTuple)
+                toCenteredLatLng(data.point1),
+                toCenteredLatLng(data.point2)
             ),
             {
-                ...options?.properties,
+                ...type.options?.properties,
                 smoothFactor: 1.0,
                 noClip: false,
                 bubblingMouseEvents: true,
@@ -24,5 +27,8 @@ export class Rectangle extends Marker {
                 attribution: undefined
             })
         );
+    }
+
+    public update(raw: unknown[]): void {
     }
 }

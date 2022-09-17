@@ -2,7 +2,7 @@ package net.pl3x.map.markers.option;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -250,15 +250,15 @@ public class Stroke extends Option<Stroke> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(isEnabled());
-        wrapper.add(getWeight());
-        wrapper.add(getColor());
-        wrapper.add(getLineCapShape());
-        wrapper.add(getLineJoinShape());
-        wrapper.add(getDashPattern());
-        wrapper.add(getDashOffset());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("enabled", isEnabled());
+        wrapper.addProperty("weight", getWeight());
+        wrapper.addProperty("color", getColor());
+        wrapper.addProperty("lineCap", getLineCapShape());
+        wrapper.addProperty("lineJoin", getLineJoinShape());
+        wrapper.addProperty("dashArray", getDashPattern());
+        wrapper.addProperty("dashOffset", getDashOffset());
+        return wrapper.getJsonObject();
     }
 
     @Override

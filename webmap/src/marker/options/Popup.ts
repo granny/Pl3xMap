@@ -1,30 +1,56 @@
 import * as L from "leaflet";
+import {Point} from "../../util/Point";
 import {isset} from "../../util/Util";
+
+export interface PopupOptions {
+    content?: string;
+    pane?: string;
+    offset?: Point;
+    maxWidth?: number;
+    minWidth?: number;
+    maxHeight?: number;
+    autoPan?: boolean;
+    autoPanPaddingTopLeft?: Point;
+    autoPanPaddingBottomRight?: Point;
+    autoPanPadding?: Point;
+    keepInView?: boolean;
+    closeButton?: boolean;
+    autoClose?: boolean;
+    closeOnEscapeKey?: boolean;
+    closeOnClick?: boolean;
+}
 
 export class Popup {
     private readonly _content: string;
     private readonly _properties: L.PopupOptions;
 
-    // ["content", null, null, 300, 50, null, 1, null, null, null, false, true, true, true, true]
-
-    constructor(data: unknown[]) {
-        this._content = isset(data[0]) ? data[0] as string : "";
+    constructor(data: PopupOptions) {
+        this._content = isset(data.content) ? data.content! : "";
 
         let props: L.PopupOptions = {};
-        if (isset(data[1])) props = {...props, pane: data[1] as string};
-        if (isset(data[2])) props = {...props, offset: data[2] as L.PointTuple};
-        if (isset(data[3])) props = {...props, maxWidth: data[3] as number};
-        if (isset(data[4])) props = {...props, minWidth: data[4] as number};
-        if (isset(data[5])) props = {...props, maxHeight: data[5] as number};
-        if (isset(data[6])) props = {...props, autoPan: data[6] as boolean};
-        if (isset(data[7])) props = {...props, autoPanPaddingTopLeft: data[7] as L.PointTuple};
-        if (isset(data[8])) props = {...props, autoPanPaddingBottomRight: data[8] as L.PointTuple};
-        if (isset(data[9])) props = {...props, autoPanPadding: data[9] as L.PointTuple};
-        if (isset(data[10])) props = {...props, keepInView: data[10] as boolean};
-        if (isset(data[11])) props = {...props, closeButton: data[11] as boolean};
-        if (isset(data[12])) props = {...props, autoClose: data[12] as boolean};
-        if (isset(data[13])) props = {...props, closeOnEscapeKey: data[13] as boolean};
-        if (isset(data[14])) props = {...props, closeOnClick: data[14] as boolean};
+        if (isset(data.pane)) props = {...props, pane: data.pane};
+        if (isset(data.offset)) props = {...props, offset: [data.offset!.x, data.offset!.z]};
+        if (isset(data.maxWidth)) props = {...props, maxWidth: data.maxWidth};
+        if (isset(data.minWidth)) props = {...props, minWidth: data.minWidth};
+        if (isset(data.maxHeight)) props = {...props, maxHeight: data.maxHeight};
+        if (isset(data.autoPan)) props = {...props, autoPan: data.autoPan};
+        if (isset(data.autoPanPaddingTopLeft)) props = {
+            ...props,
+            autoPanPaddingTopLeft: [data.autoPanPaddingTopLeft!.x, data.autoPanPaddingTopLeft!.z]
+        };
+        if (isset(data.autoPanPaddingBottomRight)) props = {
+            ...props,
+            autoPanPaddingBottomRight: [data.autoPanPaddingBottomRight!.x, data.autoPanPaddingBottomRight!.z]
+        };
+        if (isset(data.autoPanPadding)) props = {
+            ...props,
+            autoPanPadding: [data.autoPanPadding!.x, data.autoPanPadding!.z]
+        };
+        if (isset(data.keepInView)) props = {...props, keepInView: data.keepInView};
+        if (isset(data.closeButton)) props = {...props, closeButton: data.closeButton};
+        if (isset(data.autoClose)) props = {...props, autoClose: data.autoClose};
+        if (isset(data.closeOnEscapeKey)) props = {...props, closeOnEscapeKey: data.closeOnEscapeKey};
+        if (isset(data.closeOnClick)) props = {...props, closeOnClick: data.closeOnClick};
 
         this._properties = props;
     }

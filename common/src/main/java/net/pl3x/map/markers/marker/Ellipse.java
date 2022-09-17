@@ -3,7 +3,8 @@ package net.pl3x.map.markers.marker;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
+import net.pl3x.map.Key;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -17,52 +18,56 @@ public class Ellipse extends Marker<Ellipse> {
     private Vector radius;
     private Double tilt;
 
-    private Ellipse() {
-        super("elli");
+    private Ellipse(@NotNull Key key) {
+        super("elli", key);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radiusX x radius
      * @param radiusZ z radius
      */
-    public Ellipse(double centerX, double centerZ, double radiusX, double radiusZ) {
-        this(Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ));
+    public Ellipse(@NotNull Key key, double centerX, double centerZ, double radiusX, double radiusZ) {
+        this(key, Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ));
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param center  center location
      * @param radiusX x radius
      * @param radiusZ z radius
      */
-    public Ellipse(@NotNull Point center, double radiusX, double radiusZ) {
-        this(center, Vector.of(radiusX, radiusZ));
+    public Ellipse(@NotNull Key key, @NotNull Point center, double radiusX, double radiusZ) {
+        this(key, center, Vector.of(radiusX, radiusZ));
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radius  radius
      */
-    public Ellipse(double centerX, double centerZ, @NotNull Vector radius) {
-        this(Point.of(centerX, centerZ), radius);
+    public Ellipse(@NotNull Key key, double centerX, double centerZ, @NotNull Vector radius) {
+        this(key, Point.of(centerX, centerZ), radius);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key    identifying key
      * @param center center location
      * @param radius radius
      */
-    public Ellipse(@NotNull Point center, @NotNull Vector radius) {
-        this();
+    public Ellipse(@NotNull Key key, @NotNull Point center, @NotNull Vector radius) {
+        this(key);
         setCenter(center);
         setRadius(radius);
     }
@@ -70,49 +75,53 @@ public class Ellipse extends Marker<Ellipse> {
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radiusX x radius
      * @param radiusZ z radius
      * @param tilt    tilt
      */
-    public Ellipse(double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
-        this(Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ), tilt);
+    public Ellipse(@NotNull Key key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+        this(key, Point.of(centerX, centerZ), Vector.of(radiusX, radiusZ), tilt);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param center  center location
      * @param radiusX x radius
      * @param radiusZ z radius
      * @param tilt    tilt
      */
-    public Ellipse(@NotNull Point center, double radiusX, double radiusZ, double tilt) {
-        this(center, Vector.of(radiusX, radiusZ), tilt);
+    public Ellipse(@NotNull Key key, @NotNull Point center, double radiusX, double radiusZ, double tilt) {
+        this(key, center, Vector.of(radiusX, radiusZ), tilt);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radius  radius
      * @param tilt    tilt
      */
-    public Ellipse(double centerX, double centerZ, @NotNull Vector radius, double tilt) {
-        this(Point.of(centerX, centerZ), radius, tilt);
+    public Ellipse(@NotNull Key key, double centerX, double centerZ, @NotNull Vector radius, double tilt) {
+        this(key, Point.of(centerX, centerZ), radius, tilt);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key    identifying key
      * @param center center location
      * @param radius radius
      * @param tilt   tilt
      */
-    public Ellipse(@NotNull Point center, @NotNull Vector radius, double tilt) {
-        this();
+    public Ellipse(@NotNull Key key, @NotNull Point center, @NotNull Vector radius, double tilt) {
+        this(key);
         setCenter(center);
         setRadius(radius);
         setTilt(tilt);
@@ -121,54 +130,59 @@ public class Ellipse extends Marker<Ellipse> {
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radiusX x radius
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    public static Ellipse of(double centerX, double centerZ, double radiusX, double radiusZ) {
-        return new Ellipse(centerX, centerZ, radiusX, radiusZ);
+    public static Ellipse of(@NotNull Key key, double centerX, double centerZ, double radiusX, double radiusZ) {
+        return new Ellipse(key, centerX, centerZ, radiusX, radiusZ);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param center  center location
      * @param radiusX x radius
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    public static Ellipse of(@NotNull Point center, double radiusX, double radiusZ) {
-        return new Ellipse(center, radiusX, radiusZ);
+    public static Ellipse of(@NotNull Key key, @NotNull Point center, double radiusX, double radiusZ) {
+        return new Ellipse(key, center, radiusX, radiusZ);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radius  radius
      * @return a new ellipse
      */
-    public static Ellipse of(double centerX, double centerZ, @NotNull Vector radius) {
-        return new Ellipse(centerX, centerZ, radius);
+    public static Ellipse of(@NotNull Key key, double centerX, double centerZ, @NotNull Vector radius) {
+        return new Ellipse(key, centerX, centerZ, radius);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key    identifying key
      * @param center center location
      * @param radius radius
      * @return a new ellipse
      */
-    public static Ellipse of(@NotNull Point center, @NotNull Vector radius) {
-        return new Ellipse(center, radius);
+    public static Ellipse of(@NotNull Key key, @NotNull Point center, @NotNull Vector radius) {
+        return new Ellipse(key, center, radius);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radiusX x radius
@@ -176,46 +190,49 @@ public class Ellipse extends Marker<Ellipse> {
      * @param tilt    tilt
      * @return a new ellipse
      */
-    public static Ellipse of(double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
-        return new Ellipse(centerX, centerZ, radiusX, radiusZ, tilt);
+    public static Ellipse of(@NotNull Key key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+        return new Ellipse(key, centerX, centerZ, radiusX, radiusZ, tilt);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param center  center location
      * @param radiusX x radius
      * @param radiusZ z radius
      * @param tilt    tilt
      * @return a new ellipse
      */
-    public static Ellipse of(@NotNull Point center, double radiusX, double radiusZ, double tilt) {
-        return new Ellipse(center, radiusX, radiusZ, tilt);
+    public static Ellipse of(@NotNull Key key, @NotNull Point center, double radiusX, double radiusZ, double tilt) {
+        return new Ellipse(key, center, radiusX, radiusZ, tilt);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key     identifying key
      * @param centerX center x location
      * @param centerZ center z location
      * @param radius  radius
      * @param tilt    tilt
      * @return a new ellipse
      */
-    public static Ellipse of(double centerX, double centerZ, @NotNull Vector radius, double tilt) {
-        return new Ellipse(centerX, centerZ, radius, tilt);
+    public static Ellipse of(@NotNull Key key, double centerX, double centerZ, @NotNull Vector radius, double tilt) {
+        return new Ellipse(key, centerX, centerZ, radius, tilt);
     }
 
     /**
      * Create a new ellipse.
      *
+     * @param key    identifying key
      * @param center center location
      * @param radius radius
      * @param tilt   tilt
      * @return a new ellipse
      */
-    public static Ellipse of(@NotNull Point center, @NotNull Vector radius, double tilt) {
-        return new Ellipse(center, radius, tilt);
+    public static Ellipse of(@NotNull Key key, @NotNull Point center, @NotNull Vector radius, double tilt) {
+        return new Ellipse(key, center, radius, tilt);
     }
 
     /**
@@ -293,11 +310,12 @@ public class Ellipse extends Marker<Ellipse> {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getCenter());
-        wrapper.add(getRadius());
-        wrapper.add(getTilt());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("center", getCenter());
+        wrapper.addProperty("radius", getRadius());
+        wrapper.addProperty("tilt", getTilt());
+        return wrapper.getJsonObject();
     }
 
     @Override
@@ -312,21 +330,23 @@ public class Ellipse extends Marker<Ellipse> {
             return false;
         }
         Ellipse other = (Ellipse) o;
-        return Objects.equals(getRadius(), other.getRadius())
+        return getKey().equals(other.getKey())
+                && Objects.equals(getRadius(), other.getRadius())
                 && Objects.equals(getCenter(), other.getCenter())
-                && Objects.equals(getOptions(), other.getOptions())
-                && Objects.equals(getTilt(), other.getTilt());
+                && Objects.equals(getTilt(), other.getTilt())
+                && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOptions(), getCenter(), getRadius(), getTilt());
+        return Objects.hash(getKey(), getOptions(), getCenter(), getRadius(), getTilt());
     }
 
     @Override
     public String toString() {
         return "Ellipse{"
-                + "center=" + getCenter()
+                + "key=" + getKey()
+                + ",center=" + getCenter()
                 + ",radius=" + getRadius()
                 + ",tile=" + getTilt()
                 + ",options=" + getOptions()

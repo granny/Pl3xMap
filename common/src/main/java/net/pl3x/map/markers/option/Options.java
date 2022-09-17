@@ -2,7 +2,7 @@ package net.pl3x.map.markers.option;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.JsonArrayWrapper;
+import net.pl3x.map.JsonObjectWrapper;
 import net.pl3x.map.JsonSerializable;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.marker.Marker;
@@ -155,12 +155,12 @@ public class Options implements JsonSerializable {
     @Override
     @NotNull
     public JsonElement toJson() {
-        JsonArrayWrapper wrapper = new JsonArrayWrapper();
-        wrapper.add(getStroke());
-        wrapper.add(getFill());
-        wrapper.add(getTooltip());
-        wrapper.add(getPopup());
-        return wrapper.getJsonArray();
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("stroke", getStroke());
+        wrapper.addProperty("fill", getFill());
+        wrapper.addProperty("tooltip", getTooltip());
+        wrapper.addProperty("popup", getPopup());
+        return wrapper.getJsonObject();
     }
 
     @Override

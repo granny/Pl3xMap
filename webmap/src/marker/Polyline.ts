@@ -1,25 +1,27 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
+import {Point} from "../util/Point";
 import {toCenteredLatLng} from "../util/Util";
 
+interface PolylineOptions extends L.PolylineOptions {
+    key: string;
+    points: Point[];
+}
+
 export class Polyline extends Marker {
-
-    // [[0,0],[0,0],[0,0]]
-
     constructor(type: Type) {
-        const data = type.data;
-        const options = type.options;
+        const data = type.data as unknown as PolylineOptions;
 
         const line = [];
 
-        for (const point of data as unknown[]) {
-            line.push(toCenteredLatLng(point as L.PointTuple))
+        for (const point of data.points) {
+            line.push(toCenteredLatLng(point))
         }
 
-        super(L.polyline(
+        super(data.key, L.polyline(
             line,
             {
-                ...options?.properties,
+                ...type.options?.properties,
                 smoothFactor: 1.0,
                 noClip: false,
                 bubblingMouseEvents: true,
@@ -27,5 +29,8 @@ export class Polyline extends Marker {
                 attribution: undefined
             })
         );
+    }
+
+    public update(raw: unknown[]): void {
     }
 }

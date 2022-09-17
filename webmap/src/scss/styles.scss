@@ -79,6 +79,14 @@ h3 {
   margin-bottom: 0.5rem;
 }
 
+ul, li {
+  list-style-type: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
 label:focus-within {
   outline: var(--ui-outline);
 
@@ -154,6 +162,64 @@ img.leaflet-tile {
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+}
+
+.leaflet-marker-icon,
+div.leaflet-nameplates-pane div img.head {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+div.leaflet-nameplates-pane div {
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.75);
+}
+
+div.leaflet-nameplates-pane div ul {
+  padding: 3px;
+}
+
+div.leaflet-nameplates-pane div:before {
+  border-color: transparent;
+}
+
+div.leaflet-nameplates-pane div img.head {
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+div.leaflet-nameplates-pane div img.health {
+  margin-top: 3px;
+}
+
+div.leaflet-nameplates-pane div img.armor,
+div.leaflet-nameplates-pane div img.health {
+  display: block;
+  width: 81px;
+  height: 9px;
+  background-position: 0 0;
+}
+
+div.leaflet-nameplates-pane div img.armor {
+  background: url('images/armor.png') no-repeat;
+}
+
+div.leaflet-nameplates-pane div img.health {
+  background: url('images/health.png') no-repeat;
+}
+
+div.leaflet-nameplates-pane div,
+div.leaflet-marker-pane img {
+  transition: all 0.25s;
 }
 
 .menu {

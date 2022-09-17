@@ -75,13 +75,13 @@ public class BukkitPlayer extends Player {
 
     @Override
     public int getHealth() {
-        return (int) this.player.getHealth();
+        return (int) Math.round(this.player.getHealth());
     }
 
     @Override
     public int getArmorPoints() {
         AttributeInstance attr = this.player.getAttribute(Attribute.GENERIC_ARMOR);
-        return attr == null ? 0 : (int) attr.getValue();
+        return attr == null ? 0 : (int) Math.round(attr.getValue());
     }
 
     @Override

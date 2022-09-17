@@ -2,18 +2,22 @@ import * as L from "leaflet";
 import {Color} from "../../util/Color";
 import {isset} from "../../util/Util";
 
+export interface FillOptions {
+    enabled?: boolean;
+    type?: number;
+    color?: number;
+}
+
 export class Fill {
     private readonly _properties: L.PathOptions;
 
-    // [1, 1, 872349696]
-
-    constructor(data: unknown[]) {
+    constructor(data: FillOptions) {
         let props = {};
 
-        if (isset(data[0])) props = {...props, fill: data[0] as number == 1};
-        if (isset(data[1])) props = {...props, fillRule: Type[data[1] as number] as L.FillRule};
-        if (isset(data[2])) {
-            const color = new Color(data[2] as number);
+        if (isset(data.enabled)) props = {...props, fill: data.enabled};
+        if (isset(data.type)) props = {...props, fillRule: Type[data.type!]};
+        if (isset(data.color)) {
+            const color = new Color(data.color!);
             props = {...props, fillColor: color.hex, fillOpacity: color.opacity};
         }
 
