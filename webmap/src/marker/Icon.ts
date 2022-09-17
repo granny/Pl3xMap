@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {isset, toLatLng} from "../util/Util";
+import {isset, toCenteredLatLng} from "../util/Util";
 
 export class Icon extends Marker {
 
@@ -32,7 +32,7 @@ export class Icon extends Marker {
         if (isset(popupOffset)) props = {...props, popupAnchor: popupOffset as L.PointTuple};
 
         super(L.marker(
-            toLatLng(data[0] as L.PointTuple),
+            toCenteredLatLng(data[0] as L.PointTuple),
             {
                 ...options?.properties,
                 icon: L.icon(props as L.IconOptions),

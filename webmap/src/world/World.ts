@@ -139,15 +139,24 @@ export class World {
         return this._currentRenderer;
     }
 
-    public setRenderer(renderer: Label): void {
+    public setRenderer(renderer: Label | string): void {
+        if (!(renderer instanceof Label)) {
+            for (const label of this.renderers) {
+                if (label.label == renderer) {
+                    renderer = label;
+                }
+            }
+        }
+
         this._currentRendererLayer?.remove();
-        this._currentRenderer = this.settings.renderers.indexOf(renderer) > -1 ? renderer : this.settings.renderers[0] ?? 'basic';
+        this._currentRenderer = this.settings.renderers.indexOf(renderer as Label) > -1 ? renderer as Label : this.settings.renderers[0];
         this._currentRendererLayer = this._rendererLayers.get(this._currentRenderer);
         this._currentRendererLayer!.addTo(this._pl3xmap.map);
+
         fireCustomEvent('rendererselected', this);
     }
 
-    public resetRenderer(renderer?: Label): void {
+    public resetRenderer(renderer?: Label | string): void {
         this.setRenderer(renderer ?? this.settings.renderers[0]);
     }
 

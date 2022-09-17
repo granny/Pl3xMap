@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {toLatLng} from "../util/Util";
+import {toCenteredLatLng} from "../util/Util";
 
 export class Rectangle extends Marker {
 
@@ -12,8 +12,8 @@ export class Rectangle extends Marker {
 
         super(L.rectangle(
             L.latLngBounds(
-                toLatLng(data[0] as L.PointTuple),
-                toLatLng(data[1] as L.PointTuple)
+                toCenteredLatLng(data[0] as L.PointTuple),
+                toCenteredLatLng(data[1] as L.PointTuple)
             ),
             {
                 ...options?.properties,

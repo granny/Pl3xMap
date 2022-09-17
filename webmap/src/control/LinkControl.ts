@@ -22,8 +22,6 @@ export class LinkControl extends ControlBox {
     onAdd(map: Pl3xMapLeafletMap): HTMLAnchorElement {
         map.addEventListener('moveend', this.onEvent);
         map.addEventListener('zoomend', this.onEvent);
-        window.addEventListener('rendererselected', this.onEvent);
-        window.addEventListener('worldselected', this.onEvent);
         this.update();
         return this._dom;
     }
@@ -31,8 +29,6 @@ export class LinkControl extends ControlBox {
     onRemove(map: Pl3xMapLeafletMap): void {
         map.removeEventListener('moveend', this.onEvent);
         map.removeEventListener('zoomend', this.onEvent);
-        window.removeEventListener("rendererselected", this.onEvent);
-        window.removeEventListener("worldselected", this.onEvent);
     }
 
     public update(): void {

@@ -39,10 +39,18 @@ export function getUrlParam<T>(query: string, def: T): T {
     return new URLSearchParams(window.location.search).get(query) as unknown as T ?? def;
 }
 
+/**
+ * Center marker points on block centers
+ *
+ * @param point marker point
+ * @returns block centered latlng
+ */
+export function toCenteredLatLng(point: L.PointTuple): L.LatLng {
+    return toLatLng([Number(point[0]) + 0.5, Number(point[1]) + 0.5]);
+}
+
 export function toLatLng(point: L.PointTuple): L.LatLng {
-    const x = Number(point[0]) + 0.5;
-    const z = Number(point[1]) + 0.5;
-    return L.latLng(pixelsToMeters(z), pixelsToMeters(x));
+    return L.latLng(pixelsToMeters(point[1]), pixelsToMeters(point[0]));
 }
 
 export function toPoint(latlng: L.LatLng): L.PointTuple {

@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {pixelsToMeters, toLatLng} from "../util/Util";
+import {pixelsToMeters, toCenteredLatLng} from "../util/Util";
 
 export class Circle extends Marker {
 
@@ -11,7 +11,7 @@ export class Circle extends Marker {
         const options = type.options;
 
         super(L.circle(
-            toLatLng(data[0] as L.PointTuple),
+            toCenteredLatLng(data[0] as L.PointTuple),
             {
                 ...options?.properties,
                 radius: pixelsToMeters(data[1] as number),

@@ -52,7 +52,7 @@ export class WorldManager {
         return this._worlds.get(world);
     }
 
-    public async setWorld(world: World, renderer?: Label): Promise<void> {
+    public async setWorld(world: World, renderer?: Label | string, resetCoords?: boolean): Promise<void> {
         return world.load().then(() => {
             if (world === this._currentWorld && renderer === this._currentWorld.currentRenderer) {
                 return;
@@ -63,17 +63,16 @@ export class WorldManager {
                 this._currentWorld = world;
                 world.loadMarkers();
                 fireCustomEvent('worldselected', world);
+                document.getElementById("map")!.style.background = world.background;
             }
 
-            this._currentWorld.resetRenderer(renderer);
+            world.resetRenderer(renderer);
 
             this._pl3xmap.map.centerOn(
-                getUrlParam('x', world.spawn.x),
-                getUrlParam('z', world.spawn.z),
-                getUrlParam('zoom', world.zoom.default)
+                resetCoords ? world.spawn.x : getUrlParam('x', world.spawn.x),
+                resetCoords ? world.spawn.z : getUrlParam('z', world.spawn.z),
+                resetCoords ? world.zoom.default : getUrlParam('zoom', world.zoom.default)
             );
-
-            document.getElementById("map")!.style.background = world.background;
 
             const ui = world.settings.ui;
             this._pl3xmap.controlManager.linkControl = ui.link ? new LinkControl(this._pl3xmap, ui.link) : undefined;

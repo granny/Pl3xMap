@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
-import {toLatLng} from "../util/Util";
+import {toCenteredLatLng} from "../util/Util";
 
 export class Polyline extends Marker {
 
@@ -13,7 +13,7 @@ export class Polyline extends Marker {
         const line = [];
 
         for (const point of data as unknown[]) {
-            line.push(toLatLng(point as L.PointTuple))
+            line.push(toCenteredLatLng(point as L.PointTuple))
         }
 
         super(L.polyline(
