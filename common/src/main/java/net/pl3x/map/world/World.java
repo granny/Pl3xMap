@@ -161,15 +161,15 @@ public abstract class World extends Keyed {
             throw new RuntimeException(e);
         }
 
-        if (getConfig().MARKERS_WORLDBORDER) {
+        if (getConfig().MARKERS_WORLDBORDER_ENABLED) {
             getLayerRegistry().register(new WorldBorderLayer(this));
         }
 
-        if (getConfig().MARKERS_SPAWN) {
+        if (getConfig().MARKERS_SPAWN_ENABLED) {
             getLayerRegistry().register(new SpawnLayer(this));
         }
 
-        if (getConfig().MARKERS_PLAYERS) {
+        if (getConfig().MARKERS_PLAYERS_ENABLED) {
             getLayerRegistry().register(new PlayersLayer(this));
         }
 

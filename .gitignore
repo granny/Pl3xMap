@@ -125,6 +125,7 @@ build
 /webmap/node_modules/
 /webmap/dist/
 /webmap/public/images/icon/registered
-/webmap/public/images/skins
+/webmap/public/images/skins/2D
+/webmap/public/images/skins/3D
 /webmap/public/tiles
 /common/src/main/resources/web/

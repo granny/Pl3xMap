@@ -26,7 +26,7 @@ public class PlayerTexture extends Thread {
         try {
             Files.createDirectories(SKINS_2D_DIR);
             Files.createDirectories(SKINS_3D_DIR);
-            STEVE_SKIN = World.WEB_DIR.resolve("images/steve.png").toUri().toURL();
+            STEVE_SKIN = World.WEB_DIR.resolve("images/skins/steve.png").toUri().toURL();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
