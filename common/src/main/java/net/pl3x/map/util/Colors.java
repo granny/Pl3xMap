@@ -122,7 +122,7 @@ public class Colors {
         return mix(color0, color1, alpha(color1) / (float) 0xFF);
     }
 
-    public static int merge(List<Integer> colors) {
+    public static int stack(List<Integer> colors) {
         int r = 0, g = 0, b = 0, count = 0;
         for (int rgb : colors) {
             r += Colors.red(rgb);
@@ -131,6 +131,29 @@ public class Colors {
             count++;
         }
         return Colors.rgb(r / count, g / count, b / count);
+    }
+
+    /**
+     * Blends one color over another.
+     *
+     * @param color0 color to blend over with
+     * @param color1 color to be blended over
+     * @return resulting blended color
+     * @see <a href="https://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending">Alpha Blending</a>
+     */
+    public static int blend(int color0, int color1) {
+        double a0 = (double) alpha(color0) / 0xFF;
+        double a1 = (double) alpha(color1) / 0xFF;
+        double a = a0 + a1 * (1 - a0);
+        double r = (red(color0) * a0 + red(color1) * a1 * (1 - a0)) / a;
+        double g = (green(color0) * a0 + green(color1) * a1 * (1 - a0)) / a;
+        double b = (blue(color0) * a0 + blue(color1) * a1 * (1 - a0)) / a;
+        return argb(
+                (int) Math.round(a) * 0xFF,
+                (int) Math.round(r),
+                (int) Math.round(g),
+                (int) Math.round(b)
+        );
     }
 
     public static int rgb(int red, int green, int blue) {

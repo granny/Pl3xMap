@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import javax.imageio.ImageIO;
+import net.pl3x.map.util.Colors;
 import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +20,13 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerTexture extends Thread {
     private static final Path SKINS_2D_DIR = World.WEB_DIR.resolve("images/skins/2D");
     private static final Path SKINS_3D_DIR = World.WEB_DIR.resolve("images/skins/3D");
+    private static final URL STEVE_SKIN;
 
     static {
         try {
             Files.createDirectories(SKINS_2D_DIR);
             Files.createDirectories(SKINS_3D_DIR);
+            STEVE_SKIN = World.WEB_DIR.resolve("images/steve.png").toUri().toURL();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -34,7 +37,11 @@ public class PlayerTexture extends Thread {
 
     public PlayerTexture(Player player) {
         this.uuid = player.getUUID();
-        this.url = player.getSkin();
+        URL url = player.getSkin();
+        if (url == null) {
+            url = STEVE_SKIN;
+        }
+        this.url = url;
     }
 
     @Override
@@ -100,11 +107,11 @@ public class PlayerTexture extends Thread {
         BufferedImage result = new BufferedImage(32, 32, source.getType());
         for (int x1 = 0; x1 < 32; x1++) {
             for (int z1 = 0; z1 < 32; z1++) {
-                int rgb = helm.getRGB(x1 / 4, z1 / 4);
-                if (rgb == 0) {
-                    rgb = head.getRGB(x1 / 4, z1 / 4);
-                }
-                result.setRGB(x1, z1, rgb);
+                int argb = Colors.blend(
+                        helm.getRGB(x1 / 4, z1 / 4),
+                        head.getRGB(x1 / 4, z1 / 4)
+                );
+                result.setRGB(x1, z1, argb);
             }
         }
         return result;

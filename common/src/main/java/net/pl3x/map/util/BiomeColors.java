@@ -185,6 +185,6 @@ public class BiomeColors {
                 }
             }
         }
-        return Colors.merge(colors);
+        return Colors.stack(colors);
     }
 }

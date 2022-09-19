@@ -105,7 +105,7 @@ public abstract class Renderer {
 
         // if there was translucent glass, mix it in here
         if (!data.getGlassColors().isEmpty()) {
-            pixelColor = Colors.mix(pixelColor, Colors.merge(data.getGlassColors()), Math.min(1.0F, 0.70F + (0.05F * data.getGlassColors().size())));
+            pixelColor = Colors.mix(pixelColor, Colors.stack(data.getGlassColors()), Math.min(1.0F, 0.70F + (0.05F * data.getGlassColors().size())));
         }
 
         return pixelColor;
