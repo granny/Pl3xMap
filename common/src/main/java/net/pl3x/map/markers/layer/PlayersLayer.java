@@ -67,19 +67,17 @@ public class PlayersLayer extends WorldLayer {
         Icon icon = Marker.icon(player.getKey(), player.getPosition(), KEY, 16)
                 .setRotationAngle((double) player.getYaw())
                 .setRotationOrigin("center");
-        icon.setOptions(Options.builder()
-                .tooltipContent("""
-                                <ul>
-                                <li><img src='images/skins/2D/<uuid>.png' class='head' /></li>
-                                <li><name>
-                                <img src='images/clear.png' class='health' style='background-position:0 -<health>px;' />
-                                <img src='images/clear.png' class='armor' style='background-position:0 -<armor>px;' /></li>
-                                </ul>"""
-                                .replace("<uuid>", player.getUUID().toString())
-                                .replace("<name>", player.getName())
-                                .replace("<health>", Integer.toString(player.getHealth() * 9))
-                                .replace("<armor>", Integer.toString(player.getArmorPoints() * 9))
-                        // width:189px;height:9px;background:url('images/armor.png') no-repeat;background-position:0 -36px;
+        String tooltip = getWorld().getConfig().MARKERS_PLAYERS_TOOLTIP;
+        if (tooltip == null || tooltip.isBlank()) {
+            return icon;
+        }
+        return icon.setOptions(Options.builder()
+                .tooltipContent(tooltip
+                        .replace("<uuid>", player.getUUID().toString())
+                        .replace("<name>", player.getName())
+                        .replace("<decoratedName>", player.getDecoratedName())
+                        .replace("<health>", Integer.toString(player.getHealth()))
+                        .replace("<armor>", Integer.toString(player.getArmorPoints()))
                 )
                 .tooltipPane("nameplates")
                 .tooltipDirection(Tooltip.Direction.RIGHT)
@@ -88,6 +86,5 @@ public class PlayersLayer extends WorldLayer {
                 .tooltipOpacity(1.0D)
                 .build()
         );
-        return icon;
     }
 }
