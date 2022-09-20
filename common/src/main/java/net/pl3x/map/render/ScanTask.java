@@ -31,20 +31,23 @@ public class ScanTask implements Runnable {
         this.world = render.getWorld();
         this.chunkHelper = new ChunkHelper(render);
 
+        RendererRegistry registry = Pl3xMap.api().getRendererRegistry();
+
         List<RendererHolder> rendererHolders = new ArrayList<>();
-        Pl3xMap.api().getRendererRegistry().entries().forEach(((key, rendererHolder) -> {
-            if (this.world.getConfig().RENDER_RENDERERS.contains(rendererHolder.getKey().toString())) {
-                rendererHolders.add(rendererHolder);
+        this.world.getConfig().RENDER_RENDERERS.forEach(rendererName -> {
+            RendererHolder holder = registry.get(rendererName);
+            if (holder != null) {
+                rendererHolders.add(holder);
             }
-        }));
+        });
 
         String blockInfo = this.world.getConfig().UI_BLOCKINFO;
         if (blockInfo != null && !blockInfo.isEmpty()) {
-            rendererHolders.add(Pl3xMap.api().getRendererRegistry().get(RendererRegistry.BLOCKINFO));
+            rendererHolders.add(registry.get(RendererRegistry.BLOCKINFO));
         }
 
         rendererHolders.forEach(holder -> {
-            Renderer renderer = Pl3xMap.api().getRendererRegistry().createRenderer(holder, this);
+            Renderer renderer = registry.createRenderer(holder, this);
             if (renderer != null) {
                 this.renderers.put(holder.getKey(), renderer);
             }

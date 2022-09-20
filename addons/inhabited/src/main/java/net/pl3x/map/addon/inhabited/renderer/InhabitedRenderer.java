@@ -39,11 +39,11 @@ public class InhabitedRenderer extends Renderer {
             // we hsb lerp between blue and red with ratio being the
             // percent inhabited time is of the maxed out inhabited time
             float ratio = Mathf.clamp(0F, 1F, data.getChunk().getInhabitedTime() / 3600000F);
-            int inhabitedRGB = Colors.lerpHSB(0xFF0000FF, 0xFFFF0000, ratio, false);
+            int inhabitedRGB = Colors.lerpHSB(0x880000FF, 0x88FF0000, ratio, false);
 
             // set the color, mixing our heatmap on top
             // set a low enough alpha, so we can see the basic map underneath
-            pixelColor = Colors.mix(pixelColor, Colors.setAlpha(0x88, inhabitedRGB));
+            pixelColor = Colors.blend(inhabitedRGB, pixelColor);
 
             // draw color data to image
             getImageHolder().getImage().setPixel(pixelX, pixelZ, pixelColor);
