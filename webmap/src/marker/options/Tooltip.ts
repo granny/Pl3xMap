@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import {Point} from "../../util/Point";
-import {isset} from "../../util/Util";
+import {getOrCreatePane, isset} from "../../util/Util";
 
 export interface TooltipOptions {
     content?: string;
@@ -20,12 +20,20 @@ export class Tooltip {
         this._content = isset(data.content) ? data.content! : "";
 
         let props = {};
-        if (isset(data.pane)) props = {...props, pane: data.pane};
         if (isset(data.offset)) props = {...props, offset: [data.offset!.x, data.offset!.z]};
         if (isset(data.direction)) props = {...props, direction: Direction[data.direction!]};
         if (isset(data.permanent)) props = {...props, permanent: data.permanent};
         if (isset(data.sticky)) props = {...props, sticky: data.sticky};
         if (isset(data.opacity)) props = {...props, opacity: data.opacity};
+
+        if (isset(data.pane)) {
+            const dom = getOrCreatePane(data.pane!);
+            props = {
+                ...props,
+                pane: dom.className.split(" ")[1].split("-")[1]
+            };
+        }
+
         this._properties = props;
     }
 

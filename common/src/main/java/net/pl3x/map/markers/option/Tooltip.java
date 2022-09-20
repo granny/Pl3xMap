@@ -78,6 +78,8 @@ public class Tooltip extends Option<Tooltip> {
     /**
      * Set the map pane where the tooltip will be added.
      * <p>
+     * If the pane does not exist, it will be created the first time it is used.
+     * <p>
      * Defaults to '<code>tooltipPane</code>' if null.
      *
      * @param pane map pane

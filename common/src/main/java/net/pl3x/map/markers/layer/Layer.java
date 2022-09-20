@@ -199,6 +199,8 @@ public abstract class Layer extends Keyed {
 
     /**
      * Set the map pane for this layer.
+     * <p>
+     * If the pane does not exist, it will be created the first time it is used.
      *
      * @param pane new map pane
      * @return this layer

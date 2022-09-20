@@ -85,6 +85,8 @@ public class Popup extends Option<Popup> {
     /**
      * Set the map pane where the popup will be added.
      * <p>
+     * If the pane does not exist, it will be created the first time it is used.
+     * <p>
      * Defaults to '<code>popupPane</code>' if null.
      *
      * @param pane map pane

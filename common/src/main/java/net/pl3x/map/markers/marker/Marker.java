@@ -443,6 +443,8 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
     /**
      * Set the map pane where the marker will be added.
      * <p>
+     * If the pane does not exist, it will be created the first time it is used.
+     * <p>
      * Defaults to the overlay pane if null.
      *
      * @param pane map pane
