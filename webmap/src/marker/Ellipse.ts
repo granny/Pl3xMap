@@ -43,5 +43,15 @@ export class Ellipse extends Marker {
     }
 
     public update(raw: unknown[]): void {
+        const data = raw as unknown as EllipseOptions;
+        const ellipse = this.marker as L.Ellipse;
+        ellipse.setLatLng(toCenteredLatLng(data.center));
+        ellipse.setRadius([
+            pixelsToMeters(data.radius.x),
+            pixelsToMeters(data.radius.z)
+        ]);
+        if (isset(data.tilt)) {
+            ellipse.setTilt(data.tilt!);
+        }
     }
 }

@@ -13,12 +13,6 @@ export class Polyline extends Marker {
     constructor(type: Type) {
         const data = type.data as unknown as PolylineOptions;
 
-        const line = [];
-
-        for (const point of data.points) {
-            line.push(toCenteredLatLng(point))
-        }
-
         let options = {
             ...type.options?.properties,
             smoothFactor: 1.0,
@@ -36,9 +30,20 @@ export class Polyline extends Marker {
             };
         }
 
-        super(data.key, L.polyline(line, options));
+        super(data.key, L.polyline(Polyline.createLine(data), options));
     }
 
     public update(raw: unknown[]): void {
+        const data = raw as unknown as PolylineOptions;
+        const polyline = this.marker as L.Polyline;
+        polyline.setLatLngs(Polyline.createLine(data));
+    }
+
+    private static createLine(data: PolylineOptions): L.LatLng[] {
+        const line = [];
+        for (const point of data.points) {
+            line.push(toCenteredLatLng(point))
+        }
+        return line;
     }
 }

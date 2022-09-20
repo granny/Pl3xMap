@@ -3,7 +3,7 @@ import {Marker, Type} from "./Marker";
 import {Polyline} from "../util/Polyline";
 import {getOrCreatePane, isset, toCenteredLatLng} from "../util/Util";
 
-interface PolylineOptions extends L.PolylineOptions {
+interface PolygonOptions extends L.PolylineOptions {
     key: string;
     polylines: Polyline[];
     pane: string;
@@ -11,17 +11,7 @@ interface PolylineOptions extends L.PolylineOptions {
 
 export class Polygon extends Marker {
     constructor(type: Type) {
-        const data = type.data as unknown as PolylineOptions;
-
-        const poly = [];
-
-        for (const polyline of data.polylines) {
-            const line = [];
-            for (const point of polyline.points) {
-                line.push(toCenteredLatLng(point));
-            }
-            poly.push(line);
-        }
+        const data = type.data as unknown as PolygonOptions;
 
         let options = {
             ...type.options?.properties,
@@ -40,9 +30,24 @@ export class Polygon extends Marker {
             };
         }
 
-        super(data.key, L.polygon(poly, options));
+        super(data.key, L.polygon(Polygon.createPoly(data), options));
     }
 
     public update(raw: unknown[]): void {
+        const data = raw as unknown as PolygonOptions;
+        const polygon = this.marker as L.Polygon;
+        polygon.setLatLngs(Polygon.createPoly(data));
+    }
+
+    private static createPoly(data: PolygonOptions): L.LatLng[][] {
+        const poly = [];
+        for (const polyline of data.polylines) {
+            const line = [];
+            for (const point of polyline.points) {
+                line.push(toCenteredLatLng(point));
+            }
+            poly.push(line);
+        }
+        return poly;
     }
 }

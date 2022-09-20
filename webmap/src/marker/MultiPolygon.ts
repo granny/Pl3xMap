@@ -13,20 +13,6 @@ export class MultiPolygon extends Marker {
     constructor(type: Type) {
         const data = type.data as unknown as MultiPolygonOptions;
 
-        const polys = [];
-
-        for (const polygon of data.polygons) {
-            const poly = [];
-            for (const polyline of polygon.polylines) {
-                const line = [];
-                for (const point of polyline.points) {
-                    line.push(toCenteredLatLng(point))
-                }
-                poly.push(line);
-            }
-            polys.push(poly);
-        }
-
         let options = {
             ...type.options?.properties,
             smoothFactor: 1.0,
@@ -44,9 +30,28 @@ export class MultiPolygon extends Marker {
             };
         }
 
-        super(data.key, L.polygon(polys, options));
+        super(data.key, L.polygon(MultiPolygon.createPolys(data), options));
     }
 
     public update(raw: unknown[]): void {
+        const data = raw as unknown as MultiPolygonOptions;
+        const polygon = this.marker as L.Polygon;
+        polygon.setLatLngs(MultiPolygon.createPolys(data));
+    }
+
+    private static createPolys(data: MultiPolygonOptions): L.LatLng[][][] {
+        const polys = [];
+        for (const polygon of data.polygons) {
+            const poly = [];
+            for (const polyline of polygon.polylines) {
+                const line = [];
+                for (const point of polyline.points) {
+                    line.push(toCenteredLatLng(point))
+                }
+                poly.push(line);
+            }
+            polys.push(poly);
+        }
+        return polys;
     }
 }

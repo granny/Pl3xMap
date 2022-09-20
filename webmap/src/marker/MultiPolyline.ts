@@ -13,16 +13,6 @@ export class MultiPolyline extends Marker {
     constructor(type: Type) {
         const data = type.data as unknown as MultiPolylineOptions;
 
-        const lines = [];
-
-        for (const polylines of data.polylines) {
-            const line = [];
-            for (const point of polylines.points) {
-                line.push(toCenteredLatLng(point))
-            }
-            lines.push(line);
-        }
-
         let options = {
             ...type.options?.properties,
             smoothFactor: 1.0,
@@ -40,9 +30,24 @@ export class MultiPolyline extends Marker {
             };
         }
 
-        super(data.key, L.polyline(lines, options));
+        super(data.key, L.polyline(MultiPolyline.createLines(data), options));
     }
 
     public update(raw: unknown[]): void {
+        const data = raw as unknown as MultiPolylineOptions;
+        const polyline = this.marker as L.Polyline;
+        polyline.setLatLngs(MultiPolyline.createLines(data));
+    }
+
+    private static createLines(data: MultiPolylineOptions): L.LatLng[][] {
+        const lines = [];
+        for (const polylines of data.polylines) {
+            const line = [];
+            for (const point of polylines.points) {
+                line.push(toCenteredLatLng(point))
+            }
+            lines.push(line);
+        }
+        return lines;
     }
 }

@@ -35,5 +35,8 @@ export class Rectangle extends Marker {
     }
 
     public update(raw: unknown[]): void {
+        const data = raw as unknown as RectangleOptions;
+        const rectangle = this.marker as L.Rectangle;
+        rectangle.setBounds(toLatLngBounds(data.point1, data.point2));
     }
 }
