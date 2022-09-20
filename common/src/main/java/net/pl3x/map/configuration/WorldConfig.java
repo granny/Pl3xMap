@@ -125,22 +125,6 @@ public final class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
-    @Key("markers.players.enabled")
-    @Comment("Show online players on the map")
-    public boolean MARKERS_PLAYERS_ENABLED = true;
-    @Key("markers.players.tooltip")
-    @Comment("""
-            Tooltip for player markers.
-            Variables: <uuid><name><decoratedName><health><armor>""")
-    public String MARKERS_PLAYERS_TOOLTIP = """
-            <ul>
-              <li><img src='images/skins/2D/<uuid>.png' class='head' /></li>
-              <li>
-                <name>
-                <img src='images/clear.png' class='health' style='background-position:0 calc(-<health>px * 9);' />
-                <img src='images/clear.png' class='armor' style='background-position:0 calc(-<armor>px * 9);' />
-              </li>
-            </ul>""";
     @Key("markers.spawn.enabled")
     @Comment("Show the world spawn on the map")
     public boolean MARKERS_SPAWN_ENABLED = true;

@@ -123,6 +123,7 @@ public class Circle extends Marker<Circle> {
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("center", getCenter());
         wrapper.addProperty("radius", getRadius());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -139,14 +140,15 @@ public class Circle extends Marker<Circle> {
         }
         Circle other = (Circle) o;
         return getKey().equals(other.getKey())
-                && Double.compare(getRadius(), other.getRadius()) == 0
                 && Objects.equals(getCenter(), other.getCenter())
+                && Double.compare(getRadius(), other.getRadius()) == 0
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getOptions(), getRadius(), getCenter());
+        return Objects.hash(getKey(), getCenter(), getRadius(), getPane(), getOptions());
     }
 
     @Override
@@ -155,6 +157,7 @@ public class Circle extends Marker<Circle> {
                 + "key=" + getKey()
                 + ",center=" + getCenter()
                 + ",radius=" + getRadius()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }

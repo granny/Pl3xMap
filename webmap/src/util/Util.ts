@@ -54,6 +54,10 @@ export function toLatLng(point: L.PointTuple): L.LatLng {
     return L.latLng(pixelsToMeters(point[1]), pixelsToMeters(point[0]));
 }
 
+export function toLatLngBounds(point1: Point, point2: Point): L.LatLngBounds {
+    return L.latLngBounds(toCenteredLatLng(point1), toCenteredLatLng(point2));
+}
+
 export function toPoint(latlng: L.LatLng): L.PointTuple {
     return [metersToPixels(latlng.lng), metersToPixels(latlng.lat)];
 }
@@ -73,6 +77,23 @@ export function getScale() {
 
 export function isset(obj: unknown): boolean {
     return obj !== null && typeof obj !== 'undefined';
+}
+
+export function getOrCreatePane(name: string): HTMLElement {
+    const map = Pl3xMap.instance.map;
+    let pane = map.getPane(name);
+    if (pane == null) {
+        pane = map.createPane(name);
+    }
+    return pane;
+}
+
+export function insertCss(css: string, layer: string): void {
+    document.head.insertAdjacentHTML('beforeend', `<style id="${layer}">${css}</style>`);
+}
+
+export function removeCss(layer: string): void {
+    document.getElementById(layer)?.remove();
 }
 
 export function fireCustomEvent<T>(event: keyof (WindowEventMap), detail: T): void {

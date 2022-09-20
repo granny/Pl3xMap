@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonSerializable {
     private final String type;
+    private String pane;
     private Options options;
 
     /**
@@ -425,6 +426,33 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
     @NotNull
     public String getType() {
         return this.type;
+    }
+
+    /**
+     * Get the map pane where the marker will be added.
+     * <p>
+     * Defaults to the overlay pane if null.
+     *
+     * @return map pane
+     */
+    @Nullable
+    public String getPane() {
+        return this.pane;
+    }
+
+    /**
+     * Set the map pane where the marker will be added.
+     * <p>
+     * Defaults to the overlay pane if null.
+     *
+     * @param pane map pane
+     * @return this marker
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    public T setPane(@Nullable String pane) {
+        this.pane = pane;
+        return (T) this;
     }
 
     /**

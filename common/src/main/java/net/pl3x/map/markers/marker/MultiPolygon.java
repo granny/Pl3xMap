@@ -196,6 +196,7 @@ public class MultiPolygon extends Marker<MultiPolygon> {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polygons", getPolygons());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -213,12 +214,13 @@ public class MultiPolygon extends Marker<MultiPolygon> {
         MultiPolygon other = (MultiPolygon) o;
         return getKey().equals(other.getKey())
                 && Objects.equals(getPolygons(), other.getPolygons())
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getPolygons(), getOptions());
+        return Objects.hash(getKey(), getPolygons(), getPane(), getOptions());
     }
 
     @Override
@@ -226,6 +228,7 @@ public class MultiPolygon extends Marker<MultiPolygon> {
         return "MultiPolygon{"
                 + "key=" + getKey()
                 + ",polygons=" + getPolygons()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }

@@ -567,6 +567,7 @@ public class Icon extends Marker<Icon> {
         wrapper.addProperty("shadowAnchor", getShadowAnchor());
         wrapper.addProperty("rotationAngle", getRotationAngle());
         wrapper.addProperty("rotationOrigin", getRotationOrigin());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -594,13 +595,14 @@ public class Icon extends Marker<Icon> {
                 && Objects.equals(getShadowRetina(), other.getShadowRetina())
                 && Objects.equals(getShadowSize(), other.getShadowSize())
                 && Objects.equals(getShadowAnchor(), other.getShadowAnchor())
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getKey(), getPoint(), getImage(), getRetina(), getSize(), getAnchor(), getRotationAngle(),
-                getRotationOrigin(), getShadow(), getShadowRetina(), getShadowAnchor(), getShadowSize(), getOptions());
+                getRotationOrigin(), getShadow(), getShadowRetina(), getShadowSize(), getShadowAnchor(), getPane(), getOptions());
     }
 
     @Override
@@ -616,8 +618,9 @@ public class Icon extends Marker<Icon> {
                 + ",rotationOrigin=" + getRotationOrigin()
                 + ",shadow=" + getShadow()
                 + ",shadowRetina=" + getShadowRetina()
-                + ",shadowAnchor=" + getShadowAnchor()
                 + ",shadowSize=" + getShadowSize()
+                + ",shadowAnchor=" + getShadowAnchor()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }

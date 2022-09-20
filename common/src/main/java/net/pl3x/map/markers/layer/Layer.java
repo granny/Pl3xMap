@@ -20,6 +20,8 @@ public abstract class Layer extends Keyed {
     private boolean defaultHidden = false;
     private int priority = 99;
     private Integer zIndex = 99;
+    private String pane;
+    private String css;
 
     /**
      * Create a layer.
@@ -186,6 +188,50 @@ public abstract class Layer extends Keyed {
     }
 
     /**
+     * Get the map pane for this layer.
+     *
+     * @return map pane
+     */
+    @Nullable
+    public String getPane() {
+        return this.pane;
+    }
+
+    /**
+     * Set the map pane for this layer.
+     *
+     * @param pane new map pane
+     * @return this layer
+     */
+    @NotNull
+    public Layer setPane(@Nullable String pane) {
+        this.pane = pane;
+        return this;
+    }
+
+    /**
+     * Get the custom CSS to add for this layer.
+     *
+     * @return custom CSS
+     */
+    @Nullable
+    public String getCss() {
+        return this.css;
+    }
+
+    /**
+     * Set the custom CSS to add for this layer.
+     *
+     * @param css new custom CSS
+     * @return this layer
+     */
+    @NotNull
+    public Layer setCss(@Nullable String css) {
+        this.css = css;
+        return this;
+    }
+
+    /**
      * Get the markers to display in this Layer.
      *
      * @return markers to display
@@ -211,12 +257,14 @@ public abstract class Layer extends Keyed {
                 && shouldShowControls() == other.shouldShowControls()
                 && isDefaultHidden() == other.isDefaultHidden()
                 && getPriority() == other.getPriority()
-                && Objects.equals(getZIndex(), other.getZIndex());
+                && Objects.equals(getZIndex(), other.getZIndex())
+                && Objects.equals(getPane(), other.getPane())
+                && Objects.equals(getCss(), other.getCss());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getLabel(), getUpdateInterval(), shouldShowControls(), isDefaultHidden(), getPriority(), getZIndex());
+        return Objects.hash(getKey(), getLabel(), getUpdateInterval(), shouldShowControls(), isDefaultHidden(), getPriority(), getZIndex(), getPane(), getCss());
     }
 
     @Override
@@ -229,6 +277,8 @@ public abstract class Layer extends Keyed {
                 + ",defaultHidden=" + isDefaultHidden()
                 + ",priority=" + getPriority()
                 + ",zIndex=" + getZIndex()
+                + ",pane=" + getPane()
+                + ",css=" + getCss()
                 + "}";
     }
 }

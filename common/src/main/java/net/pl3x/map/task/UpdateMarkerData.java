@@ -47,6 +47,8 @@ public class UpdateMarkerData implements Runnable {
             details.put("defaultHidden", layer.isDefaultHidden());
             details.put("priority", layer.getPriority());
             details.put("zIndex", layer.getZIndex());
+            details.put("pane", layer.getPane());
+            details.put("css", layer.getCss());
             layers.add(details);
 
             long now = System.currentTimeMillis() / 1000;

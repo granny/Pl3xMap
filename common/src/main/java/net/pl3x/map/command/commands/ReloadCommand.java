@@ -10,6 +10,7 @@ import net.pl3x.map.command.Sender;
 import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.configuration.PlayerTracker;
 
 public class ReloadCommand extends Pl3xMapCommand {
     public ReloadCommand(CommandHandler handler) {
@@ -31,6 +32,7 @@ public class ReloadCommand extends Pl3xMapCommand {
         Config.reload();
         Lang.reload();
         AdvancedConfig.reload();
+        PlayerTracker.reload();
 
         Pl3xMap.api().enable();
 

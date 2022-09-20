@@ -1,11 +1,12 @@
 import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
 import {Polygon} from "../util/Polygon";
-import {toCenteredLatLng} from "../util/Util";
+import {getOrCreatePane, isset, toCenteredLatLng} from "../util/Util";
 
 interface MultiPolygonOptions extends L.PolylineOptions {
     key: string;
     polygons: Polygon[];
+    pane: string;
 }
 
 export class MultiPolygon extends Marker {
@@ -26,17 +27,24 @@ export class MultiPolygon extends Marker {
             polys.push(poly);
         }
 
-        super(data.key, L.polygon(
-            polys,
-            {
-                ...type.options?.properties,
-                smoothFactor: 1.0,
-                noClip: false,
-                bubblingMouseEvents: true,
-                interactive: true,
-                attribution: undefined
-            })
-        );
+        let options = {
+            ...type.options?.properties,
+            smoothFactor: 1.0,
+            noClip: false,
+            bubblingMouseEvents: true,
+            interactive: true,
+            attribution: undefined
+        };
+
+        if (isset(data.pane)) {
+            const dom = getOrCreatePane(data.pane);
+            options = {
+                ...options,
+                pane: dom.className.split("-")[1]
+            };
+        }
+
+        super(data.key, L.polygon(polys, options));
     }
 
     public update(raw: unknown[]): void {

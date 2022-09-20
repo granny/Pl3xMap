@@ -14,6 +14,7 @@ import net.pl3x.map.command.Console;
 import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.event.EventRegistry;
 import net.pl3x.map.heightmap.HeightmapRegistry;
 import net.pl3x.map.httpd.IntegratedServer;
@@ -98,6 +99,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         Config.reload();
         Lang.reload();
         AdvancedConfig.reload();
+        PlayerTracker.reload();
 
         // register built in tile image types
         IO.register("png", new Png());

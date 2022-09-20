@@ -32,6 +32,7 @@ import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
+import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.coordinate.ChunkCoordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
@@ -169,7 +170,7 @@ public abstract class World extends Keyed {
             getLayerRegistry().register(new SpawnLayer(this));
         }
 
-        if (getConfig().MARKERS_PLAYERS_ENABLED) {
+        if (PlayerTracker.ENABLED) {
             getLayerRegistry().register(new PlayersLayer(this));
         }
 

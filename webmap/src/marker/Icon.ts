@@ -2,7 +2,7 @@ import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
 import {MarkerOptions} from "./options/MarkerOptions";
 import {Point} from "../util/Point";
-import {isset, toCenteredLatLng} from "../util/Util";
+import {getOrCreatePane, isset, toCenteredLatLng} from "../util/Util";
 import "../lib/L.rotated";
 
 interface IconOptions extends L.MarkerOptions {
@@ -18,6 +18,7 @@ interface IconOptions extends L.MarkerOptions {
     shadowAnchor?: Point;
     rotationAngle?: number;
     rotationOrigin?: string;
+    pane: string;
 }
 
 export class Icon extends Marker {
@@ -44,16 +45,25 @@ export class Icon extends Marker {
         if (isset(tooltipOffset)) props = {...props, tooltipAnchor: tooltipOffset};
         if (isset(popupOffset)) props = {...props, popupAnchor: popupOffset};
 
-        super(data.key, L.marker(
-            toCenteredLatLng(data.point),
-            {
-                ...type.options?.properties,
-                rotationAngle: data.rotationAngle,
-                rotationOrigin: data.rotationOrigin,
-                icon: L.icon(props as L.IconOptions),
-                attribution: undefined
-            } as IconOptions)
-        );
+        let options = {
+            ...type.options?.properties,
+            rotationAngle: data.rotationAngle,
+            rotationOrigin: data.rotationOrigin,
+            icon: L.icon(props as L.IconOptions),
+            bubblingMouseEvents: true,
+            interactive: true,
+            attribution: undefined
+        } as IconOptions;
+
+        if (isset(data.pane)) {
+            const dom = getOrCreatePane(data.pane);
+            options = {
+                ...options,
+                pane: dom.className.split(" ")[1].split("-")[1]
+            };
+        }
+
+        super(data.key, L.marker(toCenteredLatLng(data.point), options));
     }
 
     public update(raw: unknown[], options?: MarkerOptions): void {

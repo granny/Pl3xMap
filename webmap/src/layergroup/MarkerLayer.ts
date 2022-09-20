@@ -11,7 +11,7 @@ import {Rectangle} from "../marker/Rectangle";
 import {Marker, Type} from "../marker/Marker";
 import {MarkerOptions, Options} from "../marker/options/MarkerOptions";
 import {World} from "../world/World";
-import {fireCustomEvent, getJSON, isset} from "../util/Util";
+import {fireCustomEvent, getJSON, getOrCreatePane, insertCss, isset, removeCss} from "../util/Util";
 
 interface MarkerData {
     type: string;
@@ -31,6 +31,8 @@ export class MarkerLayer extends L.LayerGroup {
         "rect": (type: Type) => new Rectangle(type)
     }
 
+    declare options: L.LayerOptions;
+
     private readonly _key: string;
     private readonly _label: string;
     private readonly _updateInterval: number;
@@ -38,14 +40,15 @@ export class MarkerLayer extends L.LayerGroup {
     private readonly _defaultHidden: boolean;
     private readonly _priority: number;
     private readonly _zIndex: number;
+    private readonly _pane: string;
+    private readonly _css: string;
 
     private readonly _markers: Map<string, Marker> = new Map();
 
     private _timer: NodeJS.Timeout | undefined;
 
-    constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number) {
+    constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number, pane: string, css: string) {
         super(undefined, {
-            pane: undefined,
             attribution: undefined
         });
         this._key = key;
@@ -55,6 +58,17 @@ export class MarkerLayer extends L.LayerGroup {
         this._defaultHidden = defaultHidden;
         this._priority = priority;
         this._zIndex = zIndex;
+        this._pane = pane;
+        this._css = css;
+
+        if (isset(pane)) {
+            const dom = getOrCreatePane(pane);
+            this.options.pane = dom.className.split("-")[1];
+        }
+
+        if (isset(css)) {
+            insertCss(css, key);
+        }
 
         this.addTo(Pl3xMap.instance.map);
 
@@ -89,6 +103,14 @@ export class MarkerLayer extends L.LayerGroup {
         return this._zIndex;
     }
 
+    get pane(): string {
+        return this._pane;
+    }
+
+    get css(): string {
+        return this._css;
+    }
+
     update(world: World): void {
         //console.log("Update markers: " + this._name + " " + this._world.name);
 
@@ -113,7 +135,6 @@ export class MarkerLayer extends L.LayerGroup {
                         if (marker) {
                             this._markers.set(marker.key, marker);
                             marker.marker.addTo(this);
-
                             // inform the events
                             fireCustomEvent('markeradded', marker);
                         }
@@ -136,6 +157,7 @@ export class MarkerLayer extends L.LayerGroup {
 
     unload(): void {
         clearTimeout(this._timer);
+        removeCss(this._key);
         this.clearLayers();
         this.removeFrom(Pl3xMap.instance.map);
         fireCustomEvent("overlayremoved", this);

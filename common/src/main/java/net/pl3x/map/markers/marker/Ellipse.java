@@ -315,6 +315,7 @@ public class Ellipse extends Marker<Ellipse> {
         wrapper.addProperty("center", getCenter());
         wrapper.addProperty("radius", getRadius());
         wrapper.addProperty("tilt", getTilt());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -331,15 +332,16 @@ public class Ellipse extends Marker<Ellipse> {
         }
         Ellipse other = (Ellipse) o;
         return getKey().equals(other.getKey())
-                && Objects.equals(getRadius(), other.getRadius())
                 && Objects.equals(getCenter(), other.getCenter())
+                && Objects.equals(getRadius(), other.getRadius())
                 && Objects.equals(getTilt(), other.getTilt())
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getOptions(), getCenter(), getRadius(), getTilt());
+        return Objects.hash(getKey(), getCenter(), getRadius(), getTilt(), getPane(), getOptions());
     }
 
     @Override
@@ -349,6 +351,7 @@ public class Ellipse extends Marker<Ellipse> {
                 + ",center=" + getCenter()
                 + ",radius=" + getRadius()
                 + ",tile=" + getTilt()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }

@@ -127,6 +127,7 @@ public class Rectangle extends Marker<Rectangle> {
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("point1", getPoint1());
         wrapper.addProperty("point2", getPoint2());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -145,12 +146,13 @@ public class Rectangle extends Marker<Rectangle> {
         return getKey().equals(other.getKey())
                 && getPoint1().equals(other.getPoint1())
                 && getPoint2().equals(other.getPoint2())
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getPoint1(), getPoint2(), getOptions());
+        return Objects.hash(getKey(), getPoint1(), getPoint2(), getPane(), getOptions());
     }
 
     @Override
@@ -159,6 +161,7 @@ public class Rectangle extends Marker<Rectangle> {
                 + "key=" + getKey()
                 + ",point1=" + getPoint1()
                 + ",point2=" + getPoint2()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }

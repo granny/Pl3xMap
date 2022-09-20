@@ -254,6 +254,7 @@ public class Polyline extends Marker<Polyline> {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("points", getPoints());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -271,12 +272,13 @@ public class Polyline extends Marker<Polyline> {
         Polyline other = (Polyline) o;
         return getKey().equals(other.getKey())
                 && Objects.equals(getPoints(), other.getPoints())
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getPoints(), getOptions());
+        return Objects.hash(getKey(), getPoints(), getPane(), getOptions());
     }
 
     @Override
@@ -284,6 +286,7 @@ public class Polyline extends Marker<Polyline> {
         return "Line{"
                 + "key=" + getKey()
                 + ",points=" + getPoints()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }

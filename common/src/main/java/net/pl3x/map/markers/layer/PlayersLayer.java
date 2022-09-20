@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.image.IconImage;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.marker.Icon;
@@ -26,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 public class PlayersLayer extends WorldLayer {
     public static final Key KEY = Key.of("players");
 
+    private final Key icon;
+
     /**
      * Create a new players layer.
      *
@@ -34,6 +37,8 @@ public class PlayersLayer extends WorldLayer {
     public PlayersLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_PLAYERS);
         setUpdateInterval(0);
+        setPane(PlayerTracker.PANE);
+        setCss(PlayerTracker.CSS);
     }
 
     /**
@@ -46,7 +51,9 @@ public class PlayersLayer extends WorldLayer {
     public PlayersLayer(@NotNull Key key, @NotNull World world, @NotNull Supplier<String> labelSupplier) {
         super(key, world, labelSupplier);
 
-        Path player = World.WEB_DIR.resolve("images/icon/player.png");
+        this.icon = Key.of(PlayerTracker.ICON);
+
+        Path player = World.WEB_DIR.resolve("images/icon/" + this.icon + ".png");
         try {
             IconImage playerImage = new IconImage(key, ImageIO.read(player.toFile()), "png");
             Pl3xMap.api().getIconRegistry().register(playerImage);
@@ -64,10 +71,11 @@ public class PlayersLayer extends WorldLayer {
     }
 
     private Icon createIcon(Player player) {
-        Icon icon = Marker.icon(player.getKey(), player.getPosition(), KEY, 16)
+        Icon icon = Marker.icon(player.getKey(), player.getPosition(), this.icon, 16)
                 .setRotationAngle((double) player.getYaw())
-                .setRotationOrigin("center");
-        String tooltip = getWorld().getConfig().MARKERS_PLAYERS_TOOLTIP;
+                .setRotationOrigin("center")
+                .setPane("players");
+        String tooltip = PlayerTracker.TOOLTIP;
         if (tooltip == null || tooltip.isBlank()) {
             return icon;
         }
@@ -79,7 +87,7 @@ public class PlayersLayer extends WorldLayer {
                         .replace("<health>", Integer.toString(player.getHealth()))
                         .replace("<armor>", Integer.toString(player.getArmorPoints()))
                 )
-                .tooltipPane("nameplates")
+                .tooltipPane(PlayerTracker.PANE)
                 .tooltipDirection(Tooltip.Direction.RIGHT)
                 .tooltipPermanent(true)
                 .tooltipOffset(Point.of(5, 0))

@@ -196,6 +196,7 @@ public class MultiPolyline extends Marker<MultiPolyline> {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polylines", getPolylines());
+        wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
     }
 
@@ -213,12 +214,13 @@ public class MultiPolyline extends Marker<MultiPolyline> {
         MultiPolyline other = (MultiPolyline) o;
         return getKey().equals(other.getKey())
                 && Objects.equals(getPolylines(), other.getPolylines())
+                && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), getPolylines(), getOptions());
+        return Objects.hash(getKey(), getPolylines(), getPane(), getOptions());
     }
 
     @Override
@@ -226,6 +228,7 @@ public class MultiPolyline extends Marker<MultiPolyline> {
         return "MultiPolyline{"
                 + "key=" + getKey()
                 + ",polylines=" + getPolylines()
+                + ",pane=" + getPane()
                 + ",options=" + getOptions()
                 + "}";
     }
