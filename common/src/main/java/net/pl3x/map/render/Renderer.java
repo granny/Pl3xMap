@@ -89,7 +89,7 @@ public abstract class Renderer {
                 // fix alpha
                 pixelColor = Colors.setAlpha(0xFF, pixelColor);
                 // work out the heightmap
-                pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
+                pixelColor = Colors.blend(getHeightmap().getColor(data.getCoordinate(), data, scanData), pixelColor);
             }
         }
 
@@ -97,15 +97,15 @@ public abstract class Renderer {
         if (isFluid) {
             if (transFluid) {
                 int fluidColor = fancyFluids(data, scanData, data.getFluidState(), (data.getFluidPos().getY() - data.getBlockPos().getY()) * 0.025F);
-                pixelColor = Colors.mix(pixelColor, fluidColor);
+                pixelColor = Colors.blend(fluidColor, pixelColor);
             } else {
                 pixelColor = getRender().getBiomeColors().getWaterColor(data, scanData);
             }
         }
 
         // if there was translucent glass, mix it in here
-        if (!data.getGlassColors().isEmpty()) {
-            pixelColor = Colors.mix(pixelColor, Colors.stack(data.getGlassColors()), Math.min(1.0F, 0.70F + (0.05F * data.getGlassColors().size())));
+        for (int color : data.getGlassColors()) {
+            pixelColor = Colors.blend(color, pixelColor);
         }
 
         return pixelColor;
@@ -147,7 +147,7 @@ public abstract class Renderer {
             // how much darkness to draw in 0-255 range
             int darkness = (int) Mathf.clamp(0, 0xFF, (0xFF * inverseSkylight) - alpha);
             // mix it into the pixel
-            return Colors.mix(pixelColor, Colors.setAlpha(darkness, 0x00));
+            return Colors.blend(Colors.setAlpha(darkness, 0x00), pixelColor);
         }
         return pixelColor;
     }

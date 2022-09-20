@@ -1,8 +1,8 @@
 package net.pl3x.map.render;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,7 @@ public class ScanData {
     private BlockPos.MutableBlockPos fluidPos = null;
     private BlockState fluidState = null;
 
-    private final List<Integer> glass = new ArrayList<>();
+    private final LinkedList<Integer> glass = new LinkedList<>();
 
     public ScanData(ScanTask scanTask, ChunkAccess chunk, BlockCoordinate coordinate) {
         this.scanTask = scanTask;
@@ -130,7 +130,7 @@ public class ScanData {
 
             if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && isGlass(this.blockState)) {
                 // translucent glass. store this color and keep iterating
-                this.glass.add(blockColor);
+                this.glass.addFirst(Colors.setAlpha(0x99, blockColor));
                 continue;
             }
 

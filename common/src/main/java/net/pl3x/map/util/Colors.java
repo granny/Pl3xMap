@@ -108,20 +108,6 @@ public class Colors {
         return (start + (direction * delta));
     }
 
-    public static int mix(int color0, int color1, float ratio) {
-        if (ratio >= 1F) return color1;
-        else if (ratio <= 0F) return color0;
-        float iRatio = 1.0F - ratio;
-        int r = (int) ((red(color0) * iRatio) + (red(color1) * ratio));
-        int g = (int) ((green(color0) * iRatio) + (green(color1) * ratio));
-        int b = (int) ((blue(color0) * iRatio) + (blue(color1) * ratio));
-        return argb(0xFF, r, g, b);
-    }
-
-    public static int mix(int color0, int color1) {
-        return mix(color0, color1, alpha(color1) / (float) 0xFF);
-    }
-
     public static int stack(List<Integer> colors) {
         int r = 0, g = 0, b = 0, count = 0;
         for (int rgb : colors) {

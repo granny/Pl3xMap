@@ -30,7 +30,7 @@ public final class BiomeRenderer extends Renderer {
 
                 // work out the heightmap
                 if (!fluid) {
-                    pixelColor = Colors.mix(pixelColor, getHeightmap().getColor(data.getCoordinate(), data, scanData));
+                    pixelColor = Colors.blend(getHeightmap().getColor(data.getCoordinate(), data, scanData), pixelColor);
                 }
             }
 
