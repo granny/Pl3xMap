@@ -66,7 +66,21 @@ public class PlayersLayer extends WorldLayer {
     @NotNull
     public Collection<Marker<?>> getMarkers() {
         Set<Marker<?>> icons = new HashSet<>();
-        this.getWorld().getPlayers().forEach(player -> icons.add(createIcon(player)));
+        this.getWorld().getPlayers().forEach(player -> {
+            if (player.isHidden()) {
+                return;
+            }
+            if (player.isNPC()) {
+                return;
+            }
+            if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
+                return;
+            }
+            if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
+                return;
+            }
+            icons.add(createIcon(player));
+        });
         return icons;
     }
 

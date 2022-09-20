@@ -19,6 +19,14 @@ public final class PlayerTracker extends AbstractConfig {
             Icon must be in the web/images/icon/ directory.""")
     public static String ICON = "players";
 
+    @Key("settings.hide.invisible")
+    @Comment("Should invisible players be hidden from the map")
+    public static boolean HIDE_INVISIBLE = true;
+
+    @Key("settings.hide.spectators")
+    @Comment("Should spectators be hidden from the map")
+    public static boolean HIDE_SPECTATORS = true;
+
     @Key("settings.tooltip")
     @Comment("""
             Tooltip for player markers.
