@@ -4,7 +4,6 @@ progress:
   eta:
     unknown: Unbekannt
 prefix:
-  logger: '[<dark_aqua>Pl3xMap</dark_aqua>] '
   command: '[<blue>Pl3xMap</blue>] '
 command:
   event:
@@ -38,15 +37,6 @@ command:
     active-render: <red>Ein aktiver render für <grey><world> <red>läuft!
     success: <green>Map für <grey><world> <green>zurückgesetzt!
     failed: <red>Konnte Map für <grey><world> <red>nicht zurücksetzen!
-  base:
-    usage: <light_purple><description>:\n<yellow>/<grey><command> <usage>
-    subcommands:
-      title: '<color:#25b8ff>Verfügbare Befehle</color><color:#9558ff>:'
-      full-command: <color:#9558ff>/<color:#dedede><command>
-      entry:
-        text: ' <color:#999999><prefix> <color:#dedede><command></color> <color:#9558ff>-</color> <i><description>'
-        prefix: \u251C
-        prefix-last: \u2514
   cancelrender:
     description: Breche aktiven render in Welt ab
     not-rendering: <grey><world> <red>hat keinen aktiven Render
@@ -58,7 +48,6 @@ command:
     finished: <green>Vollen Render von <grey><world> </grey>abgeschlossen!
     cancelled: <red>Vollen Render von <grey><world> </grey>abgebrochen.
     obtaining-regions: <yellow>Bekomme Regions Dateien
-    sorting-regions: <yellow>Sortiere Regions Dateien
     found-total-regions: <grey><total> <green>Regions Dateien wurden gefunden!
     use-status-for-progress: <gold>Nutz <grey>/map status</grey> um den Fortschritt zu sehen
     error-parsing-region-file: Konnte Koordinaten von Regions Datei nicht bekommen <grey><path> (<filename>)
@@ -106,8 +95,6 @@ httpd:
     error: <red>Ein Fehler ist mit dem Internen Webserver aufgetreten!
   disabled: <green>Interner Webserver wurde in <grey>config.yml </grey>deaktiviert!
 error:
-  unknown-error: <red>Unbekannter Fehler!
-  unknown-subcommand: <red>Unbekannter Unterbefehl!
   must-specify-player: <red>Du musst den Spieler angeben!
   no-such-player: <red>Spieler <grey><player> <red>nicht gefunden!
   must-specify-world: <red>Du musst eine Welt angeben!
@@ -119,7 +106,9 @@ ui:
   coords:
     label: Koordinaten
     value: <x>, <z>
-  players: Spieler (<online>/<max>)
-  worlds: Welten
-  player-tracker: Spieler
-  layers: Schichten
+  players:
+    label: Spieler (<online>/<max>)
+  worlds:
+    label: Welten
+  layers:
+    label: Schichten

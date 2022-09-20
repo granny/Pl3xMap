@@ -17,9 +17,16 @@ dependencies {
     implementation("io.undertow", "undertow-core", undertowVersion)
 }
 
+tasks.register<Delete>("cleanWeb") {
+    delete(files("${project.projectDir}/src/main/resources/web/"))
+}
+
 tasks {
     reobfJar {
         // do not output this to the root build dir
         outputJar.set(layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
+    }
+    clean {
+        finalizedBy(named("cleanWeb"))
     }
 }

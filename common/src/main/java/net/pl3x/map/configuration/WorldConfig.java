@@ -90,13 +90,13 @@ public final class WorldConfig extends AbstractConfig {
     @Comment("The order of the world in the world list")
     public int ORDER = 0;
 
-    @Key("ui.blockinfo")
-    @Comment("The display position for the blockinfo box")
-    public String UI_BLOCKINFO = "bottomleft";
-
     @Key("ui.attribution")
     @Comment("Shows the footer attributes")
     public boolean UI_ATTRIBUTION = true;
+
+    @Key("ui.blockinfo")
+    @Comment("The display position for the blockinfo box")
+    public String UI_BLOCKINFO = "bottomleft";
 
     @Key("ui.coords")
     @Comment("The display position for the coordinates box")
