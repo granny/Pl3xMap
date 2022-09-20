@@ -52,58 +52,58 @@ public class MarkerTest extends Addon implements EventListener {
     public void on(WorldLoadedEvent event) {
         World world = event.getWorld();
 
-        MARKERS.add(Marker.circle(LAYER_KEY, Point.of(-100, 100), 20));
-        MARKERS.add(Marker.ellipse(LAYER_KEY, Point.of(100, 100), Vector.of(10, 20), 45D));
-        MARKERS.add(Marker.icon(LAYER_KEY, Point.of(150, 50), ICON_KEY, 16));
-        MARKERS.add(Marker.multiPolygon(LAYER_KEY)
+        MARKERS.add(Marker.circle(Key.of("circle"), Point.of(-100, 100), 20));
+        MARKERS.add(Marker.ellipse(Key.of("ellipse"), Point.of(100, 100), Vector.of(10, 20), 45D));
+        MARKERS.add(Marker.icon(Key.of("icon"), Point.of(150, 50), ICON_KEY, 16));
+        MARKERS.add(Marker.multiPolygon(Key.of("multiPolygon"))
                 .setOptions(Options.builder()
                         .strokeColor(0xFFFF0000)
                         .build()
                 )
                 .clearPolygons()
-                .addPolygon(Polygon.of(LAYER_KEY,
-                        Polyline.of(LAYER_KEY,
+                .addPolygon(Polygon.of(Key.of("inner-polygon"),
+                        Polyline.of(Key.of("inner-polyline-1"),
                                 Point.of(-200, 200),
                                 Point.of(-150, 200),
                                 Point.of(-175, 150)
                         ),
-                        Polyline.of(LAYER_KEY,
+                        Polyline.of(Key.of("inner-polyline-2"),
                                 Point.of(-300, 200),
                                 Point.of(-250, 200),
                                 Point.of(-275, 150)
                         ),
-                        Polyline.of(LAYER_KEY,
+                        Polyline.of(Key.of("inner-polyline-3"),
                                 Point.of(-400, 200),
                                 Point.of(-350, 200),
                                 Point.of(-375, 150)
                         )
                 ))
         );
-        MARKERS.add(Marker.multiPolyline(LAYER_KEY,
-                Polyline.of(LAYER_KEY,
+        MARKERS.add(Marker.multiPolyline(Key.of("multiPolyline"),
+                Polyline.of(Key.of("inner-polyline-4"),
                         Point.of(0, 200),
                         Point.of(50, 200),
                         Point.of(25, 150)
                 ).loop(),
-                Polyline.of(LAYER_KEY,
+                Polyline.of(Key.of("inner-polyline-5"),
                         Point.of(100, 200),
                         Point.of(150, 200),
                         Point.of(125, 150)
                 ) // no loop
         ));
-        MARKERS.add(Marker.polyline(LAYER_KEY,
+        MARKERS.add(Marker.polyline(Key.of("polyline"),
                 Point.of(0, 0),
                 Point.of(50, 50),
                 Point.of(100, 0)
         ).loop());
-        MARKERS.add(Marker.polygon(LAYER_KEY, Polyline.of(LAYER_KEY,
+        MARKERS.add(Marker.polygon(Key.of("polygon"), Polyline.of(Key.of("inner-polyline-6"),
                 Point.of(50, -50),
                 Point.of(100, -50),
                 Point.of(100, -100),
                 Point.of(75, -130),
                 Point.of(50, -100)
         )));
-        MARKERS.add(Marker.rectangle(LAYER_KEY, Point.of(-50, -50), Point.of(-20, 0)));
+        MARKERS.add(Marker.rectangle(Key.of("rectangle"), Point.of(-50, -50), Point.of(-20, 0)));
 
         world.getLayerRegistry().register(new SimpleLayer(LAYER_KEY, () -> "Marker Test") {
                     @Override
