@@ -3,6 +3,8 @@ package net.pl3x.map;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -26,12 +28,15 @@ import net.pl3x.map.logger.Logger;
 import net.pl3x.map.palette.BlockPaletteRegistry;
 import net.pl3x.map.player.BukkitPlayerListener;
 import net.pl3x.map.player.BukkitPlayerRegistry;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.RendererRegistry;
 import net.pl3x.map.task.UpdateSettingsData;
 import net.pl3x.map.world.BukkitWorldListener;
 import net.pl3x.map.world.BukkitWorldRegistry;
 import org.apache.commons.lang.BooleanUtils;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.AdvancedPie;
+import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -132,10 +137,36 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
             return;
         }
 
-        // start bstats metrics
+        // setup bStats metrics
         Metrics metrics = new Metrics(this, 10133);
+        metrics.addCustomChart(new SimplePie("language_used", () ->
+                Config.LANGUAGE_FILE.replace("lang-", "").replace(".yml", "")
+        ));
         metrics.addCustomChart(new SimplePie("internal_web_server", () ->
-                BooleanUtils.toStringTrueFalse(Config.HTTPD_ENABLED)));
+                BooleanUtils.toStringTrueFalse(Config.HTTPD_ENABLED)
+        ));
+        metrics.addCustomChart(new AdvancedPie("installed_addons", () -> {
+            Map<String, Integer> map = new HashMap<>();
+            getAddonRegistry().entries().forEach((key, addon) -> map.put(addon.getName(), 1));
+            return map;
+        }));
+        metrics.addCustomChart(new AdvancedPie("renderers_used", () -> {
+            Map<String, Integer> map = new HashMap<>();
+            getWorldRegistry().entries().forEach((key, world) ->
+                    world.getConfig().RENDER_RENDERERS.forEach(rendererName -> {
+                        RendererHolder renderer = getRendererRegistry().get(rendererName);
+                        if (renderer != null) {
+                            int count = map.getOrDefault(renderer.getName(), 0);
+                            map.put(renderer.getName(), count + 1);
+                        }
+                    })
+            );
+            return map;
+        }));
+        metrics.addCustomChart(new DrilldownPie("plugin_version", () -> {
+            String[] version = getVersion().split("-");
+            return Map.of(version[0], Map.of(version[1], 1));
+        }));
 
         // enable the plugin
         enable();
