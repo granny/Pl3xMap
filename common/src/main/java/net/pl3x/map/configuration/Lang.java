@@ -181,6 +181,8 @@ public final class Lang extends AbstractConfig {
     public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
     @Key("error.no-such-world")
     public static String ERROR_NO_SUCH_WORLD = "<red>No such world <grey><world>";
+    @Key("error.must-specify-center")
+    public static String ERROR_MUST_SPECIFY_CENTER = "<red>You must specify the center point";
     @Key("error.point-invalid-format")
     public static String ERROR_POINT_INVALID_FORMAT = "'<point>' is not a valid location. Required format is '<x> <z>'";
     @Key("error.world-disabled")

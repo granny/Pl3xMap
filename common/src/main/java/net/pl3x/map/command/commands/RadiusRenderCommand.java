@@ -43,9 +43,16 @@ public class RadiusRenderCommand extends Pl3xMapCommand {
             return;
         }
 
-        Point center = context.getOrDefault("center", Point.ZERO);
+        Point center = context.getOrDefault("center", null);
+        if (center == null) {
+            if (sender instanceof Player player) {
+                center = player.getPosition();
+            } else {
+                sender.send(Lang.ERROR_MUST_SPECIFY_CENTER);
+                return;
+            }
+        }
 
-        //noinspection ConstantConditions
         Render render = new RadiusRender(world, sender, radius, center.getX(), center.getZ());
 
         if (sender instanceof Player player) {
