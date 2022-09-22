@@ -21,7 +21,11 @@ public class BackgroundRender extends Render {
             // server is not running yet
             sleep(1000);
         }
-        render();
+        try {
+            render();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     @Override

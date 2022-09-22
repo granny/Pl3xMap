@@ -11,12 +11,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -34,7 +32,6 @@ import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.configuration.WorldConfig;
-import net.pl3x.map.coordinate.ChunkCoordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.event.world.WorldLoadedEvent;
 import net.pl3x.map.logger.Logger;
@@ -91,7 +88,7 @@ public abstract class World extends Keyed {
 
     private Render activeRender = null;
 
-    private final Set<RegionCoordinate> modifiedRegions = ConcurrentHashMap.newKeySet();
+    private final ConcurrentLinkedQueue<RegionCoordinate> modifiedRegions = new ConcurrentLinkedQueue<>();
     private final LinkedHashMap<RegionCoordinate, Boolean> scannedRegions = new LinkedHashMap<>();
 
     private boolean alreadyInitialized;
@@ -280,7 +277,7 @@ public abstract class World extends Keyed {
             if (Files.exists(file)) {
                 this.modifiedRegions.addAll(GSON.fromJson(
                         new FileReader(file.toFile()),
-                        TypeToken.getParameterized(List.class, ChunkCoordinate.class).getType()
+                        TypeToken.getParameterized(List.class, RegionCoordinate.class).getType()
                 ));
             }
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
@@ -299,7 +296,9 @@ public abstract class World extends Keyed {
     }
 
     public void addModifiedRegion(RegionCoordinate region) {
-        this.modifiedRegions.add(region);
+        if (!this.modifiedRegions.contains(region)) {
+            this.modifiedRegions.add(region);
+        }
     }
 
     public boolean hasModifiedRegions() {
@@ -307,13 +306,7 @@ public abstract class World extends Keyed {
     }
 
     public RegionCoordinate getNextModifiedRegion() {
-        if (!hasModifiedRegions()) {
-            return null;
-        }
-        Iterator<RegionCoordinate> it = this.modifiedRegions.iterator();
-        RegionCoordinate region = it.next();
-        it.remove();
-        return region;
+        return this.modifiedRegions.poll();
     }
 
     public void clearScannedRegions() {

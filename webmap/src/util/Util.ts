@@ -12,7 +12,6 @@ export function createSVGIcon(icon: string): DocumentFragment {
 
 export function getJSON(url: string) {
     return fetch(url, {
-        cache: "no-store",
         headers: {
             "Content-Disposition": "inline"
         }
@@ -25,7 +24,6 @@ export function getJSON(url: string) {
 
 export function getBytes(url: string) {
     return fetch(url, {
-        cache: "no-store",
         headers: {
             "Content-Disposition": "inline"
         }

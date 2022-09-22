@@ -4,9 +4,9 @@ import {BlockInfo} from "../palette/BlockInfo";
 import {Palette} from "../palette/Palette";
 import {Label} from "../settings/Lang";
 import {Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
-import {ReversedZoomTileLayer} from "../tilelayer/ReversedZoomTileLayer";
 import {WorldManager} from "./WorldManager";
 import {fireCustomEvent, getBytes, getJSON} from "../util/Util";
+import {DoubleTileLayer} from "../tilelayer/DoubleTileLayer";
 
 /**
  * Represents a loaded world.
@@ -16,15 +16,17 @@ export class World {
     private readonly _settings: WorldSettings;
 
     private _currentRenderer?: Label;
-    private _currentRendererLayer?: ReversedZoomTileLayer;
+    private _currentRendererLayer?: DoubleTileLayer;
 
-    private _rendererLayers: Map<Label, ReversedZoomTileLayer> = new Map();
+    private _rendererLayers: Map<Label, DoubleTileLayer> = new Map();
     private _markerLayers: MarkerLayer[] = [];
 
     private _biomePalette: Map<number, string> = new Map();
     private _blockInfo: Map<number, Map<string, BlockInfo>> = new Map();
 
     private _loaded = false;
+
+    private _timer: NodeJS.Timeout | undefined;
 
     constructor(pl3xmap: Pl3xMap, worldManager: WorldManager, settings: WorldSettings) {
         this._pl3xmap = pl3xmap;
@@ -63,7 +65,7 @@ export class World {
 
                     // setup renderers
                     for (const renderer of this.settings.renderers) {
-                        this._rendererLayers.set(renderer, new ReversedZoomTileLayer(this._pl3xmap, this, renderer));
+                        this._rendererLayers.set(renderer, new DoubleTileLayer(this._pl3xmap, this, renderer));
                     }
 
                     resolve(this);
@@ -72,6 +74,7 @@ export class World {
     }
 
     public unload(): void {
+        clearTimeout(this._timer);
         // unload and clear markers
         this._markerLayers.forEach(layer => layer.unload())
         this._markerLayers = [];
@@ -127,11 +130,11 @@ export class World {
         this.blockInfo.get(zoom)?.delete(`${x}_${z}`);
     }
 
-    public getRendererLayer(renderer: Label): ReversedZoomTileLayer | undefined {
+    public getRendererLayer(renderer: Label): DoubleTileLayer | undefined {
         return this._rendererLayers.get(renderer);
     }
 
-    get currentRendererLayer(): ReversedZoomTileLayer | undefined {
+    get currentRendererLayer(): DoubleTileLayer | undefined {
         return this._currentRendererLayer;
     }
 
@@ -140,6 +143,8 @@ export class World {
     }
 
     public setRenderer(renderer: Label | string): void {
+        clearTimeout(this._timer);
+
         if (!(renderer instanceof Label)) {
             for (const label of this.renderers) {
                 if (label.label == renderer) {
@@ -152,6 +157,8 @@ export class World {
         this._currentRenderer = this.settings.renderers.indexOf(renderer as Label) > -1 ? renderer as Label : this.settings.renderers[0];
         this._currentRendererLayer = this._rendererLayers.get(this._currentRenderer);
         this._currentRendererLayer!.addTo(this._pl3xmap.map);
+
+        this.tick();
 
         fireCustomEvent('rendererselected', this);
     }
@@ -214,5 +221,10 @@ export class World {
             default:
                 return "url('images/sky/overworld.png')";
         }
+    }
+
+    private tick(): void {
+        this.currentRendererLayer?.updateTileLayer();
+        this._timer = setTimeout(() => this.tick(), this.settings.tileUpdateInterval * 1000);
     }
 }
