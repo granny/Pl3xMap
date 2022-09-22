@@ -55,6 +55,6 @@ export class DoubleTileLayer {
 
     public remove(): void {
         this._tileLayer1.remove();
-        this._tileLayer1.remove();
+        this._tileLayer2.remove();
     }
 }
