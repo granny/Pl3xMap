@@ -53,7 +53,10 @@ public class IconRegistry extends KeyedRegistry<IconImage> {
      */
     @Override
     @Nullable
-    public IconImage register(@NotNull IconImage image) {
+    public IconImage register(@Nullable IconImage image) {
+        if (image == null) {
+            return null;
+        }
         if (this.entries.containsKey(image.getKey())) {
             return null;
         }

@@ -53,11 +53,12 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     private BukkitPlayerListener playerListener;
     private BukkitWorldListener worldListener;
 
+    private IntegratedServer integratedServer;
+
     private BukkitAddonRegistry addonRegistry;
     private EventRegistry eventRegistry;
     private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
-    private IntegratedServer integratedServer;
     private BlockPaletteRegistry blockPaletteRegistry;
     private BukkitPlayerRegistry playerRegistry;
     private RendererRegistry rendererRegistry;
@@ -116,12 +117,14 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         getServer().getPluginManager().registerEvents(getPlayerListener(), this);
         getServer().getPluginManager().registerEvents(getWorldListener(), this);
 
+        // integrated server
+        this.integratedServer = new UndertowServer();
+
         // setup managers
         this.addonRegistry = new BukkitAddonRegistry();
         this.eventRegistry = new EventRegistry();
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
-        this.integratedServer = new UndertowServer();
         this.blockPaletteRegistry = new BlockPaletteRegistry();
         this.playerRegistry = new BukkitPlayerRegistry();
         this.rendererRegistry = new RendererRegistry();
@@ -221,11 +224,11 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
             this.worldListener.unregisterEvents();
         }
 
-        // unload all map worlds
-        getWorldRegistry().unregister();
-
         // stop integrated server
         getIntegratedServer().stopServer();
+
+        // unload all map worlds
+        getWorldRegistry().unregister();
 
         // disable addons
         getAddonRegistry().unregister();
@@ -276,6 +279,11 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     }
 
     @Override
+    public IntegratedServer getIntegratedServer() {
+        return this.integratedServer;
+    }
+
+    @Override
     public BukkitAddonRegistry getAddonRegistry() {
         return this.addonRegistry;
     }
@@ -293,11 +301,6 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     @Override
     public IconRegistry getIconRegistry() {
         return this.iconRegistry;
-    }
-
-    @Override
-    public IntegratedServer getIntegratedServer() {
-        return this.integratedServer;
     }
 
     @Override

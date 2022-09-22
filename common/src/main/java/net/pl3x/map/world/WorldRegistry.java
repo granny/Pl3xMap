@@ -18,10 +18,12 @@ public abstract class WorldRegistry extends KeyedRegistry<World> {
      * @param world world to register
      * @return registered world or null
      */
-    public World register(@NotNull World world) {
-        super.register(world);
-        world.init();
-        return world;
+    public World register(@Nullable World world) {
+        World result = super.register(world);
+        if (result != null) {
+            result.init();
+        }
+        return result;
     }
 
     /**

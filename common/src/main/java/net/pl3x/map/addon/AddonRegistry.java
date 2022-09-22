@@ -84,7 +84,10 @@ public abstract class AddonRegistry extends KeyedRegistry<Addon> {
      */
     @Override
     @Nullable
-    public Addon register(@NotNull Addon addon) {
+    public Addon register(@Nullable Addon addon) {
+        if (addon == null) {
+            return null;
+        }
         if (this.entries.containsKey(addon.getKey())) {
             Logger.warn("Addon is already loaded (" + addon.getInfo().getName() + ")");
             return null;

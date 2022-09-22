@@ -41,14 +41,14 @@ public interface Pl3xMap {
     @NotNull
     Path getMainDir();
 
-    void saveResource(@NotNull String resourcePath, boolean replace);
-
     @NotNull
     Console getConsole();
 
     PlayerListener getPlayerListener();
 
     WorldListener getWorldListener();
+
+    IntegratedServer getIntegratedServer();
 
     AddonRegistry getAddonRegistry();
 
@@ -57,8 +57,6 @@ public interface Pl3xMap {
     HeightmapRegistry getHeightmapRegistry();
 
     IconRegistry getIconRegistry();
-
-    IntegratedServer getIntegratedServer();
 
     BlockPaletteRegistry getBlockPaletteRegistry();
 
