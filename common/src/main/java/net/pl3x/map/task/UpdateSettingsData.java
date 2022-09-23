@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.Lang;
+import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.render.RendererHolder;
@@ -45,12 +46,24 @@ public class UpdateSettingsData implements Runnable {
                 return;
             }
 
+            // do not expose hidden players in the json
+            String worldName = player.getWorld().getName();
+            Point position = player.getPosition();
+            if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
+                worldName = null;
+                position = null;
+            } else if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
+                worldName = null;
+                position = null;
+            }
+
             Map<String, Object> entry = new LinkedHashMap<>();
 
             entry.put("name", player.getDecoratedName());
             entry.put("uuid", player.getUUID().toString());
             entry.put("displayName", player.getDecoratedName());
-            entry.put("world", player.getWorld().getName());
+            entry.put("world", worldName);
+            entry.put("position", position);
 
             players.add(entry);
         });
