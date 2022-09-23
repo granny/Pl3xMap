@@ -52,6 +52,11 @@ export default class PlayersTab extends BaseTab {
             this.removeListItem(e.detail);
             this._update();
         });
+        addEventListener('followplayer', (e: CustomEvent<Player>) => {
+            this._players.forEach((item: PlayerListItem, player: Player) => {
+                item.input.checked = player === e.detail;
+            });
+        });
 
         this._list.addEventListener('keydown', (e: KeyboardEvent) =>
             handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
@@ -83,7 +88,14 @@ export default class PlayersTab extends BaseTab {
         input.name = 'player';
         input.checked = false;
         input.addEventListener('click', async () => {
-            // focus on player
+            const manager = this._pl3xmap.playerManager;
+            const player = manager.players.get(input.id);
+            if (player === manager.follow) {
+                manager.follow = undefined;
+            } else {
+                manager.follow = player;
+            }
+            manager.updateFollow();
         });
 
         this._players.set(player, {

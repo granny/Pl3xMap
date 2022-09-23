@@ -28,6 +28,10 @@ export default class Pl3xMapLeafletMap extends L.Map {
             preferCanvas: true
         });
 
+        this.on('mousedown', () => {
+            pl3xmap.playerManager.follow = undefined;
+        });
+
         // sets the leaflet attribution prefix to our project page
         this.attributionControl.setPrefix("<a href='https://modrinth.com/plugin/pl3xmap/'>Pl3xMap &copy; 2022</a>");
 

@@ -16,6 +16,7 @@ declare global {
         worldadded: CustomEvent<World>;
         worldremoved: CustomEvent<World>;
         worldselected: CustomEvent<World>;
+        followplayer: CustomEvent<Player>;
     }
 }
 
