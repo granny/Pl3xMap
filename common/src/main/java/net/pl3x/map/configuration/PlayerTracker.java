@@ -33,11 +33,11 @@ public final class PlayerTracker extends AbstractConfig {
             Variables: <uuid><name><decoratedName><health><armor>""")
     public static String TOOLTIP = """
             <ul>
-              <li><img src='images/skins/2D/<uuid>.png' class='head' /></li>
+              <li><img src='images/skins/2D/<uuid>.png' class='head' alt='<name>' /></li>
               <li>
                 <name>
-                <img src='images/clear.png' class='health' style='background-position:0 calc(-<health>px * 9);' />
-                <img src='images/clear.png' class='armor' style='background-position:0 calc(-<armor>px * 9);' />
+                <img src='images/clear.png' class='health' style='background-position:0 calc(-<health>px * 9);' alt='Health <health>' />
+                <img src='images/clear.png' class='armor' style='background-position:0 calc(-<armor>px * 9);' alt='Armor <armor>' />
               </li>
             </ul>""";
 
