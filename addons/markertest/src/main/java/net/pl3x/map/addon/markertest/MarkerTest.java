@@ -113,6 +113,7 @@ public class MarkerTest extends Addon implements EventListener {
                 }
                         .setUpdateInterval(60)
                         .setPriority(999)
+                        .setDefaultHidden(true)
         );
     }
 

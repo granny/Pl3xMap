@@ -90,7 +90,6 @@ export class World {
                 (json as MarkerLayer[]).forEach((layer) => {
                     const markerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex, layer.pane, layer.css);
                     this._markerLayers.push(markerLayer);
-                    markerLayer.addTo(this._pl3xmap.map);
                     markerLayer.update(this);
                 });
             });

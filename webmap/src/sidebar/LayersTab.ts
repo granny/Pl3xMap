@@ -1,6 +1,7 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {SidebarTab} from "../control/SidebarControl";
+import {MarkerLayer} from "../layergroup/MarkerLayer";
 import {createSVGIcon} from "../util/Util";
 import '../svg/layers.svg';
 
@@ -11,7 +12,6 @@ interface LayerControlInput extends HTMLInputElement {
 interface LayerListItem {
     layer: L.Layer;
     name: string;
-    overlay: boolean;
 }
 
 export default class LayersTab extends L.Control.Layers implements SidebarTab {
@@ -32,7 +32,21 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     protected _list: HTMLFieldSetElement = L.DomUtil.create('fieldset', 'menu');
 
     constructor(pl3xmap: Pl3xMap) {
-        super({}, {}, {hideSingleBase: true});
+        super({}, {}, {
+            hideSingleBase: true,
+            sortLayers: true,
+            sortFunction: (layer1, layer2, name1, name2) => {
+                if (layer1 instanceof MarkerLayer && layer2 instanceof MarkerLayer) {
+                    const diff = layer1.priority - layer2.priority;
+                    if (diff !== 0) {
+                        return diff;
+                    }
+                    name1 = layer1.label;
+                    name2 = layer2.label;
+                }
+                return name1 < name2 ? -1 : (name2 < name1 ? 1 : 0);
+            }
+        });
 
         this._pl3xmap = pl3xmap;
 
@@ -54,6 +68,9 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         window.addEventListener('overlayadded', (e) => {
             if (e.detail.showControls) {
                 this.addOverlay(e.detail, e.detail.label);
+            }
+            if (!e.detail.defaultHidden) {
+                e.detail.addTo(this._map);
             }
             this._update();
         });

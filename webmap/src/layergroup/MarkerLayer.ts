@@ -61,16 +61,17 @@ export class MarkerLayer extends L.LayerGroup {
         this._pane = pane;
         this._css = css;
 
+        this.setZIndex(zIndex);
+
         if (isset(pane)) {
             const dom = getOrCreatePane(pane);
+            dom.style.zIndex = String(zIndex);
             this.options.pane = dom.className.split("-")[1];
         }
 
         if (isset(css)) {
             insertCss(css, key);
         }
-
-        this.addTo(Pl3xMap.instance.map);
 
         fireCustomEvent("overlayadded", this);
     }

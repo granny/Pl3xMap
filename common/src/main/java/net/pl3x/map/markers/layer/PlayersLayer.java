@@ -39,6 +39,7 @@ public class PlayersLayer extends WorldLayer {
         setUpdateInterval(0);
         setPane(PlayerTracker.PANE);
         setCss(PlayerTracker.CSS);
+        setZIndex(1000);
     }
 
     /**
