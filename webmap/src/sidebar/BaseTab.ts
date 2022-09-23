@@ -1,10 +1,11 @@
+import * as L from "leaflet";
 import {SidebarTab} from "../control/SidebarControl";
 import {Pl3xMap} from "../Pl3xMap";
 
 export default class BaseTab implements SidebarTab {
     protected readonly _pl3xmap: Pl3xMap;
-    protected readonly _button: HTMLButtonElement = document.createElement('button');
-    protected readonly _content: HTMLDivElement = document.createElement('div');
+    protected readonly _button: HTMLButtonElement = L.DomUtil.create('button');
+    protected readonly _content: HTMLDivElement = L.DomUtil.create('div');
     protected readonly _id: string;
 
     constructor(pl3xmap: Pl3xMap, id: string) {

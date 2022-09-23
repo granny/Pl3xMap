@@ -65,7 +65,7 @@ export class ReversedZoomTileLayer extends L.TileLayer {
     // to return an `<img>` HTML element with the appropriate image URL given `coords`. The `done`
     // callback is called when the tile has been loaded.
     createTile(coords: L.Coords, done: L.DoneCallback) {
-        const tile = document.createElement('img');
+        const tile = L.DomUtil.create('img');
 
         L.DomEvent.on(tile, 'load', () => {
             // Once image has loaded revoke the object URL as we don't need it anymore

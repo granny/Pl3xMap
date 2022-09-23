@@ -77,7 +77,7 @@ export default class PlayersTab extends BaseTab {
     }
 
     private createListItem(player: Player) {
-        const input = L.DomUtil.create('input'),
+        const input = L.DomUtil.create('input', 'players'),
             label = L.DomUtil.create('label', '');
 
         label.style.backgroundImage = `url('images/skins/3D/${player.uuid}.png')`;

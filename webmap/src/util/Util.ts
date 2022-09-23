@@ -3,10 +3,8 @@ import {Pl3xMap} from "../Pl3xMap";
 import {Point} from "./Point";
 
 export function createSVGIcon(icon: string): DocumentFragment {
-    const template = document.createElement('template');
-
+    const template = L.DomUtil.create('template');
     template.innerHTML = `<svg class="svg-icon"><use href="#icon--${icon}"></use></svg>`;
-
     return template.content;
 }
 

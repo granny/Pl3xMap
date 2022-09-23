@@ -28,8 +28,8 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     protected _content: HTMLDivElement = L.DomUtil.create('div');
 
     protected _skeleton: HTMLParagraphElement = L.DomUtil.create('p');
-    protected _overlayContainer: HTMLDivElement = L.DomUtil.create('div');
-    protected _overlaysList: HTMLFieldSetElement = L.DomUtil.create('fieldset');
+    protected _container: HTMLDivElement = L.DomUtil.create('div');
+    protected _list: HTMLFieldSetElement = L.DomUtil.create('fieldset', 'menu');
 
     constructor(pl3xmap: Pl3xMap) {
         super({}, {}, {hideSingleBase: true});
@@ -47,6 +47,10 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         this._content.id = `sidebar__layers`;
         this._content.setAttribute('aria-hidden', 'true');
 
+        this.initEvents();
+    }
+
+    private initEvents() {
         window.addEventListener('overlayadded', (e) => {
             if (e.detail.showControls) {
                 this.addOverlay(e.detail, e.detail.label);
@@ -74,13 +78,13 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         this._skeleton.id = 'layers-skeleton';
         this._skeleton.tabIndex = -1;
 
-        this._overlaysList.setAttribute('aria-labelledby', 'overlay-layers-heading');
-        this._overlaysList.setAttribute('role', 'listbox');
+        this._list.setAttribute('aria-labelledby', 'overlay-layers-heading');
+        this._list.setAttribute('role', 'listbox');
 
-        this._overlayContainer.appendChild(this._overlaysList);
+        this._container.appendChild(this._list);
 
         this._content.appendChild(this._skeleton);
-        this._content.appendChild(this._overlayContainer);
+        this._content.appendChild(this._container);
     }
 
     private _update() {
@@ -88,29 +92,24 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
             return this;
         }
 
-        L.DomUtil.empty(this._overlaysList);
+        L.DomUtil.empty(this._list);
 
         this._layerControlInputs = [];
 
-        let overlaysCount = 0,
-            baseLayersCount = 0;
-
         for (const layer of this._layers) {
             this._addItem(layer);
-            overlaysCount += layer.overlay ? 1 : 0;
-            baseLayersCount += !layer.overlay ? 1 : 0;
         }
 
-        this._overlayContainer.hidden = !overlaysCount;
-        this._skeleton.hidden = !!(baseLayersCount || overlaysCount);
+        const hasLayers = this._layers.length > 0;
+        this._container.hidden = !hasLayers;
+        this._skeleton.hidden = hasLayers;
 
         return this;
     }
 
     private _addItem(layer: LayerListItem) {
         const label = L.DomUtil.create('label'),
-            input = L.DomUtil.create('input') as LayerControlInput,
-            container = this._overlaysList;
+            input = L.DomUtil.create('input') as LayerControlInput;
 
         input.type = 'checkbox';
         input.name = 'overlays';
@@ -124,8 +123,8 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
 
         label.innerText = layer.name;
 
-        container.appendChild(input);
-        container.appendChild(label);
+        this._list.appendChild(input);
+        this._list.appendChild(label);
 
         this._checkDisabledLayers();
         return label;
@@ -142,8 +141,8 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
     }
 
     onActivate() {
-        if (!this._overlayContainer.hidden) {
-            (this._overlaysList.querySelector('input') as HTMLElement)!.focus();
+        if (!this._container.hidden) {
+            (this._list.querySelector('input') as HTMLElement)!.focus();
         } else {
             this._skeleton.focus();
         }

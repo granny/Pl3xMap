@@ -58,6 +58,10 @@ html, body {
   overflow: hidden;
   text-shadow: var(--ui-text-shadow);
   font-family: var(--ui-font);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 :focus {
@@ -198,19 +202,28 @@ img.leaflet-tile {
     &:focus:not(:focus-visible) + label {
       outline: none;
     }
-  }
 
-  input.renderer {
-    & + label {
-      margin: 0 4px 0 0;
-      padding: 0;
-      width: 34px;
-      height: 34px;
-      background-size: 100%;
+    &.players {
+      & + label {
+        background-repeat: no-repeat;
+        background-size: 32px 32px;
+        background-position: 4px center;
+        padding-left: 40px;
+      }
     }
 
-    &:checked + label {
-      border-color: #000000;
+    &.renderer {
+      & + label {
+        margin: 0 4px 0 0;
+        padding: 0;
+        width: 34px;
+        height: 34px;
+        background-size: 100%;
+      }
+
+      &:checked + label {
+        border-color: #000000;
+      }
     }
   }
 }
