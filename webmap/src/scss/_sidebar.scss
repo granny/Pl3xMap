@@ -32,4 +32,11 @@
       margin-top: 0;
     }
   }
+
+  #sidebar__players label {
+    background-repeat: no-repeat;
+    background-size: 32px 32px;
+    background-position: 2px center;
+    padding-left: 36px;
+  }
 }

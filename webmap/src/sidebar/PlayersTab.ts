@@ -8,7 +8,6 @@ import '../svg/players.svg';
 interface PlayerListItem {
     input: HTMLInputElement;
     label: HTMLLabelElement;
-    name: HTMLSpanElement;
 }
 
 export default class PlayersTab extends BaseTab {
@@ -79,10 +78,10 @@ export default class PlayersTab extends BaseTab {
 
     private createListItem(player: Player) {
         const input = L.DomUtil.create('input'),
-            label = L.DomUtil.create('label'),
-            name = L.DomUtil.create('span', '', label);
+            label = L.DomUtil.create('label', '');
 
-        name.innerText = player.displayName;
+        label.style.backgroundImage = `url('images/skins/3D/${player.uuid}.png')`;
+        label.innerText = player.displayName;
         input.id = label.htmlFor = `${player.uuid}`;
         input.type = 'radio';
         input.name = 'player';
@@ -100,8 +99,7 @@ export default class PlayersTab extends BaseTab {
 
         this._players.set(player, {
             input,
-            label,
-            name,
+            label
         });
 
         this._skeleton.hidden = true;
