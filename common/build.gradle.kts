@@ -13,7 +13,7 @@ dependencies {
     }
     implementation("net.kyori", "adventure-api", "4.11.0")
     implementation("net.kyori", "adventure-text-minimessage", "4.11.0")
-    implementation("com.github.Carleslc.Simple-YAML", "Simple-Yaml", "1.8.1")
+    implementation("com.github.Carleslc.Simple-YAML", "Simple-Yaml", "1.8.2")
     implementation("io.undertow", "undertow-core", undertowVersion)
 }
 
