@@ -66,6 +66,10 @@ module.exports = {
         filename: 'pl3xmap.js',
         path: path.resolve(__dirname, 'dist')
     },
+    performance: {
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
     resolve: {
         extensions: ['.ts', '.js', '.scss', '.css']
     },
