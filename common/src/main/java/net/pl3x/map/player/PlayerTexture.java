@@ -52,8 +52,8 @@ public class PlayerTexture extends Thread {
         try {
             ImageIO.write(get2DHead(ImageIO.read(this.url)), "png", SKINS_2D_DIR.resolve(this.uuid + ".png").toFile());
             ImageIO.write(get3DHead(ImageIO.read(this.url)), "png", SKINS_3D_DIR.resolve(this.uuid + ".png").toFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 

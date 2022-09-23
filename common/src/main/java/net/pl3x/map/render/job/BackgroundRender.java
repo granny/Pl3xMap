@@ -17,11 +17,11 @@ public class BackgroundRender extends Render {
 
     @Override
     public void run() {
-        while (Pl3xMap.api().getCurrentTick() < 20) {
-            // server is not running yet
-            sleep(1000);
-        }
         try {
+            while (Pl3xMap.api().getCurrentTick() < 20) {
+                // server is not running yet
+                sleep(1000);
+            }
             render();
         } catch (Throwable t) {
             t.printStackTrace();

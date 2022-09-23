@@ -36,27 +36,39 @@ public class UpdateMarkerData implements Runnable {
 
     @Override
     public void run() {
+        try {
+            parseLayers();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private void parseLayers() {
         List<Object> layers = new ArrayList<>();
 
         this.world.getLayerRegistry().entries().forEach((key, layer) -> {
-            Map<String, Object> details = new LinkedHashMap<>();
-            details.put("key", layer.getKey().toString());
-            details.put("label", layer.getLabel());
-            details.put("updateInterval", layer.getUpdateInterval());
-            details.put("showControls", layer.shouldShowControls());
-            details.put("defaultHidden", layer.isDefaultHidden());
-            details.put("priority", layer.getPriority());
-            details.put("zIndex", layer.getZIndex());
-            details.put("pane", layer.getPane());
-            details.put("css", layer.getCss());
-            layers.add(details);
+            try {
+                Map<String, Object> details = new LinkedHashMap<>();
+                details.put("key", layer.getKey().toString());
+                details.put("label", layer.getLabel());
+                details.put("updateInterval", layer.getUpdateInterval());
+                details.put("showControls", layer.shouldShowControls());
+                details.put("defaultHidden", layer.isDefaultHidden());
+                details.put("priority", layer.getPriority());
+                details.put("zIndex", layer.getZIndex());
+                details.put("pane", layer.getPane());
+                details.put("css", layer.getCss());
+                layers.add(details);
 
-            long now = System.currentTimeMillis() / 1000;
-            long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
+                long now = System.currentTimeMillis() / 1000;
+                long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
 
-            if (now - lastUpdate > layer.getUpdateInterval()) {
-                FileUtil.write(this.gson.toJson(layer.getMarkers()), this.world.getMarkersDir().resolve(key + ".json"));
-                this.lastUpdated.put(key, now);
+                if (now - lastUpdate > layer.getUpdateInterval()) {
+                    FileUtil.write(this.gson.toJson(layer.getMarkers()), this.world.getMarkersDir().resolve(key + ".json"));
+                    this.lastUpdated.put(key, now);
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
         });
 

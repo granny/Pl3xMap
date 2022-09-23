@@ -96,12 +96,11 @@ public abstract class Render implements Runnable {
 
     @Override
     public void run() {
-        while (Pl3xMap.api().getCurrentTick() < 20) {
-            // server is not running yet
-            sleep(1000);
-        }
-
         try {
+            while (Pl3xMap.api().getCurrentTick() < 20) {
+                // server is not running yet
+                sleep(1000);
+            }
             start();
             render();
         } catch (Throwable t) {

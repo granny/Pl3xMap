@@ -106,6 +106,14 @@ public class Progress implements Runnable {
 
     @Override
     public void run() {
+        try {
+            runProgress();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private void runProgress() {
         if (this.render.getWorld().isPaused()) {
             return;
         }

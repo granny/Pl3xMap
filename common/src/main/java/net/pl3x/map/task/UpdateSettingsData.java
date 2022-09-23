@@ -27,6 +27,14 @@ public class UpdateSettingsData implements Runnable {
 
     @Override
     public void run() {
+        try {
+            parseSettings();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private List<Object> parsePlayers() {
         List<Object> players = new ArrayList<>();
         Pl3xMap.api().getPlayerRegistry().entries().forEach((key, player) -> {
             if (player.isHidden()) {
@@ -46,9 +54,12 @@ public class UpdateSettingsData implements Runnable {
 
             players.add(entry);
         });
+        return players;
+    }
 
+    private List<Map<String, Object>> parseWorlds() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
-        Pl3xMap.api().getWorldRegistry().entries().forEach((worldKey, world) -> {
+        Pl3xMap.api().getWorldRegistry().entries().forEach((key, world) -> {
             WorldConfig config = world.getConfig();
 
             if (!config.ENABLED) {
@@ -101,6 +112,10 @@ public class UpdateSettingsData implements Runnable {
         // sort worlds by order, then by name
         worldSettings.sort(Comparator.<Map<String, Object>>comparingInt(w -> (int) w.get("order")).thenComparing(w -> (String) w.get("name")));
 
+        return worldSettings;
+    }
+
+    private void parseSettings() {
         Map<String, Object> lang = new LinkedHashMap<>();
         lang.put("title", Lang.UI_TITLE);
         lang.put("blockInfo", Map.of("label", Lang.UI_BLOCKINFO_LABEL, "value", Lang.UI_BLOCKINFO_VALUE));
@@ -115,8 +130,13 @@ public class UpdateSettingsData implements Runnable {
         map.put("format", Config.WEB_TILE_FORMAT);
         map.put("maxPlayers", MinecraftServer.getServer().getMaxPlayers());
         map.put("lang", lang);
-        map.put("players", players);
-        map.put("worldSettings", worldSettings);
+
+        try {
+            map.put("players", parsePlayers());
+            map.put("worldSettings", parseWorlds());
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
 
         FileUtil.write(this.gson.toJson(map), World.TILES_DIR.resolve("settings.json"));
     }
