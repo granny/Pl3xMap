@@ -94,7 +94,12 @@ export class ReversedZoomTileLayer extends L.TileLayer {
 
                 // Get image data and convert into object URL so it can be used as a src
                 // Leaflet's onload listener will take it from here
-                res.blob().then(blob => tile.src = URL.createObjectURL(blob));
+                res.blob().then(blob => {
+                    // don't use URL.createObjectURL, it creates memory leak
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onload = () => tile.src = String(reader.result);
+                });
             }).catch((e) => this._tileOnError(done, tile, e));
 
         return tile;
