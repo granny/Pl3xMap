@@ -29,6 +29,7 @@ import net.pl3x.map.command.commands.ReloadCommand;
 import net.pl3x.map.command.commands.ResetMapCommand;
 import net.pl3x.map.command.commands.ShowCommand;
 import net.pl3x.map.command.commands.StatusCommand;
+import net.pl3x.map.command.exception.ArgumentParseException;
 import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.player.BukkitSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -62,7 +63,12 @@ public class BukkitCommandManager extends PaperCommandManager<Sender> implements
                         .build())
                 .apply(this, getAudience());
         var handler = Objects.requireNonNull(getExceptionHandler(CommandExecutionException.class));
-        registerExceptionHandler(CommandExecutionException.class, handler);
+        registerExceptionHandler(CommandExecutionException.class, (sender, exception) -> {
+            if (exception.getCause() instanceof ArgumentParseException) {
+                return;
+            }
+            handler.accept(sender, exception);
+        });
 
         ImmutableList.of(
                 new AddonCommand(this),
