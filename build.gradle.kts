@@ -133,6 +133,7 @@ tasks {
         additionalFiles.set(
             listOf(
                 jar(project(":FlowerMap").name),
+                jar(project(":GriefPrevention").name),
                 jar(project(":Heightmaps").name),
                 jar(project(":Inhabited").name),
                 jar(project(":Webp").name)

@@ -24,6 +24,9 @@ setupSubproject("WebMap") {
 setupSubproject("FlowerMap") {
     projectDir = file("addons/flowermap")
 }
+setupSubproject("GriefPrevention") {
+    projectDir = file("addons/griefprevention")
+}
 setupSubproject("Heightmaps") {
     projectDir = file("addons/heightmaps")
 }

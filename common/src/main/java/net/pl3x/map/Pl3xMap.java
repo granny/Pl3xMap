@@ -52,6 +52,9 @@ public interface Pl3xMap {
     PlayerListener getPlayerListener();
 
     @NotNull
+    ServerListener getServerListener();
+
+    @NotNull
     WorldListener getWorldListener();
 
     @NotNull

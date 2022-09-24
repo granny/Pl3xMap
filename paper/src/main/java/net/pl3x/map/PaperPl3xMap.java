@@ -51,6 +51,7 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     private final BukkitConsole console = new BukkitConsole();
 
     private BukkitPlayerListener playerListener;
+    private BukkitServerListener serverListener;
     private BukkitWorldListener worldListener;
 
     private IntegratedServer integratedServer;
@@ -112,9 +113,11 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
 
         // register listeners
         this.playerListener = new BukkitPlayerListener();
+        this.serverListener = new BukkitServerListener();
         this.worldListener = new BukkitWorldListener(this);
 
         getServer().getPluginManager().registerEvents(getPlayerListener(), this);
+        getServer().getPluginManager().registerEvents(getServerListener(), this);
         getServer().getPluginManager().registerEvents(getWorldListener(), this);
 
         // integrated server
@@ -279,6 +282,12 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     @NotNull
     public BukkitPlayerListener getPlayerListener() {
         return this.playerListener;
+    }
+
+    @Override
+    @NotNull
+    public BukkitServerListener getServerListener() {
+        return this.serverListener;
     }
 
     @Override

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class AddonRegistry extends KeyedRegistry<Addon> {
     public static final Path ADDONS_DIR = FileUtil.MAIN_DIR.resolve("addons");
+    public static final Path ADDONS_CONFIG_DIR = FileUtil.MAIN_DIR.resolve("addons/configs");
 
     static {
         try {
