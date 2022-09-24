@@ -247,6 +247,13 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     }
 
     @Override
+    @NotNull
+    public Impl getImpl() {
+        return Impl.PAPER;
+    }
+
+    @Override
+    @NotNull
     public String getVersion() {
         return getDescription().getVersion();
     }
@@ -269,56 +276,67 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
     }
 
     @Override
+    @NotNull
     public BukkitPlayerListener getPlayerListener() {
         return this.playerListener;
     }
 
     @Override
+    @NotNull
     public BukkitWorldListener getWorldListener() {
         return this.worldListener;
     }
 
     @Override
+    @NotNull
     public IntegratedServer getIntegratedServer() {
         return this.integratedServer;
     }
 
     @Override
+    @NotNull
     public BukkitAddonRegistry getAddonRegistry() {
         return this.addonRegistry;
     }
 
     @Override
+    @NotNull
     public EventRegistry getEventRegistry() {
         return this.eventRegistry;
     }
 
     @Override
+    @NotNull
     public HeightmapRegistry getHeightmapRegistry() {
         return this.heightmapRegistry;
     }
 
     @Override
+    @NotNull
     public IconRegistry getIconRegistry() {
         return this.iconRegistry;
     }
 
     @Override
+    @NotNull
     public BlockPaletteRegistry getBlockPaletteRegistry() {
         return this.blockPaletteRegistry;
     }
 
     @Override
+    @NotNull
     public BukkitPlayerRegistry getPlayerRegistry() {
         return this.playerRegistry;
     }
 
     @Override
+    @NotNull
     public RendererRegistry getRendererRegistry() {
         return this.rendererRegistry;
     }
 
     @Override
+    @NotNull
     public BukkitWorldRegistry getWorldRegistry() {
         return this.worldRegistry;
     }

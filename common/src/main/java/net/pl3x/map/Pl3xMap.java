@@ -34,6 +34,10 @@ public interface Pl3xMap {
 
     void disable();
 
+    @NotNull
+    Impl getImpl();
+
+    @NotNull
     String getVersion();
 
     int getCurrentTick();
@@ -44,25 +48,40 @@ public interface Pl3xMap {
     @NotNull
     Console getConsole();
 
+    @NotNull
     PlayerListener getPlayerListener();
 
+    @NotNull
     WorldListener getWorldListener();
 
+    @NotNull
     IntegratedServer getIntegratedServer();
 
+    @NotNull
     AddonRegistry getAddonRegistry();
 
+    @NotNull
     EventRegistry getEventRegistry();
 
+    @NotNull
     HeightmapRegistry getHeightmapRegistry();
 
+    @NotNull
     IconRegistry getIconRegistry();
 
+    @NotNull
     BlockPaletteRegistry getBlockPaletteRegistry();
 
+    @NotNull
     PlayerRegistry getPlayerRegistry();
 
+    @NotNull
     RendererRegistry getRendererRegistry();
 
+    @NotNull
     WorldRegistry getWorldRegistry();
+
+    enum Impl {
+        PAPER;
+    }
 }
