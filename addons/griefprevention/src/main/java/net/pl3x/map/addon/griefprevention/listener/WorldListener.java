@@ -6,6 +6,7 @@ import net.pl3x.map.addon.griefprevention.layer.GPLayer;
 import net.pl3x.map.event.EventHandler;
 import net.pl3x.map.event.EventListener;
 import net.pl3x.map.event.server.ServerLoadedEvent;
+import net.pl3x.map.event.world.WorldLoadedEvent;
 
 public class WorldListener implements EventListener {
     private final GriefPrevention addon;
@@ -17,7 +18,12 @@ public class WorldListener implements EventListener {
     @EventHandler
     public void onServerLoaded(ServerLoadedEvent event) {
         Pl3xMap.api().getWorldRegistry().entries().forEach((key, world) ->
-                world.getLayerRegistry().register(new GPLayer(addon, world))
+                world.getLayerRegistry().register(new GPLayer(this.addon, world))
         );
+    }
+
+    @EventHandler
+    public void onWorldLoaded(WorldLoadedEvent event) {
+        event.getWorld().getLayerRegistry().register(new GPLayer(this.addon, event.getWorld()));
     }
 }
