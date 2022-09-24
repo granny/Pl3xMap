@@ -19,6 +19,7 @@ public class BukkitWorld extends World {
     public Collection<Player> getPlayers() {
         return getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 
