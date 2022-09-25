@@ -78,7 +78,7 @@ public abstract class World extends Keyed {
 
     private final WorldConfig config;
 
-    private final BiomePaletteRegistry biomePaletteRegistry;
+    private BiomePaletteRegistry biomePaletteRegistry;
     private final Registry<Biome> biomeRegistry;
     private final KeyedRegistry<Layer> layerRegistry;
 
@@ -169,18 +169,7 @@ public abstract class World extends Keyed {
             throw new IllegalStateException(String.format("Failed to create tiles directory for world '%s'", getName()), e);
         }
 
-        getBiomeRegistry().forEach(biome -> {
-            String name = PaletteRegistry.toName("biome", getBiomeRegistry().getKey(biome));
-            Palette index = new Palette(getBiomePaletteRegistry().size(), name);
-            getBiomePaletteRegistry().register(biome, index);
-        });
-        getBiomePaletteRegistry().lock();
-
-        try {
-            FileUtil.saveGzip(GSON.toJson(getBiomePaletteRegistry().getMap()), getTilesDir().resolve("biomes.gz"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        rebuildBiomesPaletteRegistry();
 
         if (getConfig().MARKERS_WORLDBORDER_ENABLED) {
             getLayerRegistry().register(new WorldBorderLayer(this));
@@ -257,6 +246,23 @@ public abstract class World extends Keyed {
 
     public BiomePaletteRegistry getBiomePaletteRegistry() {
         return this.biomePaletteRegistry;
+    }
+
+    public void rebuildBiomesPaletteRegistry() {
+        this.biomePaletteRegistry = new BiomePaletteRegistry();
+
+        getBiomeRegistry().forEach(biome -> {
+            String name = PaletteRegistry.toName("biome", getBiomeRegistry().getKey(biome));
+            Palette index = new Palette(getBiomePaletteRegistry().size(), name);
+            getBiomePaletteRegistry().register(biome, index);
+        });
+        getBiomePaletteRegistry().lock();
+
+        try {
+            FileUtil.saveGzip(GSON.toJson(getBiomePaletteRegistry().getMap()), getTilesDir().resolve("biomes.gz"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Registry<Biome> getBiomeRegistry() {

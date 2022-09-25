@@ -51,9 +51,12 @@ public class ResetMapCommand extends Pl3xMapCommand {
             // resume background render
             world.setPaused(false);
             throw new IllegalStateException(Lang.COMMAND_RESETMAP_FAILED
-                    .replace("<" + "world" + ">", world.getName()),
+                    .replace("<world>", world.getName()),
                     e);
         }
+
+        // rebuild biomes registry
+        world.rebuildBiomesPaletteRegistry();
 
         // reset background render
         world.stopBackgroundRender();
