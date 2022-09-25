@@ -33,7 +33,7 @@ public class WorldParser<C> implements ArgumentParser<C, World> {
             return failure(new WorldParseException(input, WorldParseException.NO_SUCH_WORLD));
         }
 
-        if (!world.getConfig().ENABLED) {
+        if (!world.isEnabled()) {
             return failure(new WorldParseException(input, WorldParseException.MAP_NOT_ENABLED));
         }
 
@@ -46,6 +46,7 @@ public class WorldParser<C> implements ArgumentParser<C, World> {
     public List<String> suggestions(@NotNull CommandContext<C> commandContext, @NotNull String input) {
         return Pl3xMap.api().getWorldRegistry()
                 .entries().values().stream()
+                .filter(World::isEnabled)
                 .map(World::getName)
                 .collect(Collectors.toList());
     }

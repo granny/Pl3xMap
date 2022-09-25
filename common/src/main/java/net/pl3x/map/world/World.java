@@ -137,6 +137,10 @@ public abstract class World extends Keyed {
 
         getConfig().reload();
 
+        if (!isEnabled()) {
+            return;
+        }
+
         getConfig().RENDER_RENDERERS.forEach((rendererName, icon) -> {
             RendererHolder holder = Pl3xMap.api().getRendererRegistry().get(rendererName);
             if (holder == null) {
@@ -406,8 +410,12 @@ public abstract class World extends Keyed {
     }
 
     public void stopMarkersTask() {
-        this.markersUpdater.cancel(false);
-        this.markersUpdater = null;
+        if (this.markersUpdater != null) {
+            if (!this.markersUpdater.isCancelled()) {
+                this.markersUpdater.cancel(false);
+            }
+            this.markersUpdater = null;
+        }
     }
 
     /**
@@ -461,6 +469,10 @@ public abstract class World extends Keyed {
     }
 
     public void unload() {
+        if (!isEnabled()) {
+            return;
+        }
+
         if (hasActiveRender()) {
             cancelRender(true);
         }

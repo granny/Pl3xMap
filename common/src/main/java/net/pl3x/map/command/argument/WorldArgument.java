@@ -88,7 +88,7 @@ public class WorldArgument<C> extends CommandArgument<C, World> {
         }
         if (sender instanceof Player player) {
             world = player.getWorld();
-            if (!world.getConfig().ENABLED) {
+            if (!world.isEnabled()) {
                 throw new WorldParseException(world.getName(), WorldParseException.MAP_NOT_ENABLED);
             } else {
                 return world;

@@ -72,11 +72,11 @@ public class UpdateSettingsData implements Runnable {
     private List<Map<String, Object>> parseWorlds() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
         Pl3xMap.api().getWorldRegistry().entries().forEach((key, world) -> {
-            WorldConfig config = world.getConfig();
-
-            if (!config.ENABLED) {
+            if (!world.isEnabled()) {
                 return;
             }
+
+            WorldConfig config = world.getConfig();
 
             Map<String, Object> spawn = new LinkedHashMap<>();
             Point point = world.getSpawn();
