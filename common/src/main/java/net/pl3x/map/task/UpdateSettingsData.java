@@ -14,7 +14,6 @@ import net.pl3x.map.configuration.Lang;
 import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.markers.Point;
-import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 
@@ -105,11 +104,9 @@ public class UpdateSettingsData implements Runnable {
             FileUtil.write(this.gson.toJson(settings), world.getTilesDir().resolve("settings.json"));
 
             List<Object> renderers = new ArrayList<>();
-            world.getConfig().RENDER_RENDERERS.forEach(renderer -> {
-                RendererHolder holder = Pl3xMap.api().getRendererRegistry().get(renderer);
-                if (holder != null) {
-                    renderers.add(Map.of("label", renderer, "value", holder.getName()));
-                }
+            world.getRendererHolders().forEach((rendererKey, holder) -> {
+                String icon = world.getConfig().RENDER_RENDERERS.get(rendererKey.toString());
+                renderers.add(Map.of("label", rendererKey.toString(), "value", holder.getName(), "icon", icon));
             });
 
             Map<String, Object> worldsList = new LinkedHashMap<>();

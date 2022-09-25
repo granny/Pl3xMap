@@ -2,9 +2,8 @@ import {Pl3xMap} from "../Pl3xMap";
 import {BlockInfoControl} from "../control/BlockInfoControl";
 import {CoordsControl} from "../control/CoordsControl";
 import {LinkControl} from "../control/LinkControl";
-import {Label} from "../settings/Lang";
 import {Settings} from "../settings/Settings";
-import {World} from "./World";
+import {Renderer, World} from "./World";
 import {fireCustomEvent, getUrlParam} from "../util/Util";
 
 /**
@@ -52,7 +51,7 @@ export class WorldManager {
         return this._worlds.get(world);
     }
 
-    public async setWorld(world: World, renderer?: Label | string, resetCoords?: boolean): Promise<void> {
+    public async setWorld(world: World, renderer?: Renderer | string, resetCoords?: boolean): Promise<void> {
         return world.load().then(() => {
             if (world === this._currentWorld && renderer === this._currentWorld.currentRenderer) {
                 return;

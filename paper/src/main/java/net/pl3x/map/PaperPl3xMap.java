@@ -28,7 +28,6 @@ import net.pl3x.map.logger.Logger;
 import net.pl3x.map.palette.BlockPaletteRegistry;
 import net.pl3x.map.player.BukkitPlayerListener;
 import net.pl3x.map.player.BukkitPlayerRegistry;
-import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.RendererRegistry;
 import net.pl3x.map.task.UpdateSettingsData;
 import net.pl3x.map.world.BukkitWorldListener;
@@ -158,13 +157,10 @@ public class PaperPl3xMap extends JavaPlugin implements Pl3xMap {
         }));
         metrics.addCustomChart(new AdvancedPie("renderers_used", () -> {
             Map<String, Integer> map = new HashMap<>();
-            getWorldRegistry().entries().forEach((key, world) ->
-                    world.getConfig().RENDER_RENDERERS.forEach(rendererName -> {
-                        RendererHolder renderer = getRendererRegistry().get(rendererName);
-                        if (renderer != null) {
-                            int count = map.getOrDefault(renderer.getName(), 0);
-                            map.put(renderer.getName(), count + 1);
-                        }
+            getWorldRegistry().entries().forEach((worldKey, world) ->
+                    world.getRendererHolders().forEach((rendererKey, holder) -> {
+                        int count = map.getOrDefault(holder.getName(), 0);
+                        map.put(holder.getName(), count + 1);
                     })
             );
             return map;

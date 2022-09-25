@@ -19,7 +19,7 @@ public class RendererRegistry extends KeyedRegistry<RendererHolder> {
     public void register() {
         register(new RendererHolder(BASIC, "Basic", BasicRenderer.class));
         register(new RendererHolder(BIOMES, "Biomes", BiomeRenderer.class));
-        register(new RendererHolder(BLOCKINFO, "BlockInfo", BlockInfoRenderer.class, false));
+        register(new RendererHolder(BLOCKINFO, "BlockInfo", BlockInfoRenderer.class));
     }
 
     public Renderer createRenderer(@NotNull RendererHolder holder, @NotNull ScanTask scanTask) {

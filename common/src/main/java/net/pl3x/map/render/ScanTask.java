@@ -32,14 +32,7 @@ public class ScanTask implements Runnable {
         this.chunkHelper = new ChunkHelper(render);
 
         RendererRegistry registry = Pl3xMap.api().getRendererRegistry();
-
-        List<RendererHolder> rendererHolders = new ArrayList<>();
-        this.world.getConfig().RENDER_RENDERERS.forEach(rendererName -> {
-            RendererHolder holder = registry.get(rendererName);
-            if (holder != null) {
-                rendererHolders.add(holder);
-            }
-        });
+        List<RendererHolder> rendererHolders = new ArrayList<>(this.world.getRendererHolders().values());
 
         String blockInfo = this.world.getConfig().UI_BLOCKINFO;
         if (blockInfo != null && !blockInfo.isEmpty()) {

@@ -1,14 +1,8 @@
 package net.pl3x.map.render;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Objects;
-import javax.imageio.ImageIO;
 import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
-import net.pl3x.map.Pl3xMap;
-import net.pl3x.map.image.IconImage;
-import net.pl3x.map.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,33 +21,9 @@ public class RendererHolder extends Keyed {
      * @param clazz the renderer class
      */
     public RendererHolder(@NotNull Key key, @NotNull String name, @NotNull Class<? extends Renderer> clazz) {
-        this(key, name, clazz, true);
-    }
-
-    /**
-     * Create a new renderer holder.
-     *
-     * @param key          identifying key
-     * @param name         name of renderer
-     * @param clazz        the renderer class
-     * @param registerIcon true tro register icon
-     */
-    public RendererHolder(@NotNull Key key, @NotNull String name, @NotNull Class<? extends Renderer> clazz, boolean registerIcon) {
         super(key);
         this.name = name;
         this.clazz = clazz;
-
-        if (!registerIcon) {
-            return;
-        }
-
-        Path icon = World.WEB_DIR.resolve("images/icon/" + key + ".png");
-        try {
-            IconImage image = new IconImage(key, ImageIO.read(icon.toFile()), "png");
-            Pl3xMap.api().getIconRegistry().register(image);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

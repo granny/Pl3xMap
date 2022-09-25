@@ -1,4 +1,4 @@
-import {Label} from "./Lang";
+import {Renderer} from "../world/World";
 
 /**
  * Represents per-world settings.
@@ -8,14 +8,14 @@ export class WorldSettings {
     private readonly _displayName: string;
     private readonly _type: string;
     private readonly _order: number;
-    private readonly _renderers: Label[];
+    private readonly _renderers: Renderer[];
 
     private _tileUpdateInterval: number = 5;
     private _spawn: Spawn = new Spawn(0, 0);
     private _zoom: Zoom = new Zoom(0, 3, 2);
     private _ui: UI = new UI()
 
-    constructor(name: string, displayName: string, type: string, order: number, renderers: Label[]) {
+    constructor(name: string, displayName: string, type: string, order: number, renderers: Renderer[]) {
         this._name = name;
         this._displayName = displayName;
         this._type = type;
@@ -39,7 +39,7 @@ export class WorldSettings {
         return this._order;
     }
 
-    get renderers(): Label[] {
+    get renderers(): Renderer[] {
         return this._renderers;
     }
 

@@ -1,6 +1,5 @@
 import {Pl3xMap} from "../Pl3xMap";
-import {World} from "../world/World";
-import {Label} from "../settings/Lang";
+import {Renderer, World} from "../world/World";
 import {ReversedZoomTileLayer} from "./ReversedZoomTileLayer";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 
@@ -11,13 +10,13 @@ export class DoubleTileLayer {
     // start with 0. from here will switch to 1 then 2 then 1 then 2 etc.
     private _currentLayer: number = 0;
 
-    constructor(pl3xmap: Pl3xMap, world: World, renderer: Label) {
+    constructor(pl3xmap: Pl3xMap, world: World, renderer: Renderer) {
         // we need 2 tile layers to swap between for seamless refreshing
         this._tileLayer1 = this.createTileLayer(pl3xmap, world, renderer);
         this._tileLayer2 = this.createTileLayer(pl3xmap, world, renderer);
     }
 
-    private createTileLayer(pl3xmap: Pl3xMap, world: World, renderer: Label): ReversedZoomTileLayer {
+    private createTileLayer(pl3xmap: Pl3xMap, world: World, renderer: Renderer): ReversedZoomTileLayer {
         return new ReversedZoomTileLayer(pl3xmap, world, renderer)
             .addEventListener("load", () => {
                 // when all tiles in this layer are loaded, switch to this layer

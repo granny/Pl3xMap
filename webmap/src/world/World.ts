@@ -4,9 +4,9 @@ import {BlockInfo} from "../palette/BlockInfo";
 import {Palette} from "../palette/Palette";
 import {Label} from "../settings/Lang";
 import {Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
+import {DoubleTileLayer} from "../tilelayer/DoubleTileLayer";
 import {WorldManager} from "./WorldManager";
 import {fireCustomEvent, getBytes, getJSON} from "../util/Util";
-import {DoubleTileLayer} from "../tilelayer/DoubleTileLayer";
 
 /**
  * Represents a loaded world.
@@ -15,10 +15,10 @@ export class World {
     private readonly _pl3xmap: Pl3xMap;
     private readonly _settings: WorldSettings;
 
-    private _currentRenderer?: Label;
+    private _currentRenderer?: Renderer;
     private _currentRendererLayer?: DoubleTileLayer;
 
-    private _rendererLayers: Map<Label, DoubleTileLayer> = new Map();
+    private _rendererLayers: Map<Renderer, DoubleTileLayer> = new Map();
     private _markerLayers: MarkerLayer[] = [];
 
     private _biomePalette: Map<number, string> = new Map();
@@ -129,7 +129,7 @@ export class World {
         this.blockInfo.get(zoom)?.delete(`${x}_${z}`);
     }
 
-    public getRendererLayer(renderer: Label): DoubleTileLayer | undefined {
+    public getRendererLayer(renderer: Renderer): DoubleTileLayer | undefined {
         return this._rendererLayers.get(renderer);
     }
 
@@ -137,14 +137,14 @@ export class World {
         return this._currentRendererLayer;
     }
 
-    get currentRenderer(): Label | undefined {
+    get currentRenderer(): Renderer | undefined {
         return this._currentRenderer;
     }
 
-    public setRenderer(renderer: Label | string): void {
+    public setRenderer(renderer: Renderer | string): void {
         clearTimeout(this._timer);
 
-        if (!(renderer instanceof Label)) {
+        if (!(renderer instanceof Renderer)) {
             for (const label of this.renderers) {
                 if (label.label == renderer) {
                     renderer = label;
@@ -153,7 +153,7 @@ export class World {
         }
 
         this._currentRendererLayer?.remove();
-        this._currentRenderer = this.settings.renderers.indexOf(renderer as Label) > -1 ? renderer as Label : this.settings.renderers[0];
+        this._currentRenderer = this.settings.renderers.indexOf(renderer as Renderer) > -1 ? renderer as Renderer : this.settings.renderers[0];
         this._currentRendererLayer = this._rendererLayers.get(this._currentRenderer);
         this._currentRendererLayer!.addTo(this._pl3xmap.map);
 
@@ -162,7 +162,7 @@ export class World {
         fireCustomEvent('rendererselected', this);
     }
 
-    public resetRenderer(renderer?: Label | string): void {
+    public resetRenderer(renderer?: Renderer | string): void {
         this.setRenderer(renderer ?? this.settings.renderers[0]);
     }
 
@@ -186,7 +186,7 @@ export class World {
         return this.settings.order;
     }
 
-    get renderers(): Label[] {
+    get renderers(): Renderer[] {
         return this.settings.renderers;
     }
 
@@ -225,5 +225,18 @@ export class World {
     private tick(): void {
         this.currentRendererLayer?.updateTileLayer();
         this._timer = setTimeout(() => this.tick(), this.settings.tileUpdateInterval * 1000);
+    }
+}
+
+export class Renderer extends Label {
+    private readonly _icon: string;
+
+    constructor(label: string, value: string, icon: string) {
+        super(label, value);
+        this._icon = icon;
+    }
+
+    get icon(): string {
+        return this._icon;
     }
 }

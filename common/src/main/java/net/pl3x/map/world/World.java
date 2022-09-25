@@ -11,15 +11,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -34,6 +37,7 @@ import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.configuration.WorldConfig;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.event.world.WorldLoadedEvent;
+import net.pl3x.map.image.IconImage;
 import net.pl3x.map.logger.Logger;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.markers.layer.Layer;
@@ -45,6 +49,7 @@ import net.pl3x.map.palette.Palette;
 import net.pl3x.map.palette.PaletteRegistry;
 import net.pl3x.map.player.Player;
 import net.pl3x.map.registry.KeyedRegistry;
+import net.pl3x.map.render.RendererHolder;
 import net.pl3x.map.render.job.BackgroundRender;
 import net.pl3x.map.render.job.FullRender;
 import net.pl3x.map.render.job.Render;
@@ -85,6 +90,8 @@ public abstract class World extends Keyed {
 
     private ScheduledFuture<?> backgroundRender;
     private ScheduledFuture<?> markersUpdater;
+
+    private final Map<Key, RendererHolder> rendererHolders = new LinkedHashMap<>();
 
     private Render activeRender = null;
 
@@ -129,6 +136,22 @@ public abstract class World extends Keyed {
         this.alreadyInitialized = true;
 
         getConfig().reload();
+
+        getConfig().RENDER_RENDERERS.forEach((rendererName, icon) -> {
+            RendererHolder holder = Pl3xMap.api().getRendererRegistry().get(rendererName);
+            if (holder == null) {
+                return;
+            }
+            Key iconKey = Key.of(icon);
+            Path path = World.WEB_DIR.resolve("images/icon/" + iconKey + ".png");
+            try {
+                IconImage image = new IconImage(iconKey, ImageIO.read(path.toFile()), "png");
+                Pl3xMap.api().getIconRegistry().register(image);
+                rendererHolders.put(holder.getKey(), holder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         try {
             if (!Files.exists(this.dataPath)) {
@@ -225,6 +248,11 @@ public abstract class World extends Keyed {
     @NotNull
     public WorldConfig getConfig() {
         return this.config;
+    }
+
+    @NotNull
+    public Map<Key, RendererHolder> getRendererHolders() {
+        return Collections.unmodifiableMap(this.rendererHolders);
     }
 
     public BiomePaletteRegistry getBiomePaletteRegistry() {

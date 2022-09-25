@@ -1,7 +1,7 @@
 package net.pl3x.map.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.World;
@@ -15,9 +15,9 @@ public final class WorldConfig extends AbstractConfig {
     @Comment("""
             Renderers to use. Each renderer will render a different
             type of map. The built in renderers include: basic, biomes""")
-    public List<String> RENDER_RENDERERS = new ArrayList<>() {{
-        add("basic");
-        add("biomes");
+    public Map<String, String> RENDER_RENDERERS = new LinkedHashMap<>() {{
+        put("basic", "overworld_basic");
+        put("biomes", "overworld_biomes");
     }};
 
     @Key("render.render-threads")
@@ -64,10 +64,10 @@ public final class WorldConfig extends AbstractConfig {
 
     @Key("render.background.interval")
     @Comment("""
-            How often to check the queue for any chunks needing updates.
-            This is what updates your map as changes happen in the world.
-            Setting this too low may cause the background renderer to run
-            non-stop. Setting this too high may cause a delay in seeing
+            How often (in seconds) to check the queue for any chunks needing
+            updates. This is what updates your map as changes happen in the
+            world. Setting this too low may cause the background renderer to
+            run non-stop. Setting this too high may cause a delay in seeing
             updates on your map. Use 0 value to disable this feature.""")
     public int RENDER_BACKGROUND_INTERVAL = 5;
 
@@ -153,10 +153,10 @@ public final class WorldConfig extends AbstractConfig {
     @Override
     protected Object getValue(String path, Object def) {
         if (getConfig().get("world-settings.default." + path) == null) {
-            getConfig().set("world-settings.default." + path, def);
+            set("world-settings.default." + path, def);
         }
-        return getConfig().get("world-settings." + this.world.getName() + "." + path,
-                getConfig().get("world-settings.default." + path));
+        return get("world-settings." + this.world.getName() + "." + path,
+                get("world-settings.default." + path));
     }
 
     @Override

@@ -68,7 +68,7 @@ export default class WorldsTab extends BaseTab {
             fieldset.appendChild(label);
 
             //icon.src = `images/icon/${renderer}.png`;
-            label.style.backgroundImage = `url('images/icon/registered/${renderer.label}.png')`;
+            label.style.backgroundImage = `url('images/icon/registered/${renderer.icon}.png')`;
             label.title = renderer.value;
             input.id = label.htmlFor = `${world.name}-${renderer.label}`;
             input.type = 'radio';
