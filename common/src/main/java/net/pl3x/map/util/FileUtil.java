@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +21,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -143,24 +144,13 @@ public class FileUtil {
         }
     }
 
-    public static void write(String str, Path file) {
-        ForkJoinPool.commonPool().execute(() -> {
-            try {
-                writeFile(file, str);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private static void writeFile(Path path, String str) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path.getParent());
-            Files.createFile(path);
-        }
-        try (OutputStream out = Files.newOutputStream(path)) {
-            out.write(str.getBytes());
-            out.flush();
+    public static void write(String str, Path path) {
+        try (
+                RandomAccessFile raf = new RandomAccessFile(mkDirs(path).toFile(), "rw");
+                FileChannel rw = raf.getChannel();
+        ) {
+            ByteBuffer buf = rw.map(FileChannel.MapMode.READ_WRITE, 0, str.length());
+            buf.put(str.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
