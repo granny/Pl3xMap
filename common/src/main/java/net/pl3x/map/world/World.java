@@ -56,12 +56,16 @@ import net.pl3x.map.render.job.Render;
 import net.pl3x.map.task.UpdateMarkerData;
 import net.pl3x.map.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a minecraft world.
+ */
 public abstract class World extends Keyed {
     public static final Path WEB_DIR = Config.WEB_DIR.startsWith("/") ? Path.of(Config.WEB_DIR) : FileUtil.MAIN_DIR.resolve(Config.WEB_DIR);
     public static final Path TILES_DIR = WEB_DIR.resolve("tiles");
 
-    private static final String DIRTY_CHUNKS = "dirty_chunks.json";
+    private static final String DIRTY_REGIONS = "dirty_regions.json";
     private static final String SCANNED_REGIONS = "resume_render.json";
 
     private static final Gson GSON = new GsonBuilder()
@@ -101,7 +105,13 @@ public abstract class World extends Keyed {
     private boolean alreadyInitialized;
     private boolean paused;
 
-    public World(Key key, ServerLevel level) {
+    /**
+     * Create a new world.
+     *
+     * @param key   identifying key
+     * @param level minecraft server level
+     */
+    public World(@NotNull Key key, @NotNull ServerLevel level) {
         super(key);
         this.level = level;
         this.type = Type.get(level);
@@ -129,6 +139,13 @@ public abstract class World extends Keyed {
         return Key.of(name);
     }
 
+    /**
+     * Initialize this world.
+     * <p>
+     * This automatically happens when the world is registered.
+     * <p>
+     * Calling this method on an initialized world with throw a {@link IllegalStateException}.
+     */
     public void init() {
         if (this.alreadyInitialized) {
             throw new IllegalStateException("World already initialized!");
@@ -190,7 +207,7 @@ public abstract class World extends Keyed {
         startMarkersTask();
         startBackgroundRender();
 
-        deserializeDirtyChunks();
+        deserializeDirtyRegions();
         deserializeScannedRegions();
 
         if (!getScannedRegions().isEmpty()) {
@@ -202,11 +219,24 @@ public abstract class World extends Keyed {
                 .replace("<world>", getName()));
     }
 
+    /**
+     * Get the internal name of this world.
+     * <p>
+     * On Bukkit servers this will be th world name, on other server
+     * types this will be the world's dimension identifier.
+     *
+     * @return world name
+     */
     @NotNull
     public String getName() {
         return getKey().toString();
     }
 
+    /**
+     * Get the internal server world level.
+     *
+     * @return world level
+     */
     @NotNull
     public ServerLevel getLevel() {
         return this.level;
@@ -221,37 +251,76 @@ public abstract class World extends Keyed {
         return getConfig().ENABLED;
     }
 
+    /**
+     * Get the world's type.
+     *
+     * @return world type
+     */
     @NotNull
     public Type getType() {
         return this.type;
     }
 
+    /**
+     * Get the world's biome seed.
+     *
+     * @return biome seed
+     */
     public long getBiomeSeed() {
         return this.seed;
     }
 
+    /**
+     * Get the world's spawn point.
+     *
+     * @return spawn point
+     */
     @NotNull
     public Point getSpawn() {
         return Point.of(getLevel().getSharedSpawnPos());
     }
 
+    /**
+     * Get all players on this world.
+     *
+     * @return all players on this world
+     */
     @NotNull
     public abstract Collection<Player> getPlayers();
 
+    /**
+     * Get the world's configuration.
+     *
+     * @return world config
+     */
     @NotNull
     public WorldConfig getConfig() {
         return this.config;
     }
 
+    /**
+     * Get the world's configured renderer holders.
+     *
+     * @return renderer holders
+     */
     @NotNull
     public Map<Key, RendererHolder> getRendererHolders() {
         return Collections.unmodifiableMap(this.rendererHolders);
     }
 
+    /**
+     * Get this world's biome palette registry.
+     *
+     * @return biome palette registry
+     */
+    @NotNull
     public BiomePaletteRegistry getBiomePaletteRegistry() {
         return this.biomePaletteRegistry;
     }
 
+    /**
+     * Rebuild this world's biome palette registry.
+     */
     public void rebuildBiomesPaletteRegistry() {
         this.biomePaletteRegistry = new BiomePaletteRegistry();
 
@@ -269,22 +338,47 @@ public abstract class World extends Keyed {
         }
     }
 
+    /**
+     * Get this world's biome registry.
+     *
+     * @return biome registry
+     */
+    @NotNull
     public Registry<Biome> getBiomeRegistry() {
         return this.biomeRegistry;
     }
 
+    /**
+     * Get this world's layer registry.
+     *
+     * @return layer registry
+     */
+    @NotNull
     public KeyedRegistry<Layer> getLayerRegistry() {
         return this.layerRegistry;
     }
 
+    /**
+     * Check if renderers are paused on this world.
+     *
+     * @return true if renderers are paused
+     */
     public boolean isPaused() {
         return this.paused;
     }
 
+    /**
+     * Set is renderers are paused on this world.
+     *
+     * @param paused true if renderers are paused
+     */
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
 
+    /**
+     * Load stored scanned region data from disk.
+     */
     public void deserializeScannedRegions() {
         try {
             final Path file = this.dataPath.resolve(SCANNED_REGIONS);
@@ -300,6 +394,9 @@ public abstract class World extends Keyed {
         }
     }
 
+    /**
+     * Store scanned region data to disk.
+     */
     public void serializeScannedRegions() {
         try {
             Files.writeString(this.dataPath.resolve(SCANNED_REGIONS), GSON.toJson(getScannedRegions()));
@@ -309,9 +406,12 @@ public abstract class World extends Keyed {
         }
     }
 
-    private void deserializeDirtyChunks() {
+    /**
+     * Load stored dirty regions data from disk.
+     */
+    private void deserializeDirtyRegions() {
         try {
-            final Path file = this.dataPath.resolve(DIRTY_CHUNKS);
+            final Path file = this.dataPath.resolve(DIRTY_REGIONS);
             if (Files.exists(file)) {
                 this.modifiedRegions.addAll(GSON.fromJson(
                         new FileReader(file.toFile()),
@@ -324,43 +424,75 @@ public abstract class World extends Keyed {
         }
     }
 
-    private void serializeDirtyChunks() {
+    /**
+     * Store dirty regions data to disk.
+     */
+    private void serializeDirtyRegions() {
         try {
-            Files.writeString(this.dataPath.resolve(DIRTY_CHUNKS), GSON.toJson(this.modifiedRegions));
+            Files.writeString(this.dataPath.resolve(DIRTY_REGIONS), GSON.toJson(this.modifiedRegions));
         } catch (IOException e) {
             Logger.warn(String.format("Failed to serialize dirty chunks for world '%s'", getName()));
             e.printStackTrace();
         }
     }
 
-    public void addModifiedRegion(RegionCoordinate region) {
+    /**
+     * Add a modified/dirty region.
+     *
+     * @param region modified/dirty region
+     */
+    public void addModifiedRegion(@NotNull RegionCoordinate region) {
         if (!this.modifiedRegions.contains(region)) {
             this.modifiedRegions.add(region);
         }
     }
 
+    /**
+     * Check if there are modified/dirty regions.
+     *
+     * @return true if there are modified/dirty regions
+     */
     public boolean hasModifiedRegions() {
         return !this.modifiedRegions.isEmpty();
     }
 
+    /**
+     * Get the next modified/dirty region in the queue.
+     *
+     * @return next modified/dirty region in the queue, or null
+     */
+    @Nullable
     public RegionCoordinate getNextModifiedRegion() {
         return this.modifiedRegions.poll();
     }
 
+    /**
+     * Clear scanned region data.
+     */
     public void clearScannedRegions() {
         synchronized (this.scannedRegions) {
             this.scannedRegions.clear();
         }
     }
 
-    public void setScannedRegions(LinkedHashMap<RegionCoordinate, Boolean> scannedRegions) {
+    /**
+     * Set scanned region data.
+     *
+     * @param scannedRegions scanned region data
+     */
+    public void setScannedRegions(@NotNull LinkedHashMap<RegionCoordinate, Boolean> scannedRegions) {
         synchronized (this.scannedRegions) {
             this.scannedRegions.clear();
             this.scannedRegions.putAll(scannedRegions);
         }
     }
 
-    public void setScannedRegion(RegionCoordinate region) {
+    /**
+     * Set a region as scanned
+     *
+     * @param region region
+     */
+    public void setScannedRegion(@NotNull RegionCoordinate region) {
         synchronized (this.scannedRegions) {
             if (this.scannedRegions.containsKey(region)) {
                 this.scannedRegions.put(region, true);
@@ -368,20 +500,40 @@ public abstract class World extends Keyed {
         }
     }
 
+    /**
+     * Get scanned region data.
+     *
+     * @return scanned region data
+     */
+    @NotNull
     public LinkedHashMap<RegionCoordinate, Boolean> getScannedRegions() {
         synchronized (this.scannedRegions) {
             return this.scannedRegions;
         }
     }
 
+    /**
+     * Check if background render is running.
+     *
+     * @return true if background render is running
+     */
     public boolean hasBackgroundRender() {
         return getBackgroundRender() != null;
     }
 
+    /**
+     * Get the current background render.
+     *
+     * @return current background render, or null
+     */
+    @Nullable
     public ScheduledFuture<?> getBackgroundRender() {
         return this.backgroundRender;
     }
 
+    /**
+     * Start the background render.
+     */
     public void startBackgroundRender() {
         if (hasBackgroundRender() || hasActiveRender()) {
             throw new IllegalStateException("Already rendering");
@@ -396,6 +548,9 @@ public abstract class World extends Keyed {
         this.backgroundRender = this.backgroundExecutor.scheduleAtFixedRate(new BackgroundRender(this), interval, interval, TimeUnit.SECONDS);
     }
 
+    /**
+     * Stop the background render.
+     */
     public void stopBackgroundRender() {
         if (!hasBackgroundRender()) {
             throw new IllegalStateException("Not background rendering");
@@ -405,10 +560,16 @@ public abstract class World extends Keyed {
         this.backgroundRender = null;
     }
 
+    /**
+     * Start the marker tasks.
+     */
     public void startMarkersTask() {
         this.markersUpdater = this.markersExecutor.scheduleAtFixedRate(new UpdateMarkerData(this), ThreadLocalRandom.current().nextInt(1000), 1000, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Stop the marker tasks.
+     */
     public void stopMarkersTask() {
         if (this.markersUpdater != null) {
             if (!this.markersUpdater.isCancelled()) {
@@ -427,11 +588,24 @@ public abstract class World extends Keyed {
         return getActiveRender() != null;
     }
 
+    /**
+     * Get the current active render.
+     * <p>
+     * This does <u>not</u> include the background render.
+     *
+     * @return current active render
+     */
+    @Nullable
     public Render getActiveRender() {
         return this.activeRender;
     }
 
-    public void startRender(Render render) {
+    /**
+     * Start a new active render.
+     *
+     * @param render
+     */
+    public void startRender(@NotNull Render render) {
         if (hasActiveRender()) {
             throw new IllegalStateException("Already rendering");
         }
@@ -444,6 +618,11 @@ public abstract class World extends Keyed {
         this.backgroundExecutor.submit(render);
     }
 
+    /**
+     * Cancel the current active render.
+     *
+     * @param unloading true if cancel is from unloading the world
+     */
     public void cancelRender(boolean unloading) {
         if (!hasActiveRender()) {
             throw new IllegalStateException("No render to cancel");
@@ -457,6 +636,9 @@ public abstract class World extends Keyed {
         }
     }
 
+    /**
+     * Finish the current active render.
+     */
     public void finishRender() {
         if (!hasActiveRender()) {
             throw new IllegalStateException("No render to finish");
@@ -468,6 +650,11 @@ public abstract class World extends Keyed {
         startBackgroundRender();
     }
 
+    /**
+     * Unload this world.
+     * <p>
+     * This is automatically called when the world is unregistered.
+     */
     public void unload() {
         if (!isEnabled()) {
             return;
@@ -479,7 +666,7 @@ public abstract class World extends Keyed {
 
         stopMarkersTask();
 
-        serializeDirtyChunks();
+        serializeDirtyRegions();
         serializeScannedRegions();
     }
 
@@ -488,6 +675,7 @@ public abstract class World extends Keyed {
      *
      * @return world tiles directory
      */
+    @NotNull
     public Path getTilesDir() {
         return this.tilesPath;
     }
@@ -497,10 +685,14 @@ public abstract class World extends Keyed {
      *
      * @return world markers directory
      */
+    @NotNull
     public Path getMarkersDir() {
         return getTilesDir().resolve("markers");
     }
 
+    /**
+     * Represents a world's type.
+     */
     public enum Type {
         OVERWORLD,
         NETHER,
@@ -513,7 +705,14 @@ public abstract class World extends Keyed {
             this.name = name().toLowerCase(Locale.ROOT);
         }
 
-        public static Type get(ServerLevel level) {
+        /**
+         * Get the world type from a server level.
+         *
+         * @param level server level
+         * @return world type
+         */
+        @NotNull
+        public static Type get(@NotNull ServerLevel level) {
             ResourceKey<Level> key = level.dimension();
             if (key == Level.OVERWORLD) {
                 return OVERWORLD;
@@ -526,6 +725,7 @@ public abstract class World extends Keyed {
         }
 
         @Override
+        @NotNull
         public String toString() {
             return this.name;
         }

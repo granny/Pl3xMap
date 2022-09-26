@@ -162,11 +162,7 @@ public class BiomeColors {
     }
 
     public int getWaterColor(ScanData data, ScanData.Data scanData) {
-        return getWaterColor(data, scanData, true);
-    }
-
-    public int getWaterColor(ScanData data, ScanData.Data scanData, boolean blend) {
-        if (blend && this.world.getConfig().RENDER_BIOME_BLEND > 0) {
+        if (this.world.getConfig().RENDER_BIOME_BLEND > 0) {
             return this.sampleNeighbors(scanData, data.getCoordinate(), this.world.getConfig().RENDER_BIOME_BLEND, (data1) -> this.waterColors.get(data1.getFluidBiome() == null ? data1.getBlockBiome() : data1.getFluidBiome()));
         }
         return this.waterColors.get(data.getFluidBiome());
