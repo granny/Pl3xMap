@@ -147,7 +147,7 @@ public class FileUtil {
     public static void write(String str, Path path) {
         try (
                 RandomAccessFile raf = new RandomAccessFile(mkDirs(path).toFile(), "rw");
-                FileChannel rw = raf.getChannel();
+                FileChannel rw = raf.getChannel().truncate(0)
         ) {
             ByteBuffer buf = rw.map(FileChannel.MapMode.READ_WRITE, 0, str.length());
             buf.put(str.getBytes());
