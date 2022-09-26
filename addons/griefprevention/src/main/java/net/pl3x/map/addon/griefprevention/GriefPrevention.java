@@ -3,7 +3,7 @@ package net.pl3x.map.addon.griefprevention;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.addon.Addon;
 import net.pl3x.map.addon.griefprevention.configuration.Config;
-import net.pl3x.map.addon.griefprevention.hook.GPBukkitHook;
+import net.pl3x.map.addon.griefprevention.hook.bukkit.GPBukkitHook;
 import net.pl3x.map.addon.griefprevention.hook.GPHook;
 import net.pl3x.map.addon.griefprevention.listener.WorldListener;
 

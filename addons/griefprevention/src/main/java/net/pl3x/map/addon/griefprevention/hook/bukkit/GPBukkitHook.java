@@ -1,4 +1,4 @@
-package net.pl3x.map.addon.griefprevention.hook;
+package net.pl3x.map.addon.griefprevention.hook.bukkit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,10 +7,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.pl3x.map.Key;
+import net.pl3x.map.addon.griefprevention.hook.GPHook;
 import net.pl3x.map.markers.marker.Marker;
 import net.pl3x.map.world.World;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,8 +18,13 @@ public class GPBukkitHook implements GPHook {
     public static final List<Marker<?>> EMPTY_LIST = new ArrayList<>();
 
     @Override
+    public boolean isGPReady() {
+        return GriefPrevention.instance != null;
+    }
+
+    @Override
     public boolean isWorldEnabled(@NotNull String name) {
-        return GriefPrevention.instance.claimsEnabledForWorld(Bukkit.getWorld(name));
+        return isGPReady() && GriefPrevention.instance.claimsEnabledForWorld(Bukkit.getWorld(name));
     }
 
     @Override
@@ -31,12 +36,11 @@ public class GPBukkitHook implements GPHook {
         return GriefPrevention.instance.dataStore.getClaims().stream()
                 .filter(claim -> claim.getLesserBoundaryCorner() != null)
                 .filter(claim -> claim.getLesserBoundaryCorner().getWorld().getName().equals(world.getName()))
+                .map(claim -> new GPBukkitClaim(world, claim))
                 .map(claim -> {
                     Key key = Key.of("gp-claim-" + claim.getID());
-                    Location min = claim.getLesserBoundaryCorner();
-                    Location max = claim.getGreaterBoundaryCorner();
-                    return Marker.rectangle(key, min.getX(), min.getZ(), max.getX(), max.getZ())
-                            .setOptions(getOptions(claim, min.getWorld().getName()));
+                    return Marker.rectangle(key, claim.getMin(), claim.getMax())
+                            .setOptions(getOptions(claim));
                 })
                 .collect(Collectors.toSet());
     }
