@@ -164,14 +164,15 @@ public abstract class World extends Keyed {
                 return;
             }
             Key iconKey = Key.of(icon);
-            Path path = World.WEB_DIR.resolve("images/icon/" + iconKey + ".png");
+            Path path = World.WEB_DIR.resolve("images/icon/" + icon + ".png");
             try {
                 IconImage image = new IconImage(iconKey, ImageIO.read(path.toFile()), "png");
                 Pl3xMap.api().getIconRegistry().register(image);
-                rendererHolders.put(holder.getKey(), holder);
             } catch (IOException e) {
+                Logger.severe("Cannot load world renderer icon " + path);
                 e.printStackTrace();
             }
+            rendererHolders.put(holder.getKey(), holder);
         });
 
         try {
