@@ -64,7 +64,8 @@ public class UpdateMarkerData implements Runnable {
                 long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
 
                 if (now - lastUpdate > layer.getUpdateInterval()) {
-                    FileUtil.write(this.gson.toJson(layer.getMarkers()), this.world.getMarkersDir().resolve(key + ".json"));
+                    List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
+                    FileUtil.write(this.gson.toJson(list), this.world.getMarkersDir().resolve(key + ".json"));
                     this.lastUpdated.put(key, now);
                 }
             } catch (Throwable t) {

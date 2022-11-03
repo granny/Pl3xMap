@@ -1,18 +1,18 @@
 package net.pl3x.map.util;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -145,12 +145,9 @@ public class FileUtil {
     }
 
     public static void write(String str, Path path) {
-        try (
-                RandomAccessFile raf = new RandomAccessFile(mkDirs(path).toFile(), "rw");
-                FileChannel rw = raf.getChannel().truncate(0)
-        ) {
-            ByteBuffer buf = rw.map(FileChannel.MapMode.READ_WRITE, 0, str.length());
-            buf.put(str.getBytes());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            writer.write(str);
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -163,6 +160,7 @@ public class FileUtil {
                 Writer writer = new OutputStreamWriter(gzipOut)
         ) {
             writer.write(json);
+            writer.flush();
         }
     }
 
@@ -172,6 +170,7 @@ public class FileUtil {
                 GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut)
         ) {
             gzipOut.write(bytes);
+            gzipOut.flush();
         }
     }
 
