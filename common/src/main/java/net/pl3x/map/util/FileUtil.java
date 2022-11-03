@@ -1,10 +1,8 @@
 package net.pl3x.map.util;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -144,8 +142,11 @@ public class FileUtil {
         }
     }
 
-    public static void write(String str, Path path) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+    public static void write(String str, Path file) {
+        try (
+                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                Writer writer = new OutputStreamWriter(fileOut)
+        ) {
             writer.write(str);
             writer.flush();
         } catch (IOException e) {
