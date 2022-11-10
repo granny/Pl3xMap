@@ -28,7 +28,12 @@ public class WorldParser<C> implements ArgumentParser<C, World> {
             return failure(new WorldParseException(null, WorldParseException.MUST_SPECIFY_WORLD));
         }
 
-        World world = Pl3xMap.api().getWorldRegistry().get(input);
+        World world = null;
+        try {
+            world = Pl3xMap.api().getWorldRegistry().get(input);
+        } catch (Throwable ignore) {
+        }
+
         if (world == null) {
             return failure(new WorldParseException(input, WorldParseException.NO_SUCH_WORLD));
         }
