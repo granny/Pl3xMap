@@ -56,12 +56,12 @@ public class BukkitWorldListener implements WorldListener, Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onWorldLoad(WorldLoadEvent event) {
         this.plugin.getWorldRegistry().register(event.getWorld());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onWorldUnload(WorldUnloadEvent event) {
         this.plugin.getWorldRegistry().unregister(event.getWorld());
     }
