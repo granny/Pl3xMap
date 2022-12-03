@@ -454,21 +454,21 @@ public class Popup extends Option<Popup> {
 
     @Override
     public boolean isDefault() {
-        return getContent() != null &&
-                getPane() != null &&
-                getOffset() != null &&
-                getMaxWidth() != null &&
-                getMinWidth() != null &&
-                getMaxHeight() != null &&
-                shouldAutoPan() != null &&
-                getAutoPanPaddingTopLeft() != null &&
-                getAutoPanPaddingBottomRight() != null &&
-                getAutoPanPadding() != null &&
-                shouldKeepInView() != null &&
-                hasCloseButton() != null &&
-                shouldAutoClose() != null &&
-                shouldCloseOnEscapeKey() != null &&
-                shouldCloseOnClick() != null;
+        return getContent() == null &&
+                getPane() == null &&
+                getOffset() == null &&
+                getMaxWidth() == null &&
+                getMinWidth() == null &&
+                getMaxHeight() == null &&
+                shouldAutoPan() == null &&
+                getAutoPanPaddingTopLeft() == null &&
+                getAutoPanPaddingBottomRight() == null &&
+                getAutoPanPadding() == null &&
+                shouldKeepInView() == null &&
+                hasCloseButton() == null &&
+                shouldAutoClose() == null &&
+                shouldCloseOnEscapeKey() == null &&
+                shouldCloseOnClick() == null;
     }
 
     @Override

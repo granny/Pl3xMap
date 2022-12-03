@@ -238,13 +238,13 @@ public class Stroke extends Option<Stroke> {
 
     @Override
     public boolean isDefault() {
-        return isEnabled() != null &&
-                getWeight() != null &&
-                getColor() != null &&
-                getLineCapShape() != null &&
-                getLineJoinShape() != null &&
-                getDashPattern() != null &&
-                getDashOffset() != null;
+        return isEnabled() == null &&
+                getWeight() == null &&
+                getColor() == null &&
+                getLineCapShape() == null &&
+                getLineJoinShape() == null &&
+                getDashPattern() == null &&
+                getDashOffset() == null;
     }
 
     @Override

@@ -227,13 +227,13 @@ public class Tooltip extends Option<Tooltip> {
 
     @Override
     public boolean isDefault() {
-        return getContent() != null &&
-                getPane() != null &&
-                getOffset() != null &&
-                getDirection() != null &&
-                isPermanent() != null &&
-                isSticky() != null &&
-                getOpacity() != null;
+        return getContent() == null &&
+                getPane() == null &&
+                getOffset() == null &&
+                getDirection() == null &&
+                isPermanent() == null &&
+                isSticky() == null &&
+                getOpacity() == null;
     }
 
     @Override

@@ -120,9 +120,9 @@ public class Fill extends Option<Fill> {
 
     @Override
     public boolean isDefault() {
-        return isEnabled() != null &&
-                getType() != null &&
-                getColor() != null;
+        return isEnabled() == null &&
+                getType() == null &&
+                getColor() == null;
     }
 
     @Override
