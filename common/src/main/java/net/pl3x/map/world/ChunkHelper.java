@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ChunkHolder;
@@ -45,7 +46,7 @@ public class ChunkHelper {
     public ChunkHelper(Render render) {
         this.render = render;
         ServerLevel level = render.getWorld().getLevel();
-        this.biomeRegistry = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY);
+        this.biomeRegistry = level.registryAccess().registryOrThrow(Registries.BIOME);
         this.minSection = WorldUtil.getMinLightSection(level);
         this.totalLightSections = WorldUtil.getMaxLightSection(level) - this.minSection + 1;
         this.chunkCache = new HashMap<>(CHUNK_CACHE_SIZE);

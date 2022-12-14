@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -120,7 +121,7 @@ public abstract class World extends Keyed {
         this.config = new WorldConfig(this);
 
         this.biomePaletteRegistry = new BiomePaletteRegistry();
-        this.biomeRegistry = level.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+        this.biomeRegistry = level.registryAccess().registryOrThrow(Registries.BIOME);
         this.layerRegistry = new KeyedRegistry<>();
 
         String dirName = getName().replace(":", "-");

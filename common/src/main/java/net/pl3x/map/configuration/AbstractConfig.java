@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -107,7 +109,7 @@ public abstract class AbstractConfig {
         }
         @SuppressWarnings("resource")
         ServerLevel level = MinecraftServer.getServer().getAllLevels().iterator().next();
-        Registry<Biome> registry = level.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+        Registry<Biome> registry = level.registryAccess().registryOrThrow(Registries.BIOME);
         for (String key : section.getKeys(false)) {
             String rawValue = section.getString(key);
             if (rawValue == null) {
@@ -119,7 +121,7 @@ public abstract class AbstractConfig {
                 ResourceKey<Biome> resourceKey = registry.getResourceKey(biome).orElse(null);
                 map.put(resourceKey, Colors.fromHex(rawValue));
             } else {
-                Block block = Registry.BLOCK.get(resource);
+                Block block = BuiltInRegistries.BLOCK.get(resource);
                 if (block != Blocks.AIR) {
                     map.put(block, Colors.fromHex(rawValue));
                 } else {
@@ -138,7 +140,7 @@ public abstract class AbstractConfig {
                 String key;
                 Object val;
                 if (k instanceof Block block) {
-                    key = Registry.BLOCK.getKey(block).toString();
+                    key = BuiltInRegistries.BLOCK.getKey(block).toString();
                     val = Colors.toHex((int) v);
                 } else if (k instanceof ResourceKey<?> resourceKey) {
                     key = resourceKey.location().toString();
