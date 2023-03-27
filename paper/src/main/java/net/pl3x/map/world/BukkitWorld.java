@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import net.pl3x.map.Pl3xMap;
 import net.pl3x.map.player.Player;
-import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
