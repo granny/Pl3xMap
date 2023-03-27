@@ -31,7 +31,7 @@ public class HelpCommand extends Pl3xMapCommand {
 
     @Override
     public void register() {
-        var helpQueryArgument = StringArgument.<Sender>newBuilder("query").greedy().asOptional()
+        var helpQueryArgument = StringArgument.<Sender>builder("query").greedy().asOptional()
                 .withSuggestionsProvider((context, input) ->
                         ((CommandHelpHandler.IndexHelpTopic<Sender>) getHandler().createHelpCommand().queryHelp(context.getSender(), ""))
                                 .getEntries().stream()

@@ -2,8 +2,10 @@ package net.pl3x.map.command.argument.parser;
 
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
@@ -25,23 +27,23 @@ public class PointParser<C> implements ArgumentParser<C, Point> {
     @Override
     @NotNull
     public ArgumentParseResult<Point> parse(@NotNull CommandContext<C> context, Queue<String> queue) {
-        String input = queue.peek();
-        if (input == null) {
-            return failure(new NoInputProvidedException(PointParser.class, context));
+        if (queue.size() < 2) {
+            StringBuilder input = new StringBuilder();
+            for (int i = 0; i < queue.size(); i++) {
+                input.append(((LinkedList<String>) queue).get(i));
+            }
+            return failure(new PointParseException(input.toString(), PointParseException.INVALID_FORMAT));
+        }
+        Integer[] coordinates = new Integer[2];
+        for (int i = 0; i < 2; i++) {
+            ArgumentParseResult<Integer> coordinate = parseCoord(context, queue);
+            if (coordinate.getFailure().isPresent()) {
+                return failure(coordinate.getFailure().get());
+            }
+            coordinates[i] = coordinate.getParsedValue().orElseThrow(NullPointerException::new);
         }
 
-        Point point;
-        try {
-            String[] nums = input.split(" ");
-            int x = Integer.parseInt(nums[0]);
-            int z = Integer.parseInt(nums[1]);
-            point = Point.of(x, z);
-        } catch (Throwable e) {
-            return failure(new PointParseException(input, PointParseException.INVALID_FORMAT));
-        }
-
-        queue.remove();
-        return success(point);
+        return success(new Point(coordinates[0], coordinates[1]));
     }
 
     @Override
@@ -51,5 +53,31 @@ public class PointParser<C> implements ArgumentParser<C, Point> {
                 .entries().values().stream()
                 .map(World::getName)
                 .collect(Collectors.toList());
+    }
+
+    @NotNull
+    public ArgumentParseResult<Integer> parseCoord(CommandContext<C> context, Queue<String> queue) {
+        String input = queue.peek();
+        if (input == null) {
+            return failure(new NoInputProvidedException(PointParser.class, context));
+        }
+
+        int coordinate;
+        try {
+            coordinate = input.isEmpty() ? 0 : Integer.parseInt(input);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return failure(new IntegerArgument.IntegerParseException(
+                    input,
+                    new IntegerArgument.IntegerParser<>(
+                            IntegerArgument.IntegerParser.DEFAULT_MINIMUM,
+                            IntegerArgument.IntegerParser.DEFAULT_MAXIMUM
+                    ),
+                    context
+            ));
+        }
+
+        queue.remove();
+        return success(coordinate);
     }
 }

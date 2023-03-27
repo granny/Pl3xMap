@@ -28,7 +28,7 @@ public class StatusCommand extends Pl3xMapCommand {
     public void register() {
         getHandler().registerSubcommand(builder -> builder.literal("status")
                 .argument(WorldArgument.of("world"))
-                .argument(StringArgument.<Sender>newBuilder("type").withSuggestionsProvider(this::suggestType).asOptional().build())
+                .argument(StringArgument.<Sender>builder("type").withSuggestionsProvider(this::suggestType).asOptional().build())
                 .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_STATUS_DESCRIPTION))
                 .permission("pl3xmap.command.status")
                 .handler(this::execute));
