@@ -177,7 +177,6 @@ public class BiomeColors {
                     colors.add(colorSampler.apply(data));
                 } else {
                     // missing data?!
-                    colors.add(0xFF0000);
                 }
             }
         }

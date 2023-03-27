@@ -52,8 +52,6 @@ public class RadiusRenderCommand extends Pl3xMapCommand {
             }
         }
 
-        System.out.println(center);
-
         Render render = new RadiusRender(world, sender, radius, center.getX(), center.getZ());
 
         if (sender instanceof Player player) {
