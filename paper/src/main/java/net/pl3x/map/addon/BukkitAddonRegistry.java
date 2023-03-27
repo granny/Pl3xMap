@@ -22,7 +22,7 @@ public class BukkitAddonRegistry extends AddonRegistry {
 
             Addon addon = clazz.getDeclaredConstructor().newInstance();
 
-            Set<String> depends = info.getDepends();
+            /*Set<String> depends = info.getDepends();
             if (!depends.isEmpty()) {
                 Field loaders = JavaPluginLoader.class.getDeclaredField("loaders");
                 loaders.setAccessible(true);
@@ -37,7 +37,7 @@ public class BukkitAddonRegistry extends AddonRegistry {
                     Set<String> set = (Set<String>) field.get(classLoader);
                     set.addAll(depends);
                 }
-            }
+            }*/
 
             return addon;
         } catch (Throwable e) {
