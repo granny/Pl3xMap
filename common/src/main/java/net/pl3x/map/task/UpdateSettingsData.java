@@ -48,7 +48,10 @@ public class UpdateSettingsData implements Runnable {
             // do not expose hidden players in the json
             String worldName = player.getWorld().getName();
             Point position = player.getPosition();
-            if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
+            if (!PlayerTracker.ENABLED) {
+                worldName = null;
+                position = null;
+            } else if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
                 worldName = null;
                 position = null;
             } else if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
