@@ -1,6 +1,5 @@
 package net.pl3x.map.render.builtin;
 
-import net.pl3x.map.Key;
 import net.pl3x.map.coordinate.RegionCoordinate;
 import net.pl3x.map.image.Image;
 import net.pl3x.map.render.Renderer;
@@ -9,7 +8,7 @@ import net.pl3x.map.render.ScanData;
 import net.pl3x.map.render.ScanTask;
 
 public final class BasicRenderer extends Renderer {
-    private Image.Holder lightImageHolder;
+    //private Image.Holder lightImageHolder;
 
     public BasicRenderer(RendererHolder holder, ScanTask scanTask) {
         super(holder, scanTask);
@@ -18,13 +17,13 @@ public final class BasicRenderer extends Renderer {
     @Override
     public void allocateData() {
         super.allocateData();
-        this.lightImageHolder = new Image.Holder(Key.of("light"), getWorld(), getRegion());
+        //this.lightImageHolder = new Image.Holder(Key.of("light"), getWorld(), getRegion());
     }
 
     @Override
     public void saveData() {
         super.saveData();
-        this.lightImageHolder.save();
+        //this.lightImageHolder.save();
     }
 
     @Override
@@ -38,8 +37,8 @@ public final class BasicRenderer extends Renderer {
             getImageHolder().getImage().setPixel(pixelX, pixelZ, pixelColor);
 
             // get light level right above this block
-            int lightPixel = calculateLight(data.getChunk(), data.getBlockPos(), data.getFluidState(), data.getFluidPos(), pixelColor);
-            this.lightImageHolder.getImage().setPixel(pixelX, pixelZ, lightPixel);
+            //int lightPixel = calculateLight(data.getChunk(), data.getBlockPos(), data.getFluidState(), data.getFluidPos(), pixelColor);
+            //this.lightImageHolder.getImage().setPixel(pixelX, pixelZ, lightPixel);
         }
     }
 }
