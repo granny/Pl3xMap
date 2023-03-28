@@ -119,7 +119,9 @@ public class BukkitCommandManager extends PaperCommandManager<Sender> implements
                     /* MinecraftHelp uses the MinecraftExtrasMetaKeys.DESCRIPTION meta,
                      * this is just so we give Bukkit a description for our commands
                      * in the Bukkit and EssentialsX '/help' command */
-                    .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'");
+                    .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'")
+                    .handler(context -> context.getSender().send(Lang.COMMAND_BASE));
+            command(this.root);
         }
         return this.root;
     }

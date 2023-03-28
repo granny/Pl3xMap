@@ -10,6 +10,9 @@ public final class Lang extends AbstractConfig {
     @Key("prefix.command")
     public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
 
+    @Key("command.base")
+    public static String COMMAND_BASE = "Pl3xMap command. '<grey><click:run_command:/map help>/map help</grey>'";
+
     @Key("command.event.click-for-help")
     public static String CLICK_FOR_HELP = "Click for help";
     @Key("command.event.click-to-confirm")
