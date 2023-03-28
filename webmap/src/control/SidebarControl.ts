@@ -2,7 +2,6 @@ import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 import LayersTab from "../sidebar/LayersTab";
-import MarkersTab from "../sidebar/MarkersTab";
 import PlayersTab from "../sidebar/PlayersTab";
 import WorldsTab from "../sidebar/WorldsTab";
 
