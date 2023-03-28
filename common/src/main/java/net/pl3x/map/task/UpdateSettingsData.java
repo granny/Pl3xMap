@@ -3,6 +3,7 @@ package net.pl3x.map.task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,28 +36,20 @@ public class UpdateSettingsData implements Runnable {
     }
 
     private List<Object> parsePlayers() {
+        if (!PlayerTracker.ENABLED) {
+            return Collections.emptyList();
+        }
         List<Object> players = new ArrayList<>();
         Pl3xMap.api().getPlayerRegistry().entries().forEach((key, player) -> {
-            if (player.isHidden()) {
-                return;
-            }
-
-            if (player.isNPC()) {
-                return;
-            }
-
             // do not expose hidden players in the json
-            String worldName = player.getWorld().getName();
-            Point position = player.getPosition();
-            if (!PlayerTracker.ENABLED) {
-                worldName = null;
-                position = null;
-            } else if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
-                worldName = null;
-                position = null;
-            } else if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
-                worldName = null;
-                position = null;
+            if (player.isHidden() || player.isNPC()) {
+                return;
+            }
+            if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
+                return;
+            }
+            if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
+                return;
             }
 
             Map<String, Object> entry = new LinkedHashMap<>();
@@ -64,8 +57,8 @@ public class UpdateSettingsData implements Runnable {
             entry.put("name", player.getDecoratedName());
             entry.put("uuid", player.getUUID().toString());
             entry.put("displayName", player.getDecoratedName());
-            entry.put("world", worldName);
-            entry.put("position", position);
+            entry.put("world", player.getWorld().getName());
+            entry.put("position", player.getPosition());
 
             players.add(entry);
         });
