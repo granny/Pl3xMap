@@ -193,5 +193,10 @@ public class ScanData {
         public Collection<ScanData> values() {
             return this.scanData.values();
         }
+
+        public void clear() {
+            this.scanData.clear();
+            this.edgeData.clear();
+        }
     }
 }

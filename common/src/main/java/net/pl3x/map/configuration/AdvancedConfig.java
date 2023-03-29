@@ -11,6 +11,16 @@ import net.pl3x.map.util.FileUtil;
 import net.pl3x.map.world.World;
 
 public final class AdvancedConfig extends AbstractConfig {
+    @Key("settings.gc.when-finished")
+    @Comment("Runs the JVM GC a handful of times after a render stops.")
+    public static boolean GC_WHEN_FINISHED = true;
+
+    @Key("settings.gc.when-running")
+    @Comment("""
+            Runs the JVM GC aggressively while a render is running
+            CAUTION: this will slow down your renders!""")
+    public static boolean GC_WHEN_RUNNING = false;
+
     @Key("settings.event-listeners.BlockBreakEvent")
     @Comment("Triggers when a player breaks a block")
     public static boolean BLOCK_BREAK_EVENT = true;

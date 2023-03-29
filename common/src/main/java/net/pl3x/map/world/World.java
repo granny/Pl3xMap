@@ -16,6 +16,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.Key;
 import net.pl3x.map.Keyed;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.configuration.Config;
 import net.pl3x.map.configuration.PlayerTracker;
 import net.pl3x.map.configuration.WorldConfig;
@@ -636,6 +639,8 @@ public abstract class World extends Keyed {
         if (!unloading) {
             startBackgroundRender();
         }
+
+        gc();
     }
 
     /**
@@ -650,6 +655,8 @@ public abstract class World extends Keyed {
         this.activeRender = null;
 
         startBackgroundRender();
+
+        gc();
     }
 
     /**
@@ -670,6 +677,8 @@ public abstract class World extends Keyed {
 
         serializeDirtyRegions();
         serializeScannedRegions();
+
+        gc();
     }
 
     /**
@@ -690,6 +699,25 @@ public abstract class World extends Keyed {
     @NotNull
     public Path getMarkersDir() {
         return getTilesDir().resolve("markers");
+    }
+
+    private void gc() {
+        if (!AdvancedConfig.GC_WHEN_FINISHED) {
+            return;
+        }
+
+        // run the GC every second for 5 seconds
+        TimerTask task = new TimerTask() {
+            private int count;
+
+            public void run() {
+                System.gc();
+                if (++this.count >= 5) {
+                    cancel();
+                }
+            }
+        };
+        new Timer().schedule(task, 1000L, 1000L);
     }
 
     /**

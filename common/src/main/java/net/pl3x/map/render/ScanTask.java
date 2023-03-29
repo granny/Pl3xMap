@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.pl3x.map.Key;
 import net.pl3x.map.Pl3xMap;
+import net.pl3x.map.configuration.AdvancedConfig;
 import net.pl3x.map.coordinate.BlockCoordinate;
 import net.pl3x.map.coordinate.Coordinate;
 import net.pl3x.map.coordinate.RegionCoordinate;
@@ -73,10 +74,11 @@ public class ScanTask implements Runnable {
         try {
             scanRegion();
             this.render.getProgress().getProcessedRegions().getAndIncrement();
-            this.chunkHelper.clear();
         } catch (Throwable t) {
             t.printStackTrace();
         }
+        this.chunkHelper.clear();
+        this.scanData.clear();
     }
 
     public void scanRegion() {
@@ -120,6 +122,10 @@ public class ScanTask implements Runnable {
                     this.renderers.forEach((id, renderer) -> renderer.saveData());
                 } catch (Throwable t) {
                     t.printStackTrace();
+                }
+                this.renderers.clear();
+                if (AdvancedConfig.GC_WHEN_RUNNING) {
+                    System.gc();
                 }
             });
         }
