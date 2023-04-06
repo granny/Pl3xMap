@@ -87,7 +87,11 @@ public class BlockInfoRenderer extends Renderer {
                     // read existing data from disk
                     ByteBuffer buffer = ByteBuffer.allocate(this.byteBuffer.capacity());
                     if (Files.exists(filePath) && Files.size(filePath) > 0) {
-                        FileUtil.readGzip(filePath, buffer);
+                        try {
+                            FileUtil.readGzip(filePath, buffer);
+                        } catch (Throwable t) {
+                            buffer.reset();
+                        }
                     }
 
                     // copy header
