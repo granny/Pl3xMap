@@ -8,7 +8,7 @@ import Pl3xMapLeafletMap from "./map/Pl3xMapLeafletMap";
 import "./scss/styles.scss";
 
 window.onload = function () {
-    new Pl3xMap();
+    window.pl3xmap = new Pl3xMap();
 };
 
 /**
