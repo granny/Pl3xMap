@@ -50,8 +50,20 @@ public class PlayerTexture extends Thread {
             return;
         }
         try {
-            ImageIO.write(get2DHead(ImageIO.read(this.url)), "png", SKINS_2D_DIR.resolve(this.uuid + ".png").toFile());
-            ImageIO.write(get3DHead(ImageIO.read(this.url)), "png", SKINS_3D_DIR.resolve(this.uuid + ".png").toFile());
+            BufferedImage textureSource = ImageIO.read(this.url);
+
+            BufferedImage head2D = get2DHead(textureSource);
+            ImageIO.write(head2D, "png", SKINS_2D_DIR.resolve(this.uuid + ".png").toFile());
+
+            BufferedImage head3D;
+            try {
+                head3D = get3DHead(textureSource);
+            } catch (NoClassDefFoundError e) {
+                // happens in headless environments (missing awt's GraphicsEnvironment)
+                // just draw a 2d head and put it in the 3d directory for now
+                head3D = head2D;
+            }
+            ImageIO.write(head3D, "png", SKINS_3D_DIR.resolve(this.uuid + ".png").toFile());
         } catch (Throwable t) {
             t.printStackTrace();
         }
