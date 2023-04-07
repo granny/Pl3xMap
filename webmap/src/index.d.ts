@@ -3,8 +3,13 @@ import {MarkerLayer} from "./layergroup/MarkerLayer";
 import {Marker} from "./marker/Marker";
 import {Player} from "./player/Player";
 import {World} from "./world/World";
+import {Pl3xMap} from "./Pl3xMap";
 
 declare global {
+    interface Window {
+        pl3xmap: Pl3xMap   
+    }
+    
     interface WindowEventMap {
         markeradded: CustomEvent<Marker>;
         markerremoved: CustomEvent<Marker>;
