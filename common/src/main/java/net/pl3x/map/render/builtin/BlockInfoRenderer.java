@@ -90,7 +90,7 @@ public class BlockInfoRenderer extends Renderer {
                         try {
                             FileUtil.readGzip(filePath, buffer);
                         } catch (Throwable t) {
-                            buffer.reset();
+                            buffer = ByteBuffer.allocate(this.byteBuffer.capacity());
                         }
                     }
 
