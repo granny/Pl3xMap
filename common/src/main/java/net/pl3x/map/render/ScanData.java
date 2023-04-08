@@ -152,24 +152,6 @@ public class ScanData {
                 state.getBlock() instanceof StainedGlassPaneBlock;
     }
 
-    public static ScanData get(ScanData[] scanData, BlockCoordinate coordinate) {
-        final int size = size();
-        final int x = coordinate.getBlockX() & size - 1;
-        final int z = coordinate.getBlockZ() & size - 1;
-        return scanData[z * size + x];
-    }
-
-    public static void put(ScanData[] scanData, BlockCoordinate coordinate, ScanData data) {
-        final int size = size();
-        final int x = coordinate.getBlockX() & size - 1;
-        final int z = coordinate.getBlockZ() & size - 1;
-        scanData[z * size + x] = data;
-    }
-
-    public static int size() {
-        return Image.SIZE + 16 * 2;
-    }
-
     public static class Data {
         private final Map<BlockCoordinate, ScanData> scanData = new LinkedHashMap<>(Image.SIZE * Image.SIZE, 1.0F);
         private final Map<BlockCoordinate, ScanData> edgeData = new LinkedHashMap<>((Image.SIZE + 2) * 4, 1.0F);
