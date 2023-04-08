@@ -151,7 +151,7 @@ public abstract class Render implements Runnable {
 
     public static int getThreads(int threads) {
         int max = Runtime.getRuntime().availableProcessors() / 2;
-        return Mathf.clamp(1, max, Math.max(threads, max));
+        return Mathf.clamp(1, max, threads < 1 ? max : threads);
     }
 
     public void sleep(int ms) {
