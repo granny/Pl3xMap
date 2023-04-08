@@ -11,6 +11,7 @@ import net.pl3x.map.command.Sender;
 import net.pl3x.map.markers.Point;
 import net.pl3x.map.render.job.progress.Progress;
 import net.pl3x.map.util.BiomeColors;
+import net.pl3x.map.util.Mathf;
 import net.pl3x.map.world.World;
 
 public abstract class Render implements Runnable {
@@ -149,10 +150,8 @@ public abstract class Render implements Runnable {
     public abstract void onCancel(boolean unloading);
 
     public static int getThreads(int threads) {
-        if (threads < 1) {
-            threads = Runtime.getRuntime().availableProcessors() / 2;
-        }
-        return Math.max(1, threads);
+        int max = Runtime.getRuntime().availableProcessors() / 2;
+        return Mathf.clamp(1, max, Math.max(threads, max));
     }
 
     public void sleep(int ms) {
