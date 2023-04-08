@@ -46,8 +46,8 @@ public class BlockInfoRenderer extends Renderer {
             if (Files.exists(path) && Files.size(path) > 0) {
                 FileUtil.readGzip(path, this.byteBuffer);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException ignore) {
+            // silently fail - we're clearing and rebuilding the entire byteBuffer anyway in scanData()
         }
     }
 
@@ -89,8 +89,8 @@ public class BlockInfoRenderer extends Renderer {
                     if (Files.exists(filePath) && Files.size(filePath) > 0) {
                         try {
                             FileUtil.readGzip(filePath, buffer);
-                        } catch (Throwable t) {
-                            buffer = ByteBuffer.allocate(this.byteBuffer.capacity());
+                        } catch (Throwable ignore) {
+                            // silently fail - the file's fucked anyway so whatever
                         }
                     }
 
@@ -118,11 +118,12 @@ public class BlockInfoRenderer extends Renderer {
                 }
             }
 
+            // ensure the file lock closes before throwing any errors
+            lock.writeLock().unlock();
+
             if (error != null) {
                 throw new RuntimeException(error);
             }
-
-            lock.writeLock().unlock();
         }
     }
 

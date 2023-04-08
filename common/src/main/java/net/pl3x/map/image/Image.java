@@ -74,30 +74,33 @@ public class Image {
             ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));
             lock.writeLock().lock();
 
-            // read existing image from disk
-            BufferedImage buffer = getBuffer(filePath);
+            // wrap all this to ensure we close the file lock even on fail
+            try {
+                // read existing image from disk
+                BufferedImage buffer = getBuffer(filePath);
 
-            // write new pixels
-            writePixels(buffer, size, step);
+                // write new pixels
+                writePixels(buffer, size, step);
 
-            // finally, save buffer to disk
-            this.io.write(filePath, buffer);
+                // finally, save buffer to disk
+                this.io.write(filePath, buffer);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
 
             lock.writeLock().unlock();
         }
     }
 
-    private BufferedImage getBuffer(Path path) {
+    private BufferedImage getBuffer(Path path) throws IOException {
         BufferedImage buffer = null;
-        try {
-            if (Files.exists(path) && Files.size(path) > 0) {
-                buffer = this.io.read(path);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        // try to read existing image
+        if (Files.exists(path) && Files.size(path) > 0) {
+            buffer = this.io.read(path);
         }
 
-        // if not file was loaded, create a new image
+        // if not, create a new image
         if (buffer == null) {
             buffer = this.io.createBuffer();
         }

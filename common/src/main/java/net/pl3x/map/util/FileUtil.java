@@ -180,7 +180,10 @@ public class FileUtil {
                 InputStream fileIn = Files.newInputStream(file);
                 GZIPInputStream gzipIn = new GZIPInputStream(fileIn)
         ) {
-            buffer.put(gzipIn.readAllBytes());
+            // try reading all bytes and closing stream _before_ putting into buffer
+            byte[] bytes = gzipIn.readAllBytes();
+            gzipIn.close();
+            buffer.put(bytes);
         }
     }
 
