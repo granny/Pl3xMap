@@ -1,0 +1,489 @@
+.menu input + label, button, .leaflet-control-button, #sidebar #sidebar__buttons button, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle,
+.leaflet-control-layers .leaflet-control-layers-toggle, .leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  display: inline-block;
+  appearance: none;
+  box-shadow: var(--ui-box-shadow);
+  white-space: nowrap;
+  background-color: var(--ui-background);
+  color: var(--ui-text);
+  border-radius: var(--ui-border-radius);
+  border: var(--ui-border);
+  background-clip: padding-box;
+  position: relative;
+  padding: 0.5rem;
+  line-height: 2rem;
+  cursor: pointer;
+  transition: 0.2s all ease-in;
+}
+.menu input + label > a:only-child, button > a:only-child, .leaflet-control-button > a:only-child, #sidebar #sidebar__buttons button > a:only-child, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle > a:only-child,
+.leaflet-control-layers .leaflet-control-layers-toggle > a:only-child, .leaflet-bar a > a:only-child {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.menu input + label > img:only-child, button > img:only-child, .leaflet-control-button > img:only-child, #sidebar #sidebar__buttons button > img:only-child, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle > img:only-child,
+.leaflet-control-layers .leaflet-control-layers-toggle > img:only-child, .leaflet-bar a > img:only-child,
+.menu input + label > svg:only-child,
+button > svg:only-child,
+.leaflet-control-button > svg:only-child,
+#sidebar #sidebar__buttons button > svg:only-child,
+.leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle > svg:only-child,
+.leaflet-control-layers .leaflet-control-layers-toggle > svg:only-child,
+.leaflet-bar a > svg:only-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: calc(100% - 1.6rem);
+  height: calc(100% - 1.6rem);
+  pointer-events: none;
+}
+.menu input + label:visited, button:visited, .leaflet-control-button:visited, #sidebar #sidebar__buttons button:visited, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle:visited,
+.leaflet-control-layers .leaflet-control-layers-toggle:visited, .leaflet-bar a:visited, .menu input + label:link, button:link, .leaflet-control-button:link, #sidebar #sidebar__buttons button:link, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle:link,
+.leaflet-control-layers .leaflet-control-layers-toggle:link, .leaflet-bar a:link {
+  color: var(--ui-text);
+}
+.menu input + label:hover, button:hover, .leaflet-control-button:hover, #sidebar #sidebar__buttons button:hover, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle:hover,
+.leaflet-control-layers .leaflet-control-layers-toggle:hover, .leaflet-bar a:hover {
+  background-color: var(--ui-background-hover);
+  color: var(--ui-text-hover);
+}
+.menu input + label:focus, button:focus, .leaflet-control-button:focus, #sidebar #sidebar__buttons button:focus, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle:focus,
+.leaflet-control-layers .leaflet-control-layers-toggle:focus, .leaflet-bar a:focus {
+  outline: var(--ui-outline);
+}
+.menu input + label:focus:not(:focus-visible), button:focus:not(:focus-visible), .leaflet-control-button:focus:not(:focus-visible), #sidebar #sidebar__buttons button:focus:not(:focus-visible),
+.leaflet-control-layers .leaflet-control-layers-toggle:focus:not(:focus-visible), .leaflet-bar a:focus:not(:focus-visible) {
+  outline-style: none;
+}
+.menu input + label:active, button:active, .leaflet-control-button:active, #sidebar #sidebar__buttons button:active, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle:active,
+.leaflet-control-layers .leaflet-control-layers-toggle:active, .leaflet-bar a:active {
+  background-color: var(--ui-background-active);
+  color: var(--ui-text-active);
+}
+.menu input + label[disabled], button[disabled], [disabled].leaflet-control-button, #sidebar #sidebar__buttons button[disabled], .leaflet-touch .leaflet-control-layers [disabled].leaflet-control-layers-toggle,
+.leaflet-control-layers [disabled].leaflet-control-layers-toggle, .leaflet-bar a[disabled], .menu input + label.leaflet-disabled, button.leaflet-disabled, .leaflet-disabled.leaflet-control-button, #sidebar #sidebar__buttons button.leaflet-disabled, .leaflet-touch .leaflet-control-layers .leaflet-disabled.leaflet-control-layers-toggle,
+.leaflet-control-layers .leaflet-disabled.leaflet-control-layers-toggle, .leaflet-bar a.leaflet-disabled {
+  background-color: var(--ui-background-disabled);
+  color: var(--ui-text-disabled);
+  cursor: not-allowed;
+}
+.menu input + label[disabled]:hover, button[disabled]:hover, [disabled].leaflet-control-button:hover, #sidebar #sidebar__buttons button[disabled]:hover,
+.leaflet-control-layers [disabled].leaflet-control-layers-toggle:hover, .leaflet-bar a[disabled]:hover, .menu input + label[disabled]:active, button[disabled]:active, [disabled].leaflet-control-button:active, #sidebar #sidebar__buttons button[disabled]:active,
+.leaflet-control-layers [disabled].leaflet-control-layers-toggle:active, .leaflet-bar a[disabled]:active, .menu input + label[disabled]:focus, button[disabled]:focus, [disabled].leaflet-control-button:focus, #sidebar #sidebar__buttons button[disabled]:focus,
+.leaflet-control-layers [disabled].leaflet-control-layers-toggle:focus, .leaflet-bar a[disabled]:focus, .menu input + label.leaflet-disabled:hover, button.leaflet-disabled:hover, .leaflet-disabled.leaflet-control-button:hover, #sidebar #sidebar__buttons button.leaflet-disabled:hover,
+.leaflet-control-layers .leaflet-disabled.leaflet-control-layers-toggle:hover, .leaflet-bar a.leaflet-disabled:hover, .menu input + label.leaflet-disabled:active, button.leaflet-disabled:active, .leaflet-disabled.leaflet-control-button:active, #sidebar #sidebar__buttons button.leaflet-disabled:active,
+.leaflet-control-layers .leaflet-disabled.leaflet-control-layers-toggle:active, .leaflet-bar a.leaflet-disabled:active, .menu input + label.leaflet-disabled:focus, button.leaflet-disabled:focus, .leaflet-disabled.leaflet-control-button:focus, #sidebar #sidebar__buttons button.leaflet-disabled:focus,
+.leaflet-control-layers .leaflet-disabled.leaflet-control-layers-toggle:focus, .leaflet-bar a.leaflet-disabled:focus {
+  background-color: var(--ui-background-disabled);
+  color: var(--ui-text-disabled);
+}
+.menu input + label[aria-pressed=true], button[aria-pressed=true], [aria-pressed=true].leaflet-control-button, #sidebar #sidebar__buttons button[aria-pressed=true], .leaflet-touch .leaflet-control-layers [aria-pressed=true].leaflet-control-layers-toggle,
+.leaflet-control-layers [aria-pressed=true].leaflet-control-layers-toggle, .leaflet-bar a[aria-pressed=true], .menu input + label[aria-expanded=true], button[aria-expanded=true], [aria-expanded=true].leaflet-control-button, #sidebar #sidebar__buttons button[aria-expanded=true], .leaflet-touch .leaflet-control-layers [aria-expanded=true].leaflet-control-layers-toggle,
+.leaflet-control-layers [aria-expanded=true].leaflet-control-layers-toggle, .leaflet-bar a[aria-expanded=true] {
+  background-color: var(--ui-background-selected);
+  color: var(--ui-text-selected);
+  font-weight: bold;
+}
+
+.leaflet-control-button, #sidebar #sidebar__buttons button, .leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle,
+.leaflet-control-layers .leaflet-control-layers-toggle, .leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  height: var(--ui-button-size);
+  width: var(--ui-button-size);
+  line-height: calc(var(--ui-button-size) - 1.2rem);
+}
+
+.leaflet-control-panel, #sidebar #sidebar__content, .leaflet-touch .leaflet-control-layers.leaflet-control-layers-expanded .leaflet-control-layers-list,
+.leaflet-control-layers.leaflet-control-layers-expanded .leaflet-control-layers-list {
+  background-color: var(--ui-background);
+  color: var(--ui-text);
+  border-radius: var(--ui-border-radius);
+  border: var(--ui-border);
+  padding: 0.2rem 0.5rem;
+}
+
+/* Overrides for leaflet styles */
+/* Use CSS grid for control containers to avoid dealing with margins between controls */
+.leaflet-control-container {
+  font-size: 1.6rem;
+  width: 100vw;
+  height: 100vh;
+  padding: var(--ui-element-spacing);
+  display: grid;
+  grid-auto-rows: 1fr;
+  pointer-events: none;
+}
+
+.leaflet-control-container-top,
+.leaflet-control-container-bottom {
+  display: grid;
+  grid-gap: inherit;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: flex-start;
+  position: relative;
+  z-index: 1002;
+}
+
+.leaflet-control-container-bottom {
+  align-items: flex-end;
+  z-index: 1001;
+}
+
+.leaflet-top, .leaflet-left,
+.leaflet-bottom, .leaflet-right {
+  position: static;
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: var(--ui-element-spacing);
+  justify-content: flex-start;
+  pointer-events: auto;
+}
+.leaflet-top .leaflet-control, .leaflet-left .leaflet-control,
+.leaflet-bottom .leaflet-control, .leaflet-right .leaflet-control {
+  margin: 0;
+}
+
+.leaflet-bottom {
+  align-content: flex-end;
+}
+
+.leaflet-center {
+  justify-content: center;
+}
+
+.leaflet-right {
+  justify-content: flex-end;
+}
+
+.leaflet-right .leaflet-control {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Use Pl3xmap styling for default leaflet controls */
+.leaflet-control-attribution {
+  font-size: 1.1rem;
+  border-radius: 3px;
+}
+
+.leaflet-control-attribution a,
+.leaflet-control-attribution a:visited,
+.leaflet-control-attribution a:active,
+.leaflet-control-attribution a:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.leaflet-popup,
+.leaflet-tooltip {
+  font-size: 12px;
+}
+
+.leaflet-bar,
+.leaflet-touch .leaflet-bar {
+  border-radius: 0;
+  border: none;
+}
+
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  display: block;
+  border: var(--ui-border);
+  border-top: none;
+  border-radius: 0;
+}
+
+.leaflet-bar a:first-child,
+.leaflet-touch .leaflet-bar a:first-child {
+  border-radius: var(--ui-border-radius) var(--ui-border-radius) 0 0;
+  border-top: var(--ui-border);
+}
+
+.leaflet-bar a:last-child,
+.leaflet-touch .leaflet-bar a:last-child {
+  border-radius: 0 0 var(--ui-border-radius) var(--ui-border-radius);
+}
+
+.leaflet-touch .leaflet-control-layers,
+.leaflet-control-layers {
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+}
+.leaflet-touch .leaflet-control-layers.leaflet-control-layers-expanded,
+.leaflet-control-layers.leaflet-control-layers-expanded {
+  padding: 0;
+}
+.leaflet-touch .leaflet-control-layers.leaflet-control-layers-expanded .leaflet-control-layers-list,
+.leaflet-control-layers.leaflet-control-layers-expanded .leaflet-control-layers-list {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: var(--ui-element-spacing);
+  width: max-content;
+  max-width: 30rem;
+}
+.leaflet-touch .leaflet-control-layers .leaflet-control-layers-toggle,
+.leaflet-control-layers .leaflet-control-layers-toggle {
+  border-radius: var(--ui-border-radius);
+  border: var(--ui-border);
+  background-image: none;
+}
+.leaflet-touch .leaflet-control-layers .leaflet-control-layers-separator,
+.leaflet-control-layers .leaflet-control-layers-separator {
+  margin: 0.5rem 0;
+  border: var(--ui-border);
+}
+.leaflet-touch .leaflet-control-layers .leaflet-control-layers-selector,
+.leaflet-control-layers .leaflet-control-layers-selector {
+  position: static;
+  margin: 0;
+  font-size: inherit;
+  display: flex;
+  align-items: center;
+  border-radius: var(--ui-border-radius);
+}
+.leaflet-touch .leaflet-control-layers .leaflet-control-layers-selector span,
+.leaflet-control-layers .leaflet-control-layers-selector span {
+  margin-left: 0.5rem;
+}
+.leaflet-touch .leaflet-control-layers .leaflet-control-layers-selector + .leaflet-control-layers-selector,
+.leaflet-control-layers .leaflet-control-layers-selector + .leaflet-control-layers-selector {
+  margin-top: 0.5rem;
+}
+
+#sidebar {
+  position: relative;
+  transition: 0.2s transform ease-in;
+  transform: none;
+}
+#sidebar.sidebar--expanded {
+  --transform: calc(-1 * var(--ui-sidebar-width));
+  transform: translateX(var(--transform));
+}
+#sidebar #sidebar__buttons {
+  display: grid;
+  grid-gap: var(--ui-element-spacing);
+}
+#sidebar #sidebar__content {
+  padding: 1rem 1.5rem;
+  border-radius: 0;
+  position: absolute;
+  top: calc(-1 * var(--ui-element-spacing));
+  left: calc(var(--ui-button-size) + var(--ui-element-spacing));
+  height: 100vh;
+  width: var(--ui-sidebar-width);
+  transition: 0.5s transform ease-in;
+  overflow-y: auto;
+}
+#sidebar #sidebar__content h2 {
+  margin-top: 0;
+}
+
+:root {
+  color-scheme: dark;
+  --ui-font: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  --ui-button-size: 5rem;
+  --ui-element-spacing: 1rem;
+  --ui-border-radius: 0.4rem;
+  --ui-border: 1px solid #777777;
+  --ui-text-shadow: none;
+  --ui-outline: solid #ffffff 0.3rem;
+  --ui-background: rgba(255, 255, 255, 0.9);
+  --ui-background-disabled: #555555;
+  --ui-background-hover: #aaaaaa;
+  --ui-background-active: #888888;
+  --ui-background-selected: #222222;
+  --ui-text: #222222;
+  --ui-text-hover: var(--ui-text);
+  --ui-text-active: var(--ui-text);
+  --ui-text-selected: rgba(255, 255, 255, 0.8);
+  --ui-text-disabled: #777777;
+  --ui-sidebar-width: 25rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-border: 1px solid #333333;
+    --ui-background: #222222;
+    --ui-background-disabled: #555555;
+    --ui-background-hover: #363636;
+    --ui-background-active: #6d6d6d;
+    --ui-background-selected: #BDBDBD;
+    --ui-text: rgba(255, 255, 255, 0.7);
+    --ui-text-hover: var(--ui-text);
+    --ui-text-active: var(--ui-text);
+    --ui-text-selected: #222222;
+    --ui-text-disabled: rgba(255, 255, 255, 0.5);
+  }
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  overflow: hidden;
+  text-shadow: var(--ui-text-shadow);
+  font-family: var(--ui-font);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+:focus {
+  outline: var(--ui-outline);
+}
+
+:focus:not(:focus-visible) {
+  outline-style: none;
+}
+
+h2 {
+  font-size: 2.8rem;
+  line-height: 3.4rem;
+}
+
+h3 {
+  font-size: 2rem;
+  line-height: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+ul, li {
+  list-style-type: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+label:focus-within {
+  outline: var(--ui-outline);
+}
+label:focus-within > input:focus {
+  outline: none;
+}
+
+fieldset {
+  appearance: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.svg-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
+.map {
+  width: 100%;
+  height: 100vh;
+  background: black;
+  cursor: default;
+}
+
+img.leaflet-tile {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.leaflet-control-panel {
+  height: var(--ui-button-size);
+}
+
+.leaflet-control-link {
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.leaflet-control-coordinates {
+  text-align: center;
+  min-width: 20rem;
+  font-family: monospace;
+  white-space: pre;
+  letter-spacing: 0.2rem;
+  font-size: 1.8rem;
+}
+.leaflet-control-coordinates:before {
+  display: block;
+  content: attr(data-label);
+  font-size: 1.2rem;
+  letter-spacing: 0;
+}
+
+.leaflet-control-blockinfo {
+  font-family: monospace;
+  text-align: left;
+  white-space: pre;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.leaflet-marker-icon {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+.menu input {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+}
+.menu input + label {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  padding: 0.8rem;
+}
+.menu input:checked + label {
+  background-color: var(--ui-background-selected);
+  color: var(--ui-text-selected);
+  font-weight: bold;
+}
+.menu input:focus + label {
+  outline: var(--ui-outline);
+}
+.menu input:focus:not(:focus-visible) + label {
+  outline: none;
+}
+.menu input.players + label {
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
+  background-position: 4px center;
+  padding-left: 40px;
+}
+.menu input.renderer + label {
+  margin: 0 4px 0 0;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  background-size: 100%;
+}
+.menu input.renderer:checked + label {
+  border-color: #000000;
+}
+
+/*# sourceMappingURL=styles.css.map*/

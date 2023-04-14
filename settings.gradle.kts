@@ -7,40 +7,19 @@ pluginManagement {
 
 rootProject.name = "Pl3xMap"
 
-// Main project
+setup("Core")
+setup("Bukkit")
+setup("Fabric")
+setup("Forge")
+setup("WebMap")
 
-setupSubproject("Common") {
-    projectDir = file("common")
-}
-setupSubproject("Paper") {
-    projectDir = file("paper")
-}
-setupSubproject("WebMap") {
-    projectDir = file("webmap")
-}
-
-// Addons
-
-setupSubproject("FlowerMap") {
-    projectDir = file("addons/flowermap")
-}
-setupSubproject("GriefPrevention") {
-    projectDir = file("addons/griefprevention")
-}
-setupSubproject("Heightmaps") {
-    projectDir = file("addons/heightmaps")
-}
-setupSubproject("Inhabited") {
-    projectDir = file("addons/inhabited")
-}
-setupSubproject("MarkerTest") {
-    projectDir = file("addons/markertest")
-}
-setupSubproject("Webp") {
-    projectDir = file("addons/webp")
+fun setup(name: String) {
+    subproject(name) {
+        projectDir = file(name.lowercase())
+    }
 }
 
-inline fun setupSubproject(name: String, block: ProjectDescriptor.() -> Unit) {
+inline fun subproject(name: String, block: ProjectDescriptor.() -> Unit) {
     include(name)
     project(":$name").apply(block)
 }

@@ -1,0 +1,33 @@
+settings:
+  debug-mode: false
+world-settings:
+  default:
+    enabled: false
+    render:
+      renderers:
+        basic: overworld_basic
+        biomes: overworld_biomes
+      skylight: 15
+  world:
+    enabled: true
+    ui:
+      display-name: Overworld
+      order: 0
+  world_nether:
+    render:
+      renderers:
+        basic: nether_basic
+        biomes: nether_biomes
+      skylight: 0
+    ui:
+      display-name: The Nether
+      order: 1
+  world_the_end:
+    render:
+      renderers:
+        basic: the_end_basic
+        biomes: the_end_biomes
+      skylight: 0
+    ui:
+      display-name: The End
+      order: 2

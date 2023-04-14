@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "pl3xmap",
+  "version": "${version}",
+  "name": "Pl3xMap",
+  "description": "Minimalistic and lightweight world map viewer for Minecraft servers",
+  "authors": [
+    "BillyGalbreath"
+  ],
+  "contact": {
+    "homepage": "https://github.com/BillyGalbreath/Pl3xMap",
+    "sources": "https://github.com/BillyGalbreath/Pl3xMap",
+    "issues": "https://github.com/BillyGalbreath/Pl3xMap/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "net.pl3x.map.fabric.Pl3xMapFabric"
+    ]
+  },
+  "mixins": [
+    "pl3xmap.mixins.json"
+  ],
+  "accessWidener": "pl3xmap.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.14.17",
+    "fabric-api": "*",
+    "minecraft": "~1.19.4",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

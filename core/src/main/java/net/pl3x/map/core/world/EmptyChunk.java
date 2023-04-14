@@ -1,0 +1,67 @@
+package net.pl3x.map.core.world;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class EmptyChunk extends Chunk {
+    protected EmptyChunk(World world, Region region) {
+        super(world, region);
+    }
+
+    @Override
+    @NonNull
+    public BlockState getBlockState(int x, int y, int z) {
+        return Block.AIR.getDefaultState();
+    }
+
+    @Override
+    public int getLight(int x, int y, int z) {
+        return getWorld().getSkylight();
+    }
+
+    @Override
+    @NonNull
+    public Biome getBiome(int x, int y, int z) {
+        return Biome.DEFAULT;
+    }
+
+    @Override
+    public int getWorldSurfaceY(int x, int z) {
+        return 0;
+    }
+
+    @Override
+    public int getOceanFloorY(int x, int z) {
+        return 0;
+    }
+
+    @Override
+    @NonNull
+    public Chunk populate() {
+        return this;
+    }
+
+    /*@Override
+    public int getBlockY(int x, int z) {
+        return 0;
+    }
+
+    @Override
+    public BlockState getBlockState(int x, int z) {
+        return null;
+    }
+
+    @Override
+    public Biome getBiome(int x, int z) {
+        return null;
+    }
+
+    @Override
+    public int getFluidY(int x, int z) {
+        return 0;
+    }
+
+    @Override
+    public BlockState getFluidState(int x, int z) {
+        return null;
+    }*/
+}

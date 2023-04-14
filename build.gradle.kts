@@ -1,150 +1,115 @@
 plugins {
-    `java-library`
-    id("io.papermc.paperweight.userdev") version "1.3.11"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("com.modrinth.minotaur") version "2.+"
+    id("java")
 }
 
 val minecraftVersion: String by project
-val paperVersion: String by project
 val buildNum = System.getenv("GITHUB_RUN_NUMBER") ?: "SNAPSHOT"
+project.group = "net.pl3x.map"
 project.version = "$minecraftVersion-$buildNum"
 
 dependencies {
-    paperDevBundle(paperVersion)
+    compileOnly(project(":Core"))
+    compileOnly(project(":Bukkit"))
+    compileOnly(project(":Fabric"))
+    compileOnly(project(":Forge"))
 }
 
+defaultTasks("build")
+
 tasks {
-    // disable building jar for root project
-    jar { enabled = false }
     build {
+        // this is to ensure the subprojects finish building completely before this task is finished
+        subprojects.filter { it.name != "WebMap" }.forEach { project ->
+            run {
+                dependsOn(project.tasks.build)
+            }
+        }
+        // copy the webmap over
         dependsOn(named("copyWebmap"))
+        // after subprojects are finished we can combine their jars into a fatjar
+        finalizedBy(named("combineJars"))
+    }
+
+    register<Jar>("combineJars") {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from(files(subprojects.filter { it.name != "WebMap" }.map {
+            it.layout.buildDirectory.file("libs/${rootProject.name}-${it.name}-${it.version}.jar").get()
+        }).filter { it.name != "MANIFEST.MF" }.map { if (it.isDirectory) it else zipTree(it) })
+        manifest {
+            // this must be here because it overrides the default jar task
+            attributes["Main-Class"] = "net.pl3x.map.core.Pl3xMap"
+        }
+    }
+
+    register<Copy>("copyWebmap") {
+        dependsOn(named("npmBuild"))
+        println("Copying webmap...")
+        from("$rootDir/webmap/public")
+        include("**/*")
+        exclude("tiles*/")
+        into("$rootDir/core/src/main/resources/web")
+        from("$rootDir/webmap/dist")
+        include("**/*")
+        into("$rootDir/core/src/main/resources/web")
+    }
+
+    register<Exec>("npmInstall") {
+        println("Installing npm dependencies...")
+        workingDir(projectDir.resolve("webmap"))
+        commandLine("npm.cmd", "install")
+    }
+
+    register<Exec>("npmBuild") {
+        dependsOn(named("npmInstall"))
+        println("Building webmap...")
+        workingDir(projectDir.resolve("webmap"))
+        commandLine("npm.cmd", "run", "build")
     }
 }
 
-tasks.register<Copy>("copyWebmap") {
-    dependsOn(tasks.named("npmBuild"))
-    println("Copying webmap...")
-    from("$rootDir/webmap/public")
-    include("**/*")
-    exclude("tiles*/")
-    into("$rootDir/common/src/main/resources/web")
-    from("$rootDir/webmap/dist")
-    include("**/*")
-    into("$rootDir/common/src/main/resources/web")
-}
+allprojects {
+    if (name == "WebMap") {
+        return@allprojects
+    }
 
-tasks.register<Exec>("npmInstall") {
-    println("Installing npm dependencies...")
-    workingDir(projectDir.resolve("webmap"))
-    commandLine("npm", "install")
-}
+    apply(plugin = "java")
 
-tasks.register<Exec>("npmBuild") {
-    dependsOn(tasks.named("npmInstall"))
-    println("Building webmap...")
-    workingDir(projectDir.resolve("webmap"))
-    commandLine("npm", "run", "build")
-}
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    }
 
-subprojects {
-    if (name != "WebMap") {
-        apply(plugin = "java-library")
-        apply(plugin = "io.papermc.paperweight.userdev")
-        apply(plugin = "com.github.johnrengelman.shadow")
+    repositories {
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
 
-        val projectName = if (name == "Paper") rootProject.name else project.name
+    dependencies {
+        implementation("com.github.ben-manes.caffeine", "caffeine", "3.1.5")
+        implementation("com.github.Querz", "NBT", "6.1")
+        implementation("com.github.Carleslc.Simple-YAML", "Simple-Yaml", "1.8.3")
+        implementation("io.undertow", "undertow-core", "2.3.5.Final")
+        implementation("org.jboss.xnio", "xnio-nio", "3.8.8.Final")
 
-        java {
-            toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        // provided by mojang
+        compileOnly("com.google.code.gson", "gson", "2.10.1")
+    }
+
+    tasks {
+        jar {
+            archiveBaseName.set(if (rootProject.name == project.name) rootProject.name else "${rootProject.name}-${project.name}")
         }
 
-        repositories {
-            mavenCentral()
-            maven("https://jitpack.io")
+        compileJava {
+            options.encoding = Charsets.UTF_8.name()
+            options.release.set(17)
         }
 
-        dependencies {
-            paperDevBundle(paperVersion)
+        javadoc {
+            options.encoding = Charsets.UTF_8.name()
         }
 
-        tasks {
-            shadowJar {
-                from(
-                    rootProject.projectDir.resolve("LICENSE"),
-                    fileTree(project.projectDir).matching {
-                        include("LICENSE*")
-                    }
-                )
-                exclude(
-                    "META-INF/LICENSE.txt",
-                    "META-INF/NOTICE.txt",
-                    "LICENSE.txt",
-                    "NOTICE.txt"
-                )
-            }
-
-            reobfJar {
-                outputJar.set(jar(projectName))
-            }
-
-            assemble {
-                dependsOn(reobfJar)
-            }
-
-            compileJava {
-                options.encoding = Charsets.UTF_8.name()
-                options.release.set(17)
-            }
-
-            javadoc {
-                options.encoding = Charsets.UTF_8.name()
-            }
-
-            processResources {
-                filteringCharset = Charsets.UTF_8.name()
-                filesMatching(
-                    listOf(
-                        "addon.yml",
-                        "plugin.yml"
-                    )
-                ) {
-                    expand(
-                        "name" to projectName,
-                        "group" to project.group,
-                        "version" to project.version,
-                        "description" to project.description,
-                        "website" to "https://modrinth.com/plugin/pl3xmap"
-                    )
-                }
-            }
+        processResources {
+            filteringCharset = Charsets.UTF_8.name()
         }
     }
-}
-
-tasks {
-    modrinth {
-        token.set(System.getenv("MODRINTH_TOKEN"))
-        projectId.set("pl3xmap")
-        versionName.set("${project.version}")
-        versionNumber.set("${project.version}")
-        versionType.set("alpha")
-        uploadFile.set(jar(rootProject.name))
-        additionalFiles.set(
-            listOf(
-                jar(project(":FlowerMap").name),
-                jar(project(":GriefPrevention").name),
-                jar(project(":Heightmaps").name),
-                jar(project(":Inhabited").name),
-                jar(project(":Webp").name)
-            )
-        )
-        gameVersions.addAll(listOf(minecraftVersion))
-        loaders.addAll(listOf("paper", "purpur"))
-        changelog.set(System.getenv("COMMIT_MESSAGE"))
-    }
-}
-
-fun jar(name: String): RegularFile {
-    return rootProject.layout.buildDirectory.file("libs/${name}-${project.version}.jar").get()
 }
