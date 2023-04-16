@@ -1,4 +1,4 @@
-package net.pl3x.map.core.heightmap;
+package net.pl3x.map.core.renderer.heightmap;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -8,8 +8,8 @@ import net.pl3x.map.core.world.Region;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class Heightmap extends Keyed {
-    public int[] x = new int[16];
-    public int[] z = new int[16];
+    public final int[] x = new int[16];
+    public final int[] z = new int[16];
 
     public Heightmap(String name) {
         super(name);

@@ -5,6 +5,7 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Mathf;
 
+@SuppressWarnings("CanBeFinal")
 public final class WorldConfig extends AbstractConfig {
     @Key("enabled")
     @Comment("Enables this world to be rendered on the map.")

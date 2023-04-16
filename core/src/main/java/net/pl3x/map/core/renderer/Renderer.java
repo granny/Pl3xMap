@@ -3,9 +3,9 @@ package net.pl3x.map.core.renderer;
 import java.util.Locale;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.heightmap.Heightmap;
 import net.pl3x.map.core.image.TileImage;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.renderer.heightmap.Heightmap;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Biome;
@@ -62,7 +62,7 @@ public abstract class Renderer extends Keyed {
             pixelColor = blockstate == null ? 0 : Colors.fixBlockColor(region, biome, blockstate, blockX, blockZ);
             if (pixelColor != 0) {
                 // fix alpha
-                pixelColor = (0xFF << 24) | (pixelColor & 0xFFFFFF);
+                pixelColor = Colors.setAlpha(0xFF, pixelColor);
                 // work out the heightmap
                 pixelColor = Colors.blend(getHeightmap().getColor(region, blockX, blockZ), pixelColor);
             }
@@ -93,11 +93,11 @@ public abstract class Renderer extends Keyed {
         if (fluidstate.getBlock().isWater()) {
             color = Colors.getWaterColor(region, biome, blockX, blockZ);
             color = Colors.lerpARGB(color, 0xFF000000, Mathf.clamp(0, 0.45F, Easing.cubicOut(depth / 1.5F)));
-            color = (((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF)) << 24) | (color & 0xFFFFFF);
+            color = Colors.setAlpha((int) (Easing.quinticOut(Mathf.clamp(0, 1, depth * 5F)) * 0xFF), color);
         } else {
             // lava
             color = Colors.lerpARGB(fluidstate.getBlock().color(), 0xFF000000, Mathf.clamp(0, 0.3F, Easing.cubicOut(depth / 1.5F)));
-            color = (0xFF << 24) | (color & 0xFFFFFF);
+            color = Colors.setAlpha(0xFF, color);
         }
         return color;
     }

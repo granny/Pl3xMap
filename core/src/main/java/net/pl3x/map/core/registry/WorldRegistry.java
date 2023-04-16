@@ -10,4 +10,13 @@ public class WorldRegistry extends Registry<World> {
         }
         return register(world.getName(), world);
     }
+
+    @Override
+    public World unregister(String id) {
+        World world = this.entries.remove(id);
+        if (world != null) {
+            world.getRegionFileWatcher().interrupt();
+        }
+        return world;
+    }
 }

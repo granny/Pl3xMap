@@ -10,6 +10,7 @@ import net.pl3x.map.core.util.FileUtil;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.MemorySection;
 
+@SuppressWarnings("CanBeFinal")
 public class ColorsConfig extends AbstractConfig {
     @Key("blocks.colors")
     @Comment("""
@@ -43,8 +44,8 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:andesite_stairs", 0x888889);
         put("minecraft:andesite_wall", 0x888889);
         put("minecraft:anvil", 0x494949);
-        put("minecraft:attached_melon_stem", 0x8C8C8C);
-        put("minecraft:attached_pumpkin_stem", 0x8A8A8A);
+        put("minecraft:attached_melon_stem", 0xE0C71C);
+        put("minecraft:attached_pumpkin_stem", 0xE0C71C);
         put("minecraft:azalea", 0x667D30);
         put("minecraft:azure_bluet", 0xACCE82);
         put("minecraft:bamboo", 0x5D9013);
@@ -469,7 +470,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:lightning_rod", 0xC46F53);
         put("minecraft:lilac", 0x977D8F);
         put("minecraft:lily_of_the_valley", 0x7DB061);
-        put("minecraft:lily_pad", 0x208030);
+        put("minecraft:lily_pad", 0x12491b);
         put("minecraft:lime_banner", 0x000000);
         put("minecraft:lime_bed", 0x70B91A);
         put("minecraft:lime_candle", 0x63AD17);
@@ -505,6 +506,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:mangrove_door", 0x70302E);
         put("minecraft:mangrove_fence", 0x763631);
         put("minecraft:mangrove_fence_gate", 0x763631);
+        put("minecraft:mangrove_leaves", 0x22570C);
         put("minecraft:mangrove_log", 0x544329);
         put("minecraft:mangrove_planks", 0x763631);
         put("minecraft:mangrove_pressure_plate", 0x763631);
@@ -603,11 +605,12 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:pink_concrete", 0xD6658F);
         put("minecraft:pink_concrete_powder", 0xE59AB5);
         put("minecraft:pink_glazed_terracotta", 0xED9BB6);
+        put("minecraft:pink_petals", 0xE8BFE8);
         put("minecraft:pink_shulker_box", 0xE87C9F);
         put("minecraft:pink_stained_glass", 0xF27FA5);
         put("minecraft:pink_stained_glass_pane", 0xF27FA5);
         put("minecraft:pink_terracotta", 0xA24E4F);
-        put("minecraft:pink_tulip", 0x649E50);
+        put("minecraft:pink_tulip", 0xE8BFE8);
         put("minecraft:pink_wall_banner", 0x000000);
         put("minecraft:pink_wool", 0xEE8DAC);
         put("minecraft:piston", 0x6E6961);
@@ -744,6 +747,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:redstone_ore", 0x8E6C6C);
         put("minecraft:redstone_torch", 0xF85528);
         put("minecraft:redstone_wall_torch", 0x855280);
+        put("minecraft:redstone_wire", 0xFF0000);
         put("minecraft:reinforced_deepslate", 0x4D4F4C);
         put("minecraft:repeater", 0xA09C9B);
         put("minecraft:repeating_command_block", 0x8371AF);
@@ -865,7 +869,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:twisting_vines", 0x14907D);
         put("minecraft:twisting_vines_plant", 0x14897A);
         put("minecraft:verdant_froglight", 0xEAF6E9);
-        put("minecraft:vine", 0x21520b);
+        put("minecraft:vine", 0x000000);
         put("minecraft:void_air", 0x000000);
         put("minecraft:wall_torch", 0xFFD966);
         put("minecraft:warped_button", 0x000000);
@@ -1032,11 +1036,13 @@ public class ColorsConfig extends AbstractConfig {
             to coloring. Blocks listed here will use the biome's
             foliage color when rendering.""")
     public static List<String> BLOCKS_FOLIAGE = new ArrayList<>() {{
-        add("minecraft:vine");
-        add("minecraft:oak_leaves");
-        add("minecraft:jungle_leaves");
         add("minecraft:acacia_leaves");
+        //add("minecraft:birch_leaves"); // birch 0x80A755
         add("minecraft:dark_oak_leaves");
+        add("minecraft:jungle_leaves");
+        add("minecraft:mangrove_leaves"); // mangrove? 0x92C648
+        add("minecraft:oak_leaves");
+        //add("minecraft:spruce_leaves"); // evergreen 0x619961
     }};
 
     @Key("blocks.glass")
@@ -1054,12 +1060,13 @@ public class ColorsConfig extends AbstractConfig {
             to coloring. Blocks listed here will use the biome's
             grass color modifier when rendering.""")
     public static List<String> BLOCKS_GRASS = new ArrayList<>() {{
-        add("minecraft:grass_block");
-        add("minecraft:grass");
-        add("minecraft:tall_grass");
-        add("minecraft:fern");
-        add("minecraft:large_fern");
-        add("minecraft:potted_fern");
+        add("minecraft:fern"); //
+        add("minecraft:grass"); //
+        add("minecraft:grass_block"); //
+        add("minecraft:large_fern"); //
+        add("minecraft:pink_petals"); //
+        add("minecraft:potted_fern"); //
+        add("minecraft:tall_grass"); //
     }};
 
     @Key("blocks.water")

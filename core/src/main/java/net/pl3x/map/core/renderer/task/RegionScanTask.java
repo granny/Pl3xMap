@@ -1,22 +1,23 @@
-package net.pl3x.map.core.task;
+package net.pl3x.map.core.renderer.task;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
 
-public class ScanRegion implements Runnable {
+public class RegionScanTask implements Runnable {
     private final World world;
     private final Point regionPos;
 
     private final List<Renderer> renderers = new ArrayList<>();
 
-    public ScanRegion(World world, Point regionPos) {
+    public RegionScanTask(World world, Point regionPos) {
         this.world = world;
         this.regionPos = regionPos;
 
@@ -47,7 +48,7 @@ public class ScanRegion implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Scanning " + regionPos + " -- " + Thread.currentThread().getName());
+            Logger.debug("[" + this.world.getName() + "] Scanning " + regionPos + " -- " + Thread.currentThread().getName());
             allocateImages();
             scanRegion(loadRegion());
             saveImages();

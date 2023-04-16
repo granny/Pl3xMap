@@ -13,14 +13,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.world.World;
 
 public class FileUtil {
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
@@ -113,11 +119,41 @@ public class FileUtil {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void deleteDirectory(Path dir) throws IOException {
         try (Stream<Path> walk = Files.walk(dir)) {
             walk.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(File::delete);
         }
+    }
+
+    public static Collection<Point> regionPathsToPoints(World world, Collection<Path> paths) {
+        if (paths == null || paths.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Point> regions = new ArrayList<>();
+        for (Path file : paths) {
+            if (file.toFile().length() <= 0) {
+                Logger.debug("Skipping zero length region: " + file.getFileName());
+                continue;
+            }
+            try {
+                String[] split = file.getFileName().toString().split("\\.");
+                int rX = Integer.parseInt(split[1]);
+                int rZ = Integer.parseInt(split[2]);
+                long modified = world.getRegionModifiedState().get(Mathf.asLong(rX, rZ));
+                if (Files.getLastModifiedTime(file).toMillis() > modified) {
+                    Logger.debug("Adding region: " + file.getFileName());
+                    regions.add(Point.of(rX, rZ));
+                } else {
+                    Logger.debug("Skipping unmodified region: " + file.getFileName());
+                }
+            } catch (NumberFormatException ignore) {
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return regions;
     }
 }

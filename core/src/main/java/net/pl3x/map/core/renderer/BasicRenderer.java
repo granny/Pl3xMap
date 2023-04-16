@@ -1,8 +1,7 @@
-package net.pl3x.map.core.renderer.builtin;
+package net.pl3x.map.core.renderer;
 
 import net.pl3x.map.core.image.TileImage;
 import net.pl3x.map.core.markers.Point;
-import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;

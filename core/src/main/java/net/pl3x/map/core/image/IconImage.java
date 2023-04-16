@@ -58,7 +58,7 @@ public class IconImage extends Keyed {
             return false;
         }
         IconImage other = (IconImage) o;
-        return getKey() == other.getKey()
+        return getKey().equals(other.getKey())
                 && getImage() == other.getImage()
                 && getType().equals(other.getType());
     }

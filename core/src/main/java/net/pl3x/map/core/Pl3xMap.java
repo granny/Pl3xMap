@@ -8,25 +8,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.heightmap.HeightmapRegistry;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.registry.IconRegistry;
 import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.registry.WorldRegistry;
+import net.pl3x.map.core.renderer.heightmap.HeightmapRegistry;
+import net.pl3x.map.core.renderer.task.RegionProcessor;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiFix;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class Pl3xMap {
+
     @NonNull
     public static Pl3xMap api() {
         return Provider.api();
     }
 
     private HttpdServer httpdServer;
+    private RegionProcessor regionProcessor;
 
     private BlockRegistry blockRegistry;
     private HeightmapRegistry heightmapRegistry;
@@ -34,7 +37,7 @@ public abstract class Pl3xMap {
     private RendererRegistry rendererRegistry;
     private WorldRegistry worldRegistry;
 
-    private ExecutorService executor;
+    private ExecutorService renderExecutor;
 
     public Pl3xMap() {
         // Due to these bugs(?) in spi
@@ -48,6 +51,9 @@ public abstract class Pl3xMap {
         // setup internal server
         this.httpdServer = new HttpdServer();
 
+        // setup tasks
+        this.regionProcessor = new RegionProcessor();
+
         // setup registries
         this.blockRegistry = new BlockRegistry();
         this.heightmapRegistry = new HeightmapRegistry();
@@ -59,6 +65,11 @@ public abstract class Pl3xMap {
     @NonNull
     public HttpdServer getHttpdServer() {
         return this.httpdServer;
+    }
+
+    @NonNull
+    public RegionProcessor getRegionProcessor() {
+        return this.regionProcessor;
     }
 
     @NonNull
@@ -87,12 +98,14 @@ public abstract class Pl3xMap {
     }
 
     @Nullable
-    public ExecutorService getExecutor() {
-        return this.executor;
+    public ExecutorService getRenderExecutor() {
+        return this.renderExecutor;
     }
 
     @NonNull
     public abstract Path getMainDir();
+
+    public abstract int getColorForPower(byte power);
 
     public void enable() {
         // load up configs
@@ -100,8 +113,11 @@ public abstract class Pl3xMap {
         Lang.reload();
         ColorsConfig.reload();
 
+        // load blocks _after_ we loaded colors
+        loadBlocks();
+
         // create the executor service
-        this.executor = ThreadFactory.createService(Config.RENDER_THREADS);
+        this.renderExecutor = ThreadFactory.createService("Pl3xMap-Renderer", Config.RENDER_THREADS);
 
         // register built in tile image types
         IO.register();
@@ -120,9 +136,15 @@ public abstract class Pl3xMap {
 
         // start integrated server
         getHttpdServer().startServer();
+
+        // start tasks
+        getRegionProcessor().start(10000L);
     }
 
     public void disable() {
+        // stop tasks
+        getRegionProcessor().stop();
+
         // stop integrated server
         getHttpdServer().stopServer();
 
@@ -145,6 +167,8 @@ public abstract class Pl3xMap {
         IO.unregister();
     }
 
+    public abstract void loadBlocks();
+
     public abstract void loadWorlds();
 
     public abstract void loadPlayers();
@@ -158,13 +182,29 @@ public abstract class Pl3xMap {
         }
     }
 
-    private static final class ThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+    public static final class ThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+        private final String name;
+        private final int threads;
+
         private final AtomicInteger id = new AtomicInteger();
 
-        private static ExecutorService createService(int threads) {
+        public ThreadFactory(String name, int threads) {
+            this.name = name;
+            this.threads = threads;
+        }
+
+        public static ExecutorService createService(String name) {
+            return createService(new ThreadFactory(name, 1));
+        }
+
+        public static ExecutorService createService(String name, int threads) {
             int max = Runtime.getRuntime().availableProcessors() / 2;
             int parallelism = Mathf.clamp(1, max, threads < 1 ? max : threads);
-            return new ForkJoinPool(parallelism, new ThreadFactory(), null, false);
+            return createService(new ThreadFactory(name, parallelism));
+        }
+
+        private static ExecutorService createService(ThreadFactory factory) {
+            return new ForkJoinPool(factory.threads, factory, null, false);
         }
 
         @Override
@@ -172,7 +212,7 @@ public abstract class Pl3xMap {
             ForkJoinWorkerThread thread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
             // use current classloader, this fixes ClassLoading issues with forge
             thread.setContextClassLoader(Pl3xMap.class.getClassLoader());
-            thread.setName("Pl3xMap-" + this.id.getAndIncrement());
+            thread.setName(this.threads > 1 ? String.format("%s-%d", this.name, this.id.getAndIncrement()) : this.name);
             return thread;
         }
     }

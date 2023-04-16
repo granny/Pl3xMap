@@ -20,6 +20,7 @@ public class StringUtils {
     }
 
     // from apache commons StringEscapeUtils
+    @SuppressWarnings({"ReassignedVariable", "DataFlowIssue", "RedundantLabeledSwitchRuleCodeBlock"})
     private static void unescapeJava(Writer out, String str) throws IOException {
         if (out == null) {
             throw new IllegalArgumentException("The Writer must not be null");

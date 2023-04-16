@@ -1,38 +1,56 @@
 package net.pl3x.map.core.world;
 
-public class BlockState {
-    private static final byte NEGATIVE_ONE = (byte) -1;
+import java.util.Map;
 
+public class BlockState {
     private final Block block;
-    //private final byte age;
-    //private final byte level;
-    //private final byte power;
+    private final byte age;
+    private final byte moisture;
+    private final byte power;
 
     public BlockState(Block block) {
-        //this(block, NEGATIVE_ONE, NEGATIVE_ONE, NEGATIVE_ONE);
         this.block = block;
+        this.age = this.moisture = this.power = -1;
     }
 
-    /*public BlockState(Block block, byte age, byte level, byte power) {
+    public BlockState(Block block, Map<String, String> properties) {
         this.block = block;
+
+        byte age = -1;
+        try {
+            age = Integer.valueOf(properties.get("age")).byteValue();
+        } catch (NumberFormatException ignore) {
+        }
         this.age = age;
-        this.level = level;
+
+        byte moisture = -1;
+        try {
+            moisture = Integer.valueOf(properties.get("moisture")).byteValue();
+        } catch (NumberFormatException ignore) {
+        }
+        this.moisture = moisture;
+
+        byte power = -1;
+        try {
+            power = Integer.valueOf(properties.get("power")).byteValue();
+        } catch (NumberFormatException ignore) {
+        }
         this.power = power;
-    }*/
+    }
 
     public Block getBlock() {
         return this.block;
     }
 
-    /*public byte getAge() {
+    public byte getAge() {
         return this.age;
     }
 
-    public byte getLevel() {
-        return this.level;
+    public byte getMoisture() {
+        return this.moisture;
     }
 
     public byte getPower() {
         return this.power;
-    }*/
+    }
 }

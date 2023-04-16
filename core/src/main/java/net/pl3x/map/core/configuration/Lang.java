@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
 
+@SuppressWarnings("CanBeFinal")
 public final class Lang extends AbstractConfig {
     @Key("prefix.command")
     public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";

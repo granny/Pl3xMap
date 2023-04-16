@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 import net.pl3x.map.core.Keyed;
-import net.pl3x.map.core.Preconditions;
 import net.pl3x.map.core.markers.marker.Marker;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -252,7 +252,7 @@ public abstract class Layer extends Keyed {
             return false;
         }
         Layer other = (Layer) o;
-        return getKey() == other.getKey()
+        return getKey().equals(other.getKey())
                 && getLabel().equals(other.getLabel())
                 && getUpdateInterval() == other.getUpdateInterval()
                 && shouldShowControls() == other.shouldShowControls()

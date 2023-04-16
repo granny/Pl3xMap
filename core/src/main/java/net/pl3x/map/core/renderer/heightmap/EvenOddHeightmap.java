@@ -1,4 +1,4 @@
-package net.pl3x.map.core.heightmap;
+package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;

@@ -8,6 +8,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.World;
@@ -19,11 +20,11 @@ public class FabricWorld extends World {
     public FabricWorld(ServerLevel level, String name, WorldConfig worldConfig) {
         super(
                 name,
-                ((ServerLevelAccessor) level).getStorage().levelDirectory.path(),
+                level.getSeed(),
+                Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getXSpawn()),
                 ((ServerLevelAccessor) level).getStorage().getDimensionPath(level.dimension()).resolve("region"),
                 worldConfig
         );
-
         this.level = level;
 
         // register biomes

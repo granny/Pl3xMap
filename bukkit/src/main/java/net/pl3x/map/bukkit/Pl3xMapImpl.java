@@ -2,17 +2,22 @@ package net.pl3x.map.bukkit;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.util.Map;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
-import net.pl3x.map.core.task.RenderWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Pl3xMapImpl extends Pl3xMap {
-    JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
     public Pl3xMapImpl(JavaPlugin plugin) {
         super();
@@ -37,16 +42,15 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void enable() {
-        super.enable();
+    public int getColorForPower(byte power) {
+        return RedStoneWireBlock.getColorForPower(power);
+    }
 
-        // todo remove temp stuff below
-
-        // initialize a fullrender
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            RenderWorld render = new RenderWorld(getWorldRegistry().get("world"));
-            render.run();
-        }, 20 * 10);
+    @Override
+    public void loadBlocks() {
+        for (Map.Entry<ResourceKey<Block>, Block> entry : MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
+            getBlockRegistry().register(entry.getKey().location().toString(), entry.getValue().defaultMaterialColor().col);
+        }
     }
 
     @Override

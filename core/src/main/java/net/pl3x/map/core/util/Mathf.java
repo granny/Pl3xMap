@@ -1,5 +1,7 @@
 package net.pl3x.map.core.util;
 
+import net.pl3x.map.core.markers.Point;
+
 public class Mathf {
     public static float lerp(float a, float b, float t) {
         return a + t * (b - a);
@@ -23,6 +25,10 @@ public class Mathf {
 
     public static int pow2(int value) {
         return 1 << value;
+    }
+
+    public static long asLong(Point pos) {
+        return asLong(pos.x(), pos.z());
     }
 
     public static long asLong(long x, long z) {

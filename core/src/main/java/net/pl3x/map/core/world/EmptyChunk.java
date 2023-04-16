@@ -39,29 +39,4 @@ public class EmptyChunk extends Chunk {
     public Chunk populate() {
         return this;
     }
-
-    /*@Override
-    public int getBlockY(int x, int z) {
-        return 0;
-    }
-
-    @Override
-    public BlockState getBlockState(int x, int z) {
-        return null;
-    }
-
-    @Override
-    public Biome getBiome(int x, int z) {
-        return null;
-    }
-
-    @Override
-    public int getFluidY(int x, int z) {
-        return 0;
-    }
-
-    @Override
-    public BlockState getFluidState(int x, int z) {
-        return null;
-    }*/
 }

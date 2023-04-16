@@ -2,7 +2,7 @@ package net.pl3x.map.core.markers.marker;
 
 import java.util.List;
 import net.pl3x.map.core.Keyed;
-import net.pl3x.map.core.Preconditions;
+import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonSerializable;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;

@@ -1,4 +1,4 @@
-package net.pl3x.map.core;
+package net.pl3x.map.core.util;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

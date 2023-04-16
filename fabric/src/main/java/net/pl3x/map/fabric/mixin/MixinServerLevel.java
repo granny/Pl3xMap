@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class MixinServerLevel implements ServerLevelAccessor {
     public LevelStorageSource.LevelStorageAccess storage;
 
+    @SuppressWarnings("unused")
     @Inject(method = "<init>", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void injected(MinecraftServer minecraftServer, Executor executor, LevelStorageSource.LevelStorageAccess levelStorageAccess, ServerLevelData serverLevelData, ResourceKey<Level> resourceKey, LevelStem levelStem, ChunkProgressListener chunkProgressListener, boolean bl, long l, List<CustomSpawner> list, boolean bl2, CallbackInfo ci) {
         this.storage = levelStorageAccess;

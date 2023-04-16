@@ -141,35 +141,6 @@ public abstract class Chunk {
         return value;
     }
 
-    /*private Data getData(int x, int z) {
-        return this.data[((z & 0xF) << 4) + (x & 0xF)];
-    }
-
-    public int getBlockY(int x, int z) {
-        return getData(x, z).blockY;
-    }
-
-    public int getFluidY(int x, int z) {
-        return getData(x, z).fluidY;
-    }
-
-    public BlockState getBlockState(int x, int z) {
-        return getData(x, z).blockstate;
-    }
-
-    public BlockState getFluidState(int x, int z) {
-        return getData(x, z).fluidstate;
-    }
-
-    public Biome getBiome(int x, int z) {
-        Data data = getData(x, z);
-        if (data.biome == null) {
-            // calculate real biome
-            data.biome = getWorld().getBiomeManager().getBiome(getRegion(), x, data.blockY, z);
-        }
-        return data.biome;
-    }*/
-
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {

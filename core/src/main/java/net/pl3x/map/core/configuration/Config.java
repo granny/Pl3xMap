@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
 
+@SuppressWarnings("CanBeFinal")
 public final class Config extends AbstractConfig {
     @Key("settings.debug-mode")
     @Comment("""

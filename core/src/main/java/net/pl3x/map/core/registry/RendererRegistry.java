@@ -2,7 +2,7 @@ package net.pl3x.map.core.registry;
 
 import java.lang.reflect.InvocationTargetException;
 import net.pl3x.map.core.renderer.Renderer;
-import net.pl3x.map.core.renderer.builtin.BasicRenderer;
+import net.pl3x.map.core.renderer.BasicRenderer;
 import net.pl3x.map.core.world.World;
 
 public class RendererRegistry extends Registry<Renderer.Builder> {

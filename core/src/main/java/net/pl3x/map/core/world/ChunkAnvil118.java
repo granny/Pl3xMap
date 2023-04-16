@@ -2,11 +2,15 @@ package net.pl3x.map.core.world;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.util.Colors;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
+import net.querz.nbt.tag.Tag;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -143,7 +147,7 @@ public class ChunkAnvil118 extends Chunk {
                     }
 
                     // test if block is renderable. we ignore blocks with black color
-                    if (data.blockstate.getBlock().color() > 0) {
+                    if (Colors.getRawBlockColor(data.blockstate.getBlock()) > 0) {
                         break;
                     }
                 } while (data.blockY > getWorld().getMinBuildHeight());
@@ -201,14 +205,14 @@ public class ChunkAnvil118 extends Chunk {
                         CompoundTag entry = paletteTag.get(i);
                         String id = entry.getString("Name");
                         Block block = Pl3xMap.api().getBlockRegistry().getOrDefault(id, Block.AIR);
-                        /*Map<String, String> properties = new LinkedHashMap<>();
+                        Map<String, String> properties = new HashMap<>();
                         CompoundTag propertiesTag = entry.getCompoundTag("Properties");
                         if (propertiesTag != null) {
                             for (Map.Entry<String, Tag<?>> property : propertiesTag) {
                                 properties.put(property.getKey().toLowerCase(), ((StringTag) property.getValue()).getValue().toLowerCase());
                             }
-                        }*/
-                        this.blockPalette[i] = new BlockState(block);//, properties);
+                        }
+                        this.blockPalette[i] = new BlockState(block, properties);
                     }
                 }
             }

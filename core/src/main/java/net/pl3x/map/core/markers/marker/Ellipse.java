@@ -2,7 +2,7 @@ package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.core.Preconditions;
+import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;

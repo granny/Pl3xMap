@@ -13,6 +13,7 @@ import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -133,14 +134,14 @@ public class TileImage extends Keyed {
                 if (i != 0 && j != 0) {
                     rgb = getPixel(x + i, z + j);
                 }
-                a += rgb >> 24 & 0xFF;
-                r += rgb >> 16 & 0xFF;
-                g += rgb >> 8 & 0xFF;
-                b += rgb & 0xFF;
+                a += Colors.alpha(rgb);
+                r += Colors.red(rgb);
+                g += Colors.green(rgb);
+                b += Colors.blue(rgb);
                 c++;
             }
         }
-        return (a / c) << 24 | (r / c) << 16 | (g / c) << 8 | (b / c);
+        return Colors.argb(a / c, r / c, g / c, b / c);
     }
 
     @Override
