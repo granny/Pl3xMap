@@ -17,6 +17,8 @@ import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.registry.WorldRegistry;
 import net.pl3x.map.core.renderer.heightmap.HeightmapRegistry;
 import net.pl3x.map.core.renderer.task.RegionProcessor;
+import net.pl3x.map.core.renderer.task.UpdateSettingsData;
+import net.pl3x.map.core.scheduler.Scheduler;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiFix;
 import net.pl3x.map.core.world.Biome;
@@ -43,6 +45,7 @@ public abstract class Pl3xMap {
     private WorldRegistry worldRegistry;
 
     private ExecutorService renderExecutor;
+    private Scheduler scheduler;
 
     public Pl3xMap() {
         // Due to these bugs(?) in spi
@@ -114,6 +117,11 @@ public abstract class Pl3xMap {
     }
 
     @NonNull
+    public Scheduler getScheduler() {
+        return this.scheduler;
+    }
+
+    @NonNull
     public abstract Path getMainDir();
 
     public abstract int getColorForPower(byte power);
@@ -132,6 +140,7 @@ public abstract class Pl3xMap {
 
         // create the executor service
         this.renderExecutor = ThreadFactory.createService("Pl3xMap-Renderer", Config.RENDER_THREADS);
+        this.scheduler = new Scheduler();
 
         // register built in tile image types
         IO.register();
@@ -153,10 +162,13 @@ public abstract class Pl3xMap {
 
         // start tasks
         getRegionProcessor().start(10000L);
+
+        getScheduler().addTask(new UpdateSettingsData());
     }
 
     public void disable() {
         // stop tasks
+        getScheduler().cancelAll();
         getRegionProcessor().stop();
 
         // stop integrated server
@@ -186,6 +198,8 @@ public abstract class Pl3xMap {
     public abstract void loadWorlds();
 
     public abstract void loadPlayers();
+
+    public abstract int getMaxPlayers();
 
     public static final class Provider {
         static Pl3xMap api;

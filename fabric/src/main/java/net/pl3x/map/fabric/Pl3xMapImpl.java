@@ -98,4 +98,9 @@ public class Pl3xMapImpl extends Pl3xMap {
         this.mod.getServer().getPlayerList().getPlayers().forEach(player ->
                 getPlayerRegistry().register(player.getUUID().toString(), new FabricPlayer(player)));
     }
+
+    @Override
+    public int getMaxPlayers() {
+        return this.mod.getServer().getMaxPlayers();
+    }
 }

@@ -27,6 +27,37 @@ public final class Lang extends AbstractConfig {
     @Key("ui.layer.worldborder")
     public static String UI_LAYER_WORLDBORDER = "World Border";
 
+    @Key("ui.title")
+    public static String UI_TITLE = "Pl3xMap";
+    @Key("ui.blockinfo.label")
+    public static String UI_BLOCKINFO_LABEL = "BlockInfo";
+    @Key("ui.blockinfo.value")
+    public static String UI_BLOCKINFO_VALUE = "<block><br /><biome>";
+    @Key("ui.coords.label")
+    public static String UI_COORDS_LABEL = "Coordinates";
+    @Key("ui.coords.value")
+    public static String UI_COORDS_VALUE = "<x>, <y>, <z>";
+    @Key("ui.link.label")
+    public static String UI_LINK_LABEL = "Sharable Link";
+    @Key("ui.link.value")
+    public static String UI_LINK_VALUE = "";
+    @Key("ui.markers.label")
+    public static String UI_MARKERS_LABEL = "Markers";
+    @Key("ui.markers.value")
+    public static String UI_MARKERS_VALUE = "No markers have been configured";
+    @Key("ui.players.label")
+    public static String UI_PLAYERS_LABEL = "Players (<online>/<max>)";
+    @Key("ui.players.value")
+    public static String UI_PLAYERS_VALUE = "No players are currently online";
+    @Key("ui.worlds.label")
+    public static String UI_WORLDS_LABEL = "Worlds";
+    @Key("ui.worlds.value")
+    public static String UI_WORLDS_VALUE = "No worlds have been configured";
+    @Key("ui.layers.label")
+    public static String UI_LAYERS_LABEL = "Layers";
+    @Key("ui.layers.value")
+    public static String UI_LAYERS_VALUE = "No layers have been configured";
+
     private static final Lang CONFIG = new Lang();
 
     public static void reload() {

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.UUID;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.util.Colors;
@@ -134,7 +133,7 @@ public class PlayerTexture extends Thread {
         AffineTransform at = new AffineTransform();
         at.concatenate(AffineTransform.getScaleInstance(-1, 1));
         at.concatenate(AffineTransform.getTranslateInstance(-src.getWidth(), 0));
-        return transform(src, at, AffineTransformOp.TYPE_BILINEAR);
+        return transform(src, at);
     }
 
     private static BufferedImage rotate(@NonNull BufferedImage src, double angle) {
@@ -146,6 +145,7 @@ public class PlayerTexture extends Thread {
         int newHeight = (int) (h * cos + w * sin);
 
         BufferedImage dest = new BufferedImage(newWidth, newHeight, src.getType());
+
         Graphics2D g2d = dest.createGraphics();
         g2d.translate((newWidth - w) / 2, (newHeight - h) / 2);
         g2d.rotate(angle, w / 2D, h / 2D);
@@ -157,40 +157,15 @@ public class PlayerTexture extends Thread {
 
     private static BufferedImage scale(@NonNull BufferedImage src, double scaleX, double scaleY) {
         AffineTransform at = AffineTransform.getScaleInstance(scaleX, scaleY);
-        return transform(src, at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return transform(src, at);
     }
 
     private static BufferedImage shear(@NonNull BufferedImage src) {
         AffineTransform at = AffineTransform.getShearInstance(0.577375, 0);
-        return transform(src, at, AffineTransformOp.TYPE_BILINEAR);
+        return transform(src, at);
     }
 
-    private static BufferedImage transform(@NonNull BufferedImage src, @NonNull AffineTransform at, int type) {
-        return new AffineTransformOp(at, type).filter(src, null);
-    }
-
-    public static class Json {
-        public long timestamp;
-        public String profileId;
-        public String profileName;
-        public boolean signatureRequired;
-        public Map<String, Map<String, String>> textures;
-
-        /*
-{
-  "timestamp" : 1681841628334,
-  "profileId" : "0b54d4f18ce946b3a7234ffdeeae3d7d",
-  "profileName" : "BillyGalbreath",
-  "signatureRequired" : true,
-  "textures" : {
-    "SKIN" : {
-      "url" : "http://textures.minecraft.net/texture/53b9eb275fbbc2cfb0c2fb8c0598c3a905e77f82d1f9ba00f7bd83196958d9b2"
-    },
-    "CAPE" : {
-      "url" : "http://textures.minecraft.net/texture/2340c0e03dd24a11b15a8b33c2a7e9e32abb2051b2481d0ba7defd635ca7a933"
-    }
-  }
-}
-         */
+    private static BufferedImage transform(@NonNull BufferedImage src, @NonNull AffineTransform at) {
+        return new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC).filter(src, null);
     }
 }

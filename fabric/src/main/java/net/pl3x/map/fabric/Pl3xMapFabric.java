@@ -2,6 +2,7 @@ package net.pl3x.map.fabric;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.pl3x.map.core.Pl3xMap;
 
@@ -10,15 +11,15 @@ public class Pl3xMapFabric implements DedicatedServerModInitializer {
 
     private MinecraftServer server;
 
-    private FabricPlayerListener playerListener;
-
     public Pl3xMapFabric() {
         this.pl3xmap = new Pl3xMapImpl(this);
     }
 
     @Override
     public void onInitializeServer() {
-        this.playerListener = new FabricPlayerListener();
+        new FabricPlayerListener();
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> this.pl3xmap.getScheduler().tick());
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             this.server = server;

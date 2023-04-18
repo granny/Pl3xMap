@@ -91,9 +91,7 @@ public class Pl3xMapImpl extends Pl3xMap {
         Bukkit.getWorlds().forEach(world -> {
             ServerLevel level = ((CraftWorld) world).getHandle();
             WorldConfig worldConfig = new WorldConfig(world.getName());
-            if (worldConfig.ENABLED) {
-                getWorldRegistry().register(new BukkitWorld(level, world.getName(), worldConfig));
-            }
+            getWorldRegistry().register(new BukkitWorld(level, world.getName(), worldConfig));
         });
     }
 
@@ -101,5 +99,10 @@ public class Pl3xMapImpl extends Pl3xMap {
     public void loadPlayers() {
         Bukkit.getOnlinePlayers().forEach(player ->
                 getPlayerRegistry().register(player.getUniqueId().toString(), new BukkitPlayer(player)));
+    }
+
+    @Override
+    public int getMaxPlayers() {
+        return MinecraftServer.getServer().getMaxPlayers();
     }
 }

@@ -1,8 +1,11 @@
 package net.pl3x.map.core.player;
 
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -12,6 +15,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents a player.
  */
 public abstract class Player {
+    private Map<BiFunction<Player, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
     private boolean hidden;
 
     /**
@@ -148,7 +152,13 @@ public abstract class Player {
      * @param priority  Priority of decorator
      * @param decorator Name decorator to register
      */
-    public abstract void registerNameDecorator(int priority, @NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String> decorator);
+    public void registerNameDecorator(int priority, @NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String> decorator) {
+        this.nameDecorators.put(decorator, priority);
+        this.nameDecorators = this.nameDecorators.entrySet().stream()
+                .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+    }
 
     /**
      * Get the player's decorated name.
@@ -156,5 +166,11 @@ public abstract class Player {
      * @return decorated name
      */
     @NonNull
-    public abstract String getDecoratedName();
+    public String getDecoratedName() {
+        String name = getName();
+        for (BiFunction<Player, String, String> fn : this.nameDecorators.keySet()) {
+            name = fn.apply(this, name);
+        }
+        return name;
+    }
 }

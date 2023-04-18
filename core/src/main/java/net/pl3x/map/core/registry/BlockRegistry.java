@@ -33,7 +33,7 @@ public class BlockRegistry extends Registry<Block> {
         Map<Integer, String> map = new HashMap<>();
         values().forEach(block -> map.put(block.getIndex(), block.getKey()));
         try {
-            FileUtil.saveGzip(GSON.toJson(map), FileUtil.getWebDir().resolve("tiles").resolve("blocks.gz"));
+            FileUtil.saveGzip(GSON.toJson(map), FileUtil.getTilesDir().resolve("blocks.gz"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

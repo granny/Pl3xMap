@@ -1,12 +1,9 @@
 package net.pl3x.map.bukkit;
 
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
@@ -24,8 +21,6 @@ public class BukkitPlayer extends Player {
     private static final NamespacedKey HIDDEN_KEY = new NamespacedKey(Pl3xMapBukkit.getInstance(), "hidden");
 
     private final org.bukkit.entity.Player player;
-
-    private Map<BiFunction<Player, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
 
     public BukkitPlayer(org.bukkit.entity.Player player) {
         this.player = player;
@@ -109,26 +104,6 @@ public class BukkitPlayer extends Player {
     @Override
     public void setPersistentlyHidden(boolean hidden) {
         this.player.getPersistentDataContainer().set(HIDDEN_KEY, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
-    }
-
-    @Override
-    public void registerNameDecorator(int priority, @NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String> decorator) {
-        this.nameDecorators.put(decorator, priority);
-
-        this.nameDecorators = this.nameDecorators.entrySet().stream()
-                .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
-    }
-
-    @Override
-    @NonNull
-    public String getDecoratedName() {
-        String name = getName();
-        for (BiFunction<Player, String, String> fn : this.nameDecorators.keySet()) {
-            name = fn.apply(this, name);
-        }
-        return name;
     }
 
     @Override

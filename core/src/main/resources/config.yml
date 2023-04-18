@@ -2,7 +2,7 @@ settings:
   debug-mode: false
 world-settings:
   default:
-    enabled: false
+    enabled: true
     render:
       renderers:
         basic: overworld_basic

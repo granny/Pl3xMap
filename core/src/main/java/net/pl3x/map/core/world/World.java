@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -18,10 +19,13 @@ import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.registry.BiomeRegistry;
+import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.task.RegionFileWatcher;
+import net.pl3x.map.core.renderer.task.UpdateMarkerData;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Mathf;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -29,35 +33,42 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class World {
     private final String name;
+    private final Path markersDirectory;
     private final Path regionDirectory;
     private final Path tilesDirectory;
     private final WorldConfig worldConfig;
 
     private final long seed;
     private final Point spawn;
+    private final Type type;
 
     private final BiomeManager biomeManager;
     private final BiomeRegistry biomeRegistry;
+    private final Registry<Layer> layerRegistry;
 
     private final LoadingCache<Long, Region> regionCache;
     private final RegionModifiedState regionModifiedState;
     private final RegionFileWatcher regionFileWatcher;
+    private final UpdateMarkerData markerTask;
     private final Map<String, Renderer.Builder> renderers = new LinkedHashMap<>();
 
     private boolean paused = false;
 
-    public World(String name, long seed, Point spawn, Path regionDirectory, WorldConfig worldConfig) {
+    public World(String name, long seed, Point spawn, Type type, Path regionDirectory, WorldConfig worldConfig) {
         this.name = name;
         this.seed = seed;
         this.spawn = spawn;
+        this.type = type;
 
         this.regionDirectory = regionDirectory;
-        this.tilesDirectory = FileUtil.getWebDir().resolve("tiles").resolve(name.replace(":", "-"));
+        this.tilesDirectory = FileUtil.getTilesDir().resolve(name.replace(":", "-"));
+        this.markersDirectory = getTilesDirectory().resolve("markers");
 
         this.worldConfig = worldConfig;
 
         this.biomeManager = new BiomeManager(this);
         this.biomeRegistry = new BiomeRegistry();
+        this.layerRegistry = new Registry<>();
 
         this.regionCache = Caffeine.newBuilder()
                 .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -66,6 +77,12 @@ public abstract class World {
 
         this.regionModifiedState = new RegionModifiedState(this);
         this.regionFileWatcher = new RegionFileWatcher(this);
+        this.markerTask = new UpdateMarkerData(this);
+
+        if (!isEnabled()) {
+            return;
+        }
+
         this.regionFileWatcher.start();
 
         worldConfig.RENDER_RENDERERS.forEach((id, icon) -> {
@@ -85,10 +102,17 @@ public abstract class World {
         });
 
         Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions());
+
+        Pl3xMap.api().getScheduler().addTask(20, true, this.markerTask);
     }
 
     public void cleanup() {
         this.regionCache.invalidateAll();
+    }
+
+    @NonNull
+    public Path getMarkersDirectory() {
+        return this.markersDirectory;
     }
 
     @NonNull
@@ -117,8 +141,22 @@ public abstract class World {
     }
 
     @NonNull
+    public UpdateMarkerData getMarkerTask() {
+        return this.markerTask;
+    }
+
+    @NonNull
     public Map<String, Renderer.Builder> getRenderers() {
         return Collections.unmodifiableMap(this.renderers);
+    }
+
+    /**
+     * Get whether this world is enabled.
+     *
+     * @return true if enabled
+     */
+    public boolean isEnabled() {
+        return getConfig().ENABLED;
     }
 
     @NonNull
@@ -139,6 +177,16 @@ public abstract class World {
         return getConfig().RENDER_SKYLIGHT;
     }
 
+    /**
+     * Get the world's type.
+     *
+     * @return world type
+     */
+    @NonNull
+    public Type getType() {
+        return this.type;
+    }
+
     public boolean isPaused() {
         return this.paused;
     }
@@ -155,6 +203,11 @@ public abstract class World {
     @NonNull
     public BiomeRegistry getBiomeRegistry() {
         return this.biomeRegistry;
+    }
+
+    @NonNull
+    public Registry<Layer> getLayerRegistry() {
+        return this.layerRegistry;
     }
 
     @NonNull
@@ -252,5 +305,43 @@ public abstract class World {
     }
 
     public record Border(double centerX, double centerZ, double size) {
+    }
+
+    /**
+     * Represents a world's type.
+     */
+    public enum Type {
+        OVERWORLD,
+        NETHER,
+        THE_END,
+        CUSTOM;
+
+        private final String name;
+
+        Type() {
+            this.name = name().toLowerCase(Locale.ROOT);
+        }
+
+        /**
+         * Get the world type from a server level.
+         *
+         * @param dimension dimension name
+         * @return world type
+         */
+        @NonNull
+        public static Type get(@NonNull String dimension) {
+            return switch (dimension) {
+                case "minecraft:overworld" -> OVERWORLD;
+                case "minecraft:the_nether" -> NETHER;
+                case "minecraft:the_end" -> THE_END;
+                default -> CUSTOM;
+            };
+        }
+
+        @Override
+        @NonNull
+        public String toString() {
+            return this.name;
+        }
     }
 }

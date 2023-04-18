@@ -36,6 +36,10 @@ import net.pl3x.map.core.world.World;
 public class FileUtil {
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
 
+    public static Path getTilesDir() {
+        return getWebDir().resolve("tiles");
+    }
+
     public static Path getWebDir() {
         return Config.WEB_DIR.startsWith("/") ? Path.of(Config.WEB_DIR) : Pl3xMap.api().getMainDir().resolve(Config.WEB_DIR);
     }
@@ -111,6 +115,18 @@ public class FileUtil {
                 Logger.warn("Failed to extract file (" + name + ") from jar!");
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void write(String str, Path file) {
+        try (
+                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                Writer writer = new OutputStreamWriter(fileOut)
+        ) {
+            writer.write(str);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -28,10 +28,15 @@ public class FabricWorld extends World {
                 name,
                 level.getSeed(),
                 Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getXSpawn()),
+                Type.get(level.dimension().location().toString()),
                 ((ServerLevelAccessor) level).getStorage().getDimensionPath(level.dimension()).resolve("region"),
                 worldConfig
         );
         this.level = level;
+
+        if (!isEnabled()) {
+            return;
+        }
 
         // register biomes
         for (Map.Entry<ResourceKey<Biome>, Biome> entry : level.registryAccess().registryOrThrow(Registries.BIOME).entrySet()) {

@@ -27,10 +27,14 @@ public class Pl3xMapBukkit extends JavaPlugin {
 
         this.playerListener = new BukkitPlayerListener();
         getServer().getPluginManager().registerEvents(this.playerListener, this);
+
+        getServer().getScheduler().runTaskTimer(this, () -> this.pl3xmap.getScheduler().tick(), 1, 1);
     }
 
     @Override
     public void onDisable() {
+        getServer().getScheduler().cancelTasks(this);
+
         if (this.playerListener != null) {
             HandlerList.unregisterAll(this.playerListener);
             this.playerListener = null;
