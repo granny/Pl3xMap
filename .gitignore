@@ -128,4 +128,4 @@ build
 /webmap/public/images/skins/2D
 /webmap/public/images/skins/3D
 /webmap/public/tiles
-/common/src/main/resources/web/
+/core/src/main/resources/web/

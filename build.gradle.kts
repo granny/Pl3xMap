@@ -30,6 +30,16 @@ tasks {
         finalizedBy(named("combineJars"))
     }
 
+    clean {
+        finalizedBy(named("cleanWebmap"))
+    }
+
+    register<Copy>("cleanWebmap") {
+        dependsOn(named("clean"))
+        println("Cleaning webmap...")
+        delete("$rootDir/core/src/main/resource/web")
+    }
+
     register<Jar>("combineJars") {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from(files(subprojects.filter { it.name != "WebMap" }.map {
