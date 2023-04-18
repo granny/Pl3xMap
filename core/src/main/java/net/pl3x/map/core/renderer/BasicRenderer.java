@@ -14,46 +14,24 @@ public final class BasicRenderer extends Renderer {
     }
 
     @Override
-    public void allocateData(World world, Point region) {
-        super.allocateData(world, region);
-        this.lightImage = new TileImage("light", world, region);
+    public void allocateData(Point region) {
+        super.allocateData(region);
+        this.lightImage = new TileImage("light", getWorld(), region);
     }
 
     @Override
-    public void saveData() {
-        super.saveData();
+    public void saveData(Point region) {
+        super.saveData(region);
         this.lightImage.saveToDisk();
     }
 
     @Override
-    public void scanData(Region region) {
-        int cX = region.getX() << 5;
-        int cZ = region.getZ() << 5;
+    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
+        int pixelColor = basicPixelColor(region, data.getBlockState(), data.getFluidState(), data.getBiome(region, blockX, blockZ), blockX, data.getBlockY(), blockZ, data.getFluidY());
+        getTileImage().setPixel(blockX, blockZ, pixelColor);
 
-        // iterate each chunk in this region
-        for (int chunkX = cX; chunkX < cX + 32; chunkX++) {
-            int bX = chunkX << 4;
-            for (int chunkZ = cZ; chunkZ < cZ + 32; chunkZ++) {
-                int bZ = chunkZ << 4;
-                Chunk chunk = region.getChunk(chunkX, chunkZ);
-                // iterate each block in this chunk
-                for (int blockX = bX; blockX < bX + 16; blockX++) {
-                    for (int blockZ = bZ; blockZ < bZ + 16; blockZ++) {
-                        Chunk.BlockData data = chunk.getData(blockX, blockZ);
-                        if (data == null) {
-                            // this shouldn't happen, but just in case...
-                            continue;
-                        }
-
-                        int pixelColor = basicPixelColor(region, data.getBlockState(), data.getFluidState(), data.getBiome(region, blockX, blockZ), blockX, data.getBlockY(), blockZ, data.getFluidY());
-                        getTileImage().setPixel(blockX, blockZ, pixelColor);
-
-                        // get light level right above this block
-                        int lightPixel = calculateLight(chunk, data.getFluidState(), blockX, data.getBlockY(), blockZ, data.getFluidY(), pixelColor);
-                        this.lightImage.setPixel(blockX, blockZ, lightPixel);
-                    }
-                }
-            }
-        }
+        // get light level right above this block
+        int lightPixel = calculateLight(chunk, data.getFluidState(), blockX, data.getBlockY(), blockZ, data.getFluidY(), pixelColor);
+        this.lightImage.setPixel(blockX, blockZ, lightPixel);
     }
 }

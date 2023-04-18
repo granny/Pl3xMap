@@ -100,9 +100,13 @@ public abstract class AbstractConfig {
             if (rawValue == null) {
                 continue;
             }
-            map.put(key, rawValue);
+            map.put(key, addToMap(rawValue));
         }
         return map;
+    }
+
+    protected Object addToMap(String rawValue) {
+        return rawValue;
     }
 
     protected void set(String path, Object value) {

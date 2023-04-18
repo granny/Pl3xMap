@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("io.papermc.paperweight.userdev") version "1.3.11"
+    id("io.papermc.paperweight.userdev") version "1.5.4"
 }
 
 group = "net.pl3x.map.bukkit"
@@ -9,7 +9,7 @@ version = rootProject.version
 dependencies {
     compileOnly(project(":Core"))
 
-    paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 }
 
 tasks {

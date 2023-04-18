@@ -10,7 +10,7 @@ public class EmptyChunk extends Chunk {
     @Override
     @NonNull
     public BlockState getBlockState(int x, int y, int z) {
-        return Block.AIR.getDefaultState();
+        return Blocks.AIR.getDefaultState();
     }
 
     @Override

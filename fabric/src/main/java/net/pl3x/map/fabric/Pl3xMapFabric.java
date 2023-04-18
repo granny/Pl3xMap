@@ -10,12 +10,16 @@ public class Pl3xMapFabric implements DedicatedServerModInitializer {
 
     private MinecraftServer server;
 
+    private FabricPlayerListener playerListener;
+
     public Pl3xMapFabric() {
         this.pl3xmap = new Pl3xMapImpl(this);
     }
 
     @Override
     public void onInitializeServer() {
+        this.playerListener = new FabricPlayerListener();
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             this.server = server;
             this.pl3xmap.enable();

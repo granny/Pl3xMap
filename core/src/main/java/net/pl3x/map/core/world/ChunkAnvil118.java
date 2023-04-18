@@ -54,7 +54,7 @@ public class ChunkAnvil118 extends Chunk {
     public BlockState getBlockState(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
-        return section == null ? Block.AIR.getDefaultState() : section.getBlockState(x, y, z);
+        return section == null ? Blocks.AIR.getDefaultState() : section.getBlockState(x, y, z);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class ChunkAnvil118 extends Chunk {
                     for (int i = 0; i < this.blockPalette.length; i++) {
                         CompoundTag entry = paletteTag.get(i);
                         String id = entry.getString("Name");
-                        Block block = Pl3xMap.api().getBlockRegistry().getOrDefault(id, Block.AIR);
+                        Block block = Pl3xMap.api().getBlockRegistry().getOrDefault(id, Blocks.AIR);
                         Map<String, String> properties = new HashMap<>();
                         CompoundTag propertiesTag = entry.getCompoundTag("Properties");
                         if (propertiesTag != null) {
@@ -252,12 +252,12 @@ public class ChunkAnvil118 extends Chunk {
                 return this.blockPalette[0];
             }
             if (this.blocks.length == 0) {
-                return Block.AIR.getDefaultState();
+                return Blocks.AIR.getDefaultState();
             }
             int blockIndex = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);
             long value = getValueFromLongArray(this.blocks, blockIndex, this.bitsPerBlock);
             if (value >= this.blockPalette.length) {
-                return Block.AIR.getDefaultState();
+                return Blocks.AIR.getDefaultState();
             }
             return this.blockPalette[(int) value];
         }

@@ -7,8 +7,6 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
-import org.simpleyaml.configuration.ConfigurationSection;
-import org.simpleyaml.configuration.MemorySection;
 
 @SuppressWarnings("CanBeFinal")
 public class ColorsConfig extends AbstractConfig {
@@ -1139,30 +1137,14 @@ public class ColorsConfig extends AbstractConfig {
     }
 
     @Override
-    protected Object get(String path) {
-        Object value = getConfig().get(path);
-        if (!(value instanceof MemorySection)) {
-            return value;
-        }
-        Map<Object, Object> map = new LinkedHashMap<>();
-        ConfigurationSection section = getConfig().getConfigurationSection(path);
-        if (section == null) {
-            return map;
-        }
-        for (String key : section.getKeys(false)) {
-            String rawValue = section.getString(key);
-            if (rawValue == null) {
-                continue;
-            }
-            map.put(key, Colors.fromHex(rawValue));
-        }
-        return map;
+    protected Object addToMap(String rawValue) {
+        return Colors.fromHex(rawValue);
     }
 
     @Override
     protected void set(String path, Object value) {
         if (value instanceof Map<?, ?> map && !map.isEmpty()) {
-            map.forEach((k, v) -> getConfig().set(path + "." + k, Colors.toHex((int) v)));
+            map.forEach((key, rawValue) -> getConfig().set(path + "." + key, Colors.toHex((int) rawValue)));
         } else {
             getConfig().set(path, value);
         }

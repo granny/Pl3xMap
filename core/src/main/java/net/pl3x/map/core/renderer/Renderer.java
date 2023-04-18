@@ -15,6 +15,7 @@ import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
 
 public abstract class Renderer extends Keyed {
+    private final World world;
     private final String name;
     private final Heightmap heightmap;
 
@@ -22,10 +23,15 @@ public abstract class Renderer extends Keyed {
 
     public Renderer(World world, Builder builder) {
         super(builder.key());
+        this.world = world;
         this.name = builder.name();
 
         String key = world.getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT);
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     public String getName() {
@@ -40,15 +46,40 @@ public abstract class Renderer extends Keyed {
         return this.tileImage;
     }
 
-    public void allocateData(World world, Point region) {
-        this.tileImage = new TileImage(getKey(), world, region);
+    public void allocateData(Point region) {
+        this.tileImage = new TileImage(getKey(), getWorld(), region);
     }
 
-    public void saveData() {
+    public void saveData(Point region) {
         this.tileImage.saveToDisk();
     }
 
-    public abstract void scanData(Region region);
+    public void scanData(Region region) {
+        int cX = region.getX() << 5;
+        int cZ = region.getZ() << 5;
+
+        // iterate each chunk in this region
+        for (int chunkX = cX; chunkX < cX + 32; chunkX++) {
+            int bX = chunkX << 4;
+            for (int chunkZ = cZ; chunkZ < cZ + 32; chunkZ++) {
+                int bZ = chunkZ << 4;
+                Chunk chunk = region.getChunk(chunkX, chunkZ);
+                // iterate each block in this chunk
+                for (int blockX = bX; blockX < bX + 16; blockX++) {
+                    for (int blockZ = bZ; blockZ < bZ + 16; blockZ++) {
+                        Chunk.BlockData data = chunk.getData(blockX, blockZ);
+                        if (data == null) {
+                            // this shouldn't happen, but just in case...
+                            continue;
+                        }
+                        scanBlock(region, chunk, data, blockX, blockZ);
+                    }
+                }
+            }
+        }
+    }
+
+    public abstract void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ);
 
     public int basicPixelColor(Region region, BlockState blockstate, BlockState fluidstate, Biome biome, int blockX, int blockY, int blockZ, int fluidY) {
         // fluid stuff

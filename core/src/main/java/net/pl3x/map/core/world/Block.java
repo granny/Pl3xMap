@@ -2,19 +2,18 @@ package net.pl3x.map.core.world;
 
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
-import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Block extends Keyed {
-    public static final Block AIR = Pl3xMap.api().getBlockRegistry().register("minecraft:air", 0);
-
+    private final int index;
     private final int color;
     private final byte bools;
     private final BlockState defaultState;
 
-    public Block(String id, int color) {
+    public Block(int index, String id, int color) {
         super(id);
+        this.index = index;
         this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, color);
 
         boolean air = ColorsConfig.BLOCKS_AIR.contains(id);
@@ -32,6 +31,10 @@ public final class Block extends Keyed {
         );
 
         this.defaultState = new BlockState(this);
+    }
+
+    public int getIndex() {
+        return this.index;
     }
 
     public int color() {

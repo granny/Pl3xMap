@@ -18,6 +18,7 @@ import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.task.RegionFileWatcher;
@@ -156,11 +157,18 @@ public abstract class World {
         return this.biomeRegistry;
     }
 
+    @NonNull
+    public abstract <T> T getLevel();
+
     public abstract long hashSeed(long seed);
 
     public abstract boolean hasCeiling();
 
     public abstract int getMinBuildHeight();
+
+    public abstract Border getWorldBorder();
+
+    public abstract Collection<Player> getPlayers();
 
     @NonNull
     public Chunk getChunk(@Nullable Region region, int chunkX, int chunkZ) {
@@ -241,5 +249,8 @@ public abstract class World {
                 + ",seed=" + getSeed()
                 + ",spawn=" + getSpawn()
                 + "}";
+    }
+
+    public record Border(double centerX, double centerZ, double size) {
     }
 }

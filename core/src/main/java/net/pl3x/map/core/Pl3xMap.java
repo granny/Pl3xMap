@@ -10,6 +10,7 @@ import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
+import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.registry.IconRegistry;
 import net.pl3x.map.core.registry.RendererRegistry;
@@ -18,11 +19,14 @@ import net.pl3x.map.core.renderer.heightmap.HeightmapRegistry;
 import net.pl3x.map.core.renderer.task.RegionProcessor;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiFix;
+import net.pl3x.map.core.world.Biome;
+import net.pl3x.map.core.world.Block;
+import net.pl3x.map.core.world.Blocks;
+import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class Pl3xMap {
-
     @NonNull
     public static Pl3xMap api() {
         return Provider.api();
@@ -34,6 +38,7 @@ public abstract class Pl3xMap {
     private BlockRegistry blockRegistry;
     private HeightmapRegistry heightmapRegistry;
     private IconRegistry iconRegistry;
+    protected PlayerRegistry playerRegistry;
     private RendererRegistry rendererRegistry;
     private WorldRegistry worldRegistry;
 
@@ -58,6 +63,7 @@ public abstract class Pl3xMap {
         this.blockRegistry = new BlockRegistry();
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
+        this.playerRegistry = new PlayerRegistry();
         this.rendererRegistry = new RendererRegistry();
         this.worldRegistry = new WorldRegistry();
     }
@@ -88,6 +94,11 @@ public abstract class Pl3xMap {
     }
 
     @NonNull
+    public PlayerRegistry getPlayerRegistry() {
+        return this.playerRegistry;
+    }
+
+    @NonNull
     public RendererRegistry getRendererRegistry() {
         return this.rendererRegistry;
     }
@@ -107,6 +118,8 @@ public abstract class Pl3xMap {
 
     public abstract int getColorForPower(byte power);
 
+    public abstract Block getFlower(World world, Biome biome, int blockX, int blockY, int blockZ);
+
     public void enable() {
         // load up configs
         Config.reload();
@@ -114,6 +127,7 @@ public abstract class Pl3xMap {
         ColorsConfig.reload();
 
         // load blocks _after_ we loaded colors
+        Blocks.registerDefaults();
         loadBlocks();
 
         // create the executor service

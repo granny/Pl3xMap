@@ -6,8 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +23,8 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import net.pl3x.map.core.Pl3xMap;
@@ -107,6 +112,47 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void saveGzip(String json, Path file) throws IOException {
+        try (
+                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
+                Writer writer = new OutputStreamWriter(gzipOut)
+        ) {
+            writer.write(json);
+            writer.flush();
+        }
+    }
+
+    public static void saveGzip(byte[] bytes, Path file) throws IOException {
+        try (
+                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut)
+        ) {
+            gzipOut.write(bytes);
+            gzipOut.flush();
+        }
+    }
+
+    public static void readGzip(Path file, ByteBuffer buffer) throws IOException {
+        try (
+                InputStream fileIn = Files.newInputStream(file);
+                GZIPInputStream gzipIn = new GZIPInputStream(fileIn)
+        ) {
+            // try reading all bytes and closing stream _before_ putting into buffer
+            byte[] bytes = gzipIn.readAllBytes();
+            gzipIn.close();
+            buffer.put(bytes);
+        }
+    }
+
+    public static Path mkDirs(Path file) throws IOException {
+        if (!Files.exists(file)) {
+            Files.createDirectories(file.getParent());
+            Files.createFile(file);
+        }
+        return file;
     }
 
     public static void createDirs(Path dirPath) {

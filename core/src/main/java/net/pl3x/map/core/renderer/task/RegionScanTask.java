@@ -26,7 +26,7 @@ public class RegionScanTask implements Runnable {
 
         String blockInfo = this.world.getConfig().UI_BLOCKINFO;
         if (blockInfo != null && !blockInfo.isEmpty()) {
-            //rendererBuilders.add(registry.get(RendererRegistry.BLOCKINFO));
+            rendererBuilders.add(registry.get(RendererRegistry.BLOCKINFO));
         }
 
         rendererBuilders.forEach(builder -> {
@@ -59,7 +59,7 @@ public class RegionScanTask implements Runnable {
 
     private void allocateImages() {
         for (Renderer renderer : this.renderers) {
-            renderer.allocateData(this.world, this.regionPos);
+            renderer.allocateData(this.regionPos);
         }
     }
 
@@ -81,7 +81,7 @@ public class RegionScanTask implements Runnable {
 
     private void saveImages() {
         for (Renderer renderer : this.renderers) {
-            renderer.saveData();
+            renderer.saveData(this.regionPos);
         }
     }
 }
