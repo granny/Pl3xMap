@@ -15,11 +15,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.layer.Layer;
+import net.pl3x.map.core.markers.layer.PlayersLayer;
+import net.pl3x.map.core.markers.layer.SpawnLayer;
+import net.pl3x.map.core.markers.layer.WorldBorderLayer;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.registry.Registry;
@@ -100,6 +104,18 @@ public abstract class World {
             }
             this.renderers.put(renderer.key(), renderer);
         });
+
+        if (getConfig().MARKERS_WORLDBORDER_ENABLED) {
+            getLayerRegistry().register(WorldBorderLayer.KEY, new WorldBorderLayer(this));
+        }
+
+        if (getConfig().MARKERS_SPAWN_ENABLED) {
+            getLayerRegistry().register(SpawnLayer.KEY, new SpawnLayer(this));
+        }
+
+        if (PlayerTracker.ENABLED) {
+            getLayerRegistry().register(PlayersLayer.KEY, new PlayersLayer(this));
+        }
 
         Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions());
 

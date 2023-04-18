@@ -101,6 +101,13 @@ public final class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
+    @Key("markers.spawn.enabled")
+    @Comment("Show the world spawn on the map")
+    public boolean MARKERS_SPAWN_ENABLED = true;
+    @Key("markers.worldborder.enabled")
+    @Comment("Show the world border on the map")
+    public boolean MARKERS_WORLDBORDER_ENABLED = true;
+
     private final String worldName;
 
     public WorldConfig(String worldName) {

@@ -19,7 +19,7 @@ public class PlayerRegistry extends Registry<Player> {
      */
     @Nullable
     public Player get(UUID uuid) {
-        return get(uuid.toString());
+        return super.get(uuid.toString());
     }
 
     /**
