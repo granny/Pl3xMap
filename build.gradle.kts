@@ -34,10 +34,10 @@ tasks {
         finalizedBy(named("cleanWebmap"))
     }
 
-    register<Copy>("cleanWebmap") {
+    register<Delete>("cleanWebmap") {
         dependsOn(named("clean"))
         println("Cleaning webmap...")
-        delete("$rootDir/core/src/main/resource/web")
+        delete("$rootDir/core/src/main/resources/web")
     }
 
     register<Jar>("combineJars") {
