@@ -12,21 +12,19 @@ dependencies {
     paperweightDevelopmentBundle('io.papermc.paper:dev-bundle:1.19.4-R0.1-SNAPSHOT')
 }
 
-tasks {
-    assemble {
-        dependsOn reobfJar
-        doLast {
-            delete fileTree("$buildDir").include('**/*-dev*.jar')
-        }
+assemble {
+    dependsOn reobfJar
+    doLast {
+        delete fileTree("$buildDir").include('**/*-dev*.jar')
     }
+}
 
-    reobfJar {
-        outputJar = file("$buildDir/libs/${rootProject.name}-${project.name}-${project.version}.jar")
-    }
+reobfJar {
+    outputJar = file("$buildDir/libs/${rootProject.name}-${project.name}-${project.version}.jar")
+}
 
-    processResources {
-        filesMatching('plugin.yml') {
-            expand 'version': project.version
-        }
+processResources {
+    filesMatching('plugin.yml') {
+        expand 'version': project.version
     }
 }
