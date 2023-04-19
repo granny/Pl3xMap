@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'fabric-loom' version '1.1-SNAPSHOT'
+}
+
+group = 'net.pl3x.map.fabric'
+version = rootProject.version
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+}
+
+dependencies {
+    compileOnly project(':core')
+
+    minecraft 'com.mojang:minecraft:1.19.4'
+    mappings loom.officialMojangMappings()
+
+    modImplementation 'net.fabricmc:fabric-loader:0.14.17'
+    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.75.3+1.19.4'
+}
+
+base {
+    archivesName = "${rootProject.name}-${project.name}"
+}
+
+processResources {
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+loom {
+    mixin {
+        defaultRefmapName = 'pl3xmap.refmap.json'
+    }
+    accessWidenerPath = file('src/main/resources/pl3xmap.accesswidener')
+    runConfigs.configureEach {
+        ideConfigGenerated(true)
+    }
+}

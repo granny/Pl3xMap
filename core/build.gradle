@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'net.pl3x.map.core'
+version = rootProject.version
+
+assemble {
+    dependsOn(shadowJar)
+    doLast {
+        delete fileTree(dir: "$buildDir", include: '**/*-dev*.jar')
+    }
+}
+
+shadowJar {
+    archiveBaseName = "${rootProject.name}-${project.name}"
+    archiveClassifier = ""
+    mergeServiceFiles()
+    exclude(
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt"
+    )
+    [
+            "com.github.benmanes.caffeine.cache",
+            "com.github.Carleslc.Simple-YAML",
+            "com.google.errorprone.annotations",
+            "com.luciad",
+            "io.undertow",
+            "net.querz",
+            "org.checkerframework",
+            "org.jboss",
+            "org.simpleyaml",
+            "org.wildfly",
+            "org.xnio",
+            "org.yaml.snakeyaml",
+    ].forEach { relocate it, "libs.$it" }
+}

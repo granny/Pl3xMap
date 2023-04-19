@@ -12,11 +12,13 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
+    compileOnly project(':core')
+
     minecraft 'net.minecraftforge:forge:1.19.4-45.0.44'
 }
 
 jar {
-    finalizedBy('reobfJar')
+    finalizedBy 'reobfJar'
 }
 
 processResources {

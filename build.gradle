@@ -1,0 +1,130 @@
+plugins {
+    id 'java'
+}
+
+def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
+project.group = 'net.pl3x.map'
+project.version = "$minecraftVersion-$buildNum"
+
+dependencies {
+    compileOnly project(':core')
+    compileOnly project(':bukkit')
+    compileOnly project(':fabric')
+    compileOnly project(':forge')
+}
+
+defaultTasks 'build'
+
+def cleanWebmap = tasks.register('cleanWebmap', Delete) {
+    dependsOn clean
+    println 'Cleaning webmap...'
+    delete "$rootDir/core/src/main/resources/web"
+}
+
+def combineJars = tasks.register('combineJars', Jar) {
+    mustRunAfter build
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(files(subprojects.findAll { it.name != 'webmap' }.collect {
+        it.layout.buildDirectory.file("libs/${rootProject.name}-${it.name}-${it.version}.jar").get()
+    }).filter { it.name != 'MANIFEST.MF' }.collect { if (it.isDirectory()) it else zipTree(it) })
+    manifest {
+        // this must be here because it overrides the default jar task
+        attributes['Main-Class'] = 'net.pl3x.map.core.Pl3xMap'
+    }
+}
+
+def npmInstall = tasks.register('npmInstall', Exec) {
+    println 'Installing npm dependencies...'
+    workingDir new File(projectDir, 'webmap')
+    commandLine 'npm.cmd', 'install'
+}
+
+def npmBuild = tasks.register("npmBuild", Exec) {
+    dependsOn npmInstall
+    println 'Building webmap...'
+    workingDir new File(projectDir, 'webmap')
+    commandLine 'npm.cmd', 'run', 'build'
+}
+
+def copyWebmap = tasks.register('copyWebmap', Copy) {
+    dependsOn npmBuild
+    println 'Copying webmap...'
+    from "$rootDir/webmap/public"
+    include '**/*'
+    exclude 'tiles*/'
+    into "$rootDir/core/src/main/resources/web"
+    from "$rootDir/webmap/dist"
+    include '**/*'
+    into "$rootDir/core/src/main/resources/web"
+}
+
+build {
+    // copy the webmap over
+    dependsOn copyWebmap
+    mustRunAfter copyWebmap
+    // this is to ensure the subprojects finish building completely before this task is finished
+    subprojects
+            .findAll { it.name != 'webmap' }
+            .forEach { project ->
+                dependsOn ":${project.name}:build"
+            }
+    // after subprojects are finished we can combine their jars into a fatjar
+    finalizedBy combineJars
+}
+
+clean {
+    finalizedBy cleanWebmap
+}
+
+allprojects {
+    if (name == "webmap") {
+        return
+    }
+
+    apply plugin: 'java'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://jitpack.io' }
+    }
+
+    dependencies {
+        implementation 'com.github.ben-manes.caffeine:caffeine:3.1.5'
+        implementation 'com.github.Querz:NBT:6.1'
+        implementation('com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.3') {
+            exclude group: 'org.yaml', module: 'snakeyaml'
+        }
+        implementation 'io.undertow:undertow-core:2.3.5.Final'
+        implementation 'org.jboss.xnio:xnio-nio:3.8.8.Final'
+
+        // provided by mojang
+        compileOnly 'com.google.code.gson:gson:2.10.1'
+    }
+
+    jar {
+        if (rootProject.name == project.name) {
+            archiveBaseName = rootProject.name
+        } else {
+            archiveBaseName = "${rootProject.name}-${project.name}"
+        }
+    }
+
+    compileJava {
+        options.encoding = 'UTF-8'
+        options.release.set(17)
+    }
+
+    javadoc {
+        options.encoding = 'UTF-8'
+    }
+
+    processResources {
+        filteringCharset = 'UTF-8'
+    }
+}
