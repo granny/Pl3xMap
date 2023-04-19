@@ -29,9 +29,7 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name()
         filesMatching("fabric.mod.json") {
-            expand(
-                    "version" to project.version
-            )
+            expand("version" to project.version)
         }
     }
 }

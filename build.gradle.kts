@@ -18,14 +18,15 @@ defaultTasks("build")
 
 tasks {
     build {
+        // copy the webmap over
+        dependsOn(named("copyWebmap"))
+        mustRunAfter(named("copyWebmap"))
         // this is to ensure the subprojects finish building completely before this task is finished
         subprojects.filter { it.name != "WebMap" }.forEach { project ->
             run {
                 dependsOn(project.tasks.build)
             }
         }
-        // copy the webmap over
-        dependsOn(named("copyWebmap"))
         // after subprojects are finished we can combine their jars into a fatjar
         finalizedBy(named("combineJars"))
     }
@@ -41,6 +42,7 @@ tasks {
     }
 
     register<Jar>("combineJars") {
+        mustRunAfter(build)
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from(files(subprojects.filter { it.name != "WebMap" }.map {
             it.layout.buildDirectory.file("libs/${rootProject.name}-${it.name}-${it.version}.jar").get()

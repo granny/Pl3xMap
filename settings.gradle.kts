@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven("https://maven.fabricmc.net/")
+        maven("https://maven.minecraftforge.net/")
     }
 }
 
@@ -15,7 +16,7 @@ setup("WebMap")
 
 fun setup(name: String) {
     subproject(name) {
-        projectDir = file(name.lowercase())
+        projectDir = file(name.toLowerCase())
     }
 }
 

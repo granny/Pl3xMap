@@ -1,0 +1,26 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '5.1.+'
+}
+
+group = "net.pl3x.map.forge"
+version = rootProject.version
+
+minecraft {
+    mappings channel: 'official', version: '1.19.4'
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.19.4-45.0.44'
+}
+
+jar {
+    finalizedBy('reobfJar')
+}
+
+processResources {
+    filesMatching("META-INF/mods.toml") {
+        expand("version": project.version)
+    }
+}
