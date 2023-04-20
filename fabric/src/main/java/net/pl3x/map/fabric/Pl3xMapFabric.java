@@ -43,7 +43,6 @@ public class Pl3xMapFabric implements DedicatedServerModInitializer {
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             this.pl3xmap.disable();
-
             this.pl3xmap.getBlockRegistry().unregister();
         });
     }

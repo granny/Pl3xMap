@@ -68,6 +68,13 @@ public abstract class World {
         this.tilesDirectory = FileUtil.getTilesDir().resolve(name.replace(":", "-"));
         this.markersDirectory = getTilesDirectory().resolve("markers");
 
+        if (!Files.exists(this.regionDirectory)) {
+            try {
+                Files.createDirectories(this.regionDirectory);
+            } catch (IOException ignore) {
+            }
+        }
+
         this.worldConfig = worldConfig;
 
         this.biomeManager = new BiomeManager(this);
@@ -106,19 +113,24 @@ public abstract class World {
         });
 
         if (getConfig().MARKERS_WORLDBORDER_ENABLED) {
+            Logger.debug("Registering world border layer");
             getLayerRegistry().register(WorldBorderLayer.KEY, new WorldBorderLayer(this));
         }
 
         if (getConfig().MARKERS_SPAWN_ENABLED) {
+            Logger.debug("Registering spawn layer");
             getLayerRegistry().register(SpawnLayer.KEY, new SpawnLayer(this));
         }
 
         if (PlayerTracker.ENABLED) {
+            Logger.debug("Registering player tracker layer");
             getLayerRegistry().register(PlayersLayer.KEY, new PlayersLayer(this));
         }
 
+        Logger.debug("Checking all region files");
         Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions());
 
+        Logger.debug("Starting marker task");
         Pl3xMap.api().getScheduler().addTask(20, true, this.markerTask);
     }
 

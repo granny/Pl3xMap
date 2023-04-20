@@ -2,6 +2,7 @@ package net.pl3x.map.core.registry;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.image.IconImage;
@@ -100,6 +101,7 @@ public class IconRegistry extends Registry<IconImage> {
         if (image != null) {
             try {
                 Files.delete(getDir().resolve(id + ".png"));
+            } catch (NoSuchFileException ignore) {
             } catch (Throwable e) {
                 throw new IllegalStateException(String.format("Failed to delete image for key '%s'", id), e);
             }

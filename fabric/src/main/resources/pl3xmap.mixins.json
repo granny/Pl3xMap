@@ -7,7 +7,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "server": [
-    "MixinServerLevel"
-  ]
+  "server": []
 }

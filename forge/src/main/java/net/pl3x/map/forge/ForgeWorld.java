@@ -1,4 +1,4 @@
-package net.pl3x.map.fabric;
+package net.pl3x.map.forge;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,10 +19,10 @@ import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class FabricWorld extends World {
+public class ForgeWorld extends World {
     private final ServerLevel level;
 
-    public FabricWorld(ServerLevel level, String name, WorldConfig worldConfig) {
+    public ForgeWorld(ServerLevel level, String name, WorldConfig worldConfig) {
         super(
                 name,
                 level.getSeed(),

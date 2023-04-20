@@ -1,4 +1,4 @@
-package net.pl3x.map.fabric;
+package net.pl3x.map.forge;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,12 +20,12 @@ import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class FabricPlayer extends Player {
+public class ForgePlayer extends Player {
     //private static final NamespacedKey HIDDEN_KEY = new NamespacedKey(Pl3xMapBukkit.getInstance(), "hidden");
 
     private final net.minecraft.world.entity.player.Player player;
 
-    public FabricPlayer(net.minecraft.world.entity.player.Player player) {
+    public ForgePlayer(net.minecraft.world.entity.player.Player player) {
         this.player = player;
     }
 
@@ -147,7 +147,7 @@ public class FabricPlayer extends Player {
     @Override
     @NonNull
     public String toString() {
-        return "FabricPlayer{"
+        return "ForgePlayer{"
                 + "player=" + getPlayer().getUUID()
                 + "}";
     }

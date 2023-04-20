@@ -1,13 +1,12 @@
-package net.pl3x.map.fabric;
+package net.pl3x.map.forge;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -19,18 +18,22 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Pl3xMapImpl extends Pl3xMap {
-    private final Pl3xMapFabric mod;
+    private final Pl3xMapForge mod;
 
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
 
-    public Pl3xMapImpl(Pl3xMapFabric mod) {
+    public Pl3xMapImpl(Pl3xMapForge mod) {
         super();
 
         this.mod = mod;
@@ -48,13 +51,17 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     public void useJar(Consumer<Path> consumer) {
-        consumer.accept(FabricLoader.getInstance().getModContainer("pl3xmap").orElseThrow().getRootPaths().get(0));
+        try {
+            FileUtil.openJar(ModList.get().getModContainerById("pl3xmap").orElseThrow().getModInfo().getOwningFile().getFile().getFilePath(), fs -> consumer.accept(fs.getPath("/")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     @NonNull
     public Path getMainDir() {
-        return FabricLoader.getInstance().getGameDir().resolve("config").resolve("pl3xmap");
+        return FMLPaths.GAMEDIR.get().resolve("config").resolve("pl3xmap");
     }
 
     @Override
@@ -76,7 +83,8 @@ public class Pl3xMapImpl extends Pl3xMap {
         RandomPatchConfiguration config = (RandomPatchConfiguration) flowers.get(0).config();
         SimpleBlockConfiguration flower = (SimpleBlockConfiguration) config.feature().value().feature().value().config();
         Block block = flower.toPlace().getState(this.randomSource, new BlockPos(blockX, blockY, blockZ)).getBlock();
-        return getBlockRegistry().get(BuiltInRegistries.BLOCK.getKey(block).toString());
+        ResourceLocation key = ForgeRegistries.BLOCKS.getKey(block);
+        return key == null ? null : getBlockRegistry().get(key.toString());
     }
 
     @Override
@@ -95,7 +103,7 @@ public class Pl3xMapImpl extends Pl3xMap {
             String name = level.dimension().location().toString();
             WorldConfig worldConfig = new WorldConfig(name);
             if (worldConfig.ENABLED) {
-                getWorldRegistry().register(new FabricWorld(level, name, worldConfig));
+                getWorldRegistry().register(new ForgeWorld(level, name, worldConfig));
             }
         });
     }
@@ -103,7 +111,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     @Override
     public void loadPlayers() {
         this.mod.getServer().getPlayerList().getPlayers().forEach(player ->
-                getPlayerRegistry().register(player.getUUID().toString(), new FabricPlayer(player)));
+                getPlayerRegistry().register(player.getUUID().toString(), new ForgePlayer(player)));
     }
 
     @Override

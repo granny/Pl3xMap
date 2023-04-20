@@ -7,6 +7,7 @@ version = rootProject.version
 
 minecraft {
     mappings channel: 'official', version: '1.19.4'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

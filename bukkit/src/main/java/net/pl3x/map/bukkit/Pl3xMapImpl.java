@@ -1,9 +1,15 @@
 package net.pl3x.map.bukkit;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +26,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
@@ -46,6 +53,29 @@ public class Pl3xMapImpl extends Pl3xMap {
         }
 
         init();
+    }
+
+    @Override
+    public void useJar(Consumer<Path> consumer) {
+        // https://github.com/PEXPlugins/PermissionsEx/blob/master/api/src/main/java/ca/stellardrift/permissionsex/util/TranslatableProvider.java#L150-L158 (Apache-2.0 license)
+        URL sourceUrl = Pl3xMap.class.getProtectionDomain().getCodeSource().getLocation();
+        // Some class loaders give the full url to the class, some give the URL to its jar.
+        // We want the containing jar, so we will unwrap jar-schema code sources.
+        if (sourceUrl.getProtocol().equals("jar")) {
+            int exclamationIdx = sourceUrl.getPath().lastIndexOf('!');
+            if (exclamationIdx != -1) {
+                try {
+                    sourceUrl = new URL(sourceUrl.getPath().substring(0, exclamationIdx));
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        try {
+            FileUtil.openJar(Paths.get(sourceUrl.toURI()), fs -> consumer.accept(fs.getPath("/")));
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

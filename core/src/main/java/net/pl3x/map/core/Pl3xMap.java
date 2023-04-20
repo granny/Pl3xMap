@@ -5,11 +5,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
+import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.registry.IconRegistry;
@@ -121,6 +123,8 @@ public abstract class Pl3xMap {
         return this.scheduler;
     }
 
+    public abstract void useJar(Consumer<Path> consumer);
+
     @NonNull
     public abstract Path getMainDir();
 
@@ -130,66 +134,85 @@ public abstract class Pl3xMap {
 
     public void enable() {
         // load up configs
+        Logger.debug("Loading configs");
         Config.reload();
         Lang.reload();
         ColorsConfig.reload();
 
         // load blocks _after_ we loaded colors
+        Logger.debug("Registering blocks");
         Blocks.registerDefaults();
         loadBlocks();
 
         // create the executor service
+        Logger.debug("Creating services");
         this.renderExecutor = ThreadFactory.createService("Pl3xMap-Renderer", Config.RENDER_THREADS);
         this.scheduler = new Scheduler();
 
         // register built in tile image types
+        Logger.debug("Registering tile image types");
         IO.register();
 
         // register built-in heightmaps
+        Logger.debug("Registering heightmaps");
         getHeightmapRegistry().register();
 
         // register built-in renderers
+        Logger.debug("Registering renderers");
         getRendererRegistry().register();
 
         // load up already loaded worlds
+        Logger.debug("Registering worlds");
         loadWorlds();
 
         // load up players already connected to the server
+        Logger.debug("Registering players");
         loadPlayers();
 
         // start integrated server
+        Logger.debug("Starting internal server");
         getHttpdServer().startServer();
 
         // start tasks
+        Logger.debug("Starting region processor");
         getRegionProcessor().start(10000L);
 
+        Logger.debug("Starting update settings data task");
         getScheduler().addTask(new UpdateSettingsData());
     }
 
     public void disable() {
         // stop tasks
+        Logger.debug("Stopping tasks");
         getScheduler().cancelAll();
         getRegionProcessor().stop();
 
         // stop integrated server
+        Logger.debug("Stopping internal server");
         getHttpdServer().stopServer();
 
         // unload all players
-        //getPlayerRegistry().unregister();
+        Logger.debug("Unregistering players");
+        getPlayerRegistry().unregister();
 
         // unload all map worlds
+        Logger.debug("Unregistering worlds");
         getWorldRegistry().unregister();
 
         // unregister renderers
+        Logger.debug("Unregistering renderers");
         getRendererRegistry().unregister();
 
         // unregister icons
+        Logger.debug("Unregistering icons");
         getIconRegistry().unregister();
 
         // unregister heightmaps
+        Logger.debug("Unregistering heightmaps");
         getHeightmapRegistry().unregister();
 
         // unregister tile image types
+        Logger.debug("Unregistering tile image types");
         IO.unregister();
     }
 

@@ -16,7 +16,7 @@ public class WorldRegistry extends Registry<World> {
         World world = this.entries.remove(id);
         if (world != null) {
             world.getMarkerTask().cancel();
-            world.getRegionFileWatcher().interrupt();
+            world.getRegionFileWatcher().stop();
         }
         return world;
     }

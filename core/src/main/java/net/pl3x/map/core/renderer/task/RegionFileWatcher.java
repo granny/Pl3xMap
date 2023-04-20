@@ -8,6 +8,8 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
@@ -17,17 +19,65 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-public class RegionFileWatcher extends Thread {
+public class RegionFileWatcher implements Runnable {
     private final World world;
 
+    private Timer timer;
+    private TimerTask task;
+    private Thread thread;
+
+    private boolean stopped;
+
     public RegionFileWatcher(World world) {
-        super(null, null, String.format("Pl3xMap-FileWatcher-%s", world.getName()), 0);
         this.world = world;
+    }
+
+    public void start() {
+        start(true);
+    }
+
+    public void start(boolean verbose) {
+        if (verbose) {
+            Logger.debug("Starting region file watcher for " + this.world.getName());
+        }
+        stop(false);
+        this.timer = new Timer();
+        this.task = new TimerTask() {
+            @Override
+            public void run() {
+                RegionFileWatcher rfw = RegionFileWatcher.this;
+                rfw.thread = Thread.currentThread();
+                rfw.thread.setName(String.format("Pl3xMap-FileWatcher-%s", rfw.world.getName()));
+                rfw.stopped = false;
+                rfw.run();
+            }
+        };
+
+        this.timer.schedule(task, 10000L);
+    }
+
+    public void stop() {
+        stop(true);
+    }
+
+    public void stop(boolean verbose) {
+        if (verbose) {
+            Logger.debug("Stopping region file watcher for " + this.world.getName());
+        }
+        this.stopped = true;
+        if (this.task != null) {
+            this.task.cancel();
+        }
+        if (this.timer != null) {
+            this.timer.cancel();
+        }
+        if (this.thread != null) {
+            this.thread.interrupt();
+        }
     }
 
     @Override
     public void run() {
-        boolean stopped = false;
         Path dir = this.world.getRegionDirectory();
 
         try (WatchService watcher = dir.getFileSystem().newWatchService()) {
@@ -55,16 +105,15 @@ public class RegionFileWatcher extends Thread {
             }
 
         } catch (ClosedWatchServiceException | InterruptedException ignore) {
-            stopped = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (stopped) {
+        if (this.stopped) {
             Logger.debug("Region file watcher stopped!");
         } else {
             Logger.debug("Region file watcher stopped! Trying to start again..");
-            this.world.getRegionFileWatcher().start();
+            start(false);
         }
     }
 }
