@@ -79,14 +79,6 @@ public abstract class Chunk {
     @NonNull
     public abstract Biome getBiome(int x, int y, int z);
 
-    public int getMinY(int x, int z) {
-        return 0;
-    }
-
-    public int getMaxY(int x, int z) {
-        return 255;
-    }
-
     @NonNull
     public abstract Chunk populate();
 

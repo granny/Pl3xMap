@@ -76,22 +76,12 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
-    public int getMinY(int x, int z) {
-        return sectionMin << 4;
-    }
-
-    @Override
-    public int getMaxY(int x, int z) {
-        return (sectionMax << 4) + 0xF;
-    }
-
-    @Override
     public int getWorldSurfaceY(int x, int z) {
         // todo cache
         if (this.worldSurfaceHeights.length < 37) {
             return 0;
         }
-        return (int) getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) - 64;
+        return (int) getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
     }
 
     @Override
@@ -100,7 +90,7 @@ public class ChunkAnvil118 extends Chunk {
         if (this.oceanFloorHeights.length < 37) {
             return 0;
         }
-        return (int) getValueFromLongArray(this.oceanFloorHeights, ((z & 0xF) << 4) + (x & 0xF), 9) - 64;
+        return (int) getValueFromLongArray(this.oceanFloorHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
     }
 
     @Override
@@ -123,10 +113,10 @@ public class ChunkAnvil118 extends Chunk {
 
                 // if world has ceiling iterate down until we find air
                 if (getWorld().hasCeiling()) {
+                    data.blockY -= 1; // start down into ceiling
                     do {
                         data.blockY -= 1;
                         data.blockstate = getBlockState(blockX, data.blockY, blockZ);
-
                     } while (data.blockY > getWorld().getMinBuildHeight() && !data.blockstate.getBlock().isAir());
                 }
 
