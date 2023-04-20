@@ -26,6 +26,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
@@ -111,7 +113,13 @@ public class Pl3xMapImpl extends Pl3xMap {
     public void loadBlocks() {
         for (Map.Entry<ResourceKey<Block>, Block> entry : MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
+            if (getBlockRegistry().has(id)) {
+                continue;
+            }
             int color = entry.getValue().defaultMaterialColor().col;
+            if (id.startsWith("minecraft:")) {
+                Logger.warn("Registering unknown block vanilla " + id + ": " + Colors.toHex(color));
+            }
             getBlockRegistry().register(id, color);
         }
         getBlockRegistry().saveToDisk();

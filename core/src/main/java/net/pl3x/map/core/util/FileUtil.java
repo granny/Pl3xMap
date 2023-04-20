@@ -195,12 +195,13 @@ public class FileUtil {
                 String[] split = file.getFileName().toString().split("\\.");
                 int rX = Integer.parseInt(split[1]);
                 int rZ = Integer.parseInt(split[2]);
-                long modified = world.getRegionModifiedState().get(Mathf.asLong(rX, rZ));
-                if (Files.getLastModifiedTime(file).toMillis() > modified) {
+                long storedModifiedTime = world.getRegionModifiedState().get(Mathf.asLong(rX, rZ));
+                long actualModifiedTime = Files.getLastModifiedTime(file).toMillis();
+                if (actualModifiedTime > storedModifiedTime) {
                     Logger.debug("Adding region: " + file.getFileName());
                     regions.add(Point.of(rX, rZ));
                 } else {
-                    Logger.debug("Skipping unmodified region: " + file.getFileName());
+                    Logger.debug("Skipping unmodified region: " + file.getFileName() + " " + actualModifiedTime + " <= " + storedModifiedTime);
                 }
             } catch (NumberFormatException ignore) {
             } catch (IOException e) {
