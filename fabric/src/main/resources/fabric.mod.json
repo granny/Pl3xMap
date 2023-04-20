@@ -13,7 +13,7 @@
     "issues": "https://github.com/BillyGalbreath/Pl3xMap/issues"
   },
   "license": "MIT",
-  "icon": "assets/icon.png",
+  "icon": "pl3xmap.png",
   "environment": "server",
   "entrypoints": {
     "server": [
@@ -26,7 +26,6 @@
   "accessWidener": "pl3xmap.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.17",
-    "fabric-api": "*",
     "minecraft": "~1.19.4",
     "java": ">=17"
   },

@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
@@ -26,15 +27,13 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Pl3xMapImpl extends Pl3xMap {
-    private final Pl3xMapFabric mod;
-
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
 
-    public Pl3xMapImpl(@NonNull Pl3xMapFabric mod) {
-        super();
+    private MinecraftServer server;
 
-        this.mod = mod;
+    public Pl3xMapImpl() {
+        super();
 
         try {
             Field api = Provider.class.getDeclaredField("api");
@@ -80,9 +79,14 @@ public class Pl3xMapImpl extends Pl3xMap {
         return getBlockRegistry().get(BuiltInRegistries.BLOCK.getKey(block).toString());
     }
 
+    public void enable(MinecraftServer server) {
+        this.server = server;
+        super.enable();
+    }
+
     @Override
     public void loadBlocks() {
-        for (Map.Entry<ResourceKey<Block>, Block> entry : this.mod.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
+        for (Map.Entry<ResourceKey<Block>, Block> entry : this.server.registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
             int color = entry.getValue().defaultMaterialColor().col;
             getBlockRegistry().register(id, color);
@@ -92,7 +96,7 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     public void loadWorlds() {
-        this.mod.getServer().getAllLevels().forEach(level -> {
+        this.server.getAllLevels().forEach(level -> {
             String name = level.dimension().location().toString();
             WorldConfig worldConfig = new WorldConfig(name);
             if (worldConfig.ENABLED) {
@@ -103,12 +107,12 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     public void loadPlayers() {
-        this.mod.getServer().getPlayerList().getPlayers().forEach(player ->
+        this.server.getPlayerList().getPlayers().forEach(player ->
                 getPlayerRegistry().register(player.getUUID().toString(), new FabricPlayer(player)));
     }
 
     @Override
     public int getMaxPlayers() {
-        return this.mod.getServer().getMaxPlayers();
+        return this.server.getMaxPlayers();
     }
 }
