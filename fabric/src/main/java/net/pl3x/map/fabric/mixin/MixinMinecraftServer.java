@@ -3,7 +3,7 @@ package net.pl3x.map.fabric.mixin;
 import java.util.function.BooleanSupplier;
 import net.minecraft.server.MinecraftServer;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.fabric.Pl3xMapImpl;
+import net.pl3x.map.fabric.Pl3xMapFabric;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,7 +20,7 @@ public class MixinMinecraftServer {
     @SuppressWarnings("DataFlowIssue")
     @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;buildServerStatus()Lnet/minecraft/network/protocol/status/ServerStatus;", ordinal = 0))
     private void runServer(CallbackInfo info) {
-        ((Pl3xMapImpl) Pl3xMap.api()).enable((MinecraftServer) (Object) this);
+        ((Pl3xMapFabric) Pl3xMap.api()).enable((MinecraftServer) (Object) this);
     }
 
     @Inject(method = "stopServer", at = @At("HEAD"))

@@ -13,16 +13,17 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BukkitPlayer extends Player {
-    private static final NamespacedKey HIDDEN_KEY = new NamespacedKey(Pl3xMapBukkit.getInstance(), "hidden");
-
     private final org.bukkit.entity.Player player;
+    private final NamespacedKey hiddenKey;
 
-    public BukkitPlayer(org.bukkit.entity.@NonNull Player player) {
+    public BukkitPlayer(Plugin plugin, org.bukkit.entity.@NonNull Player player) {
         this.player = player;
+        this.hiddenKey = new NamespacedKey(plugin, "hidden");
     }
 
     public org.bukkit.entity.@NonNull Player getPlayer() {
@@ -97,12 +98,12 @@ public class BukkitPlayer extends Player {
 
     @Override
     public boolean isPersistentlyHidden() {
-        return this.player.getPersistentDataContainer().getOrDefault(HIDDEN_KEY, PersistentDataType.BYTE, (byte) 0) != 0;
+        return this.player.getPersistentDataContainer().getOrDefault(hiddenKey, PersistentDataType.BYTE, (byte) 0) != 0;
     }
 
     @Override
     public void setPersistentlyHidden(boolean hidden) {
-        this.player.getPersistentDataContainer().set(HIDDEN_KEY, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
+        this.player.getPersistentDataContainer().set(hiddenKey, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
     }
 
     @Override

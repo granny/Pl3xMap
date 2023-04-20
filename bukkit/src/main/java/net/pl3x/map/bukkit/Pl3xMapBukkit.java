@@ -1,25 +1,23 @@
 package net.pl3x.map.bukkit;
 
 import net.pl3x.map.core.Pl3xMap;
-import org.bukkit.event.HandlerList;
+import net.pl3x.map.core.player.PlayerListener;
+import net.pl3x.map.core.player.PlayerRegistry;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class Pl3xMapBukkit extends JavaPlugin {
-    private static Pl3xMapBukkit instance;
-
-    @NonNull
-    public static Pl3xMapBukkit getInstance() {
-        return instance;
-    }
-
+public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     private final Pl3xMap pl3xmap;
-
-    private BukkitPlayerListener playerListener;
+    private final PlayerListener playerListener = new PlayerListener() {
+    };
 
     public Pl3xMapBukkit() {
         super();
-        instance = this;
         this.pl3xmap = new Pl3xMapImpl(this);
     }
 
@@ -27,8 +25,7 @@ public class Pl3xMapBukkit extends JavaPlugin {
     public void onEnable() {
         this.pl3xmap.enable();
 
-        this.playerListener = new BukkitPlayerListener();
-        getServer().getPluginManager().registerEvents(this.playerListener, this);
+        getServer().getPluginManager().registerEvents(this, this);
 
         getServer().getScheduler().runTaskTimer(this, () -> this.pl3xmap.getScheduler().tick(), 1, 1);
     }
@@ -37,11 +34,18 @@ public class Pl3xMapBukkit extends JavaPlugin {
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
 
-        if (this.playerListener != null) {
-            HandlerList.unregisterAll(this.playerListener);
-            this.playerListener = null;
-        }
-
         this.pl3xmap.disable();
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerJoin(@NonNull PlayerJoinEvent event) {
+        PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
+        this.playerListener.onJoin(registry.register(event.getPlayer().getUniqueId().toString(), new BukkitPlayer(this, event.getPlayer())));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerQuit(@NonNull PlayerQuitEvent event) {
+        PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
+        this.playerListener.onQuit(registry.unregister(event.getPlayer().getUniqueId().toString()));
     }
 }

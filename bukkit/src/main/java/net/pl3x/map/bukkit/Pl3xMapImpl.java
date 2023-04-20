@@ -137,7 +137,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     @Override
     public void loadPlayers() {
         Bukkit.getOnlinePlayers().forEach(player ->
-                getPlayerRegistry().register(player.getUniqueId().toString(), new BukkitPlayer(player)));
+                getPlayerRegistry().register(player.getUniqueId().toString(), new BukkitPlayer(this.plugin, player)));
     }
 
     @Override
