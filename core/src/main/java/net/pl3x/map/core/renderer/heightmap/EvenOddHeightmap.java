@@ -11,9 +11,9 @@ public class EvenOddHeightmap extends Heightmap {
 
     @Override
     public int getColor(@NonNull Region region, int blockX, int blockZ) {
-        Chunk.BlockData data = region.getWorld().getChunk(region, blockX >> 4, blockZ >> 4).getData(blockX, blockZ);
+        Chunk.BlockData origin = region.getWorld().getChunk(region, blockX >> 4, blockZ >> 4).getData(blockX, blockZ);
         int heightColor = 0x22;
-        if (data != null && data.getBlockY() % 2 == 1) {
+        if (origin != null && origin.getBlockY() % 2 == 1) {
             heightColor = 0x33;
         }
         return heightColor << 24;

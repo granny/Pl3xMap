@@ -4,9 +4,9 @@ import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class ModernHeightmap extends Heightmap {
-    public ModernHeightmap() {
-        super("modern");
+public class EvenOddModernHeightmap extends Heightmap {
+    public EvenOddModernHeightmap() {
+        super("even_odd_modern");
     }
 
     @Override
@@ -23,6 +23,9 @@ public class ModernHeightmap extends Heightmap {
             }
             if (north != null) {
                 heightColor = getColor(y, north.getBlockY(), heightColor, 0x22);
+            }
+            if (y % 2 == 1) {
+                heightColor += 0x11;
             }
         }
         return heightColor << 24;

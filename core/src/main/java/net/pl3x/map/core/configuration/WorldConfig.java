@@ -54,9 +54,13 @@ public final class WorldConfig extends AbstractConfig {
     @Comment("""
             Type of heightmap to render.
             NONE has no heightmap drawn.
+            EVEN_ODD makes every other Y layer darker, like Dynmap.
+            LOW_CONTRAST same as MODERN, but lighter.
             MODERN is a clearer, more detailed view.
             OLD_SCHOOL is the old type from v1.
-            EVEN_ODD makes every other Y layer darker, like Dynmap.""")
+            EVEN_ODD_LOW_CONTRAST mix of EVEN_ODD and LOW_CONTRAST.
+            EVEN_ODD_MODERN mix of EVEN_ODD and MODERN.
+            EVEN_ODD_OLD_SCHOOL mix of EVEN_ODD and OLD_SCHOOL.""")
     public String RENDER_HEIGHTMAP_TYPE = "MODERN";
 
     @Key("ui.display-name")

@@ -10,6 +10,6 @@ public class NoneHeightmap extends Heightmap {
 
     @Override
     public int getColor(@NonNull Region region, int blockX, int blockZ) {
-        return 0x22000000;
+        return 0x22 << 24;
     }
 }
