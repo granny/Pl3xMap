@@ -3,7 +3,7 @@ package net.pl3x.map.core.world;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class EmptyChunk extends Chunk {
-    protected EmptyChunk(World world, Region region) {
+    protected EmptyChunk(@NonNull World world, @NonNull Region region) {
         super(world, region);
     }
 

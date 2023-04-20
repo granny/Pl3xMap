@@ -19,7 +19,7 @@ public abstract class Chunk {
 
     protected boolean populated;
 
-    protected Chunk(World world, Region region) {
+    protected Chunk(@NonNull World world, @NonNull Region region) {
         this.world = world;
         this.region = region;
 
@@ -30,7 +30,7 @@ public abstract class Chunk {
         this.inhabitedTime = 0;
     }
 
-    protected Chunk(World world, Region region, CompoundTag tag) {
+    protected Chunk(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
         this.world = world;
         this.region = region;
 
@@ -100,7 +100,8 @@ public abstract class Chunk {
         return this.data[((z & 0xF) << 4) + (x & 0xF)];
     }
 
-    public static Chunk create(World world, Region region, CompoundTag tag) {
+    @NonNull
+    public static Chunk create(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
         if (!"full".equals(tag.getString("Status"))) {
             return new EmptyChunk(world, region);
         }
@@ -165,6 +166,7 @@ public abstract class Chunk {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Chunk{"
                 + "world=" + getWorld()
@@ -200,7 +202,7 @@ public abstract class Chunk {
         }
 
         @NonNull
-        public Biome getBiome(Region region, int x, int z) {
+        public Biome getBiome(@NonNull Region region, int x, int z) {
             if (this.biome == null) {
                 // calculate real biome
                 this.biome = region.getWorld().getBiomeManager().getBiome(region, x, this.blockY, z);

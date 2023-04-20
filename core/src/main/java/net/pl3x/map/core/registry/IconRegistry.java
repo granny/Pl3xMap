@@ -33,6 +33,7 @@ public class IconRegistry extends Registry<IconImage> {
      *
      * @return icons directory
      */
+    @NonNull
     public Path getDir() {
         return this.registeredDir;
     }
@@ -62,18 +63,11 @@ public class IconRegistry extends Registry<IconImage> {
      *
      * @param image image to register or null
      * @return registered image
-     * @throws IllegalArgumentException if image is already registered
-     * @throws IllegalStateException    if image failed to save to disk
+     * @throws IllegalStateException if image failed to save to disk
      */
     @Override
-    @Nullable
-    public IconImage register(String id, @Nullable IconImage image) {
-        if (image == null) {
-            return null;
-        }
-        if (this.entries.containsKey(id)) {
-            return null;
-        }
+    @NonNull
+    public IconImage register(@NonNull String id, @NonNull IconImage image) {
         try {
             String filename = id + "." + image.getType();
             File file = getDir().resolve(filename).toFile();

@@ -18,6 +18,7 @@ import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class UpdateSettingsData extends Task {
     private final Gson gson = new GsonBuilder()
@@ -40,6 +41,7 @@ public class UpdateSettingsData extends Task {
         }
     }
 
+    @NonNull
     private List<Object> parsePlayers() {
         if (!PlayerTracker.ENABLED) {
             return Collections.emptyList();
@@ -72,6 +74,7 @@ public class UpdateSettingsData extends Task {
         return players;
     }
 
+    @NonNull
     private List<Map<String, Object>> parseWorlds() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
         Pl3xMap.api().getWorldRegistry().entrySet().forEach(entry -> {

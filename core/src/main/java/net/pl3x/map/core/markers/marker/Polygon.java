@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -64,6 +64,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polyline polyline to add
      * @return a new polygon
      */
+    @NonNull
     public static Polygon of(@NonNull String key, @NonNull Polyline polyline) {
         return new Polygon(key, polyline);
     }
@@ -75,6 +76,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to add
      * @return a new polygon
      */
+    @NonNull
     public static Polygon of(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
         return new Polygon(key, polylines);
     }
@@ -86,6 +88,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to add
      * @return a new polygon
      */
+    @NonNull
     public static Polygon of(@NonNull String key, @NonNull Collection<Polyline> polylines) {
         return new Polygon(key, polylines);
     }
@@ -227,6 +230,7 @@ public class Polygon extends Marker<Polygon> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Polygon{"
                 + "key=" + getKey()

@@ -288,6 +288,7 @@ public class Stroke extends Option<Stroke> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Stroke{"
                 + "enabled=" + isEnabled()

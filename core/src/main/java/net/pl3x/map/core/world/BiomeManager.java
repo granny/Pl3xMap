@@ -7,14 +7,14 @@ public class BiomeManager implements Iterable<Biome> {
     private final World world;
     private final long hashedSeed;
 
-    public BiomeManager(World world) {
+    public BiomeManager(@NonNull World world) {
         this.world = world;
         //this.hashedSeed = Hashing.sha256().hashLong(world.getSeed()).asLong();
         this.hashedSeed = world.hashSeed(world.getSeed());
     }
 
     @NonNull
-    public Biome getBiome(Region region, int x, int y, int z) {
+    public Biome getBiome(@NonNull Region region, int x, int y, int z) {
         int i = x - 2;
         int j = y - 2;
         int k = z - 2;
@@ -77,6 +77,7 @@ public class BiomeManager implements Iterable<Biome> {
     }
 
     @Override
+    @NonNull
     public Iterator<Biome> iterator() {
         return this.world.getBiomeRegistry().iterator();
     }

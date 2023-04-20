@@ -7,6 +7,8 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 @SuppressWarnings("CanBeFinal")
 public class ColorsConfig extends AbstractConfig {
@@ -1137,12 +1139,13 @@ public class ColorsConfig extends AbstractConfig {
     }
 
     @Override
-    protected Object addToMap(String rawValue) {
+    @NonNull
+    protected Object addToMap(@NonNull String rawValue) {
         return Colors.fromHex(rawValue);
     }
 
     @Override
-    protected void set(String path, Object value) {
+    protected void set(@NonNull String path, @Nullable Object value) {
         if (value instanceof Map<?, ?> map && !map.isEmpty()) {
             map.forEach((key, rawValue) -> getConfig().set(path + "." + key, Colors.toHex((int) rawValue)));
         } else {

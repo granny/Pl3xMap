@@ -2,9 +2,9 @@ package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -55,6 +55,7 @@ public class Circle extends Marker<Circle> {
      * @param radius  circle radius
      * @return a new circle
      */
+    @NonNull
     public static Circle of(@NonNull String key, double centerX, double centerZ, double radius) {
         return new Circle(key, centerX, centerZ, radius);
     }
@@ -67,6 +68,7 @@ public class Circle extends Marker<Circle> {
      * @param radius circle radius
      * @return a new circle
      */
+    @NonNull
     public static Circle of(@NonNull String key, @NonNull Point center, double radius) {
         return new Circle(key, center, radius);
     }
@@ -150,6 +152,7 @@ public class Circle extends Marker<Circle> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Circle{"
                 + "key=" + getKey()

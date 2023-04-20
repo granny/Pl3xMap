@@ -6,14 +6,15 @@ import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class BiomeRenderer extends Renderer {
-    public BiomeRenderer(World world, Builder builder) {
+    public BiomeRenderer(@NonNull World world, @NonNull Builder builder) {
         super(world, builder);
     }
 
     @Override
-    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
+    public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
         int pixelColor = 0;
 
         if (Colors.getRawBlockColor(data.getBlockState().getBlock()) > 0) {

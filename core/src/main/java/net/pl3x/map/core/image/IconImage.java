@@ -20,7 +20,7 @@ public class IconImage extends Keyed {
      * @param image buffered image
      * @param type  image type
      */
-    public IconImage(@NonNull String key, @NonNull BufferedImage image, String type) {
+    public IconImage(@NonNull String key, @NonNull BufferedImage image, @NonNull String type) {
         super(key);
         this.image = image;
         this.type = type;
@@ -69,6 +69,7 @@ public class IconImage extends Keyed {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "IconImage{"
                 + "key=" + getKey()

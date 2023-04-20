@@ -79,6 +79,7 @@ public class BukkitWorld extends World {
     }
 
     @Override
+    @NonNull
     public Border getWorldBorder() {
         return new Border(this.level.getWorldBorder().getCenterX(),
                 this.level.getWorldBorder().getCenterZ(),
@@ -86,6 +87,7 @@ public class BukkitWorld extends World {
     }
 
     @Override
+    @NonNull
     public Collection<Player> getPlayers() {
         return this.<ServerLevel>getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))

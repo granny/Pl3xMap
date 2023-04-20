@@ -25,11 +25,11 @@ public class FabricPlayer extends Player {
 
     private final net.minecraft.world.entity.player.Player player;
 
-    public FabricPlayer(net.minecraft.world.entity.player.Player player) {
+    public FabricPlayer(net.minecraft.world.entity.player.@NonNull Player player) {
         this.player = player;
     }
 
-    public net.minecraft.world.entity.player.Player getPlayer() {
+    public net.minecraft.world.entity.player.@NonNull Player getPlayer() {
         return this.player;
     }
 

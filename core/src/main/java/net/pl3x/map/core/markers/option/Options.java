@@ -41,6 +41,7 @@ public class Options implements JsonSerializable {
     /**
      * Create a new {@link Builder}.
      */
+    @NonNull
     public static Builder builder() {
         return new Builder();
     }
@@ -187,6 +188,7 @@ public class Options implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Options{fill=" + getFill() + ",stroke=" + getStroke() + ",tooltip=" + getTooltip() + ",popup=" + getPopup() + "}";
     }
@@ -892,6 +894,7 @@ public class Options implements JsonSerializable {
          *
          * @return new options
          */
+        @NonNull
         public Options build() {
             return new Options(this.stroke, this.fill, this.tooltip, this.popup);
         }

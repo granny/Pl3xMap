@@ -3,6 +3,7 @@ package net.pl3x.map.core.util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import net.pl3x.map.core.markers.Point;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * An iterator that spirals around a center point in a clockwise pattern
@@ -50,6 +51,7 @@ public class SpiralIterator implements Iterator<Point> {
     }
 
     @Override
+    @NonNull
     public Point next() throws NoSuchElementException {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -95,6 +97,7 @@ public class SpiralIterator implements Iterator<Point> {
          *
          * @return next direction
          */
+        @NonNull
         public Direction next() {
             return VALUES[(ordinal() + 1) & 3];
         }

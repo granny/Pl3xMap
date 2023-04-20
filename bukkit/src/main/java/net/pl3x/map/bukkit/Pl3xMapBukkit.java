@@ -3,10 +3,12 @@ package net.pl3x.map.bukkit;
 import net.pl3x.map.core.Pl3xMap;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Pl3xMapBukkit extends JavaPlugin {
     private static Pl3xMapBukkit instance;
 
+    @NonNull
     public static Pl3xMapBukkit getInstance() {
         return instance;
     }

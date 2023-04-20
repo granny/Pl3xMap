@@ -2,9 +2,9 @@ package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
 import java.util.Objects;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -57,6 +57,7 @@ public class Rectangle extends Marker<Rectangle> {
      * @param z2  second z point
      * @return a new rectangle
      */
+    @NonNull
     public static Rectangle of(@NonNull String key, double x1, double z1, double x2, double z2) {
         return new Rectangle(key, x1, z1, x2, z2);
     }
@@ -69,6 +70,7 @@ public class Rectangle extends Marker<Rectangle> {
      * @param point2 second point
      * @return a new rectangle
      */
+    @NonNull
     public static Rectangle of(@NonNull String key, @NonNull Point point1, @NonNull Point point2) {
         return new Rectangle(key, point1, point2);
     }
@@ -113,7 +115,7 @@ public class Rectangle extends Marker<Rectangle> {
      */
     @NonNull
     public Rectangle setPoint2(@NonNull Point point2) {
-        this.point2 = Preconditions.checkNotNull(point1, "Rectangle point2 is null");
+        this.point2 = Preconditions.checkNotNull(point2, "Rectangle point2 is null");
         return this;
     }
 
@@ -153,6 +155,7 @@ public class Rectangle extends Marker<Rectangle> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Rectangle{"
                 + "key=" + getKey()

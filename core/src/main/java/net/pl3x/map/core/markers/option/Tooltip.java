@@ -277,6 +277,7 @@ public class Tooltip extends Option<Tooltip> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Tooltip{"
                 + ",content=" + getContent()

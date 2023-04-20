@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class RegionModifiedState {
     private final Map<Long, Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
     private final File file;
 
-    public RegionModifiedState(World world) {
+    public RegionModifiedState(@NonNull World world) {
         this.file = world.getTilesDirectory().resolve(".rms").toFile();
 
         if (this.file.exists()) {

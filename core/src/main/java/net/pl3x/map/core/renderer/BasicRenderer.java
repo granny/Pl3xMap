@@ -5,28 +5,29 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class BasicRenderer extends Renderer {
     private TileImage lightImage;
 
-    public BasicRenderer(World world, Builder builder) {
+    public BasicRenderer(@NonNull World world, @NonNull Builder builder) {
         super(world, builder);
     }
 
     @Override
-    public void allocateData(Point region) {
+    public void allocateData(@NonNull Point region) {
         super.allocateData(region);
         this.lightImage = new TileImage("light", getWorld(), region);
     }
 
     @Override
-    public void saveData(Point region) {
+    public void saveData(@NonNull Point region) {
         super.saveData(region);
         this.lightImage.saveToDisk();
     }
 
     @Override
-    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
+    public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
         int pixelColor = basicPixelColor(region, data.getBlockState(), data.getFluidState(), data.getBiome(region, blockX, blockZ), blockX, data.getBlockY(), blockZ, data.getFluidY());
         getTileImage().setPixel(blockX, blockZ, pixelColor);
 

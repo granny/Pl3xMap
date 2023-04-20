@@ -3,6 +3,7 @@ package net.pl3x.map.core.player;
 import java.util.Locale;
 import java.util.UUID;
 import net.pl3x.map.core.registry.Registry;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -18,7 +19,7 @@ public class PlayerRegistry extends Registry<Player> {
      * @return registered player or null
      */
     @Nullable
-    public Player get(UUID uuid) {
+    public Player get(@NonNull UUID uuid) {
         return super.get(uuid.toString());
     }
 
@@ -31,7 +32,7 @@ public class PlayerRegistry extends Registry<Player> {
      * @return registered player or null
      */
     @Nullable
-    public Player get(String name) {
+    public Player get(@NonNull String name) {
         String lowercaseName = name.toLowerCase(Locale.ROOT);
         for (Player player : values()) {
             if (player.getName().toLowerCase(Locale.ROOT).equals(lowercaseName)) {

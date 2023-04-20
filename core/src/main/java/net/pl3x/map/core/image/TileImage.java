@@ -16,6 +16,7 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TileImage extends Keyed {
@@ -33,7 +34,7 @@ public class TileImage extends Keyed {
 
     private boolean written = false;
 
-    public TileImage(String key, World world, Point region) {
+    public TileImage(@NonNull String key, @NonNull World world, @NonNull Point region) {
         super(key);
         this.world = world;
         this.region = region;
@@ -90,7 +91,8 @@ public class TileImage extends Keyed {
         }
     }
 
-    private BufferedImage getBuffer(Path path) throws IOException {
+    @NonNull
+    private BufferedImage getBuffer(@NonNull Path path) throws IOException {
         BufferedImage buffer = null;
 
         // try to read existing image
@@ -106,7 +108,7 @@ public class TileImage extends Keyed {
         return buffer;
     }
 
-    private void writePixels(BufferedImage buffer, int size, int zoom) {
+    private void writePixels(@NonNull BufferedImage buffer, int size, int zoom) {
         int step = 1 << zoom;
         int baseX = (this.region.x() * size) & 0x1FF;
         int baseZ = (this.region.z() * size) & 0x1FF;
@@ -167,6 +169,7 @@ public class TileImage extends Keyed {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "TileImage{"
                 + "key=" + getKey()

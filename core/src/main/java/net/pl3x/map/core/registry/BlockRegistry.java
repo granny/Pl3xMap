@@ -9,23 +9,26 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BlockRegistry extends Registry<Block> {
     private static final Gson GSON = new GsonBuilder().create();
 
-    public Block register(String id, int color) {
-        Block block = getOrDefault(id, null);
+    @NonNull
+    public Block register(@NonNull String id, int color) {
+        Block block = super.get(id);
         if (block != null) {
             return block; // block already registered
         }
         if (id.startsWith("minecraft:")) {
             Logger.warn("Registering unknown vanilla block " + id);
         }
-        return register(id, new Block(size(), id, color)); // todo - use old index
+        return register(id, new Block(size(), id, color)); // todo - use old index from disk
     }
 
     @Override
-    public Block get(String id) {
+    @NonNull
+    public Block get(@NonNull String id) {
         return getOrDefault(id, Blocks.AIR);
     }
 

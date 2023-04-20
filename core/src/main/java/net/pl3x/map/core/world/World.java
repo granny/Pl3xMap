@@ -58,7 +58,7 @@ public abstract class World {
 
     private boolean paused = false;
 
-    public World(String name, long seed, Point spawn, Type type, Path regionDirectory, WorldConfig worldConfig) {
+    public World(@NonNull String name, long seed, @NonNull Point spawn, @NonNull Type type, @NonNull Path regionDirectory, @NonNull WorldConfig worldConfig) {
         this.name = name;
         this.seed = seed;
         this.spawn = spawn;
@@ -247,8 +247,10 @@ public abstract class World {
 
     public abstract int getMinBuildHeight();
 
+    @NonNull
     public abstract Border getWorldBorder();
 
+    @NonNull
     public abstract Collection<Player> getPlayers();
 
     @NonNull
@@ -265,7 +267,7 @@ public abstract class World {
     }
 
     @NonNull
-    private Region getRegion(@NonNull Long pos) {
+    private Region getRegion(long pos) {
         return this.regionCache.get(pos);
     }
 
@@ -273,7 +275,7 @@ public abstract class World {
         unloadRegion(Mathf.asLong(regionX, regionZ));
     }
 
-    private void unloadRegion(Long pos) {
+    private void unloadRegion(long pos) {
         this.regionCache.invalidate(pos);
     }
 
@@ -324,6 +326,7 @@ public abstract class World {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "World{"
                 + "name=" + getName()

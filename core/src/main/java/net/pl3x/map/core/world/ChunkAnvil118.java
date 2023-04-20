@@ -23,7 +23,7 @@ public class ChunkAnvil118 extends Chunk {
     protected long[] oceanFloorHeights = new long[0];
     protected long[] worldSurfaceHeights = new long[0];
 
-    protected ChunkAnvil118(World world, Region region, CompoundTag chunkTag) {
+    protected ChunkAnvil118(@NonNull World world, @NonNull Region region, @NonNull CompoundTag chunkTag) {
         super(world, region, chunkTag);
 
         if (chunkTag.containsKey("Heightmaps")) {
@@ -189,7 +189,7 @@ public class ChunkAnvil118 extends Chunk {
         private final int bitsPerBlock;
         private final int bitsPerBiome;
 
-        public Section(World world, CompoundTag sectionData) {
+        public Section(@NonNull World world, @NonNull CompoundTag sectionData) {
             this.sectionY = sectionData.getByte("Y");
             this.blockLight = sectionData.getByteArray("BlockLight");
             //this.skyLight = sectionData.getByteArray("SkyLight");

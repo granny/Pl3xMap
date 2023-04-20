@@ -1,6 +1,7 @@
 package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.registry.Registry;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class HeightmapRegistry extends Registry<Heightmap> {
     public void register() {
@@ -10,7 +11,7 @@ public class HeightmapRegistry extends Registry<Heightmap> {
         register(new OldSchoolHeightmap());
     }
 
-    public void register(Heightmap heightmap) {
+    public void register(@NonNull Heightmap heightmap) {
         register(heightmap.getKey(), heightmap);
     }
 }

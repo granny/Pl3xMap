@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Mathf;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 @SuppressWarnings("CanBeFinal")
 public final class WorldConfig extends AbstractConfig {
@@ -14,7 +16,7 @@ public final class WorldConfig extends AbstractConfig {
     @Key("render.renderers")
     @Comment("""
             Renderers to use. Each renderer will render a different
-            type of map. The built in renderers include: basic, biomes""")
+            type of map. The built in renderers include: basic, biomes, flowermap""")
     public Map<String, String> RENDER_RENDERERS = new LinkedHashMap<>() {{
         put("basic", "overworld_basic");
         put("biomes", "overworld_biomes");
@@ -51,6 +53,7 @@ public final class WorldConfig extends AbstractConfig {
     @Key("render.heightmap-type")
     @Comment("""
             Type of heightmap to render.
+            NONE has no heightmap drawn.
             MODERN is a clearer, more detailed view.
             OLD_SCHOOL is the old type from v1.
             EVEN_ODD makes every other Y layer darker, like Dynmap.""")
@@ -110,7 +113,7 @@ public final class WorldConfig extends AbstractConfig {
 
     private final String worldName;
 
-    public WorldConfig(String worldName) {
+    public WorldConfig(@NonNull String worldName) {
         this.worldName = worldName;
         reload();
     }
@@ -123,12 +126,14 @@ public final class WorldConfig extends AbstractConfig {
     }
 
     @Override
+    @NonNull
     protected Object getClassObject() {
         return this;
     }
 
     @Override
-    protected Object getValue(String path, Object def) {
+    @Nullable
+    protected Object getValue(@NonNull String path, @Nullable Object def) {
         if (getConfig().get("world-settings.default." + path) == null) {
             set("world-settings.default." + path, def);
         }
@@ -137,7 +142,7 @@ public final class WorldConfig extends AbstractConfig {
     }
 
     @Override
-    protected void setComment(String path, String comment) {
+    protected void setComment(@NonNull String path, @Nullable String comment) {
         getConfig().setComment("world-settings.default." + path, comment);
     }
 }

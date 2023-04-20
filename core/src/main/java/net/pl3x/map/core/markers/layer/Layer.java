@@ -269,6 +269,7 @@ public abstract class Layer extends Keyed {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Layer{"
                 + "key=" + getKey()

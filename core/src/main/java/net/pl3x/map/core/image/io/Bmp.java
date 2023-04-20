@@ -1,14 +1,17 @@
 package net.pl3x.map.core.image.io;
 
 import java.awt.image.BufferedImage;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Bmp extends IO.Type {
     @Override
+    @NonNull
     public String extension() {
         return "bmp";
     }
 
     @Override
+    @NonNull
     public BufferedImage createBuffer() {
         return new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
     }

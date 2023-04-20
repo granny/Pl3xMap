@@ -123,14 +123,15 @@ public abstract class Pl3xMap {
         return this.scheduler;
     }
 
-    public abstract void useJar(Consumer<Path> consumer);
+    public abstract void useJar(@NonNull Consumer<Path> consumer);
 
     @NonNull
     public abstract Path getMainDir();
 
     public abstract int getColorForPower(byte power);
 
-    public abstract Block getFlower(World world, Biome biome, int blockX, int blockY, int blockZ);
+    @Nullable
+    public abstract Block getFlower(@NonNull World world, @NonNull Biome biome, int blockX, int blockY, int blockZ);
 
     public void enable() {
         // load up configs
@@ -239,27 +240,31 @@ public abstract class Pl3xMap {
 
         private final AtomicInteger id = new AtomicInteger();
 
-        public ThreadFactory(String name, int threads) {
+        public ThreadFactory(@NonNull String name, int threads) {
             this.name = name;
             this.threads = threads;
         }
 
-        public static ExecutorService createService(String name) {
+        @NonNull
+        public static ExecutorService createService(@NonNull String name) {
             return createService(new ThreadFactory(name, 1));
         }
 
-        public static ExecutorService createService(String name, int threads) {
+        @NonNull
+        public static ExecutorService createService(@NonNull String name, int threads) {
             int max = Runtime.getRuntime().availableProcessors() / 2;
             int parallelism = Mathf.clamp(1, max, threads < 1 ? max : threads);
             return createService(new ThreadFactory(name, parallelism));
         }
 
-        private static ExecutorService createService(ThreadFactory factory) {
+        @NonNull
+        private static ExecutorService createService(@NonNull ThreadFactory factory) {
             return new ForkJoinPool(factory.threads, factory, null, false);
         }
 
         @Override
-        public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+        @NonNull
+        public ForkJoinWorkerThread newThread(@NonNull ForkJoinPool pool) {
             ForkJoinWorkerThread thread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
             // use current classloader, this fixes ClassLoading issues with forge
             thread.setContextClassLoader(Pl3xMap.class.getClassLoader());

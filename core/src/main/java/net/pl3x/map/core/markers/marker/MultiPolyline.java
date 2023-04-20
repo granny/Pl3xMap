@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -60,6 +60,7 @@ public class MultiPolyline extends Marker<MultiPolyline> {
      * @param polyline polyline to add
      * @return a new multi-polyline
      */
+    @NonNull
     public static MultiPolyline of(@NonNull String key, @NonNull Polyline polyline) {
         return new MultiPolyline(key, polyline);
     }
@@ -71,6 +72,7 @@ public class MultiPolyline extends Marker<MultiPolyline> {
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
+    @NonNull
     public static MultiPolyline of(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
         return new MultiPolyline(key, polylines);
     }
@@ -82,6 +84,7 @@ public class MultiPolyline extends Marker<MultiPolyline> {
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
+    @NonNull
     public static MultiPolyline of(@NonNull String key, @NonNull Collection<Polyline> polylines) {
         return new MultiPolyline(key, polylines);
     }
@@ -223,6 +226,7 @@ public class MultiPolyline extends Marker<MultiPolyline> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "MultiPolyline{"
                 + "key=" + getKey()

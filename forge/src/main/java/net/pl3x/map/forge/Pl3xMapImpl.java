@@ -26,6 +26,7 @@ import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Pl3xMapImpl extends Pl3xMap {
     private final Pl3xMapForge mod;
@@ -33,7 +34,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
 
-    public Pl3xMapImpl(Pl3xMapForge mod) {
+    public Pl3xMapImpl(@NonNull Pl3xMapForge mod) {
         super();
 
         this.mod = mod;
@@ -50,7 +51,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void useJar(Consumer<Path> consumer) {
+    public void useJar(@NonNull Consumer<Path> consumer) {
         try {
             FileUtil.openJar(ModList.get().getModContainerById("pl3xmap").orElseThrow().getModInfo().getOwningFile().getFile().getFilePath(), fs -> consumer.accept(fs.getPath("/")));
         } catch (IOException e) {
@@ -70,7 +71,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public net.pl3x.map.core.world.Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(@NonNull World world, net.pl3x.map.core.world.@NonNull Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
         Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(new ResourceLocation(biome.id()));
         if (nms == null) {

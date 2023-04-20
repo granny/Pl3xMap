@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Pl3xMapFabric implements DedicatedServerModInitializer {
     private final Pl3xMap pl3xmap;
@@ -47,6 +48,7 @@ public class Pl3xMapFabric implements DedicatedServerModInitializer {
         });
     }
 
+    @NonNull
     public MinecraftServer getServer() {
         return this.server;
     }

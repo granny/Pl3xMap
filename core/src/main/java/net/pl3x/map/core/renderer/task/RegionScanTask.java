@@ -10,6 +10,7 @@ import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class RegionScanTask implements Runnable {
     private final World world;
@@ -17,7 +18,7 @@ public class RegionScanTask implements Runnable {
 
     private final List<Renderer> renderers = new ArrayList<>();
 
-    public RegionScanTask(World world, Point regionPos) {
+    public RegionScanTask(@NonNull World world, @NonNull Point regionPos) {
         this.world = world;
         this.regionPos = regionPos;
 
@@ -37,6 +38,7 @@ public class RegionScanTask implements Runnable {
         });
     }
 
+    @NonNull
     public World getWorld() {
         return this.world;
     }
@@ -63,6 +65,7 @@ public class RegionScanTask implements Runnable {
         }
     }
 
+    @NonNull
     private Region loadRegion() {
         Region region = this.world.getRegion(null, this.regionPos.x(), this.regionPos.z());
         try {
@@ -73,7 +76,7 @@ public class RegionScanTask implements Runnable {
         return region;
     }
 
-    private void scanRegion(Region region) {
+    private void scanRegion(@NonNull Region region) {
         for (Renderer renderer : this.renderers) {
             renderer.scanData(region);
         }

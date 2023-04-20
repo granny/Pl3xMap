@@ -6,22 +6,23 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.pl3x.map.core.util.Preconditions;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Registry<T> implements Iterable<T> {
     protected final Map<String, T> entries = new ConcurrentHashMap<>();
 
-    public T register(String id, T value) {
-        if (id == null) {
-            throw new NullPointerException("Id cannot be null");
-        }
-        if (value == null) {
-            throw new NullPointerException("Value cannot be null");
-        }
+    @NonNull
+    public T register(@NonNull String id, @NonNull T value) {
+        Preconditions.checkNotNull(id, "Id cannot be null");
+        Preconditions.checkNotNull(value, "Value cannot be null");
         this.entries.put(id, value);
         return value;
     }
 
-    public T unregister(String id) {
+    @Nullable
+    public T unregister(@NonNull String id) {
         return this.entries.remove(id);
     }
 
@@ -32,22 +33,26 @@ public class Registry<T> implements Iterable<T> {
         Collections.unmodifiableSet(this.entries.keySet()).forEach(this::unregister);
     }
 
-    public boolean has(String key) {
+    public boolean has(@NonNull String key) {
         return this.entries.containsKey(key);
     }
 
-    public T get(String id) {
+    @Nullable
+    public T get(@NonNull String id) {
         return this.entries.get(id);
     }
 
-    public T getOrDefault(String id, T def) {
+    @NonNull
+    public T getOrDefault(@NonNull String id, @NonNull T def) {
         return this.entries.getOrDefault(id, def);
     }
 
+    @NonNull
     public Set<Map.Entry<String, T>> entrySet() {
         return this.entries.entrySet();
     }
 
+    @NonNull
     public Collection<T> values() {
         return this.entries.values();
     }
@@ -57,6 +62,7 @@ public class Registry<T> implements Iterable<T> {
     }
 
     @Override
+    @NonNull
     public Iterator<T> iterator() {
         return this.entries.values().iterator();
     }

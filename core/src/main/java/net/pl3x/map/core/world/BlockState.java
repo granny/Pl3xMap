@@ -1,6 +1,7 @@
 package net.pl3x.map.core.world;
 
 import java.util.Map;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BlockState {
     private final Block block;
@@ -8,12 +9,12 @@ public class BlockState {
     private final byte moisture;
     private final byte power;
 
-    public BlockState(Block block) {
+    public BlockState(@NonNull Block block) {
         this.block = block;
         this.age = this.moisture = this.power = -1;
     }
 
-    public BlockState(Block block, Map<String, String> properties) {
+    public BlockState(@NonNull Block block, @NonNull Map<String, String> properties) {
         this.block = block;
 
         byte age = -1;
@@ -38,6 +39,7 @@ public class BlockState {
         this.power = power;
     }
 
+    @NonNull
     public Block getBlock() {
         return this.block;
     }

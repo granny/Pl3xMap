@@ -22,7 +22,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class FabricWorld extends World {
     private final ServerLevel level;
 
-    public FabricWorld(ServerLevel level, String name, WorldConfig worldConfig) {
+    public FabricWorld(@NonNull ServerLevel level, @NonNull String name, @NonNull WorldConfig worldConfig) {
         super(
                 name,
                 level.getSeed(),
@@ -79,6 +79,7 @@ public class FabricWorld extends World {
     }
 
     @Override
+    @NonNull
     public Border getWorldBorder() {
         return new Border(this.level.getWorldBorder().getCenterX(),
                 this.level.getWorldBorder().getCenterZ(),
@@ -86,6 +87,7 @@ public class FabricWorld extends World {
     }
 
     @Override
+    @NonNull
     public Collection<Player> getPlayers() {
         return this.<ServerLevel>getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))

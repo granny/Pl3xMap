@@ -33,6 +33,7 @@ public class JsonObjectWrapper {
      *
      * @return JsonObject
      */
+    @NonNull
     public JsonObject getJsonObject() {
         return this.wrapped;
     }
@@ -88,7 +89,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the value associated with the member.
      */
-    public void addProperty(String property, List<? extends JsonSerializable> value) {
+    public void addProperty(@NonNull String property, @Nullable List<? extends JsonSerializable> value) {
         if (value == null) {
             return;
         }

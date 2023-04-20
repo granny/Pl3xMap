@@ -25,11 +25,11 @@ public class ForgePlayer extends Player {
 
     private final net.minecraft.world.entity.player.Player player;
 
-    public ForgePlayer(net.minecraft.world.entity.player.Player player) {
+    public ForgePlayer(net.minecraft.world.entity.player.@NonNull Player player) {
         this.player = player;
     }
 
-    public net.minecraft.world.entity.player.Player getPlayer() {
+    public net.minecraft.world.entity.player.@NonNull Player getPlayer() {
         return this.player;
     }
 

@@ -3,11 +3,11 @@ package net.pl3x.map.core.markers.marker;
 import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.registry.IconRegistry;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -146,6 +146,7 @@ public class Icon extends Marker<Icon> {
      * @param image image key
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, double x, double z, @NonNull String image) {
         return new Icon(key, x, z, image);
     }
@@ -158,6 +159,7 @@ public class Icon extends Marker<Icon> {
      * @param image image key
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image) {
         return new Icon(key, point, image);
     }
@@ -172,6 +174,7 @@ public class Icon extends Marker<Icon> {
      * @param size  size of image
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, double x, double z, @NonNull String image, double size) {
         return new Icon(key, x, z, image, size);
     }
@@ -187,6 +190,7 @@ public class Icon extends Marker<Icon> {
      * @param height height of image
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, double x, double z, @NonNull String image, double width, double height) {
         return new Icon(key, x, z, image, width, height);
     }
@@ -200,6 +204,7 @@ public class Icon extends Marker<Icon> {
      * @param size  size of image
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, double size) {
         return new Icon(key, point, image, size);
     }
@@ -214,6 +219,7 @@ public class Icon extends Marker<Icon> {
      * @param height height of image
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, double width, double height) {
         return new Icon(key, point, image, width, height);
     }
@@ -227,6 +233,7 @@ public class Icon extends Marker<Icon> {
      * @param size  size of image
      * @return a new icon
      */
+    @NonNull
     public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, @Nullable Vector size) {
         return new Icon(key, point, image, size);
     }
@@ -604,6 +611,7 @@ public class Icon extends Marker<Icon> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Icon{"
                 + "key=" + getKey()

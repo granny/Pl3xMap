@@ -3,7 +3,6 @@ package net.pl3x.map.bukkit;
 import java.net.URL;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.BiFunction;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
@@ -22,11 +21,11 @@ public class BukkitPlayer extends Player {
 
     private final org.bukkit.entity.Player player;
 
-    public BukkitPlayer(org.bukkit.entity.Player player) {
+    public BukkitPlayer(org.bukkit.entity.@NonNull Player player) {
         this.player = player;
     }
 
-    public org.bukkit.entity.Player getPlayer() {
+    public org.bukkit.entity.@NonNull Player getPlayer() {
         return this.player;
     }
 

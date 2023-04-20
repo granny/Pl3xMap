@@ -3,6 +3,7 @@ package net.pl3x.map.core.world;
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.ColorsConfig;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Block extends Keyed {
@@ -11,7 +12,7 @@ public final class Block extends Keyed {
     private final byte bools;
     private final BlockState defaultState;
 
-    public Block(int index, String id, int color) {
+    public Block(int index, @NonNull String id, int color) {
         super(id);
         this.index = index;
         this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, color);
@@ -65,6 +66,7 @@ public final class Block extends Keyed {
         return (this.bools & 1) > 0;
     }
 
+    @NonNull
     public BlockState getDefaultState() {
         return this.defaultState;
     }
@@ -96,6 +98,7 @@ public final class Block extends Keyed {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "BlockState{"
                 + "key=" + getKey()
@@ -107,5 +110,4 @@ public final class Block extends Keyed {
                 + "isGlass=" + isGlass()
                 + "}";
     }
-
 }

@@ -31,7 +31,7 @@ public class UpdateMarkerData extends Task {
     private final World world;
     private final Map<String, Long> lastUpdated = new HashMap<>();
 
-    public UpdateMarkerData(World world) {
+    public UpdateMarkerData(@NonNull World world) {
         super(20, true);
         this.world = world;
     }

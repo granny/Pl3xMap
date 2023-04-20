@@ -3,7 +3,9 @@ package net.pl3x.map.core.world;
 import java.util.HashMap;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+@SuppressWarnings("unused")
 public class Blocks {
     private static final Map<String, Block> blocks = new HashMap<>();
 
@@ -1006,7 +1008,8 @@ public class Blocks {
     public static final Block ZOMBIE_HEAD = register(new Block(996, "minecraft:zombie_head", 0x000000));
     public static final Block ZOMBIE_WALL_HEAD = register(new Block(997, "minecraft:zombie_wall_head", 0x000000));
 
-    private static Block register(Block block) {
+    @NonNull
+    private static Block register(@NonNull Block block) {
         blocks.put(block.getKey(), block);
         return block;
     }

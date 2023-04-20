@@ -158,6 +158,7 @@ public class Fill extends Option<Fill> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Fill{enabled=" + isEnabled() + ",type=" + getType() + ",color=" + getColor() + "}";
     }

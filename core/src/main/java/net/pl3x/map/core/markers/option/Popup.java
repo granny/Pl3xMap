@@ -542,6 +542,7 @@ public class Popup extends Option<Popup> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Popup{"
                 + ",content=" + getContent()

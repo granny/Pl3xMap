@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -60,6 +60,7 @@ public class MultiPolygon extends Marker<MultiPolygon> {
      * @param polygon polygon to add
      * @return a new multi-polygon
      */
+    @NonNull
     public static MultiPolygon of(@NonNull String key, @NonNull Polygon polygon) {
         return new MultiPolygon(key, polygon);
     }
@@ -71,6 +72,7 @@ public class MultiPolygon extends Marker<MultiPolygon> {
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
+    @NonNull
     public static MultiPolygon of(@NonNull String key, @NonNull Polygon @NonNull ... polygons) {
         return new MultiPolygon(key, polygons);
     }
@@ -82,6 +84,7 @@ public class MultiPolygon extends Marker<MultiPolygon> {
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
+    @NonNull
     public static MultiPolygon of(@NonNull String key, @NonNull Collection<Polygon> polygons) {
         return new MultiPolygon(key, polygons);
     }
@@ -223,6 +226,7 @@ public class MultiPolygon extends Marker<MultiPolygon> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "MultiPolygon{"
                 + "key=" + getKey()

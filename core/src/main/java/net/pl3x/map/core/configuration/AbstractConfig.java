@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.StringUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.MemorySection;
 import org.simpleyaml.configuration.comments.CommentType;
@@ -20,11 +22,12 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public abstract class AbstractConfig {
     private YamlFile config;
 
+    @NonNull
     public YamlFile getConfig() {
         return this.config;
     }
 
-    protected void reload(Path path, Class<? extends AbstractConfig> clazz) {
+    protected void reload(@NonNull Path path, @NonNull Class<? extends AbstractConfig> clazz) {
         // read yaml from file
         this.config = new YamlFile(path.toFile());
         try {
@@ -65,27 +68,31 @@ public abstract class AbstractConfig {
         }
     }
 
+    @Nullable
     protected Object getClassObject() {
         return null;
     }
 
-    protected Object getValue(String path, Object def) {
+    @Nullable
+    protected Object getValue(@NonNull String path, @Nullable Object def) {
         if (getConfig().get(path) == null) {
             set(path, def);
         }
         return get(path, def);
     }
 
-    protected void setComment(String path, String comment) {
+    protected void setComment(@NonNull String path, @Nullable String comment) {
         getConfig().setComment(path, comment, CommentType.BLOCK);
     }
 
-    protected Object get(String path, Object def) {
+    @Nullable
+    protected Object get(@NonNull String path, @Nullable Object def) {
         Object val = get(path);
         return val == null ? def : val;
     }
 
-    protected Object get(String path) {
+    @Nullable
+    protected Object get(@NonNull String path) {
         Object value = getConfig().get(path);
         if (!(value instanceof MemorySection)) {
             return value;
@@ -105,23 +112,26 @@ public abstract class AbstractConfig {
         return map;
     }
 
-    protected Object addToMap(String rawValue) {
+    @NonNull
+    protected Object addToMap(@NonNull String rawValue) {
         return rawValue;
     }
 
-    protected void set(String path, Object value) {
+    protected void set(@NonNull String path, @Nullable Object value) {
         getConfig().set(path, value);
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Key {
+        @NonNull
         String value();
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Comment {
+        @NonNull
         String value();
     }
 }

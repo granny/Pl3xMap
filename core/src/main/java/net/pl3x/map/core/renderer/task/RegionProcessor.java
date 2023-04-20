@@ -17,6 +17,7 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiralIterator;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class RegionProcessor {
     private final Deque<Ticket> regionsToScan = new ConcurrentLinkedDeque<>();
@@ -54,7 +55,7 @@ public class RegionProcessor {
         }
     }
 
-    public void addRegions(World world, Collection<Point> regions) {
+    public void addRegions(@NonNull World world, @NonNull Collection<Point> regions) {
         for (Point region : regions) {
             this.regionsToScan.add(new Ticket(world, region));
         }
@@ -97,7 +98,7 @@ public class RegionProcessor {
         Logger.debug("Region processor finished queuing at " + System.currentTimeMillis());
     }
 
-    private void process(World world, Collection<Point> regionPositions) {
+    private void process(@NonNull World world, @NonNull Collection<Point> regionPositions) {
         Logger.debug(world.getName() + " Region processor started processing at " + System.currentTimeMillis());
 
         // find max radius for spiral iterator
@@ -142,7 +143,7 @@ public class RegionProcessor {
         Logger.debug(world.getName() + " Region processor finished processing at " + System.currentTimeMillis());
     }
 
-    private void schedule(World world, List<Point> orderedRegionsToScan) {
+    private void schedule(@NonNull World world, @NonNull List<Point> orderedRegionsToScan) {
         CompletableFuture.allOf(orderedRegionsToScan.stream()
                 .map(pos -> CompletableFuture.runAsync(new RegionScanTask(world, pos), Pl3xMap.api().getRenderExecutor())
                         .whenComplete((result, throwable) -> {
@@ -185,6 +186,6 @@ public class RegionProcessor {
         });
     }
 
-    private record Ticket(World world, Point region) {
+    private record Ticket(@NonNull World world, @NonNull Point region) {
     }
 }

@@ -9,6 +9,7 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BiomeRegistry extends Registry<Biome> {
     private static final Gson GSON = new GsonBuilder()
@@ -18,7 +19,8 @@ public class BiomeRegistry extends Registry<Biome> {
             .setLenient()
             .create();
 
-    public Biome register(String id, int color, int foliage, int grass, int water, Biome.GrassModifier grassModifier) {
+    @NonNull
+    public Biome register(@NonNull String id, int color, int foliage, int grass, int water, Biome.@NonNull GrassModifier grassModifier) {
         if (has(id)) {
             throw new KeyAlreadyExistsException("Biome already registered: " + id);
         }
@@ -26,11 +28,12 @@ public class BiomeRegistry extends Registry<Biome> {
     }
 
     @Override
-    public Biome get(String id) {
+    @NonNull
+    public Biome get(@NonNull String id) {
         return getOrDefault(id, Biome.DEFAULT);
     }
 
-    public void saveToDisk(World world) {
+    public void saveToDisk(@NonNull World world) {
         Map<Integer, String> map = new HashMap<>();
         values().forEach(biome -> map.put(biome.index(), biome.id()));
         try {

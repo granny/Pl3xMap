@@ -51,6 +51,7 @@ public abstract class Keyed {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return this.key;
     }

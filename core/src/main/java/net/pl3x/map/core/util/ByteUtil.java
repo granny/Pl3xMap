@@ -1,6 +1,7 @@
 package net.pl3x.map.core.util;
 
 import java.nio.ByteBuffer;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class ByteUtil {
     private ByteUtil() {
@@ -14,7 +15,7 @@ public class ByteUtil {
         return bytes;
     }
 
-    public static int getInt(ByteBuffer buffer, int index) {
+    public static int getInt(@NonNull ByteBuffer buffer, int index) {
         int value = 0;
         for (int i = 0; i < 4; i++) {
             value |= (buffer.get(index + i) & 0xFF) << (i * 8);

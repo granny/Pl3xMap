@@ -18,18 +18,19 @@ import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BlockInfoRenderer extends Renderer {
     private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     private ByteBuffer byteBuffer;
 
-    public BlockInfoRenderer(World world, Builder builder) {
+    public BlockInfoRenderer(@NonNull World world, @NonNull Builder builder) {
         super(world, builder);
     }
 
     @Override
-    public void allocateData(Point region) {
+    public void allocateData(@NonNull Point region) {
         this.byteBuffer = ByteBuffer.allocate(512 * 512 * 4 + 12);
         Path path = getWorld().getTilesDirectory()
                 .resolve(String.format(TileImage.DIR_PATH, 0, getKey()))
@@ -44,7 +45,7 @@ public class BlockInfoRenderer extends Renderer {
     }
 
     @Override
-    public void saveData(Point region) {
+    public void saveData(@NonNull Point region) {
         Path tilesDir = getWorld().getTilesDirectory();
         for (int zoom = 0; zoom <= getWorld().getConfig().ZOOM_MAX_OUT; zoom++) {
             Path dirPath = tilesDir.resolve(String.format(TileImage.DIR_PATH, zoom, getKey()));
@@ -119,7 +120,7 @@ public class BlockInfoRenderer extends Renderer {
     }
 
     @Override
-    public void scanData(Region region) {
+    public void scanData(@NonNull Region region) {
         this.byteBuffer.clear();
 
         this.byteBuffer.put(0, ByteUtil.toBytes(0x706C3378)); // pl3x
@@ -130,7 +131,7 @@ public class BlockInfoRenderer extends Renderer {
     }
 
     @Override
-    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
+    public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
         boolean fluid = data.getFluidState() != null;
 
         int y = (fluid ? data.getFluidY() : data.getBlockY()) - getWorld().getMinBuildHeight();

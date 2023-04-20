@@ -8,16 +8,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BukkitPlayerListener implements PlayerListener, Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(@NonNull PlayerJoinEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
         onJoin(registry.register(event.getPlayer().getUniqueId().toString(), new BukkitPlayer(event.getPlayer())));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(@NonNull PlayerQuitEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
         onQuit(registry.unregister(event.getPlayer().getUniqueId().toString()));
     }

@@ -35,7 +35,7 @@ public class PlayerTexture extends Thread {
     private final UUID uuid;
     private final URL url;
 
-    public PlayerTexture(Player player) {
+    public PlayerTexture(@NonNull Player player) {
         this.uuid = player.getUUID();
         URL url = player.getSkin();
         if (url == null) {

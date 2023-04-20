@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -85,6 +85,7 @@ public class Polyline extends Marker<Polyline> {
      * @param point point to add
      * @return a new line
      */
+    @NonNull
     public static Polyline of(@NonNull String key, @NonNull Point point) {
         return new Polyline(key, point);
     }
@@ -99,6 +100,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to add
      * @return a new line
      */
+    @NonNull
     public static Polyline of(@NonNull String key, @NonNull Point @NonNull ... points) {
         return new Polyline(key, points);
     }
@@ -113,6 +115,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to add
      * @return a new line
      */
+    @NonNull
     public static Polyline of(@NonNull String key, @NonNull Collection<Point> points) {
         return new Polyline(key, points);
     }
@@ -281,6 +284,7 @@ public class Polyline extends Marker<Polyline> {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Line{"
                 + "key=" + getKey()

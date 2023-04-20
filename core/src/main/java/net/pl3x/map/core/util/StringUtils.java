@@ -3,10 +3,12 @@ package net.pl3x.map.core.util;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class StringUtils {
     // from apache commons StringEscapeUtils
-    public static String unescapeJava(String str) {
+    @Nullable
+    public static String unescapeJava(@Nullable String str) {
         if (str == null) {
             return null;
         }
@@ -21,7 +23,7 @@ public class StringUtils {
 
     // from apache commons StringEscapeUtils
     @SuppressWarnings({"ReassignedVariable", "DataFlowIssue", "RedundantLabeledSwitchRuleCodeBlock"})
-    private static void unescapeJava(Writer out, String str) throws IOException {
+    private static void unescapeJava(@Nullable Writer out, @Nullable String str) throws IOException {
         if (out == null) {
             throw new IllegalArgumentException("The Writer must not be null");
         }

@@ -10,11 +10,12 @@ import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class FlowerRenderer extends Renderer {
     private final Map<Block, Integer> colorMap = new HashMap<>();
 
-    public FlowerRenderer(World world, Builder builder) {
+    public FlowerRenderer(@NonNull World world, @NonNull Builder builder) {
         super(world, builder);
         this.colorMap.put(Blocks.DANDELION, 0xFFFF00);
         this.colorMap.put(Blocks.POPPY, 0xFF0000);
@@ -31,7 +32,7 @@ public class FlowerRenderer extends Renderer {
     }
 
     @Override
-    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
+    public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
         int pixelColor = 0x7F7F7F;
 
         Biome biome = data.getBiome(region, blockX, blockZ);

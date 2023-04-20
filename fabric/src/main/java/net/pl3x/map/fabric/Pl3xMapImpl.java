@@ -23,6 +23,7 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Pl3xMapImpl extends Pl3xMap {
     private final Pl3xMapFabric mod;
@@ -30,7 +31,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
 
-    public Pl3xMapImpl(Pl3xMapFabric mod) {
+    public Pl3xMapImpl(@NonNull Pl3xMapFabric mod) {
         super();
 
         this.mod = mod;
@@ -47,7 +48,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void useJar(Consumer<Path> consumer) {
+    public void useJar(@NonNull Consumer<Path> consumer) {
         consumer.accept(FabricLoader.getInstance().getModContainer("pl3xmap").orElseThrow().getRootPaths().get(0));
     }
 
@@ -63,7 +64,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public net.pl3x.map.core.world.Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(@NonNull World world, net.pl3x.map.core.world.@NonNull Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
         Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(new ResourceLocation(biome.id()));
         if (nms == null) {
