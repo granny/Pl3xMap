@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a multi-polygon marker.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class MultiPolygon extends Marker<MultiPolygon> {
     private final List<Polygon> polygons = new ArrayList<>();
 

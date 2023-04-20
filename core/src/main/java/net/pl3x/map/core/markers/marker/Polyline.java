@@ -26,6 +26,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * The last point you add does not need to be the
  * same as the first point you added for a polygon.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Polyline extends Marker<Polyline> {
     private final List<Point> points = new ArrayList<>();
 

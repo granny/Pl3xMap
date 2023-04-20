@@ -69,8 +69,6 @@ public abstract class Chunk {
 
     public abstract int getWorldSurfaceY(int x, int z);
 
-    public abstract int getOceanFloorY(int x, int z);
-
     @NonNull
     public abstract BlockState getBlockState(int x, int y, int z);
 

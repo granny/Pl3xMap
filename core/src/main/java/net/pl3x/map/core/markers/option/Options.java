@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a {@link Marker}'s options.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Options implements JsonSerializable {
     private Stroke stroke;
     private Fill fill;

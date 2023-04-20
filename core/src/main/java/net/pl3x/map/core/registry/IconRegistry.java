@@ -10,6 +10,7 @@ import net.pl3x.map.core.util.FileUtil;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@SuppressWarnings("UnusedReturnValue")
 public class IconRegistry extends Registry<IconImage> {
     private final Path registeredDir;
 

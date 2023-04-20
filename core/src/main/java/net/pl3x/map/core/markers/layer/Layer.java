@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a layer of markers and other metadata.
  */
+@SuppressWarnings("UnusedReturnValue")
 public abstract class Layer extends Keyed {
     private Supplier<String> labelSupplier;
     private int updateInterval = 15;

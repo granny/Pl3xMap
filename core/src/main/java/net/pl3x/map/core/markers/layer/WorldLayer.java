@@ -9,6 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a layer for worlds.
  */
+@SuppressWarnings("UnusedReturnValue")
 public abstract class WorldLayer extends SimpleLayer {
     private final World world;
 

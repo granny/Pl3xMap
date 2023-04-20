@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a multi-polyline marker.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class MultiPolyline extends Marker<MultiPolyline> {
     private final List<Polyline> polylines = new ArrayList<>();
 

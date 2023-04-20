@@ -30,11 +30,6 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public int getOceanFloorY(int x, int z) {
-        return 0;
-    }
-
-    @Override
     @NonNull
     public Chunk populate() {
         return this;

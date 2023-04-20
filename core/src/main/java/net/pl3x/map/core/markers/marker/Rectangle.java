@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a rectangle marker.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Rectangle extends Marker<Rectangle> {
     private Point point1;
     private Point point2;

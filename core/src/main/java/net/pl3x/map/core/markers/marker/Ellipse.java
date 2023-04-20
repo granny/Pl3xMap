@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents an ellipse marker.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Ellipse extends Marker<Ellipse> {
     private Point center;
     private Vector radius;

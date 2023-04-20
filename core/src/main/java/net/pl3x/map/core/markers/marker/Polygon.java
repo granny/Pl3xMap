@@ -17,6 +17,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * outer polygon shape. Any additional polylines will be used
  * to cut out "holes" in the outer polygon shape.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Polygon extends Marker<Polygon> {
     private final List<Polyline> polylines = new ArrayList<>();
 

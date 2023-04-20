@@ -14,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents an icon marker.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Icon extends Marker<Icon> {
     private Point point;
     private String image;

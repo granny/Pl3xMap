@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a circle marker.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Circle extends Marker<Circle> {
     private Point center;
     private double radius;

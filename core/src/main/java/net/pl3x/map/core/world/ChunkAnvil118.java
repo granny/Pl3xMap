@@ -16,11 +16,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ChunkAnvil118 extends Chunk {
     private int sectionMin = Integer.MAX_VALUE;
-    private int sectionMax = Integer.MIN_VALUE;
 
     private Section[] sections = new Section[0];
 
-    protected long[] oceanFloorHeights = new long[0];
     protected long[] worldSurfaceHeights = new long[0];
 
     protected ChunkAnvil118(@NonNull World world, @NonNull Region region, @NonNull CompoundTag chunkTag) {
@@ -29,20 +27,20 @@ public class ChunkAnvil118 extends Chunk {
         if (chunkTag.containsKey("Heightmaps")) {
             CompoundTag heightmaps = chunkTag.getCompoundTag("Heightmaps");
             this.worldSurfaceHeights = heightmaps.getLongArray("WORLD_SURFACE");
-            this.oceanFloorHeights = heightmaps.getLongArray("OCEAN_FLOOR");
         }
 
         if (chunkTag.containsKey("sections")) {
             ListTag<CompoundTag> sections = chunkTag.getListTag("sections").asCompoundTagList();
             List<Section> list = new ArrayList<>(sections.size());
+            int sectionMax = Integer.MIN_VALUE;
             for (CompoundTag sectionTag : sections) {
                 Section section = new Section(world, sectionTag);
                 int y = section.getSectionY();
                 if (this.sectionMin > y) this.sectionMin = y;
-                if (this.sectionMax < y) this.sectionMax = y;
+                if (sectionMax < y) sectionMax = y;
                 list.add(section);
             }
-            this.sections = new Section[1 + this.sectionMax - this.sectionMin];
+            this.sections = new Section[1 + sectionMax - this.sectionMin];
             for (Section section : list) {
                 this.sections[section.getSectionY() - this.sectionMin] = section;
             }
@@ -77,20 +75,10 @@ public class ChunkAnvil118 extends Chunk {
 
     @Override
     public int getWorldSurfaceY(int x, int z) {
-        // todo cache
         if (this.worldSurfaceHeights.length < 37) {
             return 0;
         }
         return (int) getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
-    }
-
-    @Override
-    public int getOceanFloorY(int x, int z) {
-        // todo cache
-        if (this.oceanFloorHeights.length < 37) {
-            return 0;
-        }
-        return (int) getValueFromLongArray(this.oceanFloorHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
     }
 
     @Override
@@ -171,7 +159,6 @@ public class ChunkAnvil118 extends Chunk {
     protected static class Section {
         private final int sectionY;
         private byte[] blockLight;
-        //private byte[] skyLight;
         private long[] blocks;
         private long[] biomes = new long[0];
         private BlockState[] blockPalette = new BlockState[0];
@@ -182,7 +169,6 @@ public class ChunkAnvil118 extends Chunk {
         public Section(@NonNull World world, @NonNull CompoundTag sectionData) {
             this.sectionY = sectionData.getByte("Y");
             this.blockLight = sectionData.getByteArray("BlockLight");
-            //this.skyLight = sectionData.getByteArray("SkyLight");
             this.blocks = sectionData.getLongArray("BlockStates");
 
             CompoundTag blockStatesTag = sectionData.getCompoundTag("block_states");
@@ -225,9 +211,6 @@ public class ChunkAnvil118 extends Chunk {
             if (this.blockLight.length < 2048 && this.blockLight.length > 0) {
                 this.blockLight = Arrays.copyOf(this.blockLight, 2048);
             }
-            //if (this.skyLight.length < 2048 && this.skyLight.length > 0) {
-            //    this.skyLight = Arrays.copyOf(this.skyLight, 2048);
-            //}
             this.bitsPerBlock = this.blocks.length >> 6;
             this.bitsPerBiome = Integer.SIZE - Integer.numberOfLeadingZeros(this.biomePalette.length - 1);
         }
@@ -253,7 +236,7 @@ public class ChunkAnvil118 extends Chunk {
         }
 
         public int getLight(int x, int y, int z) {
-            if (this.blockLight.length == 0) {// && this.skyLight.length == 0) {
+            if (this.blockLight.length == 0) {
                 return 0;
             }
             int blockByteIndex = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);

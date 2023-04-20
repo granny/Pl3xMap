@@ -30,12 +30,7 @@ public class RegionScanTask implements Runnable {
             rendererBuilders.add(registry.get(RendererRegistry.BLOCKINFO));
         }
 
-        rendererBuilders.forEach(builder -> {
-            Renderer renderer = registry.createRenderer(this.world, builder);
-            if (renderer != null) {
-                this.renderers.add(renderer);
-            }
-        });
+        rendererBuilders.forEach(builder -> this.renderers.add(registry.createRenderer(this.world, builder)));
     }
 
     @NonNull
