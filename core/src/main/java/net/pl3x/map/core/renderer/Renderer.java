@@ -6,6 +6,7 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.image.TileImage;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.renderer.heightmap.Heightmap;
+import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Biome;
@@ -17,19 +18,26 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class Renderer extends Keyed {
-    private final World world;
+    private final RegionScanTask task;
     private final String name;
+    private final World world;
     private final Heightmap heightmap;
 
     private TileImage tileImage;
 
-    public Renderer(@NonNull World world, @NonNull Builder builder) {
+    public Renderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
         super(builder.key());
-        this.world = world;
+        this.task = task;
         this.name = builder.name();
+        this.world = task.getWorld();
 
-        String key = world.getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT);
+        String key = getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT);
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
+    }
+
+    @NonNull
+    public RegionScanTask getRegionScanTask() {
+        return this.task;
     }
 
     @NonNull

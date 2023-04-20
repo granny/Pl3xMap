@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.pl3x.map.core.image.TileImage;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.util.ByteUtil;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Mathf;
@@ -17,7 +18,6 @@ import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BlockInfoRenderer extends Renderer {
@@ -25,8 +25,8 @@ public class BlockInfoRenderer extends Renderer {
 
     private ByteBuffer byteBuffer;
 
-    public BlockInfoRenderer(@NonNull World world, @NonNull Builder builder) {
-        super(world, builder);
+    public BlockInfoRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+        super(task, builder);
     }
 
     @Override

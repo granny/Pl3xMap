@@ -3,20 +3,20 @@ package net.pl3x.map.core.renderer;
 import java.util.HashMap;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class FlowerMapRenderer extends Renderer {
     private final Map<Block, Integer> colorMap = new HashMap<>();
 
-    public FlowerMapRenderer(@NonNull World world, @NonNull Builder builder) {
-        super(world, builder);
+    public FlowerMapRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+        super(task, builder);
         this.colorMap.put(Blocks.DANDELION, 0xFFFF00);
         this.colorMap.put(Blocks.POPPY, 0xFF0000);
         this.colorMap.put(Blocks.ALLIUM, 0x9900FF);

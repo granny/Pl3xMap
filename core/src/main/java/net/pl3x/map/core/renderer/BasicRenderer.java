@@ -2,16 +2,16 @@ package net.pl3x.map.core.renderer;
 
 import net.pl3x.map.core.image.TileImage;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class BasicRenderer extends Renderer {
     private TileImage lightImage;
 
-    public BasicRenderer(@NonNull World world, @NonNull Builder builder) {
-        super(world, builder);
+    public BasicRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+        super(task, builder);
     }
 
     @Override

@@ -1,16 +1,16 @@
 package net.pl3x.map.core.renderer;
 
 import net.pl3x.map.core.configuration.ColorsConfig;
+import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class BiomeRenderer extends Renderer {
-    public BiomeRenderer(@NonNull World world, @NonNull Builder builder) {
-        super(world, builder);
+    public BiomeRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+        super(task, builder);
     }
 
     @Override
