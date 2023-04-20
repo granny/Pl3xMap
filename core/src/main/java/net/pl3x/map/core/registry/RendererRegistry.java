@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import net.pl3x.map.core.renderer.BasicRenderer;
 import net.pl3x.map.core.renderer.BiomeRenderer;
 import net.pl3x.map.core.renderer.BlockInfoRenderer;
-import net.pl3x.map.core.renderer.FlowerRenderer;
+import net.pl3x.map.core.renderer.FlowerMapRenderer;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -19,7 +19,7 @@ public class RendererRegistry extends Registry<Renderer.Builder> {
         register(BASIC, new Renderer.Builder(BASIC, "Basic", BasicRenderer.class));
         register(BIOMES, new Renderer.Builder(BIOMES, "Biomes", BiomeRenderer.class));
         register(BLOCKINFO, new Renderer.Builder(BLOCKINFO, "BlockInfo", BlockInfoRenderer.class));
-        register(FLOWERMAP, new Renderer.Builder(FLOWERMAP, "FlowerMap", FlowerRenderer.class));
+        register(FLOWERMAP, new Renderer.Builder(FLOWERMAP, "FlowerMap", FlowerMapRenderer.class));
     }
 
     @NonNull

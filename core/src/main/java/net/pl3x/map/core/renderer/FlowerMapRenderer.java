@@ -12,10 +12,10 @@ import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class FlowerRenderer extends Renderer {
+public class FlowerMapRenderer extends Renderer {
     private final Map<Block, Integer> colorMap = new HashMap<>();
 
-    public FlowerRenderer(@NonNull World world, @NonNull Builder builder) {
+    public FlowerMapRenderer(@NonNull World world, @NonNull Builder builder) {
         super(world, builder);
         this.colorMap.put(Blocks.DANDELION, 0xFFFF00);
         this.colorMap.put(Blocks.POPPY, 0xFF0000);
@@ -39,7 +39,7 @@ public class FlowerRenderer extends Renderer {
 
         Block flower = Pl3xMap.api().getFlower(region.getWorld(), biome, blockX, data.getBlockY(), blockZ);
         if (flower != null) {
-            pixelColor = this.colorMap.getOrDefault(flower, pixelColor);
+            pixelColor = (0xFF << 24) | (this.colorMap.getOrDefault(flower, pixelColor) & 0xFFFFFF);
         }
 
         // work out the heightmap
