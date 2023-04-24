@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java'
 }
@@ -5,6 +7,8 @@ plugins {
 def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
 project.group = 'net.pl3x.map'
 project.version = "$minecraftVersion-$buildNum"
+
+def npmCmd = DefaultNativePlatform.currentOperatingSystem.isWindows() ? 'npm.cmd' : 'npm'
 
 dependencies {
     compileOnly project(':core')
@@ -36,14 +40,14 @@ def combineJars = tasks.register('combineJars', Jar) {
 def npmInstall = tasks.register('npmInstall', Exec) {
     println 'Installing npm dependencies...'
     workingDir new File(projectDir, 'webmap')
-    commandLine 'npm.cmd', 'install'
+    commandLine npmCmd, 'install'
 }
 
 def npmBuild = tasks.register('npmBuild', Exec) {
     dependsOn npmInstall
     println 'Building webmap...'
     workingDir new File(projectDir, 'webmap')
-    commandLine 'npm.cmd', 'run', 'build'
+    commandLine npmCmd, 'run', 'build'
 }
 
 def copyWebmap = tasks.register('copyWebmap', Copy) {
