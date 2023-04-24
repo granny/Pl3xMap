@@ -30,6 +30,6 @@ public class ResetMapCommand extends Pl3xMapCommand {
         Sender sender = context.getSender();
         World world = WorldArgument.resolve(context, "world");
 
-        sender.sendMessage("reset map command triggered");
+        sender.sendMessage("This command doesnt actually do anything yet.");
     }
 }
