@@ -14,6 +14,11 @@ public final class Lang extends AbstractConfig {
     @Key("command.base")
     public static String COMMAND_BASE = "View the map at '<grey><click:open_url:http://localhost:8080/>http://localhost:8080/</grey>'";
 
+    @Key("command.event.click-for-help")
+    public static String CLICK_FOR_HELP = "Click for help";
+    @Key("command.event.click-to-confirm")
+    public static String CLICK_TO_CONFIRM = "Click to confirm";
+
     @Key("httpd.started.success")
     public static String HTTPD_STARTED = "<green>Internal webserver running on <yellow><bind></yellow>:<yellow><port></yellow>";
     @Key("httpd.started.error")
@@ -24,6 +29,13 @@ public final class Lang extends AbstractConfig {
     public static String HTTPD_STOP_ERROR = "<red>An error occurred with the internal webserver";
     @Key("httpd.disabled")
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled";
+
+    @Key("command.confirm.description")
+    public static String COMMAND_CONFIRM_DESCRIPTION = "Confirm a pending command";
+    @Key("command.confirm.not-rendering")
+    public static String COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE = "<red>Confirmation required. Confirm using <grey>/map confirm";
+    @Key("command.confirm.success")
+    public static String COMMAND_CONFIRM_NO_PENDING_MESSAGE = "<red>You don't have any pending confirmations";
 
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";

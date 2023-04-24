@@ -91,4 +91,13 @@ public class BukkitWorld extends World {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public @NonNull String toString() {
+        return "BukkitWorld{"
+                + "name=" + getName()
+                + ",seed=" + getSeed()
+                + ",spawn=" + getSpawn()
+                + "}";
+    }
 }

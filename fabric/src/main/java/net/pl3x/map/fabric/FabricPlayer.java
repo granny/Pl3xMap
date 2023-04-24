@@ -8,7 +8,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -128,16 +127,6 @@ public class FabricPlayer extends Player {
     @Override
     public void setPersistentlyHidden(boolean hidden) {
         //this.player.getPersistentDataContainer().set(HIDDEN_KEY, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        return this == o;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPlayer().getUUID());
     }
 
     @Override

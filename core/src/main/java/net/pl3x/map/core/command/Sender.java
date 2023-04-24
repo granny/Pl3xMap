@@ -1,5 +1,6 @@
 package net.pl3x.map.core.command;
 
+import java.util.Objects;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -23,6 +24,7 @@ public abstract class Sender implements ForwardingAudience.Single {
         return (T) this.sender;
     }
 
+    @Override
     public @NonNull Audience audience() {
         return getSender();
     }
@@ -32,6 +34,26 @@ public abstract class Sender implements ForwardingAudience.Single {
     public abstract void sendMessage(@NonNull String message);
 
     public abstract void sendMessage(@NotNull String message, @NotNull TagResolver.@NonNull Single... placeholders);
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Sender other = (Sender) o;
+        return getSender() == other.getSender();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSender());
+    }
 
     public interface Player<T> {
         @NonNull T getPlayer();

@@ -107,4 +107,13 @@ public class ForgeWorld extends World {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public @NonNull String toString() {
+        return "ForgeWorld{"
+                + "name=" + getName()
+                + ",seed=" + getSeed()
+                + ",spawn=" + getSpawn()
+                + "}";
+    }
 }

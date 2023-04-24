@@ -91,4 +91,13 @@ public class FabricWorld extends World {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public @NonNull String toString() {
+        return "FabricWorld{"
+                + "name=" + getName()
+                + ",seed=" + getSeed()
+                + ",spawn=" + getSpawn()
+                + "}";
+    }
 }

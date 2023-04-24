@@ -293,7 +293,7 @@ public abstract class World {
             return false;
         }
         World other = (World) o;
-        return getName().equals(other.getName());
+        return getLevel() == other.getLevel();
     }
 
     @Override
@@ -302,13 +302,7 @@ public abstract class World {
     }
 
     @Override
-    public @NonNull String toString() {
-        return "World{"
-                + "name=" + getName()
-                + ",seed=" + getSeed()
-                + ",spawn=" + getSpawn()
-                + "}";
-    }
+    public abstract @NonNull String toString();
 
     public record Border(double centerX, double centerZ, double size) {
     }

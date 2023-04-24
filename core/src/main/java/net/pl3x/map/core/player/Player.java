@@ -3,6 +3,7 @@ package net.pl3x.map.core.player;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -177,5 +178,25 @@ public abstract class Player {
             name = fn.apply(this, name);
         }
         return name;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Player other = (Player) o;
+        return getUUID().equals(other.getUUID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUUID());
     }
 }

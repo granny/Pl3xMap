@@ -8,7 +8,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
@@ -133,26 +132,6 @@ public class BukkitPlayer extends Player {
     @Override
     public void setPersistentlyHidden(boolean hidden) {
         getPlayer().getPersistentDataContainer().set(hiddenKey, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        if (this.getClass() != o.getClass()) {
-            return false;
-        }
-        BukkitPlayer other = (BukkitPlayer) o;
-        return getUUID().equals(other.getUUID());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPlayer().getUniqueId());
     }
 
     @Override

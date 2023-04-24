@@ -54,6 +54,13 @@ public class ForgeSender extends Sender {
         return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(tree));
     }
 
+    @Override
+    public @NonNull String toString() {
+        return "ForgeSender{"
+                + "sender=" + getSender().getTextName()
+                + "}";
+    }
+
     public static class Player extends ForgeSender implements Audience, Sender.Player<ServerPlayer> {
         public Player(@NonNull CommandSourceStack sender) {
             super(sender);
@@ -67,6 +74,13 @@ public class ForgeSender extends Sender {
         @Override
         public @Nullable World getWorld() {
             return Pl3xMap.api().getWorldRegistry().get(getPlayer().getLevel().dimension().location().toString());
+        }
+
+        @Override
+        public @NonNull String toString() {
+            return "ForgePlayer{"
+                    + "player=" + getSender().getTextName()
+                    + "}";
         }
     }
 }

@@ -46,6 +46,13 @@ public class FabricSender extends Sender {
         getSender().sendMessage(Lang.parse(message, placeholders));
     }
 
+    @Override
+    public @NonNull String toString() {
+        return "FabricSender{"
+                + "sender=" + getSender().getTextName()
+                + "}";
+    }
+
     public static class Player extends FabricSender implements Audience, Sender.Player<ServerPlayer> {
         public Player(@NonNull CommandSourceStack sender) {
             super(sender);
@@ -59,6 +66,13 @@ public class FabricSender extends Sender {
         @Override
         public @Nullable World getWorld() {
             return Pl3xMap.api().getWorldRegistry().get(getPlayer().getLevel().dimension().location().toString());
+        }
+
+        @Override
+        public @NonNull String toString() {
+            return "FabricPlayer{"
+                    + "player=" + getPlayer().getScoreboardName()
+                    + "}";
         }
     }
 }

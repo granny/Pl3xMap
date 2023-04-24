@@ -44,6 +44,13 @@ public class BukkitSender extends Sender {
         Pl3xMap.api().adventure().console().sendMessage(Lang.parse(message, placeholders));
     }
 
+    @Override
+    public @NonNull String toString() {
+        return "BukkitSender{"
+                + "sender=" + getSender().getName()
+                + "}";
+    }
+
     public static class BukkitPlayer extends BukkitSender implements Audience, Sender.Player<org.bukkit.entity.Player> {
         public BukkitPlayer(@NonNull CommandSender sender) {
             super(sender);
@@ -67,6 +74,13 @@ public class BukkitSender extends Sender {
         @Override
         public void sendMessage(@NotNull String message, @NotNull TagResolver.@NonNull Single... placeholders) {
             Pl3xMap.api().adventure().player(getPlayer().getUniqueId()).sendMessage(Lang.parse(message, placeholders));
+        }
+
+        @Override
+        public @NonNull String toString() {
+            return "BukkitPlayer{"
+                    + "player=" + getSender().getName()
+                    + "}";
         }
     }
 }
