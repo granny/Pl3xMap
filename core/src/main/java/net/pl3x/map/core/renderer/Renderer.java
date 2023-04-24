@@ -35,28 +35,23 @@ public abstract class Renderer extends Keyed {
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
     }
 
-    @NonNull
-    public RegionScanTask getRegionScanTask() {
+    public @NonNull RegionScanTask getRegionScanTask() {
         return this.task;
     }
 
-    @NonNull
-    public World getWorld() {
+    public @NonNull World getWorld() {
         return this.world;
     }
 
-    @NonNull
-    public String getName() {
+    public @NonNull String getName() {
         return this.name;
     }
 
-    @NonNull
-    public Heightmap getHeightmap() {
+    public @NonNull Heightmap getHeightmap() {
         return this.heightmap;
     }
 
-    @NonNull
-    public TileImage getTileImage() {
+    public @NonNull TileImage getTileImage() {
         return this.tileImage;
     }
 
@@ -175,6 +170,6 @@ public abstract class Renderer extends Keyed {
         }
     }
 
-    public record Builder(@NonNull String key, @NonNull String name, @NonNull Class<? extends Renderer> clazz) {
+    public record Builder(@NonNull String key, @NonNull String name, @NonNull Class<@NonNull ? extends @NonNull Renderer> clazz) {
     }
 }

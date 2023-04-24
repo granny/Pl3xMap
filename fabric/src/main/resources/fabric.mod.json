@@ -2,22 +2,23 @@
   "schemaVersion": 1,
   "id": "pl3xmap",
   "version": "${version}",
-  "name": "Pl3xMap",
-  "description": "Minimalistic and lightweight world map viewer for Minecraft servers",
+  "name": "${name}",
+  "description": "${description}",
   "authors": [
-    "BillyGalbreath"
+    "BillyGalbreath",
+    "JLyne"
   ],
   "contact": {
-    "homepage": "https://github.com/BillyGalbreath/Pl3xMap",
-    "sources": "https://github.com/BillyGalbreath/Pl3xMap",
-    "issues": "https://github.com/BillyGalbreath/Pl3xMap/issues"
+    "homepage": "${website}",
+    "sources": "${sources}",
+    "issues": "${issues}"
   },
   "license": "MIT",
   "icon": "pl3xmap.png",
   "environment": "server",
   "entrypoints": {
     "server": [
-      "net.pl3x.map.fabric.Pl3xMapFabric"
+      "${group}.Pl3xMapFabric"
     ]
   },
   "mixins": [
@@ -25,11 +26,19 @@
   ],
   "accessWidener": "pl3xmap.accesswidener",
   "depends": {
-    "fabricloader": ">=0.14.17",
-    "minecraft": "~1.19.4",
+    "fabricloader": ">=${fabricLoaderVersion}",
+    "fabric": "*",
+    "minecraft": "~${minecraftVersion}",
     "java": ">=17"
   },
-  "suggests": {
-    "another-mod": "*"
+  "recommends": {
+    "better-fabric-console": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/nhGzEkwXQX"
+      }
+    }
   }
 }

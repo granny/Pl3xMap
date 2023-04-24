@@ -13,7 +13,7 @@ import net.pl3x.map.core.world.Region;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class FlowerMapRenderer extends Renderer {
-    private final Map<Block, Integer> colorMap = new HashMap<>();
+    private final Map<@NonNull Block, @NonNull Integer> colorMap = new HashMap<>();
 
     public FlowerMapRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
         super(task, builder);

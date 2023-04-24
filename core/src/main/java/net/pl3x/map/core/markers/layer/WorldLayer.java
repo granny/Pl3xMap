@@ -22,23 +22,20 @@ public abstract class WorldLayer extends SimpleLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public WorldLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<String> labelSupplier) {
+    public WorldLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
         super(key, labelSupplier);
         this.world = world;
     }
 
-    @NonNull
-    public World getWorld() {
+    public @NonNull World getWorld() {
         return this.world;
     }
 
-    @Nullable
-    public Options getOptions() {
+    public @Nullable Options getOptions() {
         return this.options;
     }
 
-    @NonNull
-    public WorldLayer setOptions(@Nullable Options options) {
+    public @NonNull WorldLayer setOptions(@Nullable Options options) {
         this.options = options;
         return this;
     }

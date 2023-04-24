@@ -3,7 +3,7 @@ package net.pl3x.map.core.renderer.heightmap;
 import net.pl3x.map.core.registry.Registry;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class HeightmapRegistry extends Registry<Heightmap> {
+public class HeightmapRegistry extends Registry<@NonNull Heightmap> {
     public void register() {
         register(new EvenOddHeightmap());
         register(new EvenOddLowContrastHeightmap());

@@ -10,8 +10,7 @@ public class Preconditions {
         }
     }
 
-    @NonNull
-    public static <T> T checkNotNull(@Nullable T value, @Nullable Object error) {
+    public static <@NonNull T> @NonNull T checkNotNull(@Nullable T value, @Nullable Object error) {
         if (value == null) {
             throw new NullPointerException(String.valueOf(error));
         }

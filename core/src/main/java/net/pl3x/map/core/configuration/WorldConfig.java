@@ -17,7 +17,7 @@ public final class WorldConfig extends AbstractConfig {
     @Comment("""
             Renderers to use. Each renderer will render a different
             type of map. The built in renderers include: basic, biomes, flowermap""")
-    public Map<String, String> RENDER_RENDERERS = new LinkedHashMap<>() {{
+    public Map<@NonNull String, @NonNull String> RENDER_RENDERERS = new LinkedHashMap<>() {{
         put("basic", "overworld_basic");
         put("biomes", "overworld_biomes");
     }};
@@ -130,14 +130,12 @@ public final class WorldConfig extends AbstractConfig {
     }
 
     @Override
-    @NonNull
-    protected Object getClassObject() {
+    protected @NonNull Object getClassObject() {
         return this;
     }
 
     @Override
-    @Nullable
-    protected Object getValue(@NonNull String path, @Nullable Object def) {
+    protected @Nullable Object getValue(@NonNull String path, @Nullable Object def) {
         if (getConfig().get("world-settings.default." + path) == null) {
             set("world-settings.default." + path, def);
         }

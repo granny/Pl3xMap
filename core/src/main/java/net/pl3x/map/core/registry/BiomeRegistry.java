@@ -11,7 +11,7 @@ import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class BiomeRegistry extends Registry<Biome> {
+public class BiomeRegistry extends Registry<@NonNull Biome> {
     private static final Gson GSON = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
@@ -19,8 +19,7 @@ public class BiomeRegistry extends Registry<Biome> {
             .setLenient()
             .create();
 
-    @NonNull
-    public Biome register(@NonNull String id, int color, int foliage, int grass, int water, Biome.@NonNull GrassModifier grassModifier) {
+    public @NonNull Biome register(@NonNull String id, int color, int foliage, int grass, int water, Biome.@NonNull GrassModifier grassModifier) {
         if (has(id)) {
             throw new KeyAlreadyExistsException("Biome already registered: " + id);
         }
@@ -28,8 +27,7 @@ public class BiomeRegistry extends Registry<Biome> {
     }
 
     @Override
-    @NonNull
-    public Biome get(@NonNull String id) {
+    public @NonNull Biome get(@NonNull String id) {
         return getOrDefault(id, Biome.DEFAULT);
     }
 

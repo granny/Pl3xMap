@@ -5,9 +5,8 @@ import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class WorldRegistry extends Registry<World> {
-    @NonNull
-    public World register(@NonNull World world) {
+public class WorldRegistry extends Registry<@NonNull World> {
+    public @NonNull World register(@NonNull World world) {
         if (has(world.getName())) {
             throw new KeyAlreadyExistsException("World already registered: " + world.getName());
         }
@@ -15,8 +14,7 @@ public class WorldRegistry extends Registry<World> {
     }
 
     @Override
-    @Nullable
-    public World unregister(@NonNull String id) {
+    public @Nullable World unregister(@NonNull String id) {
         World world = this.entries.remove(id);
         if (world != null) {
             world.getMarkerTask().cancel();

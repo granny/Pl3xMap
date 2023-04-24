@@ -6,6 +6,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import net.kyori.adventure.platform.AudienceProvider;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
@@ -31,8 +32,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class Pl3xMap {
-    @NonNull
-    public static Pl3xMap api() {
+    public static @NonNull Pl3xMap api() {
         return Provider.api();
     }
 
@@ -73,65 +73,45 @@ public abstract class Pl3xMap {
         this.worldRegistry = new WorldRegistry();
     }
 
-    @NonNull
-    public HttpdServer getHttpdServer() {
+    public @NonNull HttpdServer getHttpdServer() {
         return this.httpdServer;
     }
 
-    @NonNull
-    public RegionProcessor getRegionProcessor() {
+    public @NonNull RegionProcessor getRegionProcessor() {
         return this.regionProcessor;
     }
 
-    @NonNull
-    public BlockRegistry getBlockRegistry() {
+    public @NonNull BlockRegistry getBlockRegistry() {
         return this.blockRegistry;
     }
 
-    @NonNull
-    public HeightmapRegistry getHeightmapRegistry() {
+    public @NonNull HeightmapRegistry getHeightmapRegistry() {
         return this.heightmapRegistry;
     }
 
-    @NonNull
-    public IconRegistry getIconRegistry() {
+    public @NonNull IconRegistry getIconRegistry() {
         return this.iconRegistry;
     }
 
-    @NonNull
-    public PlayerRegistry getPlayerRegistry() {
+    public @NonNull PlayerRegistry getPlayerRegistry() {
         return this.playerRegistry;
     }
 
-    @NonNull
-    public RendererRegistry getRendererRegistry() {
+    public @NonNull RendererRegistry getRendererRegistry() {
         return this.rendererRegistry;
     }
 
-    @NonNull
-    public WorldRegistry getWorldRegistry() {
+    public @NonNull WorldRegistry getWorldRegistry() {
         return this.worldRegistry;
     }
 
-    @Nullable
-    public ExecutorService getRenderExecutor() {
+    public @NonNull ExecutorService getRenderExecutor() {
         return this.renderExecutor;
     }
 
-    @NonNull
-    public Scheduler getScheduler() {
+    public @NonNull Scheduler getScheduler() {
         return this.scheduler;
     }
-
-    public abstract void useJar(@NonNull Consumer<Path> consumer);
-
-    @NonNull
-    public abstract Path getMainDir();
-
-    public abstract int getColorForPower(byte power);
-
-    @Nullable
-    public abstract Block getFlower(@NonNull World world, @NonNull Biome biome, int blockX, int blockY, int blockZ);
 
     public void enable() {
         // load up configs
@@ -217,19 +197,32 @@ public abstract class Pl3xMap {
         IO.unregister();
     }
 
-    public abstract void loadBlocks();
-
-    public abstract void loadWorlds();
-
-    public abstract void loadPlayers();
+    public abstract @NonNull String getVersion();
 
     public abstract int getMaxPlayers();
 
-    public static final class Provider {
+    public abstract int getOperatorUserPermissionLevel();
+
+    public abstract @NonNull AudienceProvider adventure();
+
+    public abstract @NonNull Path getMainDir();
+
+    public abstract void useJar(@NonNull Consumer<@NonNull Path> consumer);
+
+    public abstract int getColorForPower(byte power);
+
+    public abstract @Nullable Block getFlower(@NonNull World world, @NonNull Biome biome, int blockX, int blockY, int blockZ);
+
+    protected abstract void loadBlocks();
+
+    protected abstract void loadWorlds();
+
+    protected abstract void loadPlayers();
+
+    protected static final class Provider {
         static Pl3xMap api;
 
-        @NonNull
-        public static Pl3xMap api() {
+        static @NonNull Pl3xMap api() {
             return Provider.api;
         }
     }
@@ -245,26 +238,22 @@ public abstract class Pl3xMap {
             this.threads = threads;
         }
 
-        @NonNull
-        public static ExecutorService createService(@NonNull String name) {
+        public static @NonNull ExecutorService createService(@NonNull String name) {
             return createService(new ThreadFactory(name, 1));
         }
 
-        @NonNull
-        public static ExecutorService createService(@NonNull String name, int threads) {
+        public static @NonNull ExecutorService createService(@NonNull String name, int threads) {
             int max = Runtime.getRuntime().availableProcessors() / 2;
             int parallelism = Mathf.clamp(1, max, threads < 1 ? max : threads);
             return createService(new ThreadFactory(name, parallelism));
         }
 
-        @NonNull
-        private static ExecutorService createService(@NonNull ThreadFactory factory) {
+        private static @NonNull ExecutorService createService(@NonNull ThreadFactory factory) {
             return new ForkJoinPool(factory.threads, factory, null, false);
         }
 
         @Override
-        @NonNull
-        public ForkJoinWorkerThread newThread(@NonNull ForkJoinPool pool) {
+        public @NonNull ForkJoinWorkerThread newThread(@NonNull ForkJoinPool pool) {
             ForkJoinWorkerThread thread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
             // use current classloader, this fixes ClassLoading issues with forge
             thread.setContextClassLoader(Pl3xMap.class.getClassLoader());

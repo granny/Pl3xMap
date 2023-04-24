@@ -7,8 +7,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class StringUtils {
     // from apache commons StringEscapeUtils
-    @Nullable
-    public static String unescapeJava(@Nullable String str) {
+    public static @Nullable String unescapeJava(@Nullable String str) {
         if (str == null) {
             return null;
         }

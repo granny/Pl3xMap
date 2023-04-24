@@ -11,7 +11,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 @SuppressWarnings("UnusedReturnValue")
-public class IconRegistry extends Registry<IconImage> {
+public class IconRegistry extends Registry<@NonNull IconImage> {
     private final Path registeredDir;
 
     /**
@@ -34,8 +34,7 @@ public class IconRegistry extends Registry<IconImage> {
      *
      * @return icons directory
      */
-    @NonNull
-    public Path getDir() {
+    public @NonNull Path getDir() {
         return this.registeredDir;
     }
 
@@ -49,8 +48,7 @@ public class IconRegistry extends Registry<IconImage> {
      * @throws IllegalArgumentException if image is already registered
      * @throws IllegalStateException    if image failed to save to disk
      */
-    @Nullable
-    public IconImage register(@Nullable IconImage image) {
+    public @Nullable IconImage register(@Nullable IconImage image) {
         if (image == null) {
             return null;
         }
@@ -67,8 +65,7 @@ public class IconRegistry extends Registry<IconImage> {
      * @throws IllegalStateException if image failed to save to disk
      */
     @Override
-    @NonNull
-    public IconImage register(@NonNull String id, @NonNull IconImage image) {
+    public @NonNull IconImage register(@NonNull String id, @NonNull IconImage image) {
         try {
             String filename = id + "." + image.getType();
             File file = getDir().resolve(filename).toFile();
@@ -90,8 +87,7 @@ public class IconRegistry extends Registry<IconImage> {
      * @throws IllegalStateException if image failed to delete from disk
      */
     @Override
-    @Nullable
-    public IconImage unregister(@NonNull String id) {
+    public @Nullable IconImage unregister(@NonNull String id) {
         IconImage image = super.unregister(id);
         if (image != null) {
             try {

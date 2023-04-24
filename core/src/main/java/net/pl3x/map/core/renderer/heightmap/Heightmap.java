@@ -50,8 +50,7 @@ public abstract class Heightmap extends Keyed {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Heightmap{"
                 + "key=" + getKey()
                 + ",x=" + Arrays.toString(this.x)

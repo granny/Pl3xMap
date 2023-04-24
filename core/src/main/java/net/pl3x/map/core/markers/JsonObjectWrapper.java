@@ -33,8 +33,7 @@ public class JsonObjectWrapper {
      *
      * @return JsonObject
      */
-    @NonNull
-    public JsonObject getJsonObject() {
+    public @NonNull JsonObject getJsonObject() {
         return this.wrapped;
     }
 
@@ -47,7 +46,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the enum value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable Enum<?> value) {
+    public void addProperty(@NonNull String property, @Nullable Enum<@NonNull ?> value) {
         if (value == null) {
             return;
         }
@@ -75,7 +74,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the option value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable Option<?> value) {
+    public void addProperty(@NonNull String property, @Nullable Option<@NonNull ?> value) {
         if (value == null) {
             return;
         }
@@ -89,7 +88,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable List<? extends JsonSerializable> value) {
+    public void addProperty(@NonNull String property, @Nullable List<@NonNull ? extends @NonNull JsonSerializable> value) {
         if (value == null) {
             return;
         }

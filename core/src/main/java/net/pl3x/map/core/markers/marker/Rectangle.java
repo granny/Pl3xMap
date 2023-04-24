@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents a rectangle marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Rectangle extends Marker<Rectangle> {
+public class Rectangle extends Marker<@NonNull Rectangle> {
     private Point point1;
     private Point point2;
 
@@ -58,8 +58,7 @@ public class Rectangle extends Marker<Rectangle> {
      * @param z2  second z point
      * @return a new rectangle
      */
-    @NonNull
-    public static Rectangle of(@NonNull String key, double x1, double z1, double x2, double z2) {
+    public static @NonNull Rectangle of(@NonNull String key, double x1, double z1, double x2, double z2) {
         return new Rectangle(key, x1, z1, x2, z2);
     }
 
@@ -71,8 +70,7 @@ public class Rectangle extends Marker<Rectangle> {
      * @param point2 second point
      * @return a new rectangle
      */
-    @NonNull
-    public static Rectangle of(@NonNull String key, @NonNull Point point1, @NonNull Point point2) {
+    public static @NonNull Rectangle of(@NonNull String key, @NonNull Point point1, @NonNull Point point2) {
         return new Rectangle(key, point1, point2);
     }
 
@@ -81,8 +79,7 @@ public class Rectangle extends Marker<Rectangle> {
      *
      * @return first point
      */
-    @NonNull
-    public Point getPoint1() {
+    public @NonNull Point getPoint1() {
         return this.point1;
     }
 
@@ -92,8 +89,7 @@ public class Rectangle extends Marker<Rectangle> {
      * @param point1 first point
      * @return this rectangle
      */
-    @NonNull
-    public Rectangle setPoint1(@NonNull Point point1) {
+    public @NonNull Rectangle setPoint1(@NonNull Point point1) {
         this.point1 = Preconditions.checkNotNull(point1, "Rectangle point1 is null");
         return this;
     }
@@ -103,8 +99,7 @@ public class Rectangle extends Marker<Rectangle> {
      *
      * @return second point
      */
-    @NonNull
-    public Point getPoint2() {
+    public @NonNull Point getPoint2() {
         return this.point2;
     }
 
@@ -114,15 +109,13 @@ public class Rectangle extends Marker<Rectangle> {
      * @param point2 second point
      * @return this rectangle
      */
-    @NonNull
-    public Rectangle setPoint2(@NonNull Point point2) {
+    public @NonNull Rectangle setPoint2(@NonNull Point point2) {
         this.point2 = Preconditions.checkNotNull(point2, "Rectangle point2 is null");
         return this;
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("point1", getPoint1());
@@ -156,8 +149,7 @@ public class Rectangle extends Marker<Rectangle> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Rectangle{"
                 + "key=" + getKey()
                 + ",point1=" + getPoint1()

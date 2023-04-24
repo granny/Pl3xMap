@@ -11,11 +11,10 @@ import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class BlockRegistry extends Registry<Block> {
+public class BlockRegistry extends Registry<@NonNull Block> {
     private static final Gson GSON = new GsonBuilder().create();
 
-    @NonNull
-    public Block register(@NonNull String id, int color) {
+    public @NonNull Block register(@NonNull String id, int color) {
         Block block = super.get(id);
         if (block != null) {
             return block; // block already registered
@@ -27,8 +26,7 @@ public class BlockRegistry extends Registry<Block> {
     }
 
     @Override
-    @NonNull
-    public Block get(@NonNull String id) {
+    public @NonNull Block get(@NonNull String id) {
         return getOrDefault(id, Blocks.AIR);
     }
 

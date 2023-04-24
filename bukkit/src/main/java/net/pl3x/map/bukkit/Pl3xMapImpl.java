@@ -9,7 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
+import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -37,10 +40,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Pl3xMapImpl extends Pl3xMap {
-    private final JavaPlugin plugin;
-
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
+
+    private final JavaPlugin plugin;
+
+    private BukkitAudiences adventure;
 
     public Pl3xMapImpl(@NonNull JavaPlugin plugin) {
         super();
@@ -59,7 +64,48 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void useJar(@NonNull Consumer<Path> consumer) {
+    public void enable() {
+        this.adventure = BukkitAudiences.create(this.plugin);
+        super.enable();
+    }
+
+    @Override
+    public void disable() {
+        super.disable();
+        this.adventure = null;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public @NonNull String getVersion() {
+        return this.plugin.getDescription().getVersion();
+    }
+
+    @Override
+    public int getMaxPlayers() {
+        return MinecraftServer.getServer().getMaxPlayers();
+    }
+
+    @Override
+    public int getOperatorUserPermissionLevel() {
+        return MinecraftServer.getServer().getOperatorUserPermissionLevel();
+    }
+
+    @Override
+    public @NonNull AudienceProvider adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure without a running server!");
+        }
+        return this.adventure;
+    }
+
+    @Override
+    public @NonNull Path getMainDir() {
+        return this.plugin.getDataFolder().toPath();
+    }
+
+    @Override
+    public void useJar(@NonNull Consumer<@NonNull Path> consumer) {
         // https://github.com/PEXPlugins/PermissionsEx/blob/master/api/src/main/java/ca/stellardrift/permissionsex/util/TranslatableProvider.java#L150-L158 (Apache-2.0 license)
         URL sourceUrl = Pl3xMap.class.getProtectionDomain().getCodeSource().getLocation();
         // Some class loaders give the full url to the class, some give the URL to its jar.
@@ -79,12 +125,6 @@ public class Pl3xMapImpl extends Pl3xMap {
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    @NonNull
-    public Path getMainDir() {
-        return this.plugin.getDataFolder().toPath();
     }
 
     @Override
@@ -110,7 +150,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void loadBlocks() {
+    protected void loadBlocks() {
         for (Map.Entry<ResourceKey<Block>, Block> entry : MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
             if (getBlockRegistry().has(id)) {
@@ -126,7 +166,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void loadWorlds() {
+    protected void loadWorlds() {
         Bukkit.getWorlds().forEach(world -> {
             ServerLevel level = ((CraftWorld) world).getHandle();
             WorldConfig worldConfig = new WorldConfig(world.getName());
@@ -135,13 +175,10 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void loadPlayers() {
-        Bukkit.getOnlinePlayers().forEach(player ->
-                getPlayerRegistry().register(player.getUniqueId().toString(), new BukkitPlayer(this.plugin, player)));
-    }
-
-    @Override
-    public int getMaxPlayers() {
-        return MinecraftServer.getServer().getMaxPlayers();
+    protected void loadPlayers() {
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            UUID uuid = player.getUniqueId();
+            getPlayerRegistry().getOrDefault(uuid, () -> new BukkitPlayer(player));
+        });
     }
 }

@@ -49,7 +49,7 @@ public class PlayersLayer extends WorldLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public PlayersLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<String> labelSupplier) {
+    public PlayersLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
         super(key, world, labelSupplier);
 
         this.icon = PlayerTracker.ICON;
@@ -64,8 +64,7 @@ public class PlayersLayer extends WorldLayer {
     }
 
     @Override
-    @NonNull
-    public Collection<Marker<?>> getMarkers() {
+    public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
         Set<Marker<?>> icons = new HashSet<>();
         getWorld().getPlayers().forEach(player -> {
             if (player.isHidden()) {
@@ -85,8 +84,7 @@ public class PlayersLayer extends WorldLayer {
         return icons;
     }
 
-    @NonNull
-    private Icon createIcon(@NonNull Player player) {
+    private @NonNull Icon createIcon(@NonNull Player player) {
         Icon icon = Marker.icon(player.getUUID().toString(), player.getPosition(), this.icon, 16)
                 .setRotationAngle((double) player.getYaw())
                 .setRotationOrigin("center")

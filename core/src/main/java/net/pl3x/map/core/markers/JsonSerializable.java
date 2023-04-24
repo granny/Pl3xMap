@@ -12,6 +12,5 @@ public interface JsonSerializable {
      *
      * @return object as json element
      */
-    @NonNull
-    JsonElement toJson();
+    @NonNull JsonElement toJson();
 }

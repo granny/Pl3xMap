@@ -33,17 +33,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class FileUtil {
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
 
-    @NonNull
-    public static Path getTilesDir() {
+    public @NonNull
+    static Path getTilesDir() {
         return getWebDir().resolve("tiles");
     }
 
-    @NonNull
-    public static Path getWebDir() {
+    public static @NonNull Path getWebDir() {
         return Config.WEB_DIR.startsWith("/") ? Path.of(Config.WEB_DIR) : Pl3xMap.api().getMainDir().resolve(Config.WEB_DIR);
     }
 
-    public static void extractFile(@NonNull Class<?> clazz, @NonNull String filename, @NonNull Path outDir, boolean replace) {
+    public static void extractFile(@NonNull Class<@NonNull ?> clazz, @NonNull String filename, @NonNull Path outDir, boolean replace) {
         try (InputStream in = clazz.getResourceAsStream("/" + filename)) {
             if (in == null) {
                 throw new RuntimeException("Could not read file from jar! (" + filename + ")");
@@ -102,7 +101,7 @@ public class FileUtil {
         });
     }
 
-    public static void openJar(@NonNull Path jar, @NonNull Consumer<FileSystem> consumer) throws IOException {
+    public static void openJar(@NonNull Path jar, @NonNull Consumer<@NonNull FileSystem> consumer) throws IOException {
         try (FileSystem fileSystem = FileSystems.newFileSystem(jar)) {
             consumer.accept(fileSystem);
         }
@@ -153,8 +152,7 @@ public class FileUtil {
         }
     }
 
-    @NonNull
-    public static Path mkDirs(@NonNull Path file) throws IOException {
+    public static @NonNull Path mkDirs(@NonNull Path file) throws IOException {
         if (!Files.exists(file)) {
             Files.createDirectories(file.getParent());
             Files.createFile(file);
@@ -181,7 +179,7 @@ public class FileUtil {
         }
     }
 
-    public static Collection<Point> regionPathsToPoints(@NonNull World world, @Nullable Collection<Path> paths) {
+    public static @NonNull Collection<@NonNull Point> regionPathsToPoints(@NonNull World world, @Nullable Collection<@NonNull Path> paths) {
         if (paths == null || paths.isEmpty()) {
             return Collections.emptyList();
         }

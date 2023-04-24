@@ -10,7 +10,7 @@ import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class RendererRegistry extends Registry<Renderer.Builder> {
+public class RendererRegistry extends Registry<Renderer.@NonNull Builder> {
     public static final String BASIC = "basic";
     public static final String BIOMES = "biomes";
     public static final String BLOCKINFO = "blockinfo";
@@ -25,8 +25,7 @@ public class RendererRegistry extends Registry<Renderer.Builder> {
         register(INHABITED, new Renderer.Builder(INHABITED, "Inhabited", InhabitedRenderer.class));
     }
 
-    @NonNull
-    public Renderer createRenderer(@NonNull RegionScanTask task, Renderer.@NonNull Builder builder) {
+    public @NonNull Renderer createRenderer(@NonNull RegionScanTask task, Renderer.@NonNull Builder builder) {
         try {
             return builder.clazz().getConstructor(RegionScanTask.class, Renderer.Builder.class).newInstance(task, builder);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {

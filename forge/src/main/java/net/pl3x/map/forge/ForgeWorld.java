@@ -1,5 +1,6 @@
 package net.pl3x.map.forge;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -37,12 +38,27 @@ public class ForgeWorld extends World {
             return;
         }
 
+        // we have to do all this because forge throws an error if we use ATs to make the field public :/
+        Field climateSettings = null;
+        try {
+            //noinspection JavaReflectionMemberAccess
+            climateSettings = Biome.class.getDeclaredField("f_47437_"); // climateSettings
+            climateSettings.setAccessible(true);
+        } catch (Throwable ignore) {
+        }
+
         // register biomes
         for (Map.Entry<ResourceKey<Biome>, Biome> entry : level.registryAccess().registryOrThrow(Registries.BIOME).entrySet()) {
             String id = entry.getKey().location().toString();
             Biome biome = entry.getValue();
             float temperature = Mathf.clamp(0.0F, 1.0F, biome.getBaseTemperature());
-            float humidity = Mathf.clamp(0.0F, 1.0F, biome.climateSettings.downfall());
+            float humidity = 0.5F;
+            if (climateSettings != null) {
+                try {
+                    humidity = Mathf.clamp(0.0F, 1.0F, ((Biome.ClimateSettings) climateSettings.get(biome)).downfall());
+                } catch (Throwable ignore) {
+                }
+            }
             getBiomeRegistry().register(
                     id,
                     ColorsConfig.BIOME_COLORS.getOrDefault(id, 0),
@@ -57,10 +73,9 @@ public class ForgeWorld extends World {
     }
 
     @Override
-    @NonNull
     @SuppressWarnings({"unchecked"})
-    public <T> T getLevel() {
-        return (T) this.level;
+    public <@NonNull T> @NonNull T getLevel() {
+        return (@NonNull T) this.level;
     }
 
     @Override
@@ -79,16 +94,14 @@ public class ForgeWorld extends World {
     }
 
     @Override
-    @NonNull
-    public Border getWorldBorder() {
+    public @NonNull Border getWorldBorder() {
         return new Border(this.level.getWorldBorder().getCenterX(),
                 this.level.getWorldBorder().getCenterZ(),
                 this.level.getWorldBorder().getSize());
     }
 
     @Override
-    @NonNull
-    public Collection<Player> getPlayers() {
+    public @NonNull Collection<@NonNull Player> getPlayers() {
         return this.<ServerLevel>getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
                 .filter(Objects::nonNull)

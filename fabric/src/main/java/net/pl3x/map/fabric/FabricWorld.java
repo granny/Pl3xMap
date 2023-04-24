@@ -57,10 +57,9 @@ public class FabricWorld extends World {
     }
 
     @Override
-    @NonNull
     @SuppressWarnings({"unchecked"})
-    public <T> T getLevel() {
-        return (T) this.level;
+    public <@NonNull T> @NonNull T getLevel() {
+        return (@NonNull T) this.level;
     }
 
     @Override
@@ -79,16 +78,14 @@ public class FabricWorld extends World {
     }
 
     @Override
-    @NonNull
-    public Border getWorldBorder() {
+    public @NonNull Border getWorldBorder() {
         return new Border(this.level.getWorldBorder().getCenterX(),
                 this.level.getWorldBorder().getCenterZ(),
                 this.level.getWorldBorder().getSize());
     }
 
     @Override
-    @NonNull
-    public Collection<Player> getPlayers() {
+    public @NonNull Collection<@NonNull Player> getPlayers() {
         return this.<ServerLevel>getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
                 .filter(Objects::nonNull)

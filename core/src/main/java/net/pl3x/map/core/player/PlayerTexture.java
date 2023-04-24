@@ -69,13 +69,11 @@ public class PlayerTexture extends Thread {
         }
     }
 
-    @NonNull
-    private static BufferedImage get2DHead(@NonNull BufferedImage source) {
+    private static @NonNull BufferedImage get2DHead(@NonNull BufferedImage source) {
         return getPart(source, 8, 8);
     }
 
-    @NonNull
-    private static BufferedImage get3DHead(@NonNull BufferedImage source) {
+    private static @NonNull BufferedImage get3DHead(@NonNull BufferedImage source) {
         // get parts
         BufferedImage left = getPart(source, 8, 8);
         BufferedImage right = getPart(source, 16, 8);
@@ -113,7 +111,7 @@ public class PlayerTexture extends Thread {
         return result;
     }
 
-    private static BufferedImage getPart(@NonNull BufferedImage source, int x, int y) {
+    private static @NonNull BufferedImage getPart(@NonNull BufferedImage source, int x, int y) {
         BufferedImage head = source.getSubimage(x, y, 8, 8);
         BufferedImage helm = source.getSubimage(x + 32, y, 8, 8);
         BufferedImage result = new BufferedImage(32, 32, source.getType());
@@ -129,14 +127,14 @@ public class PlayerTexture extends Thread {
         return result;
     }
 
-    private static BufferedImage flip(@NonNull BufferedImage src) {
+    private static @NonNull BufferedImage flip(@NonNull BufferedImage src) {
         AffineTransform at = new AffineTransform();
         at.concatenate(AffineTransform.getScaleInstance(-1, 1));
         at.concatenate(AffineTransform.getTranslateInstance(-src.getWidth(), 0));
         return transform(src, at);
     }
 
-    private static BufferedImage rotate(@NonNull BufferedImage src, double angle) {
+    private static @NonNull BufferedImage rotate(@NonNull BufferedImage src, double angle) {
         int w = src.getWidth();
         int h = src.getHeight();
         double sin = Math.abs(Math.sin(angle));
@@ -155,17 +153,17 @@ public class PlayerTexture extends Thread {
         return dest;
     }
 
-    private static BufferedImage scale(@NonNull BufferedImage src, double scaleX, double scaleY) {
+    private static @NonNull BufferedImage scale(@NonNull BufferedImage src, double scaleX, double scaleY) {
         AffineTransform at = AffineTransform.getScaleInstance(scaleX, scaleY);
         return transform(src, at);
     }
 
-    private static BufferedImage shear(@NonNull BufferedImage src) {
+    private static @NonNull BufferedImage shear(@NonNull BufferedImage src) {
         AffineTransform at = AffineTransform.getShearInstance(0.577375, 0);
         return transform(src, at);
     }
 
-    private static BufferedImage transform(@NonNull BufferedImage src, @NonNull AffineTransform at) {
+    private static @NonNull BufferedImage transform(@NonNull BufferedImage src, @NonNull AffineTransform at) {
         return new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC).filter(src, null);
     }
 }

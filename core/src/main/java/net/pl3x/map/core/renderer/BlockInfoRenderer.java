@@ -21,7 +21,7 @@ import net.pl3x.map.core.world.Region;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BlockInfoRenderer extends Renderer {
-    private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+    private static final Map<@NonNull Path, @NonNull ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     private ByteBuffer byteBuffer;
 

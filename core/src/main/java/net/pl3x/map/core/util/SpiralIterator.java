@@ -51,8 +51,7 @@ public class SpiralIterator implements Iterator<Point> {
     }
 
     @Override
-    @NonNull
-    public Point next() throws NoSuchElementException {
+    public @NonNull Point next() throws NoSuchElementException {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
@@ -97,8 +96,7 @@ public class SpiralIterator implements Iterator<Point> {
          *
          * @return next direction
          */
-        @NonNull
-        public Direction next() {
+        public @NonNull Direction next() {
             return VALUES[(ordinal() + 1) & 3];
         }
     }

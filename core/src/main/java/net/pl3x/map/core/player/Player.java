@@ -15,40 +15,47 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents a player.
  */
 public abstract class Player {
-    private Map<BiFunction<Player, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
+    private final Object player;
+
+    private Map<@NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String>, @NonNull Integer> nameDecorators = new LinkedHashMap<>();
     private boolean hidden;
+
+    public <@NonNull T> Player(@NonNull T player) {
+        this.player = player;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <@NonNull T> @NonNull T getPlayer() {
+        return (T) this.player;
+    }
 
     /**
      * Get the player's name.
      *
      * @return player's name
      */
-    @NonNull
-    public abstract String getName();
+    public abstract @NonNull String getName();
 
     /**
      * Get the player's UUID.
      *
      * @return player's UUID
      */
-    @NonNull
-    public abstract UUID getUUID();
+    public abstract @NonNull UUID getUUID();
 
     /**
      * Get the world this player is currently in.
      *
      * @return player's world
      */
-    @NonNull
-    public abstract World getWorld();
+    public abstract @NonNull World getWorld();
 
     /**
      * Get the player's current position.
      *
      * @return player's position
      */
-    @NonNull
-    public abstract Point getPosition();
+    public abstract @NonNull Point getPosition();
 
     /**
      * Get the player's current yaw.
@@ -76,8 +83,7 @@ public abstract class Player {
      *
      * @return player's skin URL
      */
-    @Nullable
-    public abstract URL getSkin();
+    public abstract @Nullable URL getSkin();
 
     /**
      * Get whether the player is invisible.
@@ -165,8 +171,7 @@ public abstract class Player {
      *
      * @return decorated name
      */
-    @NonNull
-    public String getDecoratedName() {
+    public @NonNull String getDecoratedName() {
         String name = getName();
         for (BiFunction<Player, String, String> fn : this.nameDecorators.keySet()) {
             name = fn.apply(this, name);

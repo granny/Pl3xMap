@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a {@link Marker}'s options.
  */
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public class Options implements JsonSerializable {
     private Stroke stroke;
     private Fill fill;
@@ -42,13 +42,11 @@ public class Options implements JsonSerializable {
     /**
      * Create a new {@link Builder}.
      */
-    @NonNull
-    public static Builder builder() {
+    public static @NonNull Builder builder() {
         return new Builder();
     }
 
-    @Nullable
-    static <T extends Option<T>> T parse(@Nullable T option) {
+    static <@Nullable T extends @NonNull Option<@NonNull T>> @Nullable T parse(@Nullable T option) {
         return option == null || option.isDefault() ? null : option;
     }
 
@@ -57,8 +55,7 @@ public class Options implements JsonSerializable {
      *
      * @return stroke rules
      */
-    @Nullable
-    public Stroke getStroke() {
+    public @Nullable Stroke getStroke() {
         return this.stroke;
     }
 
@@ -68,8 +65,7 @@ public class Options implements JsonSerializable {
      * @param stroke new stroke rules.
      * @return this marker options
      */
-    @NonNull
-    public Options setStroke(@Nullable Stroke stroke) {
+    public @NonNull Options setStroke(@Nullable Stroke stroke) {
         this.stroke = parse(stroke);
         return this;
     }
@@ -79,8 +75,7 @@ public class Options implements JsonSerializable {
      *
      * @return fill rules
      */
-    @Nullable
-    public Fill getFill() {
+    public @Nullable Fill getFill() {
         return this.fill;
     }
 
@@ -90,8 +85,7 @@ public class Options implements JsonSerializable {
      * @param fill new fill rules
      * @return this marker options
      */
-    @NonNull
-    public Options setFill(@Nullable Fill fill) {
+    public @NonNull Options setFill(@Nullable Fill fill) {
         this.fill = parse(fill);
         return this;
     }
@@ -101,8 +95,7 @@ public class Options implements JsonSerializable {
      *
      * @return tooltip rules
      */
-    @Nullable
-    public Tooltip getTooltip() {
+    public @Nullable Tooltip getTooltip() {
         return this.tooltip;
     }
 
@@ -112,8 +105,7 @@ public class Options implements JsonSerializable {
      * @param tooltip new tooltip rules
      * @return this marker options
      */
-    @NonNull
-    public Options setTooltip(@Nullable Tooltip tooltip) {
+    public @NonNull Options setTooltip(@Nullable Tooltip tooltip) {
         this.tooltip = parse(tooltip);
         return this;
     }
@@ -123,8 +115,7 @@ public class Options implements JsonSerializable {
      *
      * @return popup rules
      */
-    @Nullable
-    public Popup getPopup() {
+    public @Nullable Popup getPopup() {
         return this.popup;
     }
 
@@ -134,8 +125,7 @@ public class Options implements JsonSerializable {
      * @param popup new popup rules
      * @return this marker options
      */
-    @NonNull
-    public Options setPopup(@Nullable Popup popup) {
+    public @NonNull Options setPopup(@Nullable Popup popup) {
         this.popup = parse(popup);
         return this;
     }
@@ -145,8 +135,7 @@ public class Options implements JsonSerializable {
      *
      * @return new builder
      */
-    @NonNull
-    public Builder asBuilder() {
+    public @NonNull Builder asBuilder() {
         return new Builder()
                 .stroke(getStroke())
                 .fill(getFill())
@@ -155,8 +144,7 @@ public class Options implements JsonSerializable {
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("stroke", getStroke());
         wrapper.addProperty("fill", getFill());
@@ -189,15 +177,13 @@ public class Options implements JsonSerializable {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Options{fill=" + getFill() + ",stroke=" + getStroke() + ",tooltip=" + getTooltip() + ",popup=" + getPopup() + "}";
     }
 
     /**
      * Builder for {@link Options}.
      */
-    @SuppressWarnings("unused")
     public static class Builder {
         private Stroke stroke = null;
         private Fill fill = null;
@@ -216,8 +202,7 @@ public class Options implements JsonSerializable {
          * @param stroke stroke properties
          * @return this options builder
          */
-        @NonNull
-        public Builder stroke(@Nullable Stroke stroke) {
+        public @NonNull Builder stroke(@Nullable Stroke stroke) {
             this.stroke = parse(stroke);
             return this;
         }
@@ -232,8 +217,7 @@ public class Options implements JsonSerializable {
          * @param enabled whether stroke is enabled
          * @return this options builder
          */
-        @NonNull
-        public Builder stroke(@Nullable Boolean enabled) {
+        public @NonNull Builder stroke(@Nullable Boolean enabled) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -251,8 +235,7 @@ public class Options implements JsonSerializable {
          * @param weight new stroke weight
          * @return this options builder
          */
-        @NonNull
-        public Builder strokeWeight(@Nullable Integer weight) {
+        public @NonNull Builder strokeWeight(@Nullable Integer weight) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -270,8 +253,7 @@ public class Options implements JsonSerializable {
          * @param color argb color
          * @return this options builder
          */
-        @NonNull
-        public Builder strokeColor(@Nullable Integer color) {
+        public @NonNull Builder strokeColor(@Nullable Integer color) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -290,8 +272,7 @@ public class Options implements JsonSerializable {
          * @return this options builder
          * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap">MDN stroke-linecap</a>
          */
-        @NonNull
-        public Builder strokeLineCapShape(Stroke.@Nullable LineCapShape lineCapShape) {
+        public @NonNull Builder strokeLineCapShape(Stroke.@Nullable LineCapShape lineCapShape) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -310,8 +291,7 @@ public class Options implements JsonSerializable {
          * @return this options builder
          * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin">MDN stroke-linejoin</a>
          */
-        @NonNull
-        public Builder strokeLineJoinShape(Stroke.@Nullable LineJoinShape lineJoinShape) {
+        public @NonNull Builder strokeLineJoinShape(Stroke.@Nullable LineJoinShape lineJoinShape) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -330,8 +310,7 @@ public class Options implements JsonSerializable {
          * @return this options builder
          * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray">MDN stroke-dasharray</a>
          */
-        @NonNull
-        public Builder strokeDashPattern(@Nullable String dashPattern) {
+        public @NonNull Builder strokeDashPattern(@Nullable String dashPattern) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -351,8 +330,7 @@ public class Options implements JsonSerializable {
          * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset">MDN stroke-dashoffset</a>
          * @see <a href="https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility">Browser compatibility</a>
          */
-        @NonNull
-        public Builder strokeDashOffset(@Nullable String dashOffset) {
+        public @NonNull Builder strokeDashOffset(@Nullable String dashOffset) {
             if (this.stroke == null) {
                 this.stroke = new Stroke();
             }
@@ -368,8 +346,7 @@ public class Options implements JsonSerializable {
          * @param fill fill properties
          * @return this options builder
          */
-        @NonNull
-        public Builder fill(@Nullable Fill fill) {
+        public @NonNull Builder fill(@Nullable Fill fill) {
             this.fill = parse(fill);
             return this;
         }
@@ -384,8 +361,7 @@ public class Options implements JsonSerializable {
          * @param enabled whether fill is enabled
          * @return this options builder
          */
-        @NonNull
-        public Builder fill(@Nullable Boolean enabled) {
+        public @NonNull Builder fill(@Nullable Boolean enabled) {
             if (this.fill == null) {
                 this.fill = new Fill();
             }
@@ -404,8 +380,7 @@ public class Options implements JsonSerializable {
          * @return this options builder
          * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
          */
-        @NonNull
-        public Builder fillType(Fill.@Nullable Type type) {
+        public @NonNull Builder fillType(Fill.@Nullable Type type) {
             if (this.fill == null) {
                 this.fill = new Fill();
             }
@@ -423,8 +398,7 @@ public class Options implements JsonSerializable {
          * @param color new argb color
          * @return this options builder
          */
-        @NonNull
-        public Builder fillColor(@Nullable Integer color) {
+        public @NonNull Builder fillColor(@Nullable Integer color) {
             if (this.fill == null) {
                 this.fill = new Fill();
             }
@@ -440,8 +414,7 @@ public class Options implements JsonSerializable {
          * @param tooltip tooltip properties
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltip(@Nullable Tooltip tooltip) {
+        public @NonNull Builder tooltip(@Nullable Tooltip tooltip) {
             this.tooltip = parse(tooltip);
             return this;
         }
@@ -456,8 +429,7 @@ public class Options implements JsonSerializable {
          * @param content tooltip content
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipContent(@Nullable String content) {
+        public @NonNull Builder tooltipContent(@Nullable String content) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -475,8 +447,7 @@ public class Options implements JsonSerializable {
          * @param pane map pane
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipPane(@Nullable String pane) {
+        public @NonNull Builder tooltipPane(@Nullable String pane) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -494,8 +465,7 @@ public class Options implements JsonSerializable {
          * @param offset tooltip offset
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipOffset(@Nullable Point offset) {
+        public @NonNull Builder tooltipOffset(@Nullable Point offset) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -513,8 +483,7 @@ public class Options implements JsonSerializable {
          * @param direction opening direction
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipDirection(Tooltip.@Nullable Direction direction) {
+        public @NonNull Builder tooltipDirection(Tooltip.@Nullable Direction direction) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -532,8 +501,7 @@ public class Options implements JsonSerializable {
          * @param permanent opened permanently
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipPermanent(@Nullable Boolean permanent) {
+        public @NonNull Builder tooltipPermanent(@Nullable Boolean permanent) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -553,8 +521,7 @@ public class Options implements JsonSerializable {
          * @param sticky sticky state
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipSticky(@Nullable Boolean sticky) {
+        public @NonNull Builder tooltipSticky(@Nullable Boolean sticky) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -572,8 +539,7 @@ public class Options implements JsonSerializable {
          * @param opacity tooltip opacity
          * @return this options builder
          */
-        @NonNull
-        public Builder tooltipOpacity(@Nullable Double opacity) {
+        public @NonNull Builder tooltipOpacity(@Nullable Double opacity) {
             if (this.tooltip == null) {
                 this.tooltip = new Tooltip();
             }
@@ -589,8 +555,7 @@ public class Options implements JsonSerializable {
          * @param popup popup properties
          * @return this options builder
          */
-        @NonNull
-        public Builder popup(@Nullable Popup popup) {
+        public @NonNull Builder popup(@Nullable Popup popup) {
             this.popup = parse(popup);
             return this;
         }
@@ -605,8 +570,7 @@ public class Options implements JsonSerializable {
          * @param content popup content
          * @return this options builder
          */
-        @NonNull
-        public Builder popupContent(@Nullable String content) {
+        public @NonNull Builder popupContent(@Nullable String content) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -624,8 +588,7 @@ public class Options implements JsonSerializable {
          * @param pane map pane
          * @return this options builder
          */
-        @NonNull
-        public Builder popupPane(@Nullable String pane) {
+        public @NonNull Builder popupPane(@Nullable String pane) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -643,8 +606,7 @@ public class Options implements JsonSerializable {
          * @param offset popup offset
          * @return this options builder
          */
-        @NonNull
-        public Builder popupOffset(@Nullable Point offset) {
+        public @NonNull Builder popupOffset(@Nullable Point offset) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -662,8 +624,7 @@ public class Options implements JsonSerializable {
          * @param maxWidth max width
          * @return this options builder
          */
-        @NonNull
-        public Builder popupMaxWidth(@Nullable Integer maxWidth) {
+        public @NonNull Builder popupMaxWidth(@Nullable Integer maxWidth) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -681,8 +642,7 @@ public class Options implements JsonSerializable {
          * @param minWidth min width
          * @return this options builder
          */
-        @NonNull
-        public Builder popupMinWidth(@Nullable Integer minWidth) {
+        public @NonNull Builder popupMinWidth(@Nullable Integer minWidth) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -701,8 +661,7 @@ public class Options implements JsonSerializable {
          * @param maxHeight max height
          * @return this options builder
          */
-        @NonNull
-        public Builder popupMaxHeight(@Nullable Integer maxHeight) {
+        public @NonNull Builder popupMaxHeight(@Nullable Integer maxHeight) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -720,8 +679,7 @@ public class Options implements JsonSerializable {
          * @param autoPan true to auto pan
          * @return this options builder
          */
-        @NonNull
-        public Builder popupShouldAutoPan(@Nullable Boolean autoPan) {
+        public @NonNull Builder popupShouldAutoPan(@Nullable Boolean autoPan) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -740,8 +698,7 @@ public class Options implements JsonSerializable {
          * @param autoPanPaddingTopLeft top left corner padding margins
          * @return this options builder
          */
-        @NonNull
-        public Builder popupAutoPanPaddingTopLeft(@Nullable Point autoPanPaddingTopLeft) {
+        public @NonNull Builder popupAutoPanPaddingTopLeft(@Nullable Point autoPanPaddingTopLeft) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -760,8 +717,7 @@ public class Options implements JsonSerializable {
          * @param autoPanPaddingBottomRight bottom right corner padding margins
          * @return this options builder
          */
-        @NonNull
-        public Builder popupAutoPanPaddingBottomRight(@Nullable Point autoPanPaddingBottomRight) {
+        public @NonNull Builder popupAutoPanPaddingBottomRight(@Nullable Point autoPanPaddingBottomRight) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -782,8 +738,7 @@ public class Options implements JsonSerializable {
          * @param autoPanPadding padding margins
          * @return this options builder
          */
-        @NonNull
-        public Builder popupAutoPanPadding(@Nullable Point autoPanPadding) {
+        public @NonNull Builder popupAutoPanPadding(@Nullable Point autoPanPadding) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -803,8 +758,7 @@ public class Options implements JsonSerializable {
          * @param keepInView true to keep popup in view
          * @return this options builder
          */
-        @NonNull
-        public Builder popupShouldKeepInView(@Nullable Boolean keepInView) {
+        public @NonNull Builder popupShouldKeepInView(@Nullable Boolean keepInView) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -822,8 +776,7 @@ public class Options implements JsonSerializable {
          * @param closeButton true if popup has close button
          * @return this options builder
          */
-        @NonNull
-        public Builder popupCloseButton(@Nullable Boolean closeButton) {
+        public @NonNull Builder popupCloseButton(@Nullable Boolean closeButton) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -841,8 +794,7 @@ public class Options implements JsonSerializable {
          * @param autoClose true if popup auto closes
          * @return this options builder
          */
-        @NonNull
-        public Builder popupShouldAutoClose(@Nullable Boolean autoClose) {
+        public @NonNull Builder popupShouldAutoClose(@Nullable Boolean autoClose) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -860,8 +812,7 @@ public class Options implements JsonSerializable {
          * @param closeOnEscapeKey true to close with escape
          * @return this options builder
          */
-        @NonNull
-        public Builder popupShouldCloseOnEscapeKey(@Nullable Boolean closeOnEscapeKey) {
+        public @NonNull Builder popupShouldCloseOnEscapeKey(@Nullable Boolean closeOnEscapeKey) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -879,8 +830,7 @@ public class Options implements JsonSerializable {
          * @param closeOnClick true to close on map click
          * @return this options builder
          */
-        @NonNull
-        public Builder popupShouldCloseOnClick(@Nullable Boolean closeOnClick) {
+        public @NonNull Builder popupShouldCloseOnClick(@Nullable Boolean closeOnClick) {
             if (this.popup == null) {
                 this.popup = new Popup();
             }
@@ -895,8 +845,7 @@ public class Options implements JsonSerializable {
          *
          * @return new options
          */
-        @NonNull
-        public Options build() {
+        public @NonNull Options build() {
             return new Options(this.stroke, this.fill, this.tooltip, this.popup);
         }
     }

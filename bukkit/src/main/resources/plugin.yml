@@ -1,7 +1,9 @@
-name: "Pl3xMap"
-main: "net.pl3x.map.bukkit.Pl3xMapBukkit"
+#file: noinspection YAMLSchemaValidation
+name: "${name}"
+main: "${group}.Pl3xMapBukkit"
 version: "${version}"
-api-version: "1.18"
-author: "BillyGalbreath"
-description: "Minimalistic and lightweight world map viewer for Minecraft servers"
-website: "https://modrinth.com/plugin/pl3xmap"
+api-version: "1.19"
+load: "POSTWORLD"
+authors: ${authors}
+description: "${description}"
+website: "${website}"

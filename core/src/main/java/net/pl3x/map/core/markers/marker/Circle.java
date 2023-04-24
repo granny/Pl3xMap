@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents a circle marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Circle extends Marker<Circle> {
+public class Circle extends Marker<@NonNull Circle> {
     private Point center;
     private double radius;
 
@@ -56,8 +56,7 @@ public class Circle extends Marker<Circle> {
      * @param radius  circle radius
      * @return a new circle
      */
-    @NonNull
-    public static Circle of(@NonNull String key, double centerX, double centerZ, double radius) {
+    public static @NonNull Circle of(@NonNull String key, double centerX, double centerZ, double radius) {
         return new Circle(key, centerX, centerZ, radius);
     }
 
@@ -69,8 +68,7 @@ public class Circle extends Marker<Circle> {
      * @param radius circle radius
      * @return a new circle
      */
-    @NonNull
-    public static Circle of(@NonNull String key, @NonNull Point center, double radius) {
+    public static @NonNull Circle of(@NonNull String key, @NonNull Point center, double radius) {
         return new Circle(key, center, radius);
     }
 
@@ -79,8 +77,7 @@ public class Circle extends Marker<Circle> {
      *
      * @return center point
      */
-    @NonNull
-    public Point getCenter() {
+    public @NonNull Point getCenter() {
         return this.center;
     }
 
@@ -90,8 +87,7 @@ public class Circle extends Marker<Circle> {
      * @param center new center
      * @return this circle
      */
-    @NonNull
-    public Circle setCenter(@NonNull Point center) {
+    public @NonNull Circle setCenter(@NonNull Point center) {
         this.center = Preconditions.checkNotNull(center, "Circle center is null");
         return this;
     }
@@ -111,15 +107,13 @@ public class Circle extends Marker<Circle> {
      * @param radius new radius
      * @return this circle
      */
-    @NonNull
-    public Circle setRadius(double radius) {
+    public @NonNull Circle setRadius(double radius) {
         this.radius = radius;
         return this;
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("center", getCenter());
@@ -153,8 +147,7 @@ public class Circle extends Marker<Circle> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Circle{"
                 + "key=" + getKey()
                 + ",center=" + getCenter()

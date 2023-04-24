@@ -14,7 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a map marker.
  */
-public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonSerializable {
+public abstract class Marker<@NonNull T extends Marker<@NonNull T>> extends Keyed implements JsonSerializable {
     private final String type;
     private String pane;
     private Options options;
@@ -39,8 +39,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param radius  circle radius
      * @return a new circle
      */
-    @NonNull
-    public static Circle circle(@NonNull String key, double centerX, double centerZ, double radius) {
+    public static @NonNull Circle circle(@NonNull String key, double centerX, double centerZ, double radius) {
         return Circle.of(key, centerX, centerZ, radius);
     }
 
@@ -52,8 +51,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param radius circle radius
      * @return a new circle
      */
-    @NonNull
-    public static Circle circle(@NonNull String key, @NonNull Point center, double radius) {
+    public static @NonNull Circle circle(@NonNull String key, @NonNull Point center, double radius) {
         return Circle.of(key, center, radius);
     }
 
@@ -67,8 +65,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ) {
         return Ellipse.of(key, centerX, centerZ, radiusX, radiusZ);
     }
 
@@ -81,8 +78,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ) {
         return Ellipse.of(key, center, radiusX, radiusZ);
     }
 
@@ -95,8 +91,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param radius  radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius) {
         return Ellipse.of(key, centerX, centerZ, radius);
     }
 
@@ -108,8 +103,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param radius radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, @NonNull Point center, @NonNull Vector radius) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, @NonNull Point center, @NonNull Vector radius) {
         return Ellipse.of(key, center, radius);
     }
 
@@ -124,8 +118,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param tilt    tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
         return Ellipse.of(key, centerX, centerZ, radiusX, radiusZ, tilt);
     }
 
@@ -139,8 +132,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param tilt    tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ, double tilt) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ, double tilt) {
         return Ellipse.of(key, center, radiusX, radiusZ, tilt);
     }
 
@@ -154,8 +146,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param tilt    tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius, double tilt) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius, double tilt) {
         return Ellipse.of(key, centerX, centerZ, radius, tilt);
     }
 
@@ -168,8 +159,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param tilt   tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse ellipse(@NonNull String key, @NonNull Point center, @NonNull Vector radius, double tilt) {
+    public static @NonNull Ellipse ellipse(@NonNull String key, @NonNull Point center, @NonNull Vector radius, double tilt) {
         return Ellipse.of(key, center, radius, tilt);
     }
 
@@ -182,8 +172,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param image image key
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, double x, double z, @NonNull String image) {
+    public static @NonNull Icon icon(@NonNull String key, double x, double z, @NonNull String image) {
         return Icon.of(key, x, z, image);
     }
 
@@ -195,8 +184,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param image image key
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image) {
+    public static @NonNull Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image) {
         return Icon.of(key, point, image);
     }
 
@@ -210,8 +198,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param size  size of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, double x, double z, @NonNull String image, double size) {
+    public static @NonNull Icon icon(@NonNull String key, double x, double z, @NonNull String image, double size) {
         return Icon.of(key, x, z, image, size, size);
     }
 
@@ -226,8 +213,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param height height of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, double x, double z, @NonNull String image, double width, double height) {
+    public static @NonNull Icon icon(@NonNull String key, double x, double z, @NonNull String image, double width, double height) {
         return Icon.of(key, x, z, image, width, height);
     }
 
@@ -240,8 +226,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param size  size of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image, double size) {
+    public static @NonNull Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image, double size) {
         return Icon.of(key, point, image, size, size);
     }
 
@@ -255,8 +240,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param height height of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image, double width, double height) {
+    public static @NonNull Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image, double width, double height) {
         return Icon.of(key, point, image, width, height);
     }
 
@@ -269,8 +253,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param size  size of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image, @Nullable Vector size) {
+    public static @NonNull Icon icon(@NonNull String key, @NonNull Point point, @NonNull String image, @Nullable Vector size) {
         return Icon.of(key, point, image, size);
     }
 
@@ -281,8 +264,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polygon polygon to add
      * @return a new multi-polygon
      */
-    @NonNull
-    public static MultiPolygon multiPolygon(@NonNull String key, @NonNull Polygon polygon) {
+    public static @NonNull MultiPolygon multiPolygon(@NonNull String key, @NonNull Polygon polygon) {
         return MultiPolygon.of(key, polygon);
     }
 
@@ -293,8 +275,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    @NonNull
-    public static MultiPolygon multiPolygon(@NonNull String key, @NonNull Polygon @NonNull ... polygons) {
+    public static @NonNull MultiPolygon multiPolygon(@NonNull String key, @NonNull Polygon @NonNull ... polygons) {
         return MultiPolygon.of(key, polygons);
     }
 
@@ -305,8 +286,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    @NonNull
-    public static MultiPolygon multiPolygon(@NonNull String key, @NonNull List<Polygon> polygons) {
+    public static @NonNull MultiPolygon multiPolygon(@NonNull String key, @NonNull List<@NonNull Polygon> polygons) {
         return MultiPolygon.of(key, polygons);
     }
 
@@ -317,8 +297,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polyline polyline to add
      * @return a new multi-polyline
      */
-    @NonNull
-    public static MultiPolyline multiPolyline(@NonNull String key, @NonNull Polyline polyline) {
+    public static @NonNull MultiPolyline multiPolyline(@NonNull String key, @NonNull Polyline polyline) {
         return MultiPolyline.of(key, polyline);
     }
 
@@ -329,8 +308,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    @NonNull
-    public static MultiPolyline multiPolyline(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
+    public static @NonNull MultiPolyline multiPolyline(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
         return MultiPolyline.of(key, polylines);
     }
 
@@ -341,8 +319,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    @NonNull
-    public static MultiPolyline multiPolyline(@NonNull String key, @NonNull List<Polyline> polylines) {
+    public static @NonNull MultiPolyline multiPolyline(@NonNull String key, @NonNull List<@NonNull Polyline> polylines) {
         return MultiPolyline.of(key, polylines);
     }
 
@@ -353,8 +330,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polyline polyline to add
      * @return a new polygon
      */
-    @NonNull
-    public static Polygon polygon(@NonNull String key, @NonNull Polyline polyline) {
+    public static @NonNull Polygon polygon(@NonNull String key, @NonNull Polyline polyline) {
         return Polygon.of(key, polyline);
     }
 
@@ -365,8 +341,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polylines polylines to add
      * @return a new polygon
      */
-    @NonNull
-    public static Polygon polygon(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
+    public static @NonNull Polygon polygon(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
         return Polygon.of(key, polylines);
     }
 
@@ -377,8 +352,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param polylines polylines to add
      * @return a new polygon
      */
-    @NonNull
-    public static Polygon polygon(@NonNull String key, @NonNull List<Polyline> polylines) {
+    public static @NonNull Polygon polygon(@NonNull String key, @NonNull List<@NonNull Polyline> polylines) {
         return Polygon.of(key, polylines);
     }
 
@@ -389,8 +363,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param point point to add
      * @return a new polyline
      */
-    @NonNull
-    public static Polyline polyline(@NonNull String key, @NonNull Point point) {
+    public static @NonNull Polyline polyline(@NonNull String key, @NonNull Point point) {
         return Polyline.of(key, point);
     }
 
@@ -401,8 +374,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param points points to add
      * @return a new polyline
      */
-    @NonNull
-    public static Polyline polyline(@NonNull String key, @NonNull Point @NonNull ... points) {
+    public static @NonNull Polyline polyline(@NonNull String key, @NonNull Point @NonNull ... points) {
         return Polyline.of(key, points);
     }
 
@@ -413,8 +385,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param points points to add
      * @return a new polyline
      */
-    @NonNull
-    public static Polyline polyline(@NonNull String key, @NonNull List<Point> points) {
+    public static @NonNull Polyline polyline(@NonNull String key, @NonNull List<@NonNull Point> points) {
         return Polyline.of(key, points);
     }
 
@@ -428,8 +399,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param z2  second z point
      * @return a new rectangle
      */
-    @NonNull
-    public static Rectangle rectangle(@NonNull String key, double x1, double z1, double x2, double z2) {
+    public static @NonNull Rectangle rectangle(@NonNull String key, double x1, double z1, double x2, double z2) {
         return Rectangle.of(key, x1, z1, x2, z2);
     }
 
@@ -441,8 +411,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param point2 second point
      * @return a new rectangle
      */
-    @NonNull
-    public static Rectangle rectangle(@NonNull String key, @NonNull Point point1, @NonNull Point point2) {
+    public static @NonNull Rectangle rectangle(@NonNull String key, @NonNull Point point1, @NonNull Point point2) {
         return Rectangle.of(key, point1, point2);
     }
 
@@ -453,8 +422,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      *
      * @return marker type
      */
-    @NonNull
-    public String getType() {
+    public @NonNull String getType() {
         return this.type;
     }
 
@@ -465,8 +433,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      *
      * @return map pane
      */
-    @Nullable
-    public String getPane() {
+    public @Nullable String getPane() {
         return this.pane;
     }
 
@@ -480,11 +447,10 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param pane map pane
      * @return this marker
      */
-    @NonNull
     @SuppressWarnings("unchecked")
-    public T setPane(@Nullable String pane) {
+    public @NonNull T setPane(@Nullable String pane) {
         this.pane = pane;
-        return (T) this;
+        return (@NonNull T) this;
     }
 
     /**
@@ -494,8 +460,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      *
      * @return marker options
      */
-    @Nullable
-    public Options getOptions() {
+    public @Nullable Options getOptions() {
         return this.options;
     }
 
@@ -507,11 +472,10 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param options new options or null
      * @return this marker
      */
-    @NonNull
     @SuppressWarnings("unchecked")
-    public T setOptions(@Nullable Options options) {
+    public @NonNull T setOptions(@Nullable Options options) {
         this.options = options;
-        return (T) this;
+        return (@NonNull T) this;
     }
 
     /**
@@ -522,8 +486,7 @@ public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonS
      * @param builder new options builder or null
      * @return this marker
      */
-    @NonNull
-    public T setOptions(Options.@Nullable Builder builder) {
+    public @NonNull T setOptions(Options.@Nullable Builder builder) {
         return setOptions(builder == null ? null : builder.build());
     }
 }

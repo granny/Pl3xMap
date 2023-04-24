@@ -1,20 +1,17 @@
 package net.pl3x.map.core.player;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Player event listener.
  */
-public interface PlayerListener {
+public class PlayerListener {
     /**
      * Fired when a player joins the server.
      *
      * @param player player that joined
      */
-    default void onJoin(@Nullable Player player) {
-        if (player == null) {
-            return;
-        }
+    public void onJoin(@NonNull Player player) {
         if (player.isHidden()) {
             player.setHidden(true, false);
         }
@@ -26,6 +23,6 @@ public interface PlayerListener {
      *
      * @param player player that left
      */
-    default void onQuit(@Nullable Player player) {
+    public void onQuit(@NonNull Player player) {
     }
 }

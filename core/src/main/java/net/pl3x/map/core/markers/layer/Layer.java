@@ -14,7 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @SuppressWarnings("UnusedReturnValue")
 public abstract class Layer extends Keyed {
-    private Supplier<String> labelSupplier;
+    private Supplier<@NonNull String> labelSupplier;
     private int updateInterval = 15;
     private boolean showControls = true;
     private boolean defaultHidden = false;
@@ -28,7 +28,7 @@ public abstract class Layer extends Keyed {
      *
      * @param key key for layer
      */
-    public Layer(@NonNull String key, @NonNull Supplier<String> labelSupplier) {
+    public Layer(@NonNull String key, @NonNull Supplier<@NonNull String> labelSupplier) {
         super(key);
         this.labelSupplier = labelSupplier;
     }
@@ -38,8 +38,7 @@ public abstract class Layer extends Keyed {
      *
      * @return layer label
      */
-    @NonNull
-    public String getLabel() {
+    public @NonNull String getLabel() {
         return this.labelSupplier.get();
     }
 
@@ -49,8 +48,7 @@ public abstract class Layer extends Keyed {
      * @param label new label
      * @return this layer
      */
-    @NonNull
-    public Layer setLabel(@NonNull String label) {
+    public @NonNull Layer setLabel(@NonNull String label) {
         Preconditions.checkNotNull(label, "Layer label is null");
         this.labelSupplier = () -> label;
         return this;
@@ -62,8 +60,7 @@ public abstract class Layer extends Keyed {
      * @param labelSupplier new label supplier
      * @return this layer
      */
-    @NonNull
-    public Layer setLabel(@NonNull Supplier<String> labelSupplier) {
+    public @NonNull Layer setLabel(@NonNull Supplier<@NonNull String> labelSupplier) {
         Preconditions.checkNotNull(labelSupplier, "Layer label supplier is null");
         this.labelSupplier = labelSupplier;
         return this;
@@ -84,8 +81,7 @@ public abstract class Layer extends Keyed {
      * @param updateInterval new update interval
      * @return this layer
      */
-    @NonNull
-    public Layer setUpdateInterval(int updateInterval) {
+    public @NonNull Layer setUpdateInterval(int updateInterval) {
         this.updateInterval = updateInterval;
         return this;
     }
@@ -105,8 +101,7 @@ public abstract class Layer extends Keyed {
      * @param showControls true to show
      * @return this layer
      */
-    @NonNull
-    public Layer setShowControls(boolean showControls) {
+    public @NonNull Layer setShowControls(boolean showControls) {
         this.showControls = showControls;
         return this;
     }
@@ -126,8 +121,7 @@ public abstract class Layer extends Keyed {
      * @param defaultHidden true to hide by default
      * @return this layer
      */
-    @NonNull
-    public Layer setDefaultHidden(boolean defaultHidden) {
+    public @NonNull Layer setDefaultHidden(boolean defaultHidden) {
         this.defaultHidden = defaultHidden;
         return this;
     }
@@ -151,8 +145,7 @@ public abstract class Layer extends Keyed {
      * @param priority new priority
      * @return this layer
      */
-    @NonNull
-    public Layer setPriority(int priority) {
+    public @NonNull Layer setPriority(int priority) {
         this.priority = priority;
         return this;
     }
@@ -166,8 +159,7 @@ public abstract class Layer extends Keyed {
      *
      * @return layer z-index
      */
-    @Nullable
-    public Integer getZIndex() {
+    public @Nullable Integer getZIndex() {
         return zIndex == null ? this.getPriority() : zIndex;
     }
 
@@ -181,8 +173,7 @@ public abstract class Layer extends Keyed {
      * @param zIndex new z-index
      * @return this layer
      */
-    @NonNull
-    public Layer setZIndex(@Nullable Integer zIndex) {
+    public @NonNull Layer setZIndex(@Nullable Integer zIndex) {
         this.zIndex = zIndex;
         return this;
     }
@@ -192,8 +183,7 @@ public abstract class Layer extends Keyed {
      *
      * @return map pane
      */
-    @Nullable
-    public String getPane() {
+    public @Nullable String getPane() {
         return this.pane;
     }
 
@@ -205,8 +195,7 @@ public abstract class Layer extends Keyed {
      * @param pane new map pane
      * @return this layer
      */
-    @NonNull
-    public Layer setPane(@Nullable String pane) {
+    public @NonNull Layer setPane(@Nullable String pane) {
         this.pane = pane;
         return this;
     }
@@ -216,8 +205,7 @@ public abstract class Layer extends Keyed {
      *
      * @return custom CSS
      */
-    @Nullable
-    public String getCss() {
+    public @Nullable String getCss() {
         return this.css;
     }
 
@@ -227,8 +215,7 @@ public abstract class Layer extends Keyed {
      * @param css new custom CSS
      * @return this layer
      */
-    @NonNull
-    public Layer setCss(@Nullable String css) {
+    public @NonNull Layer setCss(@Nullable String css) {
         this.css = css;
         return this;
     }
@@ -238,8 +225,7 @@ public abstract class Layer extends Keyed {
      *
      * @return markers to display
      */
-    @NonNull
-    public abstract Collection<Marker<?>> getMarkers();
+    public abstract @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers();
 
     @Override
     public boolean equals(@Nullable Object o) {
@@ -270,8 +256,7 @@ public abstract class Layer extends Keyed {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Layer{"
                 + "key=" + getKey()
                 + ",label=" + getLabel()

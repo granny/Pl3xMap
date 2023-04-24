@@ -1,15 +1,15 @@
 plugins {
     id 'java'
-    id 'io.papermc.paperweight.userdev' version '1.5.4'
+    id 'io.papermc.paperweight.userdev' version "$paperweightVersion"
 }
 
-group = 'net.pl3x.map.bukkit'
+group = "${rootProject.group}.bukkit"
 version = rootProject.version
 
 dependencies {
     compileOnly project(":core")
 
-    paperweightDevelopmentBundle('io.papermc.paper:dev-bundle:1.19.4-R0.1-SNAPSHOT')
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:$bukkitVersion")
 }
 
 assemble {
@@ -25,6 +25,13 @@ reobfJar {
 
 processResources {
     filesMatching('plugin.yml') {
-        expand 'version': project.version
+        expand(
+                'name': rootProject.name,
+                'group': project.group,
+                'version': project.version,
+                'authors': authors,
+                'description': project.properties["description"],
+                'website': website
+        )
     }
 }

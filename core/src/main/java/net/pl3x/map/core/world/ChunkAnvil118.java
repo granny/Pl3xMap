@@ -48,8 +48,7 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
-    @NonNull
-    public BlockState getBlockState(int x, int y, int z) {
+    public @NonNull BlockState getBlockState(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
         return section == null ? Blocks.AIR.getDefaultState() : section.getBlockState(x, y, z);
@@ -66,8 +65,7 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
-    @NonNull
-    public Biome getBiome(int x, int y, int z) {
+    public @NonNull Biome getBiome(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
         return section == null ? Biome.DEFAULT : section.getBiome(x, y, z);
@@ -82,8 +80,7 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
-    @NonNull
-    public Chunk populate() {
+    public @NonNull Chunk populate() {
         if (this.populated) {
             return this;
         }
@@ -150,8 +147,7 @@ public class ChunkAnvil118 extends Chunk {
         return this;
     }
 
-    @Nullable
-    private Section getSection(int y) {
+    private @Nullable Section getSection(int y) {
         y -= this.sectionMin;
         return y < 0 || y >= this.sections.length ? null : this.sections[y];
     }
@@ -219,8 +215,7 @@ public class ChunkAnvil118 extends Chunk {
             return this.sectionY;
         }
 
-        @NonNull
-        public BlockState getBlockState(int x, int y, int z) {
+        public @NonNull BlockState getBlockState(int x, int y, int z) {
             if (this.blockPalette.length == 1) {
                 return this.blockPalette[0];
             }
@@ -245,8 +240,7 @@ public class ChunkAnvil118 extends Chunk {
             return getByteHalf(this.blockLight[blockHalfByteIndex], largeHalf);
         }
 
-        @NonNull
-        public Biome getBiome(int x, int y, int z) {
+        public @NonNull Biome getBiome(int x, int y, int z) {
             if (this.biomePalette.length == 0) {
                 return Biome.DEFAULT;
             }

@@ -25,8 +25,7 @@ public abstract class Keyed {
      *
      * @return the key
      */
-    @NonNull
-    public String getKey() {
+    public @NonNull String getKey() {
         return this.key;
     }
 
@@ -51,8 +50,7 @@ public abstract class Keyed {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return this.key;
     }
 }

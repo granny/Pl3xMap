@@ -27,8 +27,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * same as the first point you added for a polygon.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Polyline extends Marker<Polyline> {
-    private final List<Point> points = new ArrayList<>();
+public class Polyline extends Marker<@NonNull Polyline> {
+    private final List<@NonNull Point> points = new ArrayList<>();
 
     private Polyline(@NonNull String key) {
         super("line", key);
@@ -71,7 +71,7 @@ public class Polyline extends Marker<Polyline> {
      * @param key    identifying key
      * @param points points to add
      */
-    public Polyline(@NonNull String key, @NonNull Collection<Point> points) {
+    public Polyline(@NonNull String key, @NonNull Collection<@NonNull Point> points) {
         this(key);
         addPoint(points);
     }
@@ -86,8 +86,7 @@ public class Polyline extends Marker<Polyline> {
      * @param point point to add
      * @return a new line
      */
-    @NonNull
-    public static Polyline of(@NonNull String key, @NonNull Point point) {
+    public static @NonNull Polyline of(@NonNull String key, @NonNull Point point) {
         return new Polyline(key, point);
     }
 
@@ -101,8 +100,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to add
      * @return a new line
      */
-    @NonNull
-    public static Polyline of(@NonNull String key, @NonNull Point @NonNull ... points) {
+    public static @NonNull Polyline of(@NonNull String key, @NonNull Point @NonNull ... points) {
         return new Polyline(key, points);
     }
 
@@ -116,8 +114,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to add
      * @return a new line
      */
-    @NonNull
-    public static Polyline of(@NonNull String key, @NonNull Collection<Point> points) {
+    public static @NonNull Polyline of(@NonNull String key, @NonNull Collection<@NonNull Point> points) {
         return new Polyline(key, points);
     }
 
@@ -126,8 +123,7 @@ public class Polyline extends Marker<Polyline> {
      *
      * @return list of points
      */
-    @NonNull
-    public List<Point> getPoints() {
+    public @NonNull List<@NonNull Point> getPoints() {
         return this.points;
     }
 
@@ -136,8 +132,7 @@ public class Polyline extends Marker<Polyline> {
      *
      * @return this polyline
      */
-    @NonNull
-    public Polyline clearPoints() {
+    public @NonNull Polyline clearPoints() {
         this.points.clear();
         return this;
     }
@@ -150,8 +145,7 @@ public class Polyline extends Marker<Polyline> {
      *
      * @return this line
      */
-    @NonNull
-    public Polyline loop() {
+    public @NonNull Polyline loop() {
         Preconditions.checkState(this.points.size() > 0, "No points to loop back on");
         Point first = this.points.get(0);
         Point last = this.points.get(this.points.size() - 1);
@@ -169,8 +163,7 @@ public class Polyline extends Marker<Polyline> {
      * @param point point to add
      * @return this line
      */
-    @NonNull
-    public Polyline addPoint(@NonNull Point point) {
+    public @NonNull Polyline addPoint(@NonNull Point point) {
         Preconditions.checkNotNull(point, "Polyline point is null");
         this.points.add(point);
         return this;
@@ -185,8 +178,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to add
      * @return this line
      */
-    @NonNull
-    public Polyline addPoint(@NonNull Point @NonNull ... points) {
+    public @NonNull Polyline addPoint(@NonNull Point @NonNull ... points) {
         Preconditions.checkNotNull(points, "Polyline points is null");
         for (Point point : points) {
             addPoint(point);
@@ -203,8 +195,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to add
      * @return this line
      */
-    @NonNull
-    public Polyline addPoint(@NonNull Collection<Point> points) {
+    public @NonNull Polyline addPoint(@NonNull Collection<@NonNull Point> points) {
         Preconditions.checkNotNull(points, "Polyline points is null");
         this.points.addAll(points);
         return this;
@@ -216,8 +207,7 @@ public class Polyline extends Marker<Polyline> {
      * @param point point to remove
      * @return this polyline
      */
-    @NonNull
-    public Polyline removePoint(@NonNull Point point) {
+    public @NonNull Polyline removePoint(@NonNull Point point) {
         Preconditions.checkNotNull(point, "Polyline point is null");
         this.points.remove(point);
         return this;
@@ -229,8 +219,7 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to remove
      * @return this polyline
      */
-    @NonNull
-    public Polyline removePoint(@NonNull Point @NonNull ... points) {
+    public @NonNull Polyline removePoint(@NonNull Point @NonNull ... points) {
         Preconditions.checkNotNull(points, "Polyline points is null");
         for (Point point : points) {
             removePoint(point);
@@ -244,16 +233,14 @@ public class Polyline extends Marker<Polyline> {
      * @param points points to remove
      * @return this polyline
      */
-    @NonNull
-    public Polyline removePoint(@NonNull Collection<Point> points) {
+    public @NonNull Polyline removePoint(@NonNull Collection<@NonNull Point> points) {
         Preconditions.checkNotNull(points, "Polyline points is null");
         this.points.removeAll(points);
         return this;
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("points", getPoints());
@@ -285,8 +272,7 @@ public class Polyline extends Marker<Polyline> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Line{"
                 + "key=" + getKey()
                 + ",points=" + getPoints()

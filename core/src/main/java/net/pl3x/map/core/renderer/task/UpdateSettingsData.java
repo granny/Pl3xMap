@@ -41,8 +41,7 @@ public class UpdateSettingsData extends Task {
         }
     }
 
-    @NonNull
-    private List<Object> parsePlayers() {
+    private @NonNull List<@NonNull Object> parsePlayers() {
         if (!PlayerTracker.ENABLED) {
             return Collections.emptyList();
         }
@@ -74,8 +73,7 @@ public class UpdateSettingsData extends Task {
         return players;
     }
 
-    @NonNull
-    private List<Map<String, Object>> parseWorlds() {
+    private @NonNull List<@NonNull Map<@NonNull String, @NonNull Object>> parseWorlds() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
         Pl3xMap.api().getWorldRegistry().entrySet().forEach(entry -> {
             World world = entry.getValue();

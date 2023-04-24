@@ -29,7 +29,7 @@ public class UpdateMarkerData extends Task {
             .create();
 
     private final World world;
-    private final Map<String, Long> lastUpdated = new HashMap<>();
+    private final Map<@NonNull String, @NonNull Long> lastUpdated = new HashMap<>();
 
     public UpdateMarkerData(@NonNull World world) {
         super(20, true);
@@ -80,10 +80,9 @@ public class UpdateMarkerData extends Task {
         FileUtil.write(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
     }
 
-    private static class Adapter implements JsonSerializer<Marker<?>> {
+    private static class Adapter implements JsonSerializer<@NonNull Marker<@NonNull ?>> {
         @Override
-        @NonNull
-        public JsonElement serialize(@NonNull Marker<?> marker, @NonNull Type type, @NonNull JsonSerializationContext context) {
+        public @NonNull JsonElement serialize(@NonNull Marker<@NonNull ?> marker, @NonNull Type type, @NonNull JsonSerializationContext context) {
             JsonObjectWrapper wrapper = new JsonObjectWrapper();
             wrapper.addProperty("type", marker.getType());
             wrapper.addProperty("data", marker);

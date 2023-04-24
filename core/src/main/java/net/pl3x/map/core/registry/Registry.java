@@ -10,19 +10,17 @@ import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class Registry<T> implements Iterable<T> {
-    protected final Map<String, T> entries = new ConcurrentHashMap<>();
+public class Registry<@NonNull T> implements Iterable<@NonNull T> {
+    protected final Map<@NonNull String, @NonNull T> entries = new ConcurrentHashMap<>();
 
-    @NonNull
-    public T register(@NonNull String id, @NonNull T value) {
+    public @NonNull T register(@NonNull String id, @NonNull T value) {
         Preconditions.checkNotNull(id, "Id cannot be null");
         Preconditions.checkNotNull(value, "Value cannot be null");
         this.entries.put(id, value);
         return value;
     }
 
-    @Nullable
-    public T unregister(@NonNull String id) {
+    public @Nullable T unregister(@NonNull String id) {
         return this.entries.remove(id);
     }
 
@@ -37,23 +35,19 @@ public class Registry<T> implements Iterable<T> {
         return this.entries.containsKey(key);
     }
 
-    @Nullable
-    public T get(@NonNull String id) {
+    public @Nullable T get(@NonNull String id) {
         return this.entries.get(id);
     }
 
-    @NonNull
-    public T getOrDefault(@NonNull String id, @NonNull T def) {
+    public @NonNull T getOrDefault(@NonNull String id, @NonNull T def) {
         return this.entries.getOrDefault(id, def);
     }
 
-    @NonNull
-    public Set<Map.Entry<String, T>> entrySet() {
+    public @NonNull Set<Map.@NonNull Entry<@NonNull String, @NonNull T>> entrySet() {
         return this.entries.entrySet();
     }
 
-    @NonNull
-    public Collection<T> values() {
+    public @NonNull Collection<@NonNull T> values() {
         return this.entries.values();
     }
 
@@ -62,8 +56,7 @@ public class Registry<T> implements Iterable<T> {
     }
 
     @Override
-    @NonNull
-    public Iterator<T> iterator() {
+    public @NonNull Iterator<@NonNull T> iterator() {
         return this.entries.values().iterator();
     }
 }

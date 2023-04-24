@@ -18,8 +18,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * to cut out "holes" in the outer polygon shape.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Polygon extends Marker<Polygon> {
-    private final List<Polyline> polylines = new ArrayList<>();
+public class Polygon extends Marker<@NonNull Polygon> {
+    private final List<@NonNull Polyline> polylines = new ArrayList<>();
 
     private Polygon(@NonNull String key) {
         super("poly", key);
@@ -53,7 +53,7 @@ public class Polygon extends Marker<Polygon> {
      * @param key       identifying key
      * @param polylines polylines to add
      */
-    public Polygon(@NonNull String key, @NonNull Collection<Polyline> polylines) {
+    public Polygon(@NonNull String key, @NonNull Collection<@NonNull Polyline> polylines) {
         this(key);
         addPolyline(polylines);
     }
@@ -65,8 +65,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polyline polyline to add
      * @return a new polygon
      */
-    @NonNull
-    public static Polygon of(@NonNull String key, @NonNull Polyline polyline) {
+    public static @NonNull Polygon of(@NonNull String key, @NonNull Polyline polyline) {
         return new Polygon(key, polyline);
     }
 
@@ -77,8 +76,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to add
      * @return a new polygon
      */
-    @NonNull
-    public static Polygon of(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
+    public static @NonNull Polygon of(@NonNull String key, @NonNull Polyline @NonNull ... polylines) {
         return new Polygon(key, polylines);
     }
 
@@ -89,8 +87,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to add
      * @return a new polygon
      */
-    @NonNull
-    public static Polygon of(@NonNull String key, @NonNull Collection<Polyline> polylines) {
+    public static @NonNull Polygon of(@NonNull String key, @NonNull Collection<@NonNull Polyline> polylines) {
         return new Polygon(key, polylines);
     }
 
@@ -99,8 +96,7 @@ public class Polygon extends Marker<Polygon> {
      *
      * @return list of polylines
      */
-    @NonNull
-    public List<Polyline> getPolylines() {
+    public @NonNull List<@NonNull Polyline> getPolylines() {
         return this.polylines;
     }
 
@@ -109,8 +105,7 @@ public class Polygon extends Marker<Polygon> {
      *
      * @return this polygon
      */
-    @NonNull
-    public Polygon clearPolylines() {
+    public @NonNull Polygon clearPolylines() {
         this.polylines.clear();
         return this;
     }
@@ -121,8 +116,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polyline polyline to remove
      * @return this polygon
      */
-    @NonNull
-    public Polygon addPolyline(@NonNull Polyline polyline) {
+    public @NonNull Polygon addPolyline(@NonNull Polyline polyline) {
         Preconditions.checkNotNull(polyline, "Polygon polyline is null");
         this.polylines.add(polyline);
         return this;
@@ -134,8 +128,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to remove
      * @return this polygon
      */
-    @NonNull
-    public Polygon addPolyline(@NonNull Polyline @NonNull ... polylines) {
+    public @NonNull Polygon addPolyline(@NonNull Polyline @NonNull ... polylines) {
         Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         for (Polyline polyline : polylines) {
             addPolyline(polyline);
@@ -149,8 +142,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to remove
      * @return this polygon
      */
-    @NonNull
-    public Polygon addPolyline(@NonNull Collection<Polyline> polylines) {
+    public @NonNull Polygon addPolyline(@NonNull Collection<@NonNull Polyline> polylines) {
         Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         this.polylines.addAll(polylines);
         return this;
@@ -162,8 +154,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polyline polyline to remove
      * @return this polygon
      */
-    @NonNull
-    public Polygon removeLine(@NonNull Polyline polyline) {
+    public @NonNull Polygon removeLine(@NonNull Polyline polyline) {
         Preconditions.checkNotNull(polyline, "Polygon polyline is null");
         this.polylines.remove(polyline);
         return this;
@@ -175,8 +166,7 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to remove
      * @return this polygon
      */
-    @NonNull
-    public Polygon removeLine(@NonNull Polyline @NonNull ... polylines) {
+    public @NonNull Polygon removeLine(@NonNull Polyline @NonNull ... polylines) {
         Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         for (Polyline polyline : polylines) {
             removeLine(polyline);
@@ -190,16 +180,14 @@ public class Polygon extends Marker<Polygon> {
      * @param polylines polylines to remove
      * @return this polygon
      */
-    @NonNull
-    public Polygon removeLine(@NonNull Collection<Polyline> polylines) {
+    public @NonNull Polygon removeLine(@NonNull Collection<@NonNull Polyline> polylines) {
         Preconditions.checkNotNull(polylines, "Polygon polylines is null");
         this.polylines.removeAll(polylines);
         return this;
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polylines", getPolylines());
@@ -231,8 +219,7 @@ public class Polygon extends Marker<Polygon> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Polygon{"
                 + "key=" + getKey()
                 + ",polylines=" + getPolylines()

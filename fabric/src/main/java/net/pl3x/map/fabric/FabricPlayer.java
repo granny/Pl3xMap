@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
@@ -23,32 +24,29 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class FabricPlayer extends Player {
     //private static final NamespacedKey HIDDEN_KEY = new NamespacedKey(Pl3xMapBukkit.getInstance(), "hidden");
 
-    private final net.minecraft.world.entity.player.Player player;
-
-    public FabricPlayer(net.minecraft.world.entity.player.@NonNull Player player) {
-        this.player = player;
-    }
-
-    public net.minecraft.world.entity.player.@NonNull Player getPlayer() {
-        return this.player;
+    public FabricPlayer(@NonNull ServerPlayer player) {
+        super(player);
     }
 
     @Override
-    @NonNull
-    public String getName() {
-        return this.player.getScoreboardName();
+    @SuppressWarnings("unchecked")
+    public @NonNull ServerPlayer getPlayer() {
+        return super.getPlayer();
     }
 
     @Override
-    @NonNull
-    public UUID getUUID() {
-        return this.player.getUUID();
+    public @NonNull String getName() {
+        return getPlayer().getScoreboardName();
     }
 
     @Override
-    @NonNull
-    public World getWorld() {
-        World world = Pl3xMap.api().getWorldRegistry().get(this.player.getLevel().dimension().location().toString());
+    public @NonNull UUID getUUID() {
+        return getPlayer().getUUID();
+    }
+
+    @Override
+    public @NonNull World getWorld() {
+        World world = Pl3xMap.api().getWorldRegistry().get(getPlayer().getLevel().dimension().location().toString());
         if (world == null) {
             throw new IllegalStateException("Player is in an unloaded world!");
         }
@@ -56,33 +54,31 @@ public class FabricPlayer extends Player {
     }
 
     @Override
-    @NonNull
-    public Point getPosition() {
-        Vec3 loc = this.player.position();
+    public @NonNull Point getPosition() {
+        Vec3 loc = getPlayer().position();
         return Point.of(loc.x(), loc.z());
     }
 
     @Override
     public float getYaw() {
-        return this.player.getYRot();
+        return getPlayer().getYRot();
     }
 
     @Override
     public int getHealth() {
-        return Math.round(this.player.getHealth());
+        return Math.round(getPlayer().getHealth());
     }
 
     @Override
     public int getArmorPoints() {
-        AttributeInstance attr = this.player.getAttribute(Attributes.ARMOR);
+        AttributeInstance attr = getPlayer().getAttribute(Attributes.ARMOR);
         return attr == null ? 0 : (int) Math.round(attr.getValue());
     }
 
     @Override
-    @Nullable
-    public URL getSkin() {
+    public @Nullable URL getSkin() {
         try {
-            Property property = this.player.getGameProfile().getProperties().get("textures").stream().findFirst().orElse(null);
+            Property property = getPlayer().getGameProfile().getProperties().get("textures").stream().findFirst().orElse(null);
             if (property == null) {
                 return null;
             }
@@ -111,7 +107,7 @@ public class FabricPlayer extends Player {
 
     @Override
     public boolean isInvisible() {
-        return this.player.isInvisible();
+        return getPlayer().isInvisible();
     }
 
     @Override
@@ -121,7 +117,7 @@ public class FabricPlayer extends Player {
 
     @Override
     public boolean isSpectator() {
-        return this.player.isSpectator();
+        return getPlayer().isSpectator();
     }
 
     @Override
@@ -141,12 +137,11 @@ public class FabricPlayer extends Player {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.player.getUUID());
+        return Objects.hash(getPlayer().getUUID());
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "FabricPlayer{"
                 + "player=" + getPlayer().getUUID()
                 + "}";

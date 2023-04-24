@@ -13,7 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents an ellipse marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Ellipse extends Marker<Ellipse> {
+public class Ellipse extends Marker<@NonNull Ellipse> {
     private Point center;
     private Vector radius;
     private Double tilt;
@@ -137,8 +137,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ) {
+    public static @NonNull Ellipse of(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ) {
         return new Ellipse(key, centerX, centerZ, radiusX, radiusZ);
     }
 
@@ -151,8 +150,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ) {
+    public static @NonNull Ellipse of(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ) {
         return new Ellipse(key, center, radiusX, radiusZ);
     }
 
@@ -165,8 +163,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param radius  radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius) {
+    public static @NonNull Ellipse of(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius) {
         return new Ellipse(key, centerX, centerZ, radius);
     }
 
@@ -178,8 +175,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param radius radius
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, @NonNull Point center, @NonNull Vector radius) {
+    public static @NonNull Ellipse of(@NonNull String key, @NonNull Point center, @NonNull Vector radius) {
         return new Ellipse(key, center, radius);
     }
 
@@ -194,8 +190,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param tilt    tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+    public static @NonNull Ellipse of(@NonNull String key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
         return new Ellipse(key, centerX, centerZ, radiusX, radiusZ, tilt);
     }
 
@@ -209,8 +204,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param tilt    tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ, double tilt) {
+    public static @NonNull Ellipse of(@NonNull String key, @NonNull Point center, double radiusX, double radiusZ, double tilt) {
         return new Ellipse(key, center, radiusX, radiusZ, tilt);
     }
 
@@ -224,8 +218,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param tilt    tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius, double tilt) {
+    public static @NonNull Ellipse of(@NonNull String key, double centerX, double centerZ, @NonNull Vector radius, double tilt) {
         return new Ellipse(key, centerX, centerZ, radius, tilt);
     }
 
@@ -238,8 +231,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param tilt   tilt
      * @return a new ellipse
      */
-    @NonNull
-    public static Ellipse of(@NonNull String key, @NonNull Point center, @NonNull Vector radius, double tilt) {
+    public static @NonNull Ellipse of(@NonNull String key, @NonNull Point center, @NonNull Vector radius, double tilt) {
         return new Ellipse(key, center, radius, tilt);
     }
 
@@ -248,8 +240,7 @@ public class Ellipse extends Marker<Ellipse> {
      *
      * @return center point
      */
-    @NonNull
-    public Point getCenter() {
+    public @NonNull Point getCenter() {
         return this.center;
     }
 
@@ -259,8 +250,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param center new center
      * @return this ellipse
      */
-    @NonNull
-    public Ellipse setCenter(@NonNull Point center) {
+    public @NonNull Ellipse setCenter(@NonNull Point center) {
         this.center = Preconditions.checkNotNull(center, "Ellipse center is null");
         return this;
     }
@@ -270,8 +260,7 @@ public class Ellipse extends Marker<Ellipse> {
      *
      * @return radius
      */
-    @NonNull
-    public Vector getRadius() {
+    public @NonNull Vector getRadius() {
         return this.radius;
     }
 
@@ -281,8 +270,7 @@ public class Ellipse extends Marker<Ellipse> {
      * @param radius new radius
      * @return this ellipse
      */
-    @NonNull
-    public Ellipse setRadius(@NonNull Vector radius) {
+    public @NonNull Ellipse setRadius(@NonNull Vector radius) {
         this.radius = Preconditions.checkNotNull(radius, "Ellipse radius is null");
         return this;
     }
@@ -294,8 +282,7 @@ public class Ellipse extends Marker<Ellipse> {
      *
      * @return tilt
      */
-    @Nullable
-    public Double getTilt() {
+    public @Nullable Double getTilt() {
         return this.tilt;
     }
 
@@ -307,15 +294,13 @@ public class Ellipse extends Marker<Ellipse> {
      * @param tilt new tilt
      * @return this ellipse
      */
-    @NonNull
-    public Ellipse setTilt(@Nullable Double tilt) {
+    public @NonNull Ellipse setTilt(@Nullable Double tilt) {
         this.tilt = tilt;
         return this;
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("center", getCenter());
@@ -351,8 +336,7 @@ public class Ellipse extends Marker<Ellipse> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Ellipse{"
                 + "key=" + getKey()
                 + ",center=" + getCenter()

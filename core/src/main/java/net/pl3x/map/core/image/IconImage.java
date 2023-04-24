@@ -31,8 +31,7 @@ public class IconImage extends Keyed {
      *
      * @return buffered image
      */
-    @NonNull
-    public BufferedImage getImage() {
+    public @NonNull BufferedImage getImage() {
         return this.image;
     }
 
@@ -41,8 +40,7 @@ public class IconImage extends Keyed {
      *
      * @return image type
      */
-    @NonNull
-    public String getType() {
+    public @NonNull String getType() {
         return this.type;
     }
 
@@ -69,8 +67,7 @@ public class IconImage extends Keyed {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "IconImage{"
                 + "key=" + getKey()
                 + ",image=" + getImage()

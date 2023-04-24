@@ -3,7 +3,7 @@ package net.pl3x.map.core.world;
 import java.util.Iterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class BiomeManager implements Iterable<Biome> {
+public class BiomeManager implements Iterable<@NonNull Biome> {
     private final World world;
     private final long hashedSeed;
 
@@ -13,8 +13,7 @@ public class BiomeManager implements Iterable<Biome> {
         this.hashedSeed = world.hashSeed(world.getSeed());
     }
 
-    @NonNull
-    public Biome getBiome(@NonNull Region region, int x, int y, int z) {
+    public @NonNull Biome getBiome(@NonNull Region region, int x, int y, int z) {
         int i = x - 2;
         int j = y - 2;
         int k = z - 2;
@@ -77,8 +76,7 @@ public class BiomeManager implements Iterable<Biome> {
     }
 
     @Override
-    @NonNull
-    public Iterator<Biome> iterator() {
+    public @NonNull Iterator<@NonNull Biome> iterator() {
         return this.world.getBiomeRegistry().iterator();
     }
 }

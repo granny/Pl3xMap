@@ -41,13 +41,11 @@ public abstract class Chunk {
         this.inhabitedTime = tag.getLong("InhabitedTime");
     }
 
-    @NonNull
-    public World getWorld() {
+    public @NonNull World getWorld() {
         return this.world;
     }
 
-    @NonNull
-    public Region getRegion() {
+    public @NonNull Region getRegion() {
         return this.region;
     }
 
@@ -69,29 +67,23 @@ public abstract class Chunk {
 
     public abstract int getWorldSurfaceY(int x, int z);
 
-    @NonNull
-    public abstract BlockState getBlockState(int x, int y, int z);
+    public abstract @NonNull BlockState getBlockState(int x, int y, int z);
 
     public abstract int getLight(int x, int y, int z);
 
-    @NonNull
-    public abstract Biome getBiome(int x, int y, int z);
+    public abstract @NonNull Biome getBiome(int x, int y, int z);
 
-    @NonNull
-    public abstract Chunk populate();
+    public abstract @NonNull Chunk populate();
 
-    @NonNull
-    public BlockData[] getData() {
+    public @NonNull BlockData[] getData() {
         return this.data;
     }
 
-    @Nullable
-    public BlockData getData(int x, int z) {
+    public @Nullable BlockData getData(int x, int z) {
         return this.data[((z & 0xF) << 4) + (x & 0xF)];
     }
 
-    @NonNull
-    public static Chunk create(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
+    public static @NonNull Chunk create(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
         if (!"full".equals(tag.getString("Status"))) {
             return new EmptyChunk(world, region);
         }
@@ -156,8 +148,7 @@ public abstract class Chunk {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Chunk{"
                 + "world=" + getWorld()
                 + ",xPos=" + getX()
@@ -181,18 +172,15 @@ public abstract class Chunk {
             return this.fluidY;
         }
 
-        @NonNull
-        public BlockState getBlockState() {
+        public @NonNull BlockState getBlockState() {
             return this.blockstate;
         }
 
-        @Nullable
-        public BlockState getFluidState() {
+        public @Nullable BlockState getFluidState() {
             return this.fluidstate;
         }
 
-        @NonNull
-        public Biome getBiome(@NonNull Region region, int x, int z) {
+        public @NonNull Biome getBiome(@NonNull Region region, int x, int z) {
             if (this.biome == null) {
                 // calculate real biome
                 this.biome = region.getWorld().getBiomeManager().getBiome(region, x, this.blockY, z);

@@ -29,7 +29,7 @@ def combineJars = tasks.register('combineJars', Jar) {
     }).filter { it.name != 'MANIFEST.MF' }.collect { if (it.isDirectory()) it else zipTree(it) })
     manifest {
         // this must be here because it overrides the default jar task
-        attributes['Main-Class'] = 'net.pl3x.map.core.Pl3xMap'
+        attributes['Main-Class'] = "${rootProject.group}.core.Pl3xMap"
     }
 }
 
@@ -39,7 +39,7 @@ def npmInstall = tasks.register('npmInstall', Exec) {
     commandLine 'npm.cmd', 'install'
 }
 
-def npmBuild = tasks.register("npmBuild", Exec) {
+def npmBuild = tasks.register('npmBuild', Exec) {
     dependsOn npmInstall
     println 'Building webmap...'
     workingDir new File(projectDir, 'webmap')
@@ -77,7 +77,7 @@ clean {
 }
 
 allprojects {
-    if (name == "webmap") {
+    if (name == 'webmap') {
         return
     }
 
@@ -91,20 +91,35 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven { url = 'https://jitpack.io' }
     }
 
     dependencies {
-        implementation 'com.github.ben-manes.caffeine:caffeine:3.1.5'
-        implementation 'com.github.Querz:NBT:6.1'
-        implementation('com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.3') {
+        implementation "cloud.commandframework:cloud-core:$cloudVersion"
+        implementation "cloud.commandframework:cloud-brigadier:$cloudVersion"
+        implementation "cloud.commandframework:cloud-paper:$cloudVersion"
+        implementation("cloud.commandframework:cloud-minecraft-extras:$cloudVersion") {
+            exclude group: 'net.kyori', module: '*'
+        }
+
+        implementation "net.kyori:adventure-api:$adventureVersion"
+        implementation "net.kyori:adventure-text-minimessage:$adventureVersion"
+        implementation "net.kyori:adventure-text-serializer-plain:$adventureVersion"
+        implementation "net.kyori:adventure-platform-bukkit:$adventureBukkitVersion"
+
+        implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+        implementation "com.github.Querz:NBT:$querzNbtVersion"
+        implementation("com.github.Carleslc.Simple-YAML:Simple-Yaml:$simpleYamlVersion") {
             exclude group: 'org.yaml', module: 'snakeyaml'
         }
-        implementation 'io.undertow:undertow-core:2.3.5.Final'
-        implementation 'org.jboss.xnio:xnio-nio:3.8.8.Final'
+
+        implementation "io.undertow:undertow-core:$undertowVersion"
+        implementation "org.jboss.xnio:xnio-nio:$xnioVersion"
 
         // provided by mojang
-        compileOnly 'com.google.code.gson:gson:2.10.1'
+        compileOnly "com.google.code.gson:gson:$gsonVersion"
+        compileOnly "org.slf4j:slf4j-api:$slf4jVersion"
     }
 
     jar {

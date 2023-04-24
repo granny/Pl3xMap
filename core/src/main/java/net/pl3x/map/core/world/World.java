@@ -48,13 +48,13 @@ public abstract class World {
 
     private final BiomeManager biomeManager;
     private final BiomeRegistry biomeRegistry;
-    private final Registry<Layer> layerRegistry;
+    private final Registry<@NonNull Layer> layerRegistry;
 
-    private final LoadingCache<Long, Region> regionCache;
+    private final LoadingCache<@NonNull Long, @NonNull Region> regionCache;
     private final RegionModifiedState regionModifiedState;
     private final RegionFileWatcher regionFileWatcher;
     private final UpdateMarkerData markerTask;
-    private final Map<String, Renderer.Builder> renderers = new LinkedHashMap<>();
+    private final Map<@NonNull String, Renderer.@NonNull Builder> renderers = new LinkedHashMap<>();
 
     private boolean paused = false;
 
@@ -138,43 +138,35 @@ public abstract class World {
         this.regionCache.invalidateAll();
     }
 
-    @NonNull
-    public Path getMarkersDirectory() {
+    public @NonNull Path getMarkersDirectory() {
         return this.markersDirectory;
     }
 
-    @NonNull
-    public Path getRegionDirectory() {
+    public @NonNull Path getRegionDirectory() {
         return this.regionDirectory;
     }
 
-    @NonNull
-    public Path getTilesDirectory() {
+    public @NonNull Path getTilesDirectory() {
         return this.tilesDirectory;
     }
 
-    @NonNull
-    public WorldConfig getConfig() {
+    public @NonNull WorldConfig getConfig() {
         return this.worldConfig;
     }
 
-    @NonNull
-    public RegionModifiedState getRegionModifiedState() {
+    public @NonNull RegionModifiedState getRegionModifiedState() {
         return this.regionModifiedState;
     }
 
-    @NonNull
-    public RegionFileWatcher getRegionFileWatcher() {
+    public @NonNull RegionFileWatcher getRegionFileWatcher() {
         return this.regionFileWatcher;
     }
 
-    @NonNull
-    public UpdateMarkerData getMarkerTask() {
+    public @NonNull UpdateMarkerData getMarkerTask() {
         return this.markerTask;
     }
 
-    @NonNull
-    public Map<String, Renderer.Builder> getRenderers() {
+    public @NonNull Map<@NonNull String, Renderer.@NonNull Builder> getRenderers() {
         return Collections.unmodifiableMap(this.renderers);
     }
 
@@ -187,8 +179,7 @@ public abstract class World {
         return getConfig().ENABLED;
     }
 
-    @NonNull
-    public String getName() {
+    public @NonNull String getName() {
         return this.name;
     }
 
@@ -196,8 +187,7 @@ public abstract class World {
         return this.seed;
     }
 
-    @NonNull
-    public Point getSpawn() {
+    public @NonNull Point getSpawn() {
         return this.spawn;
     }
 
@@ -210,8 +200,7 @@ public abstract class World {
      *
      * @return world type
      */
-    @NonNull
-    public Type getType() {
+    public @NonNull Type getType() {
         return this.type;
     }
 
@@ -223,23 +212,19 @@ public abstract class World {
         this.paused = paused;
     }
 
-    @NonNull
-    public BiomeManager getBiomeManager() {
+    public @NonNull BiomeManager getBiomeManager() {
         return this.biomeManager;
     }
 
-    @NonNull
-    public BiomeRegistry getBiomeRegistry() {
+    public @NonNull BiomeRegistry getBiomeRegistry() {
         return this.biomeRegistry;
     }
 
-    @NonNull
-    public Registry<Layer> getLayerRegistry() {
+    public @NonNull Registry<Layer> getLayerRegistry() {
         return this.layerRegistry;
     }
 
-    @NonNull
-    public abstract <T> T getLevel();
+    public abstract <@NonNull T> @NonNull T getLevel();
 
     public abstract long hashSeed(long seed);
 
@@ -247,27 +232,22 @@ public abstract class World {
 
     public abstract int getMinBuildHeight();
 
-    @NonNull
-    public abstract Border getWorldBorder();
+    public abstract @NonNull Border getWorldBorder();
 
-    @NonNull
-    public abstract Collection<Player> getPlayers();
+    public abstract @NonNull Collection<@NonNull Player> getPlayers();
 
-    @NonNull
-    public Chunk getChunk(@Nullable Region region, int chunkX, int chunkZ) {
+    public @NonNull Chunk getChunk(@Nullable Region region, int chunkX, int chunkZ) {
         return getRegion(region, chunkX >> 5, chunkZ >> 5).getChunk(chunkX, chunkZ);
     }
 
-    @NonNull
-    public Region getRegion(@Nullable Region region, int regionX, int regionZ) {
+    public @NonNull Region getRegion(@Nullable Region region, int regionX, int regionZ) {
         if (region != null && region.getX() == regionX && region.getZ() == regionZ) {
             return region;
         }
         return getRegion(Mathf.asLong(regionX, regionZ));
     }
 
-    @NonNull
-    private Region getRegion(long pos) {
+    private @NonNull Region getRegion(long pos) {
         return this.regionCache.get(pos);
     }
 
@@ -279,8 +259,7 @@ public abstract class World {
         this.regionCache.invalidate(pos);
     }
 
-    @NonNull
-    public Collection<Path> getRegionFiles() {
+    public @NonNull Collection<@NonNull Path> getRegionFiles() {
         try (Stream<Path> stream = Files.list(getRegionDirectory())) {
             return stream.filter(FileUtil.MCA_MATCHER::matches).toList();
         } catch (IOException e) {
@@ -288,20 +267,17 @@ public abstract class World {
         }
     }
 
-    @NonNull
-    public Collection<Point> listRegions() {
+    public @NonNull Collection<@NonNull Point> listRegions() {
         return FileUtil.regionPathsToPoints(this, getRegionFiles());
     }
 
-    @NonNull
-    private Region loadRegion(long pos) {
+    private @NonNull Region loadRegion(long pos) {
         int x = Mathf.longToX(pos);
         int z = Mathf.longToZ(pos);
         return new Region(this, x, z, getMCAFile(x, z));
     }
 
-    @NonNull
-    private Path getMCAFile(int regionX, int regionZ) {
+    private @NonNull Path getMCAFile(int regionX, int regionZ) {
         return getRegionDirectory().resolve("r." + regionX + "." + regionZ + ".mca");
     }
 
@@ -326,8 +302,7 @@ public abstract class World {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "World{"
                 + "name=" + getName()
                 + ",seed=" + getSeed()
@@ -359,8 +334,7 @@ public abstract class World {
          * @param dimension dimension name
          * @return world type
          */
-        @NonNull
-        public static Type get(@NonNull String dimension) {
+        public static @NonNull Type get(@NonNull String dimension) {
             return switch (dimension) {
                 case "minecraft:overworld" -> OVERWORLD;
                 case "minecraft:the_nether" -> NETHER;
@@ -370,8 +344,7 @@ public abstract class World {
         }
 
         @Override
-        @NonNull
-        public String toString() {
+        public @NonNull String toString() {
             return this.name;
         }
     }

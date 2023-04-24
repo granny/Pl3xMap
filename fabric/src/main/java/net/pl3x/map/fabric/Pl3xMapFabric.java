@@ -4,9 +4,12 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.kyori.adventure.platform.AudienceProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.world.World;
+import net.pl3x.map.fabric.command.FabricCommandManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -32,6 +36,7 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     private final RandomSource randomSource = RandomSource.createThreadSafe();
 
     private MinecraftServer server;
+    private ModContainer modContainer;
 
     public Pl3xMapFabric() {
         super();
@@ -47,24 +52,61 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
         init();
     }
 
-    public void enable(MinecraftServer server) {
+    @Override
+    public void onInitializeServer() {
+        try {
+            new FabricCommandManager();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void enable(@NonNull MinecraftServer server) {
         this.server = server;
+
         super.enable();
     }
 
     @Override
-    public void onInitializeServer() {
+    public void disable() {
+        super.disable();
+    }
+
+    public @NonNull ModContainer getModContainer() {
+        if (this.modContainer == null) {
+            this.modContainer = FabricLoader.getInstance().getModContainer("pl3xmap").orElseThrow();
+        }
+        return this.modContainer;
     }
 
     @Override
-    public void useJar(@NonNull Consumer<Path> consumer) {
-        consumer.accept(FabricLoader.getInstance().getModContainer("pl3xmap").orElseThrow().getRootPaths().get(0));
+    public @NonNull String getVersion() {
+        return getModContainer().getMetadata().getVersion().getFriendlyString();
     }
 
     @Override
-    @NonNull
-    public Path getMainDir() {
+    public int getMaxPlayers() {
+        return this.server.getMaxPlayers();
+    }
+
+    @Override
+    public int getOperatorUserPermissionLevel() {
+        return this.server.getOperatorUserPermissionLevel();
+    }
+
+    @Override
+    public @NonNull AudienceProvider adventure() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public @NonNull Path getMainDir() {
         return FabricLoader.getInstance().getGameDir().resolve("config").resolve("pl3xmap");
+    }
+
+    @Override
+    public void useJar(@NonNull Consumer<@NonNull Path> consumer) {
+        consumer.accept(getModContainer().getRootPaths().get(0));
     }
 
     @Override
@@ -90,7 +132,7 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     }
 
     @Override
-    public void loadBlocks() {
+    protected void loadBlocks() {
         for (Map.Entry<ResourceKey<Block>, Block> entry : this.server.registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
             int color = entry.getValue().defaultMaterialColor().col;
@@ -100,7 +142,7 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     }
 
     @Override
-    public void loadWorlds() {
+    protected void loadWorlds() {
         this.server.getAllLevels().forEach(level -> {
             String name = level.dimension().location().toString();
             WorldConfig worldConfig = new WorldConfig(name);
@@ -111,13 +153,10 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     }
 
     @Override
-    public void loadPlayers() {
-        this.server.getPlayerList().getPlayers().forEach(player ->
-                getPlayerRegistry().register(player.getUUID().toString(), new FabricPlayer(player)));
-    }
-
-    @Override
-    public int getMaxPlayers() {
-        return this.server.getMaxPlayers();
+    protected void loadPlayers() {
+        this.server.getPlayerList().getPlayers().forEach(player -> {
+            UUID uuid = player.getUUID();
+            getPlayerRegistry().getOrDefault(uuid, () -> new FabricPlayer(player));
+        });
     }
 }

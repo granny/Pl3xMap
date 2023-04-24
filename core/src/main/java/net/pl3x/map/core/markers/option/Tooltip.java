@@ -11,7 +11,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Tooltip properties of a marker.
  */
-public class Tooltip extends Option<Tooltip> {
+public class Tooltip extends Option<@NonNull Tooltip> {
     private String content;
     private String pane;
     private Point offset;
@@ -42,8 +42,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return tooltip content
      */
-    @Nullable
-    public String getContent() {
+    public @Nullable String getContent() {
         return this.content;
     }
 
@@ -57,8 +56,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param content tooltip content
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setContent(@Nullable String content) {
+    public @NonNull Tooltip setContent(@Nullable String content) {
         this.content = content;
         return this;
     }
@@ -70,8 +68,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return map pane
      */
-    @Nullable
-    public String getPane() {
+    public @Nullable String getPane() {
         return this.pane;
     }
 
@@ -85,8 +82,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param pane map pane
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setPane(@Nullable String pane) {
+    public @NonNull Tooltip setPane(@Nullable String pane) {
         this.pane = pane;
         return this;
     }
@@ -98,8 +94,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return tooltip offset from marker point
      */
-    @Nullable
-    public Point getOffset() {
+    public @Nullable Point getOffset() {
         return this.offset;
     }
 
@@ -111,8 +106,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param offset tooltip offset
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setOffset(@Nullable Point offset) {
+    public @NonNull Tooltip setOffset(@Nullable Point offset) {
         this.offset = offset;
         return this;
     }
@@ -124,8 +118,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return opening direction
      */
-    @Nullable
-    public Direction getDirection() {
+    public @Nullable Direction getDirection() {
         return this.direction;
     }
 
@@ -137,8 +130,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param direction opening direction
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setDirection(@Nullable Direction direction) {
+    public @NonNull Tooltip setDirection(@Nullable Direction direction) {
         this.direction = direction;
         return this;
     }
@@ -150,8 +142,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return true if opened permanently
      */
-    @Nullable
-    public Boolean isPermanent() {
+    public @Nullable Boolean isPermanent() {
         return this.permanent;
     }
 
@@ -163,8 +154,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param permanent opened permanently
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setPermanent(@Nullable Boolean permanent) {
+    public @NonNull Tooltip setPermanent(@Nullable Boolean permanent) {
         this.permanent = permanent;
         return this;
     }
@@ -178,8 +168,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return sticky state
      */
-    @Nullable
-    public Boolean isSticky() {
+    public @Nullable Boolean isSticky() {
         return this.sticky;
     }
 
@@ -193,8 +182,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param sticky sticky state
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setSticky(@Nullable Boolean sticky) {
+    public @NonNull Tooltip setSticky(@Nullable Boolean sticky) {
         this.sticky = sticky;
         return this;
     }
@@ -206,8 +194,7 @@ public class Tooltip extends Option<Tooltip> {
      *
      * @return tooltip opacity
      */
-    @Nullable
-    public Double getOpacity() {
+    public @Nullable Double getOpacity() {
         return this.opacity;
     }
 
@@ -219,8 +206,7 @@ public class Tooltip extends Option<Tooltip> {
      * @param opacity tooltip opacity
      * @return this tooltip rule
      */
-    @NonNull
-    public Tooltip setOpacity(@Nullable Double opacity) {
+    public @NonNull Tooltip setOpacity(@Nullable Double opacity) {
         this.opacity = opacity == null ? null : Mathf.clamp(0D, 1D, opacity);
         return this;
     }
@@ -237,8 +223,7 @@ public class Tooltip extends Option<Tooltip> {
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("content", getContent());
         wrapper.addProperty("pane", getPane());
@@ -277,8 +262,7 @@ public class Tooltip extends Option<Tooltip> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Tooltip{"
                 + ",content=" + getContent()
                 + ",pane=" + getPane()

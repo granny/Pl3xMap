@@ -19,7 +19,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class IO {
-    private static final Registry<Type> TYPES = new Registry<>();
+    private static final Registry<@NonNull Type> TYPES = new Registry<>();
 
     public static void register() {
         IO.register("bmp", new Bmp());
@@ -44,8 +44,7 @@ public abstract class IO {
         TYPES.unregister(name);
     }
 
-    @NonNull
-    public static Type get(@NonNull String format) {
+    public static @NonNull Type get(@NonNull String format) {
         Type type = TYPES.get(format.toLowerCase(Locale.ROOT));
         if (type == null) {
             throw new IllegalStateException("Unknown or unsupported image format");
@@ -54,11 +53,9 @@ public abstract class IO {
     }
 
     public abstract static class Type {
-        @NonNull
-        public abstract String extension();
+        public abstract @NonNull String extension();
 
-        @NonNull
-        public BufferedImage createBuffer() {
+        public @NonNull BufferedImage createBuffer() {
             return new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
         }
 
@@ -66,8 +63,7 @@ public abstract class IO {
             return argb;
         }
 
-        @Nullable
-        public BufferedImage read(@NonNull Path path) {
+        public @Nullable BufferedImage read(@NonNull Path path) {
             BufferedImage buffer = null;
             ImageReader reader = null;
             try (ImageInputStream in = ImageIO.createImageInputStream(Files.newInputStream(path))) {

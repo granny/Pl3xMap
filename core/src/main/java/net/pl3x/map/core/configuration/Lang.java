@@ -1,13 +1,18 @@
 package net.pl3x.map.core.configuration;
 
 import java.nio.file.Path;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("CanBeFinal")
 public final class Lang extends AbstractConfig {
-    @Key("prefix.command")
-    public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
+    @Key("command.base")
+    public static String COMMAND_BASE = "View the map at '<grey><click:open_url:http://localhost:8080/>http://localhost:8080/</grey>'";
 
     @Key("httpd.started.success")
     public static String HTTPD_STARTED = "<green>Internal webserver running on <yellow><bind></yellow>:<yellow><port></yellow>";
@@ -19,6 +24,25 @@ public final class Lang extends AbstractConfig {
     public static String HTTPD_STOP_ERROR = "<red>An error occurred with the internal webserver";
     @Key("httpd.disabled")
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled";
+
+    @Key("command.reload.description")
+    public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";
+    @Key("command.reload.success")
+    public static String COMMAND_RELOAD_SUCCESS = "<green>Pl3xMap <grey>v<version></grey> reloaded";
+
+    @Key("command.resetmap.description")
+    public static String COMMAND_RESETMAP_DESCRIPTION = "Cancel active render of a world";
+    @Key("command.resetmap.success")
+    public static String COMMAND_RESETMAP_SUCCESS = "<green>Successfully reset map for <grey><world>";
+    @Key("command.resetmap.failed")
+    public static String COMMAND_RESETMAP_FAILED = "<red>Could not reset map for <grey><world>";
+
+    @Key("error.must-specify-world")
+    public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
+    @Key("error.no-such-world")
+    public static String ERROR_NO_SUCH_WORLD = "<red>No such world <grey><world>";
+    @Key("error.world-disabled")
+    public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <grey><world>";
 
     @Key("ui.layer.players")
     public static String UI_LAYER_PLAYERS = "Players";
@@ -67,5 +91,9 @@ public final class Lang extends AbstractConfig {
         FileUtil.extractDir("/locale/", localeDir, false);
 
         CONFIG.reload(localeDir.resolve(Config.LANGUAGE_FILE), Lang.class);
+    }
+
+    public static @NonNull Component parse(@NotNull String msg, @NotNull TagResolver.@NonNull Single... placeholders) {
+        return MiniMessage.miniMessage().deserialize(msg, placeholders);
     }
 }

@@ -294,16 +294,14 @@ public class Colors {
         return (int) Long.parseLong(color.replace("#", ""), 16);
     }
 
-    @NonNull
-    public static String toHex(int argb) {
+    public static @NonNull String toHex(int argb) {
         return String.format("#%06X", (0xFFFFFF & argb));
     }
 
-    @NonNull
-    public static String toHex8(int argb) {
+    public static @NonNull String toHex8(int argb) {
         return String.format("#%08X", argb);
     }
 
-    public interface Sampler extends TriFunction<Biome, Integer, Integer, Integer> {
+    public interface Sampler extends TriFunction<@NonNull Biome, @NonNull Integer, @NonNull Integer, @NonNull Integer> {
     }
 }

@@ -21,7 +21,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class SpawnLayer extends WorldLayer {
     public static final String KEY = "spawn";
 
-    private final Collection<Marker<?>> markers;
+    private final Collection<@NonNull Marker<@NonNull ?>> markers;
 
     /**
      * Create a new spawn layer.
@@ -52,8 +52,7 @@ public class SpawnLayer extends WorldLayer {
     }
 
     @Override
-    @NonNull
-    public Collection<Marker<?>> getMarkers() {
+    public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
         return this.markers;
     }
 }

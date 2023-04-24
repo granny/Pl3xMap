@@ -35,8 +35,7 @@ public class Region {
         this.hash = Objects.hash(world, regionX, regionZ);
     }
 
-    @NonNull
-    public World getWorld() {
+    public @NonNull World getWorld() {
         return this.world;
     }
 
@@ -48,8 +47,7 @@ public class Region {
         return this.regionZ;
     }
 
-    @NonNull
-    public File getRegionFile() {
+    public @NonNull File getRegionFile() {
         return this.regionFile;
     }
 
@@ -57,8 +55,7 @@ public class Region {
         return (chunkX & 0x1F) + ((chunkZ & 0x1F) << 5);
     }
 
-    @NonNull
-    public Chunk getChunk(int chunkX, int chunkZ) {
+    public @NonNull Chunk getChunk(int chunkX, int chunkZ) {
         int index = getChunkIndex(chunkX, chunkZ);
         Chunk chunk = this.chunks[index];
         if (chunk == null) {
@@ -83,8 +80,7 @@ public class Region {
         }
     }
 
-    @NonNull
-    public Chunk loadChunk(@NonNull RandomAccessFile raf, int index) throws IOException {
+    public @NonNull Chunk loadChunk(@NonNull RandomAccessFile raf, int index) throws IOException {
         raf.seek(index * 4L);
         int offset = raf.read() << 16;
         offset |= (raf.read() & 0xFF) << 8;
@@ -132,8 +128,7 @@ public class Region {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Region{"
                 + "world=" + getWorld()
                 + ",x=" + getX()

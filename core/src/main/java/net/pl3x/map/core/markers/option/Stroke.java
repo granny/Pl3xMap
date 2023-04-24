@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Stroke properties of a marker.
  */
-public class Stroke extends Option<Stroke> {
+public class Stroke extends Option<@NonNull Stroke> {
     private Boolean enabled;
     private Integer weight;
     private Integer color;
@@ -49,8 +49,7 @@ public class Stroke extends Option<Stroke> {
      *
      * @return true if stroke is enabled
      */
-    @Nullable
-    public Boolean isEnabled() {
+    public @Nullable Boolean isEnabled() {
         return this.enabled;
     }
 
@@ -64,8 +63,7 @@ public class Stroke extends Option<Stroke> {
      * @param enabled whether stroke is enabled
      * @return this stroke rule
      */
-    @NonNull
-    public Stroke setEnabled(@Nullable Boolean enabled) {
+    public @NonNull Stroke setEnabled(@Nullable Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -77,8 +75,7 @@ public class Stroke extends Option<Stroke> {
      *
      * @return stroke weight
      */
-    @Nullable
-    public Integer getWeight() {
+    public @Nullable Integer getWeight() {
         return this.weight;
     }
 
@@ -90,8 +87,7 @@ public class Stroke extends Option<Stroke> {
      * @param weight new stroke weight
      * @return this stroke rule
      */
-    @NonNull
-    public Stroke setWeight(@Nullable Integer weight) {
+    public @NonNull Stroke setWeight(@Nullable Integer weight) {
         this.weight = weight;
         return this;
     }
@@ -103,8 +99,7 @@ public class Stroke extends Option<Stroke> {
      *
      * @return argb color
      */
-    @Nullable
-    public Integer getColor() {
+    public @Nullable Integer getColor() {
         return this.color;
     }
 
@@ -116,8 +111,7 @@ public class Stroke extends Option<Stroke> {
      * @param color argb color
      * @return this stroke rule
      */
-    @NonNull
-    public Stroke setColor(@Nullable Integer color) {
+    public @NonNull Stroke setColor(@Nullable Integer color) {
         this.color = color;
         return this;
     }
@@ -130,8 +124,7 @@ public class Stroke extends Option<Stroke> {
      * @return line cap shape
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap">MDN stroke-linecap</a>
      */
-    @Nullable
-    public LineCapShape getLineCapShape() {
+    public @Nullable LineCapShape getLineCapShape() {
         return this.lineCapShape;
     }
 
@@ -144,8 +137,7 @@ public class Stroke extends Option<Stroke> {
      * @return this stroke rule
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap">MDN stroke-linecap</a>
      */
-    @NonNull
-    public Stroke setLineCapShape(@Nullable LineCapShape lineCapShape) {
+    public @NonNull Stroke setLineCapShape(@Nullable LineCapShape lineCapShape) {
         this.lineCapShape = lineCapShape;
         return this;
     }
@@ -158,8 +150,7 @@ public class Stroke extends Option<Stroke> {
      * @return line join shape
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin">MDN stroke-linejoin</a>
      */
-    @Nullable
-    public LineJoinShape getLineJoinShape() {
+    public @Nullable LineJoinShape getLineJoinShape() {
         return this.lineJoinShape;
     }
 
@@ -172,8 +163,7 @@ public class Stroke extends Option<Stroke> {
      * @return this stroke rule
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin">MDN stroke-linejoin</a>
      */
-    @NonNull
-    public Stroke setLineJoinShape(@Nullable LineJoinShape lineJoinShape) {
+    public @NonNull Stroke setLineJoinShape(@Nullable LineJoinShape lineJoinShape) {
         this.lineJoinShape = lineJoinShape;
         return this;
     }
@@ -186,8 +176,7 @@ public class Stroke extends Option<Stroke> {
      * @return stroke dash pattern
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray">MDN stroke-dasharray</a>
      */
-    @Nullable
-    public String getDashPattern() {
+    public @Nullable String getDashPattern() {
         return this.dashPattern;
     }
 
@@ -200,8 +189,7 @@ public class Stroke extends Option<Stroke> {
      * @return this stroke rule
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray">MDN stroke-dasharray</a>
      */
-    @NonNull
-    public Stroke setDashPattern(@Nullable String dashPattern) {
+    public @NonNull Stroke setDashPattern(@Nullable String dashPattern) {
         this.dashPattern = dashPattern;
         return this;
     }
@@ -215,8 +203,7 @@ public class Stroke extends Option<Stroke> {
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset">MDN stroke-dashoffset</a>
      * @see <a href="https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility">Browser compatibility</a>
      */
-    @Nullable
-    public String getDashOffset() {
+    public @Nullable String getDashOffset() {
         return this.dashOffset;
     }
 
@@ -230,8 +217,7 @@ public class Stroke extends Option<Stroke> {
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset">MDN stroke-dashoffset</a>
      * @see <a href="https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility">Browser compatibility</a>
      */
-    @NonNull
-    public Stroke setDashOffset(@Nullable String dashOffset) {
+    public @NonNull Stroke setDashOffset(@Nullable String dashOffset) {
         this.dashOffset = dashOffset;
         return this;
     }
@@ -248,8 +234,7 @@ public class Stroke extends Option<Stroke> {
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("enabled", isEnabled());
         wrapper.addProperty("weight", getWeight());
@@ -288,8 +273,7 @@ public class Stroke extends Option<Stroke> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Stroke{"
                 + "enabled=" + isEnabled()
                 + ",weight=" + getWeight()

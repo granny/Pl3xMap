@@ -1,12 +1,12 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version "$forgeGradleVersion"
 }
 
-group = "net.pl3x.map.forge"
+group = "${rootProject.group}.forge"
 version = rootProject.version
 
 minecraft {
-    mappings channel: 'official', version: '1.19.4'
+    mappings channel: 'official', version: minecraftVersion
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 }
 
@@ -15,7 +15,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     compileOnly project(':core')
 
-    minecraft 'net.minecraftforge:forge:1.19.4-45.0.44'
+    minecraft "net.minecraftforge:forge:$forgeVersion"
 }
 
 jar {
@@ -23,7 +23,16 @@ jar {
 }
 
 processResources {
-    filesMatching("META-INF/mods.toml") {
-        expand("version": project.version)
+    filesMatching('META-INF/mods.toml') {
+        expand(
+                'name': rootProject.name,
+                'version': project.version,
+                'authors': authors,
+                'description': project.properties["description"],
+                'website': website,
+                'issues': issues,
+                'forgeLoaderVersion': forgeLoaderVersion,
+                'minecraftVersion': minecraftVersion,
+        )
     }
 }

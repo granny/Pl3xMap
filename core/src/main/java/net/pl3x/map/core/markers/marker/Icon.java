@@ -14,8 +14,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents an icon marker.
  */
-@SuppressWarnings("UnusedReturnValue")
-public class Icon extends Marker<Icon> {
+@SuppressWarnings({"UnusedReturnValue", "unused"})
+public class Icon extends Marker<@NonNull Icon> {
     private Point point;
     private String image;
     private String retina;
@@ -147,8 +147,7 @@ public class Icon extends Marker<Icon> {
      * @param image image key
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, double x, double z, @NonNull String image) {
+    public static @NonNull Icon of(@NonNull String key, double x, double z, @NonNull String image) {
         return new Icon(key, x, z, image);
     }
 
@@ -160,8 +159,7 @@ public class Icon extends Marker<Icon> {
      * @param image image key
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image) {
+    public static @NonNull Icon of(@NonNull String key, @NonNull Point point, @NonNull String image) {
         return new Icon(key, point, image);
     }
 
@@ -175,8 +173,7 @@ public class Icon extends Marker<Icon> {
      * @param size  size of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, double x, double z, @NonNull String image, double size) {
+    public static @NonNull Icon of(@NonNull String key, double x, double z, @NonNull String image, double size) {
         return new Icon(key, x, z, image, size);
     }
 
@@ -191,8 +188,7 @@ public class Icon extends Marker<Icon> {
      * @param height height of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, double x, double z, @NonNull String image, double width, double height) {
+    public static @NonNull Icon of(@NonNull String key, double x, double z, @NonNull String image, double width, double height) {
         return new Icon(key, x, z, image, width, height);
     }
 
@@ -205,8 +201,7 @@ public class Icon extends Marker<Icon> {
      * @param size  size of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, double size) {
+    public static @NonNull Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, double size) {
         return new Icon(key, point, image, size);
     }
 
@@ -220,8 +215,7 @@ public class Icon extends Marker<Icon> {
      * @param height height of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, double width, double height) {
+    public static @NonNull Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, double width, double height) {
         return new Icon(key, point, image, width, height);
     }
 
@@ -234,8 +228,7 @@ public class Icon extends Marker<Icon> {
      * @param size  size of image
      * @return a new icon
      */
-    @NonNull
-    public static Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, @Nullable Vector size) {
+    public static @NonNull Icon of(@NonNull String key, @NonNull Point point, @NonNull String image, @Nullable Vector size) {
         return new Icon(key, point, image, size);
     }
 
@@ -244,8 +237,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return point on map
      */
-    @NonNull
-    public Point getPoint() {
+    public @NonNull Point getPoint() {
         return this.point;
     }
 
@@ -255,8 +247,7 @@ public class Icon extends Marker<Icon> {
      * @param point new point on map
      * @return this icon
      */
-    @NonNull
-    public Icon setPoint(@NonNull Point point) {
+    public @NonNull Icon setPoint(@NonNull Point point) {
         this.point = Preconditions.checkNotNull(point, "Icon point is null");
         return this;
     }
@@ -267,8 +258,7 @@ public class Icon extends Marker<Icon> {
      * @return image
      * @see IconRegistry
      */
-    @NonNull
-    public String getImage() {
+    public @NonNull String getImage() {
         return this.image;
     }
 
@@ -281,8 +271,7 @@ public class Icon extends Marker<Icon> {
      * @return this icon
      * @see IconRegistry
      */
-    @NonNull
-    public Icon setImage(@NonNull String image) {
+    public @NonNull Icon setImage(@NonNull String image) {
         Preconditions.checkNotNull(image, "Icon key is null");
         Preconditions.checkNotNull(Pl3xMap.api().getIconRegistry().get(image), String.format("Icon not in registry (%s)", image));
         this.image = image;
@@ -299,8 +288,7 @@ public class Icon extends Marker<Icon> {
      * @return retina image
      * @see IconRegistry
      */
-    @Nullable
-    public String getRetina() {
+    public @Nullable String getRetina() {
         return this.retina;
     }
 
@@ -317,8 +305,7 @@ public class Icon extends Marker<Icon> {
      * @return this icon
      * @see IconRegistry
      */
-    @NonNull
-    public Icon setRetina(@Nullable String retina) {
+    public @NonNull Icon setRetina(@Nullable String retina) {
         Preconditions.checkArgument(retina == null || Pl3xMap.api().getIconRegistry().has(retina), String.format("Icon not in registry (%s)", retina));
         this.retina = retina;
         return this;
@@ -331,8 +318,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return image size
      */
-    @Nullable
-    public Vector getSize() {
+    public @Nullable Vector getSize() {
         return this.size;
     }
 
@@ -344,8 +330,7 @@ public class Icon extends Marker<Icon> {
      * @param size new image size
      * @return this icon
      */
-    @NonNull
-    public Icon setSize(@Nullable Vector size) {
+    public @NonNull Icon setSize(@Nullable Vector size) {
         this.size = size;
         return this;
     }
@@ -359,8 +344,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return icon anchor
      */
-    @Nullable
-    public Vector getAnchor() {
+    public @Nullable Vector getAnchor() {
         return this.anchor;
     }
 
@@ -374,8 +358,7 @@ public class Icon extends Marker<Icon> {
      * @param anchor new anchor
      * @return this icon
      */
-    @NonNull
-    public Icon setAnchor(@Nullable Vector anchor) {
+    public @NonNull Icon setAnchor(@Nullable Vector anchor) {
         this.anchor = anchor;
         return this;
     }
@@ -387,8 +370,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return angle of rotation
      */
-    @Nullable
-    public Double getRotationAngle() {
+    public @Nullable Double getRotationAngle() {
         return this.rotationAngle;
     }
 
@@ -400,8 +382,7 @@ public class Icon extends Marker<Icon> {
      * @param rotationAngle angle of rotation
      * @return this icon
      */
-    @NonNull
-    public Icon setRotationAngle(@Nullable Double rotationAngle) {
+    public @NonNull Icon setRotationAngle(@Nullable Double rotationAngle) {
         this.rotationAngle = rotationAngle;
         return this;
     }
@@ -414,8 +395,7 @@ public class Icon extends Marker<Icon> {
      * @return origin of rotation
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin">MDN transform-origin</a>
      */
-    @Nullable
-    public String getRotationOrigin() {
+    public @Nullable String getRotationOrigin() {
         return this.rotationOrigin;
     }
 
@@ -428,8 +408,7 @@ public class Icon extends Marker<Icon> {
      * @return this icon
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin">MDN transform-origin</a>
      */
-    @NonNull
-    public Icon setRotationOrigin(@Nullable String rotationOrigin) {
+    public @NonNull Icon setRotationOrigin(@Nullable String rotationOrigin) {
         this.rotationOrigin = rotationOrigin;
         return this;
     }
@@ -441,8 +420,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return shadow image
      */
-    @Nullable
-    public String getShadow() {
+    public @Nullable String getShadow() {
         return this.shadow;
     }
 
@@ -457,8 +435,7 @@ public class Icon extends Marker<Icon> {
      * @return this icon
      * @see IconRegistry
      */
-    @NonNull
-    public Icon setShadow(@Nullable String shadow) {
+    public @NonNull Icon setShadow(@Nullable String shadow) {
         Preconditions.checkArgument(shadow == null || Pl3xMap.api().getIconRegistry().has(shadow), String.format("Icon not in registry (%s)", shadow));
         this.shadow = shadow;
         return this;
@@ -476,8 +453,7 @@ public class Icon extends Marker<Icon> {
      * @return retina shadow image
      * @see IconRegistry
      */
-    @Nullable
-    public String getShadowRetina() {
+    public @Nullable String getShadowRetina() {
         return this.shadowRetina;
     }
 
@@ -494,8 +470,7 @@ public class Icon extends Marker<Icon> {
      * @return this icon
      * @see IconRegistry
      */
-    @NonNull
-    public Icon setShadowRetina(@Nullable String shadowRetina) {
+    public @NonNull Icon setShadowRetina(@Nullable String shadowRetina) {
         Preconditions.checkArgument(shadowRetina == null || Pl3xMap.api().getIconRegistry().has(shadowRetina), String.format("Icon not in registry (%s)", shadowRetina));
         this.shadowRetina = shadowRetina;
         return this;
@@ -508,8 +483,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return shadow image size
      */
-    @Nullable
-    public Vector getShadowSize() {
+    public @Nullable Vector getShadowSize() {
         return this.shadowSize;
     }
 
@@ -521,8 +495,7 @@ public class Icon extends Marker<Icon> {
      * @param shadowSize new shadow image size
      * @return this icon
      */
-    @NonNull
-    public Icon setShadowSize(@Nullable Vector shadowSize) {
+    public @NonNull Icon setShadowSize(@Nullable Vector shadowSize) {
         this.shadowSize = shadowSize;
         return this;
     }
@@ -536,8 +509,7 @@ public class Icon extends Marker<Icon> {
      *
      * @return icon anchor
      */
-    @Nullable
-    public Vector getShadowAnchor() {
+    public @Nullable Vector getShadowAnchor() {
         return this.shadowAnchor;
     }
 
@@ -551,15 +523,13 @@ public class Icon extends Marker<Icon> {
      * @param shadowAnchor new anchor
      * @return this icon
      */
-    @NonNull
-    public Icon setShadowAnchor(@Nullable Vector shadowAnchor) {
+    public @NonNull Icon setShadowAnchor(@Nullable Vector shadowAnchor) {
         this.shadowAnchor = shadowAnchor;
         return this;
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("point", getPoint());
@@ -612,8 +582,7 @@ public class Icon extends Marker<Icon> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Icon{"
                 + "key=" + getKey()
                 + ",point=" + getPoint()

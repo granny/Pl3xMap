@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TileImage extends Keyed {
-    private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+    private static final Map<@NonNull Path, @NonNull ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     public static final String DIR_PATH = "%d/%s/";
     public static final String FILE_PATH = "%d_%d.%s";
@@ -91,8 +91,7 @@ public class TileImage extends Keyed {
         }
     }
 
-    @NonNull
-    private BufferedImage getBuffer(@NonNull Path path) throws IOException {
+    private @NonNull BufferedImage getBuffer(@NonNull Path path) throws IOException {
         BufferedImage buffer = null;
 
         // try to read existing image
@@ -169,8 +168,7 @@ public class TileImage extends Keyed {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "TileImage{"
                 + "key=" + getKey()
                 + ",region=" + this.region

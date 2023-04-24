@@ -1,22 +1,27 @@
 plugins {
     id 'java'
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version "$fabricLoomVersion"
 }
 
-group = 'net.pl3x.map.fabric'
+group = "${rootProject.group}.fabric"
 version = rootProject.version
 
 repositories {
     maven { url = 'https://maven.fabricmc.net/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
     compileOnly project(':core')
 
-    minecraft 'com.mojang:minecraft:1.19.4'
+    minecraft "com.mojang:minecraft:$minecraftVersion"
     mappings loom.officialMojangMappings()
 
-    modImplementation 'net.fabricmc:fabric-loader:0.14.17'
+    modImplementation "net.fabricmc:fabric-loader:$fabricLoaderVersion"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
+    modImplementation include("cloud.commandframework:cloud-fabric:$cloudVersion")
+    modImplementation include("net.kyori:adventure-platform-fabric:$adventureFabricVersion")
+    modImplementation include('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
 }
 
 base {
@@ -25,7 +30,18 @@ base {
 
 processResources {
     filesMatching('fabric.mod.json') {
-        expand 'version': project.version
+        expand(
+                'name': rootProject.name,
+                'group': project.group,
+                'version': project.version,
+                //'authors': authors, // fabric is dumb and wont compile with this :/
+                'description': project.properties["description"],
+                'fabricLoaderVersion': fabricLoaderVersion,
+                'minecraftVersion': minecraftVersion,
+                'website': website,
+                'sources': sources,
+                'issues': issues,
+        )
     }
 }
 

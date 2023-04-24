@@ -14,7 +14,7 @@ public class BlockState {
         this.age = this.moisture = this.power = -1;
     }
 
-    public BlockState(@NonNull Block block, @NonNull Map<String, String> properties) {
+    public BlockState(@NonNull Block block, @NonNull Map<@NonNull String, @NonNull String> properties) {
         this.block = block;
 
         byte age = -1;
@@ -39,8 +39,7 @@ public class BlockState {
         this.power = power;
     }
 
-    @NonNull
-    public Block getBlock() {
+    public @NonNull Block getBlock() {
         return this.block;
     }
 

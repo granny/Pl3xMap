@@ -12,7 +12,7 @@ import java.util.zip.GZIPOutputStream;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class RegionModifiedState {
-    private final Map<Long, Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
+    private final Map<@NonNull Long, @NonNull Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
     private final File file;
 
     public RegionModifiedState(@NonNull World world) {

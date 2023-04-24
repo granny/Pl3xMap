@@ -5,14 +5,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Bmp extends IO.Type {
     @Override
-    @NonNull
-    public String extension() {
+    public @NonNull String extension() {
         return "bmp";
     }
 
     @Override
-    @NonNull
-    public BufferedImage createBuffer() {
+    public @NonNull BufferedImage createBuffer() {
         return new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
     }
 

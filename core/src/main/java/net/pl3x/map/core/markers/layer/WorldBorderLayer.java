@@ -44,13 +44,12 @@ public class WorldBorderLayer extends WorldLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public WorldBorderLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<String> labelSupplier) {
+    public WorldBorderLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
         super(key, world, labelSupplier);
     }
 
     @Override
-    @NonNull
-    public Collection<Marker<?>> getMarkers() {
+    public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
         World.Border border = getWorld().getWorldBorder();
 
         int x = (int) border.centerX();

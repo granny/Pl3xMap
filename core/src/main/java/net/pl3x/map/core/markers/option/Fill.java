@@ -9,7 +9,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Fill properties of a marker.
  */
-public class Fill extends Option<Fill> {
+@SuppressWarnings("unused")
+public class Fill extends Option<@NonNull Fill> {
     private Boolean enabled;
     private Type type;
     private Integer color;
@@ -43,8 +44,7 @@ public class Fill extends Option<Fill> {
      *
      * @return true if fill is enabled
      */
-    @Nullable
-    public Boolean isEnabled() {
+    public @Nullable Boolean isEnabled() {
         return this.enabled;
     }
 
@@ -58,8 +58,7 @@ public class Fill extends Option<Fill> {
      * @param enabled whether fill is enabled
      * @return this fill rule
      */
-    @NonNull
-    public Fill setEnabled(@Nullable Boolean enabled) {
+    public @NonNull Fill setEnabled(@Nullable Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -72,8 +71,7 @@ public class Fill extends Option<Fill> {
      * @return fill type
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
      */
-    @Nullable
-    public Type getType() {
+    public @Nullable Type getType() {
         return this.type;
     }
 
@@ -86,8 +84,7 @@ public class Fill extends Option<Fill> {
      * @return this fill rule
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
      */
-    @NonNull
-    public Fill setType(@Nullable Type type) {
+    public @NonNull Fill setType(@Nullable Type type) {
         this.type = type;
         return this;
     }
@@ -99,8 +96,7 @@ public class Fill extends Option<Fill> {
      *
      * @return argb color
      */
-    @Nullable
-    public Integer getColor() {
+    public @Nullable Integer getColor() {
         return this.color;
     }
 
@@ -112,8 +108,7 @@ public class Fill extends Option<Fill> {
      * @param color new argb color
      * @return this fill rule
      */
-    @NonNull
-    public Fill setColor(@Nullable Integer color) {
+    public @NonNull Fill setColor(@Nullable Integer color) {
         this.color = color;
         return this;
     }
@@ -126,8 +121,7 @@ public class Fill extends Option<Fill> {
     }
 
     @Override
-    @NonNull
-    public JsonElement toJson() {
+    public @NonNull JsonElement toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("enabled", isEnabled());
         wrapper.addProperty("type", getType());
@@ -158,8 +152,7 @@ public class Fill extends Option<Fill> {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "Fill{enabled=" + isEnabled() + ",type=" + getType() + ",color=" + getColor() + "}";
     }
 

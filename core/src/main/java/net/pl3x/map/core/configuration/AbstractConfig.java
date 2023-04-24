@@ -22,12 +22,11 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public abstract class AbstractConfig {
     private YamlFile config;
 
-    @NonNull
-    public YamlFile getConfig() {
+    public @NonNull YamlFile getConfig() {
         return this.config;
     }
 
-    protected void reload(@NonNull Path path, @NonNull Class<? extends AbstractConfig> clazz) {
+    protected void reload(@NonNull Path path, @NonNull Class<? extends @NonNull AbstractConfig> clazz) {
         // read yaml from file
         this.config = new YamlFile(path.toFile());
         try {
@@ -68,13 +67,11 @@ public abstract class AbstractConfig {
         }
     }
 
-    @Nullable
-    protected Object getClassObject() {
+    protected @Nullable Object getClassObject() {
         return null;
     }
 
-    @Nullable
-    protected Object getValue(@NonNull String path, @Nullable Object def) {
+    protected @Nullable Object getValue(@NonNull String path, @Nullable Object def) {
         if (getConfig().get(path) == null) {
             set(path, def);
         }
@@ -85,14 +82,12 @@ public abstract class AbstractConfig {
         getConfig().setComment(path, comment, CommentType.BLOCK);
     }
 
-    @Nullable
-    protected Object get(@NonNull String path, @Nullable Object def) {
+    protected @Nullable Object get(@NonNull String path, @Nullable Object def) {
         Object val = get(path);
         return val == null ? def : val;
     }
 
-    @Nullable
-    protected Object get(@NonNull String path) {
+    protected @Nullable Object get(@NonNull String path) {
         Object value = getConfig().get(path);
         if (!(value instanceof MemorySection)) {
             return value;
@@ -112,8 +107,7 @@ public abstract class AbstractConfig {
         return map;
     }
 
-    @NonNull
-    protected Object addToMap(@NonNull String rawValue) {
+    protected @NonNull Object addToMap(@NonNull String rawValue) {
         return rawValue;
     }
 
@@ -124,14 +118,12 @@ public abstract class AbstractConfig {
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Key {
-        @NonNull
-        String value();
+        @NonNull String value();
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Comment {
-        @NonNull
-        String value();
+        @NonNull String value();
     }
 }

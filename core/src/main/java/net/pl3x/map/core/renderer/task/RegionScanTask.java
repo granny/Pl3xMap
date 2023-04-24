@@ -19,7 +19,7 @@ public class RegionScanTask implements Runnable {
     private final World world;
     private final Point regionPos;
 
-    private final Map<String, Renderer> renderers = new LinkedHashMap<>();
+    private final Map<@NonNull String, @NonNull Renderer> renderers = new LinkedHashMap<>();
 
     public RegionScanTask(@NonNull World world, @NonNull Point regionPos) {
         this.world = world;
@@ -39,13 +39,11 @@ public class RegionScanTask implements Runnable {
         });
     }
 
-    @NonNull
-    public World getWorld() {
+    public @NonNull World getWorld() {
         return this.world;
     }
 
-    @Nullable
-    public Renderer getRenderer(String id) {
+    public @Nullable Renderer getRenderer(@NonNull String id) {
         return this.renderers.get(id);
     }
 
@@ -71,8 +69,7 @@ public class RegionScanTask implements Runnable {
         }
     }
 
-    @NonNull
-    private Region loadRegion() {
+    private @NonNull Region loadRegion() {
         Region region = this.world.getRegion(null, this.regionPos.x(), this.regionPos.z());
         try {
             region.loadChunks();

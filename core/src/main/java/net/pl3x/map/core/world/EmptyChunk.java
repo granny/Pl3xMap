@@ -8,8 +8,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    @NonNull
-    public BlockState getBlockState(int x, int y, int z) {
+    public @NonNull BlockState getBlockState(int x, int y, int z) {
         return Blocks.AIR.getDefaultState();
     }
 
@@ -19,8 +18,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    @NonNull
-    public Biome getBiome(int x, int y, int z) {
+    public @NonNull Biome getBiome(int x, int y, int z) {
         return Biome.DEFAULT;
     }
 
@@ -30,8 +28,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    @NonNull
-    public Chunk populate() {
+    public @NonNull Chunk populate() {
         return this;
     }
 }

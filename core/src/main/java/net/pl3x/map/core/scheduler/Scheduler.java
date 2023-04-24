@@ -6,7 +6,7 @@ import java.util.List;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Scheduler {
-    private final List<Task> tasks = new ArrayList<>();
+    private final List<@NonNull Task> tasks = new ArrayList<>();
 
     /**
      * Tick this scheduler.

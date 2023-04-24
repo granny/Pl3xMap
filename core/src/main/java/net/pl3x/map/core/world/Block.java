@@ -66,8 +66,7 @@ public final class Block extends Keyed {
         return (this.bools & 1) > 0;
     }
 
-    @NonNull
-    public BlockState getDefaultState() {
+    public @NonNull BlockState getDefaultState() {
         return this.defaultState;
     }
 
@@ -98,8 +97,7 @@ public final class Block extends Keyed {
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return "BlockState{"
                 + "key=" + getKey()
                 + "color=" + color()

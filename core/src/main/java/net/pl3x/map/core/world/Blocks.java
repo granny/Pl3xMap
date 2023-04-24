@@ -7,7 +7,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 @SuppressWarnings("unused")
 public class Blocks {
-    private static final Map<String, Block> blocks = new HashMap<>();
+    private static final Map<@NonNull String, @NonNull Block> blocks = new HashMap<>();
 
     public static final Block ACACIA_BUTTON = register(new Block(0, "minecraft:acacia_button", 0x000000));
     public static final Block ACACIA_DOOR = register(new Block(1, "minecraft:acacia_door", 0xD87F33));
@@ -1008,8 +1008,7 @@ public class Blocks {
     public static final Block ZOMBIE_HEAD = register(new Block(996, "minecraft:zombie_head", 0x000000));
     public static final Block ZOMBIE_WALL_HEAD = register(new Block(997, "minecraft:zombie_wall_head", 0x000000));
 
-    @NonNull
-    private static Block register(@NonNull Block block) {
+    private static @NonNull Block register(@NonNull Block block) {
         blocks.put(block.getKey(), block);
         return block;
     }
