@@ -10,6 +10,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 @SuppressWarnings("CanBeFinal")
 public final class Lang extends AbstractConfig {
+    @Key("prefix.command")
+    public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
     @Key("command.base")
     public static String COMMAND_BASE = "View the map at '<grey><click:open_url:http://localhost:8080/>http://localhost:8080/</grey>'";
 
@@ -35,6 +37,11 @@ public final class Lang extends AbstractConfig {
     public static String COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE = "<red>Confirmation required. Confirm using <grey>/map confirm";
     @Key("command.confirm.success")
     public static String COMMAND_CONFIRM_NO_PENDING_MESSAGE = "<red>You don't have any pending confirmations";
+
+    @Key("command.help.description")
+    public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";
+    @Key("command.help.argument.query")
+    public static String COMMAND_HELP_ARGUMENT_QUERY_DESCRIPTION = "Help Query";
 
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";

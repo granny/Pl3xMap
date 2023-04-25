@@ -3,9 +3,14 @@ package net.pl3x.map.core.command;
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.AudienceProvider;
+import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import java.util.List;
 import java.util.function.UnaryOperator;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.pl3x.map.core.command.commands.ConfirmCommand;
+import net.pl3x.map.core.command.commands.HelpCommand;
 import net.pl3x.map.core.command.commands.ReloadCommand;
 import net.pl3x.map.core.command.commands.ResetMapCommand;
 import net.pl3x.map.core.configuration.Lang;
@@ -29,6 +34,18 @@ public interface CommandHandler {
      */
     Command.@NonNull Builder<@NonNull Sender> getRoot();
 
+    default void setupExceptionHandlers() {
+        new MinecraftExceptionHandler<Sender>()
+                .withDefaultHandlers()
+                .withDecorator(component -> Component.text()
+                        .append(Lang.parse(Lang.PREFIX_COMMAND)
+                                .hoverEvent(Lang.parse(Lang.CLICK_FOR_HELP))
+                                .clickEvent(ClickEvent.runCommand("/map help")))
+                        .append(component)
+                        .build())
+                .apply(getManager(), AudienceProvider.nativeAudience());
+    }
+
     /**
      * Register a new subcommand.
      *
@@ -48,6 +65,7 @@ public interface CommandHandler {
     default void registerSubcommands() {
         List.of(
                 new ConfirmCommand(this),
+                new HelpCommand(this),
                 new ReloadCommand(this),
                 new ResetMapCommand(this)
         ).forEach(Pl3xMapCommand::register);

@@ -1,6 +1,8 @@
 package net.pl3x.map.core.command;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
@@ -26,11 +28,15 @@ public abstract class Sender implements ForwardingAudience.Single {
     public abstract boolean hasPermission(@NonNull String permission);
 
     public void sendMessage(@NonNull String message) {
-        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(message));
+        sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message));
     }
 
     public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
-        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(message, placeholders));
+        sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message, placeholders));
+    }
+
+    public void sendMessage(Audience audience, boolean prefix, @NonNull ComponentLike message) {
+        audience.sendMessage(prefix ? Lang.parse(Lang.PREFIX_COMMAND).append(message) : message);
     }
 
     @Override

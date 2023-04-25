@@ -85,12 +85,12 @@ public class ForgeSender extends Sender {
 
         @Override
         public void sendMessage(@NonNull String message) {
-            Pl3xMap.api().adventure().player(getPlayer().getUUID()).sendMessage(Lang.parse(message));
+            sendMessage(Pl3xMap.api().adventure().player(getPlayer().getUUID()), true, Lang.parse(message));
         }
 
         @Override
         public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
-            Pl3xMap.api().adventure().player(getPlayer().getUUID()).sendMessage(Lang.parse(message, placeholders));
+            sendMessage(Pl3xMap.api().adventure().player(getPlayer().getUUID()), true, Lang.parse(message, placeholders));
         }
 
         @Override

@@ -22,6 +22,8 @@ public class ForgeCommandManager implements CommandHandler {
         brigadier.registerMapping(new TypeToken<WorldParser<Sender>>() {
         }, builder -> builder.toConstant(DimensionArgument.dimension()).cloudSuggestions());
 
+        setupExceptionHandlers();
+
         this.root = buildRoot();
         getManager().command(getRoot());
         registerSubcommands();

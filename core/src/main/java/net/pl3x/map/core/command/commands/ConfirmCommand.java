@@ -12,7 +12,7 @@ import net.pl3x.map.core.configuration.Lang;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class ConfirmCommand extends Pl3xMapCommand {
-    private final CommandConfirmationManager<Sender> confirmationManager = new CommandConfirmationManager<>(
+    private final CommandConfirmationManager<@NonNull Sender> confirmationManager = new CommandConfirmationManager<>(
             15L, TimeUnit.SECONDS,
             context -> context.getCommandContext().getSender().sendMessage(
                     Component.text().append(Lang.parse(Lang.COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE))
