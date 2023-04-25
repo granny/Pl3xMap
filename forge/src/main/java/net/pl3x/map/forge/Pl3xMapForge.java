@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.forge.ForgeServerAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -55,6 +56,8 @@ public class Pl3xMapForge extends Pl3xMap {
     private MinecraftServer server;
     private IModInfo modInfo;
 
+    private ForgeServerAudiences adventure;
+
     public Pl3xMapForge() {
         super();
 
@@ -66,6 +69,7 @@ public class Pl3xMapForge extends Pl3xMap {
             throw new RuntimeException(e);
         }
 
+        //noinspection InstantiationOfUtilityClass
         new CloudForgeEntrypoint();
 
         init();
@@ -107,13 +111,17 @@ public class Pl3xMapForge extends Pl3xMap {
     @SubscribeEvent
     public void onServerStarted(@NonNull ServerStartedEvent event) {
         this.server = event.getServer();
+        this.adventure = new ForgeServerAudiences(this.server);
         enable();
     }
 
     @SubscribeEvent
     public void onServerStopping(@NonNull ServerStoppingEvent event) {
         disable();
-        getBlockRegistry().unregister();
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 
     public @NonNull IModInfo getModInfo() {
@@ -140,7 +148,10 @@ public class Pl3xMapForge extends Pl3xMap {
 
     @Override
     public @NonNull AudienceProvider adventure() {
-        throw new UnsupportedOperationException();
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure without a running server!");
+        }
+        return this.adventure;
     }
 
     @Override

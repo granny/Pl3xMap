@@ -31,9 +31,8 @@ import java.util.WeakHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.commands.CommandBuildContext;
-import org.jetbrains.annotations.ApiStatus;
 
-@ApiStatus.Internal
+//@ApiStatus.Internal
 public final class ContextualArgumentTypeProvider<V> implements Supplier<ArgumentType<V>> {
 
     private static final ThreadLocal<ThreadLocalContext> CONTEXT = new ThreadLocal<>();

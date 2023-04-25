@@ -10,6 +10,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -38,6 +39,8 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     private MinecraftServer server;
     private ModContainer modContainer;
 
+    private FabricServerAudiences adventure;
+
     public Pl3xMapFabric() {
         super();
 
@@ -63,13 +66,17 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
 
     public void enable(@NonNull MinecraftServer server) {
         this.server = server;
-
-        super.enable();
+        this.adventure = FabricServerAudiences.of(this.server);
+        enable();
     }
 
     @Override
     public void disable() {
         super.disable();
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 
     public @NonNull ModContainer getModContainer() {
@@ -96,7 +103,10 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
 
     @Override
     public @NonNull AudienceProvider adventure() {
-        throw new UnsupportedOperationException();
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure without a running server!");
+        }
+        return this.adventure;
     }
 
     @Override

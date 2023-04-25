@@ -1,7 +1,9 @@
 package net.pl3x.map.fabric.command;
 
+import java.util.Objects;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,7 +13,6 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public class FabricSender extends Sender {
     public static @NonNull Sender create(@NonNull CommandSourceStack stack) {
@@ -37,13 +38,28 @@ public class FabricSender extends Sender {
     }
 
     @Override
-    public void sendMessage(@NonNull String message) {
-        getSender().sendMessage(Lang.parse(message));
+    public @NonNull Audience audience() {
+        return ((FabricServerAudiences) Pl3xMap.api().adventure()).audience(getSender());
     }
 
     @Override
-    public void sendMessage(@NotNull String message, @NotNull TagResolver.@NonNull Single... placeholders) {
-        getSender().sendMessage(Lang.parse(message, placeholders));
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        FabricSender other = (FabricSender) o;
+        return getSender().source == other.getSender().source;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSender().source);
     }
 
     @Override
@@ -69,9 +85,19 @@ public class FabricSender extends Sender {
         }
 
         @Override
+        public void sendMessage(@NonNull String message) {
+            Pl3xMap.api().adventure().player(getPlayer().getUUID()).sendMessage(Lang.parse(message));
+        }
+
+        @Override
+        public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
+            Pl3xMap.api().adventure().player(getPlayer().getUUID()).sendMessage(Lang.parse(message, placeholders));
+        }
+
+        @Override
         public @NonNull String toString() {
-            return "FabricPlayer{"
-                    + "player=" + getPlayer().getScoreboardName()
+            return "FabricSender$Player{"
+                    + "player=" + getPlayer().getUUID()
                     + "}";
         }
     }

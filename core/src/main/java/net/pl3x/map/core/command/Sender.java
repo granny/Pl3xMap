@@ -1,13 +1,12 @@
 package net.pl3x.map.core.command;
 
-import java.util.Objects;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a command sender.
@@ -24,36 +23,24 @@ public abstract class Sender implements ForwardingAudience.Single {
         return (T) this.sender;
     }
 
-    @Override
-    public @NonNull Audience audience() {
-        return getSender();
-    }
-
     public abstract boolean hasPermission(@NonNull String permission);
 
-    public abstract void sendMessage(@NonNull String message);
+    public void sendMessage(@NonNull String message) {
+        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(message));
+    }
 
-    public abstract void sendMessage(@NotNull String message, @NotNull TagResolver.@NonNull Single... placeholders);
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        if (this.getClass() != o.getClass()) {
-            return false;
-        }
-        Sender other = (Sender) o;
-        return getSender() == other.getSender();
+    public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
+        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(message, placeholders));
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getSender());
-    }
+    public abstract boolean equals(@Nullable Object o);
+
+    @Override
+    public abstract int hashCode();
+
+    @Override
+    public abstract @NonNull String toString();
 
     public interface Player<T> {
         @NonNull T getPlayer();

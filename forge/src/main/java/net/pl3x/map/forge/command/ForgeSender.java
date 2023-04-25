@@ -1,11 +1,9 @@
 package net.pl3x.map.forge.command;
 
-import com.google.gson.JsonElement;
 import java.util.Objects;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.platform.forge.ForgeServerAudiences;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
@@ -14,7 +12,6 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public class ForgeSender extends Sender {
     public static @NonNull Sender create(@NonNull CommandSourceStack stack) {
@@ -36,22 +33,32 @@ public class ForgeSender extends Sender {
 
     @Override
     public boolean hasPermission(@NonNull String permission) {
-        return true; // getSender().hasPermission(permission);
+        return true; // todo getSender().hasPermission(permission);
     }
 
     @Override
-    public void sendMessage(@NonNull String message) {
-        getSender().sendSystemMessage(toNative(Lang.parse(message)));
+    public @NonNull Audience audience() {
+        return ((ForgeServerAudiences) Pl3xMap.api().adventure()).audience(getSender());
     }
 
     @Override
-    public void sendMessage(@NotNull String message, @NotNull TagResolver.@NonNull Single... placeholders) {
-        getSender().sendSystemMessage(toNative(Lang.parse(message, placeholders)));
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        ForgeSender other = (ForgeSender) o;
+        return getSender().source == other.getSender().source;
     }
 
-    private static net.minecraft.network.chat.Component toNative(Component component) {
-        final JsonElement tree = GsonComponentSerializer.gson().serializeToTree(component);
-        return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(tree));
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSender().source);
     }
 
     @Override
@@ -77,9 +84,19 @@ public class ForgeSender extends Sender {
         }
 
         @Override
+        public void sendMessage(@NonNull String message) {
+            Pl3xMap.api().adventure().player(getPlayer().getUUID()).sendMessage(Lang.parse(message));
+        }
+
+        @Override
+        public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
+            Pl3xMap.api().adventure().player(getPlayer().getUUID()).sendMessage(Lang.parse(message, placeholders));
+        }
+
+        @Override
         public @NonNull String toString() {
-            return "ForgePlayer{"
-                    + "player=" + getSender().getTextName()
+            return "ForgeSender$Player{"
+                    + "player=" + getPlayer().getUUID()
                     + "}";
         }
     }

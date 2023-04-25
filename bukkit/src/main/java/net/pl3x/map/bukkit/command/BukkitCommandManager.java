@@ -17,10 +17,12 @@ public class BukkitCommandManager implements CommandHandler {
     public BukkitCommandManager(@NonNull Plugin plugin) throws Exception {
         this.manager = new PaperCommandManager<>(plugin, CommandExecutionCoordinator.simpleCoordinator(), BukkitSender::create, Sender::getSender);
 
-        getManager().registerBrigadier();
-        CloudBrigadierManager<Sender, ?> brigadier = getManager().brigadierManager();
-        if (brigadier != null) {
-            brigadier.setNativeNumberSuggestions(false);
+        if (getManager().hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
+            getManager().registerBrigadier();
+            CloudBrigadierManager<Sender, ?> brigadier = getManager().brigadierManager();
+            if (brigadier != null) {
+                brigadier.setNativeNumberSuggestions(false);
+            }
         }
 
         if (getManager().hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {

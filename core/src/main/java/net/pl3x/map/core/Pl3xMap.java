@@ -195,6 +195,9 @@ public abstract class Pl3xMap {
         // unregister tile image types
         Logger.debug("Unregistering tile image types");
         IO.unregister();
+
+        // unregister blocks
+        getBlockRegistry().unregister();
     }
 
     public abstract @NonNull String getVersion();

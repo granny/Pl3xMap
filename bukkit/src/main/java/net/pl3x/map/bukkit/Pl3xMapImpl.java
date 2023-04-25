@@ -72,7 +72,10 @@ public class Pl3xMapImpl extends Pl3xMap {
     @Override
     public void disable() {
         super.disable();
-        this.adventure = null;
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 
     @Override
