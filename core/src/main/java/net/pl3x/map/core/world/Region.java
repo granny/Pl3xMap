@@ -75,6 +75,9 @@ public class Region {
         }
         try (RandomAccessFile raf = new RandomAccessFile(getRegionFile(), "r")) {
             for (int index = 0; index < this.chunks.length; index++) {
+                if (getWorld().isPaused()) {
+                    return;
+                }
                 loadChunk(raf, index);
             }
         }

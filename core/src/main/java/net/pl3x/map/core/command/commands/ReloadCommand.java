@@ -24,9 +24,13 @@ public class ReloadCommand extends Pl3xMapCommand {
     }
 
     public void execute(@NonNull CommandContext<@NonNull Sender> context) {
+        // disable everything
         Pl3xMap.api().disable();
+
+        // enable everything
         Pl3xMap.api().enable();
 
+        // notify sender
         context.getSender().sendMessage(Lang.COMMAND_RELOAD_SUCCESS,
                 Placeholder.unparsed("version", Pl3xMap.api().getVersion()));
     }

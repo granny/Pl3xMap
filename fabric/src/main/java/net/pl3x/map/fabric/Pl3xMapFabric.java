@@ -169,4 +169,9 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
             getPlayerRegistry().getOrDefault(uuid, () -> new FabricPlayer(player));
         });
     }
+
+    @Override
+    public @NonNull World cloneWorld(@NonNull World world) {
+        return new FabricWorld(world.getLevel(), world.getName(), world.getConfig());
+    }
 }

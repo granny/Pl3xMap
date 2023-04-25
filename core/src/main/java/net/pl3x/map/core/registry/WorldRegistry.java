@@ -17,8 +17,10 @@ public class WorldRegistry extends Registry<@NonNull World> {
     public @Nullable World unregister(@NonNull String id) {
         World world = this.entries.remove(id);
         if (world != null) {
+            world.setPaused(true);
             world.getMarkerTask().cancel();
             world.getRegionFileWatcher().stop();
+            world.cleanup();
         }
         return world;
     }

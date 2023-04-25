@@ -184,4 +184,9 @@ public class Pl3xMapImpl extends Pl3xMap {
             getPlayerRegistry().getOrDefault(uuid, () -> new BukkitPlayer(player));
         });
     }
+
+    @Override
+    public @NonNull World cloneWorld(@NonNull World world) {
+        return new BukkitWorld(world.getLevel(), world.getName(), world.getConfig());
+    }
 }

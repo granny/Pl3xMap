@@ -55,8 +55,23 @@ public class RegionScanTask implements Runnable {
     public void run() {
         try {
             Logger.debug("[" + this.world.getName() + "] Scanning " + regionPos + " -- " + Thread.currentThread().getName());
+
+            if (getWorld().isPaused()) {
+                return;
+            }
+
             allocateImages();
+
+            if (getWorld().isPaused()) {
+                return;
+            }
+
             scanRegion(loadRegion());
+
+            if (getWorld().isPaused()) {
+                return;
+            }
+
             saveImages();
         } catch (Throwable t) {
             t.printStackTrace();
@@ -65,6 +80,9 @@ public class RegionScanTask implements Runnable {
 
     private void allocateImages() {
         for (Renderer renderer : this.renderers.values()) {
+            if (getWorld().isPaused()) {
+                return;
+            }
             renderer.allocateData(this.regionPos);
         }
     }
@@ -81,12 +99,18 @@ public class RegionScanTask implements Runnable {
 
     private void scanRegion(@NonNull Region region) {
         for (Renderer renderer : this.renderers.values()) {
+            if (getWorld().isPaused()) {
+                return;
+            }
             renderer.scanData(region);
         }
     }
 
     private void saveImages() {
         for (Renderer renderer : this.renderers.values()) {
+            if (getWorld().isPaused()) {
+                return;
+            }
             renderer.saveData(this.regionPos);
         }
     }

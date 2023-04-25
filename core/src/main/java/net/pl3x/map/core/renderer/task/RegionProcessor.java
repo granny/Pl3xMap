@@ -154,9 +154,6 @@ public class RegionProcessor {
                             // set region modified time
                             world.getRegionModifiedState().set(Mathf.asLong(pos), this.timeStarted);
 
-                            // free up some memory - todo is this cleanup needed?
-                            //task.cleanup();
-
                             // run the garbage collector
                             if (Config.GC_WHEN_RUNNING) {
                                 System.gc();

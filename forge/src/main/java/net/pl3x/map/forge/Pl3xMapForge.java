@@ -219,4 +219,9 @@ public class Pl3xMapForge extends Pl3xMap {
             getPlayerRegistry().getOrDefault(uuid, () -> new ForgePlayer(player));
         });
     }
+
+    @Override
+    public @NonNull World cloneWorld(@NonNull World world) {
+        return new ForgeWorld(world.getLevel(), world.getName(), world.getConfig());
+    }
 }

@@ -76,6 +76,9 @@ public abstract class Renderer extends Keyed {
                 // iterate each block in this chunk
                 for (int blockX = bX; blockX < bX + 16; blockX++) {
                     for (int blockZ = bZ; blockZ < bZ + 16; blockZ++) {
+                        if (getWorld().isPaused()) {
+                            return;
+                        }
                         Chunk.BlockData data = chunk.getData(blockX, blockZ);
                         if (data == null) {
                             // this shouldn't happen, but just in case...

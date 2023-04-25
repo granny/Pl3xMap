@@ -222,6 +222,8 @@ public abstract class Pl3xMap {
 
     protected abstract void loadPlayers();
 
+    public abstract @NonNull World cloneWorld(@NonNull World world);
+
     protected static final class Provider {
         static Pl3xMap api;
 
