@@ -49,6 +49,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -66,6 +67,7 @@ import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
+import net.pl3x.map.forge.capability.HiddenCapability;
 import net.pl3x.map.forge.command.ForgeCommandManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -99,12 +101,18 @@ public class Pl3xMapForge extends Pl3xMap {
         init();
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new HiddenCapability());
 
         try {
             new ForgeCommandManager();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @SubscribeEvent
+    public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.register(HiddenCapability.class);
     }
 
     @SubscribeEvent
@@ -125,7 +133,7 @@ public class Pl3xMapForge extends Pl3xMap {
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.@NonNull PlayerLoggedOutEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
-        String uuid = event.getEntity().getUUID().toString();
+        UUID uuid = event.getEntity().getUUID();
         Player forgePlayer = registry.unregister(uuid);
         if (forgePlayer != null) {
             this.playerListener.onQuit(forgePlayer);

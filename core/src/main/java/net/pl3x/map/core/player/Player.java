@@ -215,7 +215,7 @@ public abstract class Player {
             return false;
         }
         Player other = (Player) o;
-        return getUUID().equals(other.getUUID());
+        return getPlayer() == other.getPlayer();
     }
 
     @Override

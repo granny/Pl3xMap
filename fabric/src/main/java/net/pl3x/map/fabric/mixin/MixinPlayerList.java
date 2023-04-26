@@ -23,6 +23,7 @@
  */
 package net.pl3x.map.fabric.mixin;
 
+import java.util.UUID;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -30,6 +31,7 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
+import net.pl3x.map.fabric.FabricPlayer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,16 +46,15 @@ public class MixinPlayerList {
     @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundCustomPayloadPacket;<init>(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/FriendlyByteBuf;)V"))
     private void placeNewPlayer(@NonNull Connection connection, @NonNull ServerPlayer player, @NonNull CallbackInfo info) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
-        Player fabricPlayer = registry.get(player.getUUID());
-        if (fabricPlayer != null) {
-            this.playerListener.onJoin(fabricPlayer);
-        }
+        UUID uuid = player.getUUID();
+        Player fabricPlayer = registry.getOrDefault(uuid, () -> new FabricPlayer(player));
+        this.playerListener.onJoin(fabricPlayer);
     }
 
     @Inject(method = "remove", at = @At(value = "HEAD"))
     private void remove(@NonNull ServerPlayer player, @NonNull CallbackInfo info) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
-        String uuid = player.getUUID().toString();
+        UUID uuid = player.getUUID();
         Player fabricPlayer = registry.unregister(uuid);
         if (fabricPlayer != null) {
             this.playerListener.onQuit(fabricPlayer);

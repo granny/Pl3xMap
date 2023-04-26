@@ -37,7 +37,6 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.markers.Point;
-import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
@@ -69,9 +68,7 @@ public class UpdateSettingsData extends Task {
             return Collections.emptyList();
         }
         List<Object> players = new ArrayList<>();
-        Pl3xMap.api().getPlayerRegistry().entrySet().forEach(entry -> {
-            Player player = entry.getValue();
-
+        Pl3xMap.api().getPlayerRegistry().forEach(player -> {
             // do not expose hidden players in the json
             if (player.isHidden() || player.isNPC()) {
                 return;

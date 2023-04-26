@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Supplier;
 import net.pl3x.map.core.registry.Registry;
+import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -38,9 +39,19 @@ public class PlayerRegistry extends Registry<@NonNull Player> {
         Player player = get(uuid);
         if (player == null) {
             player = supplier.get();
-            register(player.getUUID().toString(), player);
+            register(player.getUUID(), player);
         }
         return player;
+    }
+
+    public @NonNull Player register(@NonNull UUID uuid, @NonNull Player player) {
+        Preconditions.checkNotNull(uuid, "UUID cannot be null");
+        Preconditions.checkNotNull(player, "Player cannot be null");
+        return super.register(uuid.toString(), player);
+    }
+
+    public @Nullable Player unregister(@NonNull UUID uuid) {
+        return super.unregister(uuid.toString());
     }
 
     /**

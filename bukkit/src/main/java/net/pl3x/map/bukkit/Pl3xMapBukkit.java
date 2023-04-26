@@ -79,7 +79,7 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(@NonNull PlayerQuitEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
-        String uuid = event.getPlayer().getUniqueId().toString();
+        UUID uuid = event.getPlayer().getUniqueId();
         Player bukkitPlayer = registry.unregister(uuid);
         if (bukkitPlayer != null) {
             this.playerListener.onQuit(bukkitPlayer);
