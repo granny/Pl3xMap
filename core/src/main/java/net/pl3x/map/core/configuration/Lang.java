@@ -11,7 +11,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @SuppressWarnings("CanBeFinal")
 public final class Lang extends AbstractConfig {
     @Key("prefix.command")
-    public static String PREFIX_COMMAND = "<white>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</white> ";
+    public static String PREFIX_COMMAND = "<gray>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</gray> ";
     @Key("command.base")
     public static String COMMAND_BASE = "View the map at '<grey><click:open_url:http://localhost:8080/>http://localhost:8080/</grey>'";
 
@@ -31,6 +31,13 @@ public final class Lang extends AbstractConfig {
     @Key("httpd.disabled")
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled";
 
+    @Key("command.argument.optional-player")
+    public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
+    @Key("command.argument.optional-world")
+    public static String COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION = "Defaults to the players current world if not provided";
+    @Key("command.argument.optional-center")
+    public static String COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION = "Defaults to (<white>0<gray>,</gray> 0</white>) if unspecified";
+
     @Key("command.confirm.description")
     public static String COMMAND_CONFIRM_DESCRIPTION = "Confirm a pending command";
     @Key("command.confirm.not-rendering")
@@ -42,6 +49,13 @@ public final class Lang extends AbstractConfig {
     public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";
     @Key("command.help.argument.query")
     public static String COMMAND_HELP_ARGUMENT_QUERY_DESCRIPTION = "Help Query";
+
+    @Key("command.hide.description")
+    public static String COMMAND_HIDE_DESCRIPTION = "Hide a player from the map";
+    @Key("command.hide.already-hidden")
+    public static String COMMAND_HIDE_ALREADY_HIDDEN = "<grey><player> <red>is already hidden from the map";
+    @Key("command.hide.success")
+    public static String COMMAND_HIDE_SUCCESS = "<grey><player> <green>is now hidden from the map";
 
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";
@@ -55,6 +69,17 @@ public final class Lang extends AbstractConfig {
     @Key("command.resetmap.failed")
     public static String COMMAND_RESETMAP_FAILED = "<red>Could not reset map for <grey><world>";
 
+    @Key("command.show.description")
+    public static String COMMAND_SHOW_DESCRIPTION = "Show a player on the map";
+    @Key("command.show.not-hidden")
+    public static String COMMAND_SHOW_NOT_HIDDEN = "<grey><player> <red>is not hidden from the map";
+    @Key("command.show.success")
+    public static String COMMAND_SHOW_SUCCESS = "<grey><player> <green>is no longer hidden from the map";
+
+    @Key("error.must-specify-player")
+    public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
+    @Key("error.no-such-player")
+    public static String ERROR_NO_SUCH_PLAYER = "<red>No such player <grey><player>";
     @Key("error.must-specify-world")
     public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
     @Key("error.no-such-world")

@@ -1,6 +1,7 @@
 package net.pl3x.map.forge.command;
 
 import java.util.Objects;
+import java.util.UUID;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.forge.ForgeServerAudiences;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -76,6 +77,11 @@ public class ForgeSender extends Sender {
         @Override
         public @NonNull ServerPlayer getPlayer() {
             return (ServerPlayer) getSender().source;
+        }
+
+        @Override
+        public @NonNull UUID getUUID() {
+            return getPlayer().getUUID();
         }
 
         @Override

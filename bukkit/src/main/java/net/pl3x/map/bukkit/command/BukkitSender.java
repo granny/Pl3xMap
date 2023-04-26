@@ -1,6 +1,7 @@
 package net.pl3x.map.bukkit.command;
 
 import java.util.Objects;
+import java.util.UUID;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -75,6 +76,11 @@ public class BukkitSender extends Sender {
         @Override
         public org.bukkit.entity.@NonNull Player getPlayer() {
             return (org.bukkit.entity.Player) getSender();
+        }
+
+        @Override
+        public @NonNull UUID getUUID() {
+            return getPlayer().getUniqueId();
         }
 
         @Override

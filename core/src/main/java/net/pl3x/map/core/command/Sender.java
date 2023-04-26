@@ -1,5 +1,6 @@
 package net.pl3x.map.core.command;
 
+import java.util.UUID;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.ComponentLike;
@@ -50,6 +51,8 @@ public abstract class Sender implements ForwardingAudience.Single {
 
     public interface Player<T> {
         @NonNull T getPlayer();
+
+        @NonNull UUID getUUID();
 
         @Nullable World getWorld();
     }

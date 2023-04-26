@@ -1,5 +1,6 @@
 package net.pl3x.map.core;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
@@ -13,6 +14,7 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.metrics.Metrics;
 import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.registry.IconRegistry;
@@ -36,6 +38,9 @@ public abstract class Pl3xMap {
         return Provider.api();
     }
 
+    private boolean isEnabled;
+    private Metrics metrics;
+
     private HttpdServer httpdServer;
     private RegionProcessor regionProcessor;
 
@@ -55,6 +60,10 @@ public abstract class Pl3xMap {
         // * imageio fails to find twelvemonkeys spis at all
         // I am forced to load them all myself instead of relying on the META-INF
         SpiFix.forceRegisterSpis();
+    }
+
+    public boolean isEnabled() {
+        return this.isEnabled;
     }
 
     protected void init() {
@@ -160,9 +169,27 @@ public abstract class Pl3xMap {
 
         Logger.debug("Starting update settings data task");
         getScheduler().addTask(new UpdateSettingsData());
+
+        Logger.info("Platform: " + getPlatform());
+        Logger.info("Version: " + getVersion());
+
+        try {
+            this.metrics = new Metrics(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.isEnabled = true;
     }
 
     public void disable() {
+        if (this.metrics != null) {
+            this.metrics.shutdown();
+            this.metrics = null;
+        }
+
+        this.isEnabled = false;
+
         // stop tasks
         Logger.debug("Stopping tasks");
         getScheduler().cancelAll();
@@ -200,9 +227,13 @@ public abstract class Pl3xMap {
         getBlockRegistry().unregister();
     }
 
+    public abstract @NonNull String getPlatform();
+
     public abstract @NonNull String getVersion();
 
     public abstract int getMaxPlayers();
+
+    public abstract boolean getOnlineMode();
 
     public abstract int getOperatorUserPermissionLevel();
 

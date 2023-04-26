@@ -1,6 +1,7 @@
 package net.pl3x.map.fabric.command;
 
 import java.util.Objects;
+import java.util.UUID;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
@@ -77,6 +78,11 @@ public class FabricSender extends Sender {
         @Override
         public @NonNull ServerPlayer getPlayer() {
             return (ServerPlayer) getSender().source;
+        }
+
+        @Override
+        public @NonNull UUID getUUID() {
+            return getPlayer().getUUID();
         }
 
         @Override

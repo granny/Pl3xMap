@@ -11,8 +11,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.pl3x.map.core.command.commands.ConfirmCommand;
 import net.pl3x.map.core.command.commands.HelpCommand;
+import net.pl3x.map.core.command.commands.HideCommand;
 import net.pl3x.map.core.command.commands.ReloadCommand;
 import net.pl3x.map.core.command.commands.ResetMapCommand;
+import net.pl3x.map.core.command.commands.ShowCommand;
 import net.pl3x.map.core.configuration.Lang;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -66,8 +68,10 @@ public interface CommandHandler {
         List.of(
                 new ConfirmCommand(this),
                 new HelpCommand(this),
+                new HideCommand(this),
                 new ReloadCommand(this),
-                new ResetMapCommand(this)
+                new ResetMapCommand(this),
+                new ShowCommand(this)
         ).forEach(Pl3xMapCommand::register);
     }
 }

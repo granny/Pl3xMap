@@ -1,33 +1,45 @@
 package net.pl3x.map.core.log;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
+import net.pl3x.map.core.configuration.Lang;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.slf4j.LoggerFactory;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Logger {
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger("Pl3xMap");
-
     public static void debug(@NonNull String message) {
         if (Config.DEBUG_MODE) {
-            info("<yellow>[DEBUG]</yellow> " + message);
+            log("<gray>[<yellow>DEBUG</yellow>] " + message);
         }
     }
 
     public static void info(@NonNull String message) {
-        log.info(strip(message));
+        log("<gray>[INFO] " + message);
     }
 
     public static void severe(@NonNull String message) {
-        log.error(strip("<red>[ERROR] " + message));
+        severe(message, null);
+    }
+
+    public static void severe(@NonNull String message, @Nullable Throwable throwable) {
+        log("<gray>[<red>ERROR</red>]</gray> <red>" + message);
+        if (throwable != null) {
+            throwable.printStackTrace();
+        }
     }
 
     public static void warn(@NonNull String message) {
-        log.warn(strip("<yellow>[WARN] " + message));
+        warn(message, null);
     }
 
-    // todo - temporarily strip colors until we can figure this out
-    private static @NonNull String strip(@NonNull String message) {
-        return MiniMessage.miniMessage().stripTags(message);
+    public static void warn(@NonNull String message, @Nullable Throwable throwable) {
+        log("<gray>[<yellow>WARN</yellow>]</gray> <yellow>" + message);
+        if (throwable != null) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private static void log(String message) {
+        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(Lang.PREFIX_COMMAND + message));
     }
 }

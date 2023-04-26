@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -132,6 +133,11 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
+    public @NonNull String getPlatform() {
+        return this.server.getServerModName().toLowerCase(Locale.ROOT);
+    }
+
+    @Override
     public @NonNull String getVersion() {
         return getModInfo().getVersion().toString();
     }
@@ -139,6 +145,11 @@ public class Pl3xMapForge extends Pl3xMap {
     @Override
     public int getMaxPlayers() {
         return this.server.getMaxPlayers();
+    }
+
+    @Override
+    public boolean getOnlineMode() {
+        return this.server.usesAuthentication();
     }
 
     @Override

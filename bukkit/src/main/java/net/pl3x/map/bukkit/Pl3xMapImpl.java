@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -79,6 +80,11 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
+    public @NonNull String getPlatform() {
+        return Bukkit.getName().toLowerCase(Locale.ROOT);
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public @NonNull String getVersion() {
         return this.plugin.getDescription().getVersion();
@@ -86,7 +92,12 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     public int getMaxPlayers() {
-        return MinecraftServer.getServer().getMaxPlayers();
+        return Bukkit.getMaxPlayers();
+    }
+
+    @Override
+    public boolean getOnlineMode() {
+        return Bukkit.getOnlineMode();
     }
 
     @Override
