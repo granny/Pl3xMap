@@ -47,7 +47,7 @@ jobs:
       - name: Publish to Hangar
         run: ./gradlew publishPluginPublicationToHangar --stacktrace
         env:
-          MODRINTH_TOKEN: ${{ secrets.HANGAR_TOKEN }}
+          HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
           COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
 #      - name: Publish to Modrinth
 #        run: ./gradlew modrinth --stacktrace
