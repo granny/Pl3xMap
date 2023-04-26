@@ -1,8 +1,10 @@
+import io.papermc.hangarpublishplugin.model.Platforms
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id 'java'
-    id("com.modrinth.minotaur") version "2.+"
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'io.papermc.hangar-publish-plugin' version '0.0.5'
 }
 
 def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
@@ -149,14 +151,33 @@ allprojects {
     }
 }
 
+var file = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar")
+
 modrinth {
     token = System.getenv('MODRINTH_TOKEN')
     projectId = 'pl3xmap'
     versionName = "${project.version}"
     versionNumber = "${project.version}"
     versionType = 'alpha'
-    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
+    uploadFile = file.get()
     gameVersions.addAll(["${minecraftVersion}"])
     loaders.addAll(['bukkit', 'spigot', 'paper', 'purpur', 'fabric', 'forge'])
     changelog = System.getenv('COMMIT_MESSAGE')
+}
+
+hangarPublish {
+    var mcVer = "${minecraftVersion}"
+    publications.register("plugin") {
+        version.set(project.version as String)
+        namespace("BillyGalbreath", "Pl3xMap")
+        channel.set("Alpha")
+        changelog.set(System.getenv('COMMIT_MESSAGE'))
+        apiKey.set(System.getenv('HANGAR_TOKEN'))
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(file.get())
+                platformVersions.set([mcVer])
+            }
+        }
+    }
 }
