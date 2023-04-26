@@ -32,7 +32,7 @@ jobs:
       - name: Store artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Pl3xMap-v2
+          name: Pl3xMap-v3
           path: build/libs
       - name: Generate Javadoc
         run: ./gradlew javadoc
@@ -44,18 +44,18 @@ jobs:
           clean: true
           folder: core/build/docs/javadoc
           target-folder: ./
-      - name: Publish to Modrinth
-        run: ./gradlew modrinth --stacktrace
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
-      - name: Notify Discord
-        uses: sarisia/actions-status-discord@v1
-        if: success()
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          nodetail: true
-          title: New build of Pl3xMap is ready!
-          description: |
-            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
-            Click [here](https://modrinth.com/mod/pl3xmap) to download!
+#      - name: Publish to Modrinth
+#        run: ./gradlew modrinth --stacktrace
+#        env:
+#          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+#          COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
+#      - name: Notify Discord
+#        uses: sarisia/actions-status-discord@v1
+#        if: success()
+#        with:
+#          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+#          nodetail: true
+#          title: New build of Pl3xMap is ready!
+#          description: |
+#            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
+#            Click [here](https://modrinth.com/mod/pl3xmap) to download!
