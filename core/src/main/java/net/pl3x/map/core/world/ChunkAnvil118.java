@@ -1,3 +1,27 @@
+/*
+ * This file is part of BlueMap, licensed under the MIT License (MIT).
+ *
+ * Copyright (c) Blue (Lukas Rieger) <https://bluecolored.de>
+ * Copyright (c) contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package net.pl3x.map.core.world;
 
 import java.util.ArrayList;
@@ -7,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Colors;
+import net.pl3x.map.core.util.MCAMath;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
@@ -76,7 +101,7 @@ public class ChunkAnvil118 extends Chunk {
         if (this.worldSurfaceHeights.length < 37) {
             return 0;
         }
-        return (int) getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
+        return (int) MCAMath.getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
     }
 
     @Override
@@ -223,7 +248,7 @@ public class ChunkAnvil118 extends Chunk {
                 return Blocks.AIR.getDefaultState();
             }
             int blockIndex = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);
-            long value = getValueFromLongArray(this.blocks, blockIndex, this.bitsPerBlock);
+            long value = MCAMath.getValueFromLongArray(this.blocks, blockIndex, this.bitsPerBlock);
             if (value >= this.blockPalette.length) {
                 return Blocks.AIR.getDefaultState();
             }
@@ -237,7 +262,7 @@ public class ChunkAnvil118 extends Chunk {
             int blockByteIndex = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);
             int blockHalfByteIndex = blockByteIndex >> 1;
             boolean largeHalf = (blockByteIndex & 0x1) != 0;
-            return getByteHalf(this.blockLight[blockHalfByteIndex], largeHalf);
+            return MCAMath.getByteHalf(this.blockLight[blockHalfByteIndex], largeHalf);
         }
 
         public @NonNull Biome getBiome(int x, int y, int z) {
@@ -248,7 +273,7 @@ public class ChunkAnvil118 extends Chunk {
                 return this.biomePalette[0];
             }
             int biomeIndex = (((y & 0xF) >> 2) << 4) + (((z & 0xF) >> 2) << 2) + ((x & 0xF) >> 2);
-            long value = getValueFromLongArray(this.biomes, biomeIndex, this.bitsPerBiome);
+            long value = MCAMath.getValueFromLongArray(this.biomes, biomeIndex, this.bitsPerBiome);
             if (value >= this.biomePalette.length) {
                 return Biome.DEFAULT;
             }

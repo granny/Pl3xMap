@@ -1,3 +1,6 @@
+/*
+ * Borrowed from Mojang in good faith with much love <3
+ */
 package net.pl3x.map.core.world;
 
 import java.util.Iterator;
@@ -9,7 +12,6 @@ public class BiomeManager implements Iterable<@NonNull Biome> {
 
     public BiomeManager(@NonNull World world) {
         this.world = world;
-        //this.hashedSeed = Hashing.sha256().hashLong(world.getSeed()).asLong();
         this.hashedSeed = world.hashSeed(world.getSeed());
     }
 

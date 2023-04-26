@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 William Blake Galbreath
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package net.pl3x.map.core.world;
 
 import java.util.Objects;
@@ -92,36 +115,6 @@ public abstract class Chunk {
         //if (version < 2500) return new ChunkAnvil115(world, tag);
         //if (version < 2844) return new ChunkAnvil116(world, tag);
         return new ChunkAnvil118(world, region, tag);
-    }
-
-    public static long getValueFromLongArray(long[] data, int valueIndex, int bitsPerValue) {
-        int valuesPerLong = 64 / bitsPerValue;
-        int longIndex = valueIndex / valuesPerLong;
-        int bitIndex = (valueIndex % valuesPerLong) * bitsPerValue;
-        long value = data[longIndex] >>> bitIndex;
-        return value & (0xFFFFFFFFFFFFFFFFL >>> -bitsPerValue);
-    }
-
-    public static long getValueFromLongStream(long[] data, int valueIndex, int bitsPerValue) {
-        int bitIndex = valueIndex * bitsPerValue;
-        int firstLong = bitIndex >> 6;
-        int bitoffset = bitIndex & 0x3F;
-        long value = data[firstLong] >>> bitoffset;
-        if (bitoffset > 0 && firstLong + 1 < data.length) {
-            long value2 = data[firstLong + 1];
-            value2 = value2 << -bitoffset;
-            value = value | value2;
-        }
-        return value & (0xFFFFFFFFFFFFFFFFL >>> -bitsPerValue);
-    }
-
-    public static int getByteHalf(int value, boolean largeHalf) {
-        value = value & 0xFF;
-        if (largeHalf) {
-            value = value >> 4;
-        }
-        value = value & 0xF;
-        return value;
     }
 
     @Override

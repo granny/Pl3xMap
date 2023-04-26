@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.pl3x.map.core.util;
 
 import java.io.IOException;
@@ -5,8 +21,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+// from apache commons StringEscapeUtils
+
 public class StringUtils {
-    // from apache commons StringEscapeUtils
     public static @Nullable String unescapeJava(@Nullable String str) {
         if (str == null) {
             return null;
@@ -20,7 +37,6 @@ public class StringUtils {
         }
     }
 
-    // from apache commons StringEscapeUtils
     @SuppressWarnings({"ReassignedVariable", "DataFlowIssue", "RedundantLabeledSwitchRuleCodeBlock"})
     private static void unescapeJava(@Nullable Writer out, @Nullable String str) throws IOException {
         if (out == null) {
