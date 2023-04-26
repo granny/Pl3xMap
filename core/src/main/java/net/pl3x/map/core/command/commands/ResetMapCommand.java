@@ -27,7 +27,9 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
@@ -57,22 +59,28 @@ public class ResetMapCommand extends Pl3xMapCommand {
         Sender sender = context.getSender();
         World world = WorldArgument.resolve(context, "world");
 
-        // unregister the world
-        Pl3xMap.api().getWorldRegistry().unregister(world.getName());
+        TagResolver.Single worldPlaceholder = Placeholder.unparsed("world", world.getName());
+        sender.sendMessage(Lang.COMMAND_RESETMAP_BEGIN, worldPlaceholder);
 
-        // delete world files
-        String result;
-        try {
-            FileUtil.deleteDirectory(world.getTilesDirectory());
-            result = Lang.COMMAND_RESETMAP_SUCCESS;
-        } catch (IOException e) {
-            result = Lang.COMMAND_RESETMAP_FAILED;
-        }
+        // this _can_ take forever... don't stall the main thread
+        CompletableFuture.runAsync(() -> {
+            // unregister the world
+            Pl3xMap.api().getWorldRegistry().unregister(world.getName());
 
-        // create a new world
-        Pl3xMap.api().getWorldRegistry().register(Pl3xMap.api().cloneWorld(world));
+            // delete world files
+            String result;
+            try {
+                FileUtil.deleteDirectory(world.getTilesDirectory());
+                result = Lang.COMMAND_RESETMAP_SUCCESS;
+            } catch (IOException e) {
+                result = Lang.COMMAND_RESETMAP_FAILED;
+            }
 
-        // notify sender
-        sender.sendMessage(result, Placeholder.unparsed("world", world.getName()));
+            // create a new world
+            Pl3xMap.api().getWorldRegistry().register(Pl3xMap.api().cloneWorld(world));
+
+            // notify sender
+            sender.sendMessage(result, worldPlaceholder);
+        });
     }
 }

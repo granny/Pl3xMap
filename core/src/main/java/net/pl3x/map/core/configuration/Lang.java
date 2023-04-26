@@ -87,6 +87,8 @@ public final class Lang extends AbstractConfig {
 
     @Key("command.resetmap.description")
     public static String COMMAND_RESETMAP_DESCRIPTION = "Cancel active render of a world";
+    @Key("command.resetmap.begin")
+    public static String COMMAND_RESETMAP_BEGIN = "<green>Map reset for <grey><world></grey> has begun";
     @Key("command.resetmap.success")
     public static String COMMAND_RESETMAP_SUCCESS = "<green>Successfully reset map for <grey><world>";
     @Key("command.resetmap.failed")
