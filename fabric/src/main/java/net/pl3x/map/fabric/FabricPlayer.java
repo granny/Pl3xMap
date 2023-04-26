@@ -40,12 +40,11 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.world.World;
+import net.pl3x.map.fabric.duck.AccessServerPlayer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FabricPlayer extends Player {
-    //private static final NamespacedKey HIDDEN_KEY = new NamespacedKey(Pl3xMapBukkit.getInstance(), "hidden");
-
     public FabricPlayer(@NonNull ServerPlayer player) {
         super(player);
     }
@@ -144,12 +143,12 @@ public class FabricPlayer extends Player {
 
     @Override
     public boolean isPersistentlyHidden() {
-        return false;//this.player.getPersistentDataContainer().getOrDefault(HIDDEN_KEY, PersistentDataType.BYTE, (byte) 0) != 0;
+        return ((AccessServerPlayer) getPlayer()).isHidden();
     }
 
     @Override
     public void setPersistentlyHidden(boolean hidden) {
-        //this.player.getPersistentDataContainer().set(HIDDEN_KEY, PersistentDataType.BYTE, (byte) (hidden ? 1 : 0));
+        ((AccessServerPlayer) getPlayer()).setHidden(hidden);
     }
 
     @Override
