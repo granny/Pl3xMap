@@ -3,16 +3,13 @@
  */
 package net.pl3x.map.core.world;
 
-import java.util.Iterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class BiomeManager implements Iterable<@NonNull Biome> {
-    private final World world;
+public class BiomeManager {
     private final long hashedSeed;
 
-    public BiomeManager(@NonNull World world) {
-        this.world = world;
-        this.hashedSeed = world.hashSeed(world.getSeed());
+    public BiomeManager(long hashedSeed) {
+        this.hashedSeed = hashedSeed;
     }
 
     public @NonNull Biome getBiome(@NonNull Region region, int x, int y, int z) {
@@ -46,7 +43,7 @@ public class BiomeManager implements Iterable<@NonNull Biome> {
         x = ((o & 4) == 0 ? l : l + 1) << 2;
         y = ((o & 2) == 0 ? m : m + 1) << 2;
         z = ((o & 1) == 0 ? n : n + 1) << 2;
-        return this.world.getChunk(region, x >> 4, z >> 4).getBiome(x, y, z);
+        return region.getWorld().getChunk(region, x >> 4, z >> 4).getBiome(x, y, z);
     }
 
     private double getFiddledDistance(long seed, int i, int j, int k, double d, double e, double f) {
@@ -75,10 +72,5 @@ public class BiomeManager implements Iterable<@NonNull Biome> {
 
     private double square(double n) {
         return n * n;
-    }
-
-    @Override
-    public @NonNull Iterator<@NonNull Biome> iterator() {
-        return this.world.getBiomeRegistry().iterator();
     }
 }

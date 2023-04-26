@@ -100,7 +100,7 @@ public abstract class World {
 
         this.worldConfig = worldConfig;
 
-        this.biomeManager = new BiomeManager(this);
+        this.biomeManager = new BiomeManager(hashSeed(getSeed()));
         this.biomeRegistry = new BiomeRegistry();
         this.layerRegistry = new Registry<>();
 
