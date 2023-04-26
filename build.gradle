@@ -167,12 +167,14 @@ modrinth {
 
 hangarPublish {
     var mcVer = "${minecraftVersion}"
+    var hangarToken = System.getenv('HANGAR_TOKEN')
+    var commitMessage = System.getenv('COMMIT_MESSAGE')
     publications.register("plugin") {
         version.set(project.version as String)
-        namespace("BillyGalbreath", "Pl3xMap")
-        channel.set("Alpha")
-        changelog.set(System.getenv('COMMIT_MESSAGE'))
-        apiKey.set(System.getenv('HANGAR_TOKEN'))
+        namespace('BillyGalbreath', 'Pl3xMap')
+        channel.set('Alpha')
+        changelog.set(commitMessage)
+        apiKey.set(hangarToken)
         platforms {
             register(Platforms.PAPER) {
                 jar.set(file.get())
