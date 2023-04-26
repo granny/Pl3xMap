@@ -2,6 +2,7 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id 'java'
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
@@ -146,4 +147,16 @@ allprojects {
     processResources {
         filteringCharset = 'UTF-8'
     }
+}
+
+modrinth {
+    token = System.getenv('MODRINTH_TOKEN')
+    projectId = 'pl3xmap'
+    versionName = "${project.version}"
+    versionNumber = "${project.version}"
+    versionType = 'alpha'
+    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
+    gameVersions.addAll(["${minecraftVersion}"])
+    loaders.addAll(['bukkit', 'spigot', 'paper', 'purpur', 'fabric', 'forge'])
+    changelog = System.getenv('COMMIT_MESSAGE')
 }
