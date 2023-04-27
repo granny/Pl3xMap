@@ -23,7 +23,6 @@
  */
 package net.pl3x.map.bukkit;
 
-import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -81,6 +80,9 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
                     pl3xmap.getScheduler().tick();
                 }
             }, 50L, 50L);
+        } else {
+            getServer().getScheduler().runTaskTimer(this, () ->
+                    this.pl3xmap.getScheduler().tick(), 1, 1);
         }
     }
 
@@ -92,13 +94,6 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
         }
 
         this.pl3xmap.disable();
-    }
-
-    @EventHandler
-    public void onServerTick(ServerTickEndEvent event) {
-        if (this.pl3xmap != null && !this.isFolia) {
-            this.pl3xmap.getScheduler().tick();
-        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
