@@ -61,6 +61,9 @@ public class RegionFileWatcher implements Runnable {
     }
 
     public void start(boolean verbose) {
+        if (!Pl3xMap.api().isEnabled()) {
+            return;
+        }
         if (verbose) {
             Logger.debug("Starting region file watcher for " + this.world.getName());
         }

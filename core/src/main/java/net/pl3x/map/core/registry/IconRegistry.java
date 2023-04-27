@@ -35,12 +35,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 @SuppressWarnings("UnusedReturnValue")
 public class IconRegistry extends Registry<@NonNull IconImage> {
-    private final Path registeredDir;
+    private Path registeredDir;
 
     /**
      * Create a new image registry.
      */
-    public IconRegistry() {
+    public void init() {
         this.registeredDir = FileUtil.getWebDir().resolve("images/icon/registered/");
         try {
             if (Files.exists(getDir())) {

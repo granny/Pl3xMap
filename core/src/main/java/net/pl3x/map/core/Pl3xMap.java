@@ -163,6 +163,9 @@ public abstract class Pl3xMap {
         Lang.reload();
         ColorsConfig.reload();
 
+        // initialize icons
+        getIconRegistry().init();
+
         // load blocks _after_ we loaded colors
         Logger.debug("Registering blocks");
         Blocks.registerDefaults();
