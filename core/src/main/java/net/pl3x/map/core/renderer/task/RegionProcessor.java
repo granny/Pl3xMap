@@ -132,7 +132,7 @@ public class RegionProcessor {
 
         // create spiral iterator to order region scanning
         Point spawn = world.getSpawn();
-        SpiralIterator spiralIterator = new SpiralIterator(spawn.x(), spawn.z(), maxRadius);
+        SpiralIterator spiralIterator = new SpiralIterator(spawn.x() >> 9, spawn.z() >> 9, maxRadius);
 
         // order preserved map of regions with boolean to signify if it was already scanned
         List<Point> orderedRegionsToScan = new ArrayList<>();
