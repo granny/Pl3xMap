@@ -24,7 +24,6 @@
 package net.pl3x.map.bukkit;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -66,25 +65,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class Pl3xMapImpl extends Pl3xMap {
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
-
     private final JavaPlugin plugin;
 
     private BukkitAudiences adventure;
 
     public Pl3xMapImpl(@NonNull JavaPlugin plugin) {
         super();
-
         this.plugin = plugin;
-
-        try {
-            Field api = Provider.class.getDeclaredField("api");
-            api.setAccessible(true);
-            api.set(null, this);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        init();
     }
 
     @Override

@@ -25,7 +25,6 @@ package net.pl3x.map.forge;
 
 import cloud.commandframework.forge.CloudForgeEntrypoint;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
@@ -87,18 +86,8 @@ public class Pl3xMapForge extends Pl3xMap {
     public Pl3xMapForge() {
         super();
 
-        try {
-            Field api = Provider.class.getDeclaredField("api");
-            api.setAccessible(true);
-            api.set(null, this);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
         //noinspection InstantiationOfUtilityClass
         new CloudForgeEntrypoint();
-
-        init();
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new HiddenCapability());

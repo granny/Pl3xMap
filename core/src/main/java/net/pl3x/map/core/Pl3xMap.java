@@ -24,6 +24,7 @@
 package net.pl3x.map.core;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
@@ -61,40 +62,46 @@ public abstract class Pl3xMap {
         return Provider.api();
     }
 
-    private boolean isEnabled;
-    private Metrics metrics;
+    private final HttpdServer httpdServer;
+    private final RegionProcessor regionProcessor;
+    private final Scheduler scheduler;
 
-    private HttpdServer httpdServer;
-    private RegionProcessor regionProcessor;
-
-    private BlockRegistry blockRegistry;
-    private HeightmapRegistry heightmapRegistry;
-    private IconRegistry iconRegistry;
-    protected PlayerRegistry playerRegistry;
-    private RendererRegistry rendererRegistry;
-    private WorldRegistry worldRegistry;
+    private final BlockRegistry blockRegistry;
+    private final HeightmapRegistry heightmapRegistry;
+    private final IconRegistry iconRegistry;
+    private final PlayerRegistry playerRegistry;
+    private final RendererRegistry rendererRegistry;
+    private final WorldRegistry worldRegistry;
 
     private ExecutorService renderExecutor;
-    private Scheduler scheduler;
+
+    private Metrics metrics;
+    private boolean enabled;
 
     public Pl3xMap() {
-        // Due to these bugs(?) in spi
-        // * relocated libraries cant find their services (xnio fails)
-        // * imageio fails to find twelvemonkeys spis at all
-        // I am forced to load them all myself instead of relying on the META-INF
-        SpiFix.forceRegisterSpis();
-    }
+        try {
+            // Due to these bugs(?) in spi
+            // * relocated libraries cant find their services (xnio fails)
+            // * imageio fails to find twelvemonkeys spis at all
+            // I am forced to load them all myself instead of relying on the META-INF
+            SpiFix.forceRegisterSpis();
+        } catch (Throwable ignore) {
+        }
 
-    public boolean isEnabled() {
-        return this.isEnabled;
-    }
+        try {
+            Field api = Provider.class.getDeclaredField("api");
+            api.setAccessible(true);
+            api.set(null, this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
-    protected void init() {
         // setup internal server
         this.httpdServer = new HttpdServer();
 
         // setup tasks
         this.regionProcessor = new RegionProcessor();
+        this.scheduler = new Scheduler();
 
         // setup registries
         this.blockRegistry = new BlockRegistry();
@@ -103,6 +110,10 @@ public abstract class Pl3xMap {
         this.playerRegistry = new PlayerRegistry();
         this.rendererRegistry = new RendererRegistry();
         this.worldRegistry = new WorldRegistry();
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 
     public @NonNull HttpdServer getHttpdServer() {
@@ -160,7 +171,6 @@ public abstract class Pl3xMap {
         // create the executor service
         Logger.debug("Creating services");
         this.renderExecutor = ThreadFactory.createService("Pl3xMap-Renderer", Config.RENDER_THREADS);
-        this.scheduler = new Scheduler();
 
         // register built in tile image types
         Logger.debug("Registering tile image types");
@@ -202,7 +212,7 @@ public abstract class Pl3xMap {
             e.printStackTrace();
         }
 
-        this.isEnabled = true;
+        this.enabled = true;
     }
 
     public void disable() {
@@ -211,12 +221,15 @@ public abstract class Pl3xMap {
             this.metrics = null;
         }
 
-        this.isEnabled = false;
+        this.enabled = false;
 
         // stop tasks
         Logger.debug("Stopping tasks");
         getScheduler().cancelAll();
         getRegionProcessor().stop();
+        if (this.renderExecutor != null) {
+            this.renderExecutor.shutdownNow();
+        }
 
         // stop integrated server
         Logger.debug("Stopping internal server");

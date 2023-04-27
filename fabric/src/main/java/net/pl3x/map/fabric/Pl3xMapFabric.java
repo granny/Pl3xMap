@@ -23,7 +23,6 @@
  */
 package net.pl3x.map.fabric;
 
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
@@ -74,16 +73,6 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
 
     public Pl3xMapFabric() {
         super();
-
-        try {
-            Field api = Provider.class.getDeclaredField("api");
-            api.setAccessible(true);
-            api.set(null, this);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        init();
     }
 
     @Override

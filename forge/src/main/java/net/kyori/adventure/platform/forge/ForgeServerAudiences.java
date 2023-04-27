@@ -45,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class ForgeServerAudiences implements AudienceProvider {
     private final MinecraftServer server;
 
-    public ForgeServerAudiences(MinecraftServer server) {
+    public ForgeServerAudiences(@NonNull MinecraftServer server) {
         this.server = server;
     }
 
