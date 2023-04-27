@@ -24,13 +24,11 @@
 package net.pl3x.map.forge;
 
 import cloud.commandframework.forge.CloudForgeEntrypoint;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.forge.ForgeServerAudiences;
 import net.minecraft.core.BlockPos;
@@ -64,7 +62,6 @@ import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
-import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.forge.capability.HiddenCapability;
 import net.pl3x.map.forge.command.ForgeCommandManager;
@@ -191,12 +188,8 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
-    public void useJar(@NonNull Consumer<@NonNull Path> consumer) {
-        try {
-            FileUtil.openJar(getModInfo().getOwningFile().getFile().getFilePath(), fs -> consumer.accept(fs.getPath("/")));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public @NonNull Path getJarPath() {
+        return getModInfo().getOwningFile().getFile().getFilePath();
     }
 
     @Override

@@ -23,17 +23,12 @@
  */
 package net.pl3x.map.bukkit;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.minecraft.core.BlockPos;
@@ -54,7 +49,6 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.Colors;
-import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
@@ -68,6 +62,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     private final JavaPlugin plugin;
 
     private BukkitAudiences adventure;
+    private Path jarPath;
 
     public Pl3xMapImpl(@NonNull JavaPlugin plugin) {
         super();
@@ -129,26 +124,15 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public void useJar(@NonNull Consumer<@NonNull Path> consumer) {
-        // https://github.com/PEXPlugins/PermissionsEx/blob/master/api/src/main/java/ca/stellardrift/permissionsex/util/TranslatableProvider.java#L150-L158 (Apache-2.0 license)
-        URL sourceUrl = Pl3xMap.class.getProtectionDomain().getCodeSource().getLocation();
-        // Some class loaders give the full url to the class, some give the URL to its jar.
-        // We want the containing jar, so we will unwrap jar-schema code sources.
-        if (sourceUrl.getProtocol().equals("jar")) {
-            int exclamationIdx = sourceUrl.getPath().lastIndexOf('!');
-            if (exclamationIdx != -1) {
-                try {
-                    sourceUrl = new URL(sourceUrl.getPath().substring(0, exclamationIdx));
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                }
+    public @NonNull Path getJarPath() {
+        if (this.jarPath == null) {
+            try {
+                this.jarPath = Path.of(Pl3xMap.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
         }
-        try {
-            FileUtil.openJar(Paths.get(sourceUrl.toURI()), fs -> consumer.accept(fs.getPath("/")));
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        return this.jarPath;
     }
 
     @Override

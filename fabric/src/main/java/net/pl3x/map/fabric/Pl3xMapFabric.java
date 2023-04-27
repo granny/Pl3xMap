@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -161,8 +160,8 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     }
 
     @Override
-    public void useJar(@NonNull Consumer<@NonNull Path> consumer) {
-        consumer.accept(getModContainer().getRootPaths().get(0));
+    public @NonNull Path getJarPath() {
+        return getModContainer().getOrigin().getPaths().get(0);
     }
 
     @Override

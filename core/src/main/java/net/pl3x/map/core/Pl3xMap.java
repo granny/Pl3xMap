@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
@@ -280,7 +279,7 @@ public abstract class Pl3xMap {
 
     public abstract @NonNull Path getMainDir();
 
-    public abstract void useJar(@NonNull Consumer<@NonNull Path> consumer);
+    public abstract @NonNull Path getJarPath();
 
     public abstract int getColorForPower(byte power);
 

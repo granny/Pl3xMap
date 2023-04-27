@@ -26,8 +26,10 @@ package net.pl3x.map.core.world;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -59,6 +61,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class World {
+    public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
+
     private final String name;
     private final Path markersDirectory;
     private final Path regionDirectory;
@@ -284,7 +288,7 @@ public abstract class World {
 
     public @NonNull Collection<@NonNull Path> getRegionFiles() {
         try (Stream<Path> stream = Files.list(getRegionDirectory())) {
-            return stream.filter(FileUtil.MCA_MATCHER::matches).toList();
+            return stream.filter(MCA_MATCHER::matches).toList();
         } catch (IOException e) {
             throw new RuntimeException("Failed to list region files in directory '" + getRegionDirectory().toAbsolutePath() + "'", e);
         }

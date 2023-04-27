@@ -23,25 +23,27 @@
  */
 package net.pl3x.map.core.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -54,8 +56,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FileUtil {
-    public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
-
     public @NonNull
     static Path getTilesDir() {
         return getWebDir().resolve("tiles");
@@ -72,6 +72,7 @@ public class FileUtil {
             }
             Path path = outDir.resolve(filename);
             if (!Files.exists(path) || replace) {
+                Files.createDirectories(path.getParent());
                 Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
@@ -80,53 +81,54 @@ public class FileUtil {
     }
 
     public static void extractDir(@NonNull String sourceDir, @NonNull Path outDir, boolean replace) {
-        Pl3xMap.api().useJar(jar -> {
-            try {
-                Path inDir = jar.resolve(sourceDir);
-                if (!Files.exists(inDir)) {
-                    throw new IllegalStateException("can't find " + inDir + " on the classpath");
+        try (JarFile jarFile = new JarFile(Pl3xMap.api().getJarPath().toFile())) {
+            Logger.debug("Extracting " + sourceDir + " directory from jar...");
+            String path = sourceDir.substring(1);
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String name = entry.getName();
+                if (!name.startsWith(path)) {
+                    continue;
                 }
-                Logger.debug("Extracting " + inDir + " directory from jar...");
-                try (Stream<Path> stream = Files.walk(inDir)) {
-                    stream.forEach(source -> {
-                        Path target = outDir.resolve(inDir.relativize(source).toString());
-                        String friendlyPathName = inDir.resolve(source).toString();
-                        boolean exists = Files.exists(target);
-                        if (Files.isDirectory(source)) {
-                            if (!exists) {
-                                try {
-                                    Logger.debug("  <green>creating</green> " + friendlyPathName);
-                                    Files.createDirectories(target);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            return;
-                        }
-                        if (!replace && exists) {
-                            Logger.debug("  <yellow>exists</yellow>   " + friendlyPathName);
-                            return;
-                        }
+                Path file = outDir.resolve(name.substring(path.length()));
+                boolean exists = Files.exists(file);
+                if (!replace && exists) {
+                    Logger.debug("  <yellow>exists</yellow>   " + name);
+                    continue;
+                }
+                if (entry.isDirectory()) {
+                    if (!exists) {
                         try {
-                            Logger.debug("  <green>writing</green>  " + friendlyPathName);
-                            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                            Files.createDirectories(file);
+                            Logger.debug("  <green>creating</green> " + name);
                         } catch (IOException e) {
-                            Logger.debug("  <red><bold>failed</bold></red>   " + friendlyPathName);
-                            Logger.warn("Failed to extract file (" + friendlyPathName + ") from jar!");
-                            e.printStackTrace();
+                            Logger.debug("  <red><bold>failed</bold></red>   " + name);
                         }
-                    });
+                    } else {
+                        Logger.debug("  <yellow>exists</yellow>   " + name);
+                    }
+                    continue;
                 }
-            } catch (IOException e) {
-                Logger.warn("Failed to extract file (" + sourceDir + ") from jar!");
-                e.printStackTrace();
+                try (
+                        InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
+                        OutputStream out = new BufferedOutputStream(new FileOutputStream(file.toFile()))
+                ) {
+                    byte[] buffer = new byte[4096];
+                    int readCount;
+                    while ((readCount = in.read(buffer)) > 0) {
+                        out.write(buffer, 0, readCount);
+                    }
+                    out.flush();
+                    Logger.debug("  <green>writing</green>  " + name);
+                } catch (IOException e) {
+                    Logger.debug("  <red><bold>failed</bold></red>   " + name);
+                    Logger.warn("Failed to extract file (" + name + ") from jar!");
+                    e.printStackTrace();
+                }
             }
-        });
-    }
-
-    public static void openJar(@NonNull Path jar, @NonNull Consumer<@NonNull FileSystem> consumer) throws IOException {
-        try (FileSystem fileSystem = FileSystems.newFileSystem(jar)) {
-            consumer.accept(fileSystem);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
