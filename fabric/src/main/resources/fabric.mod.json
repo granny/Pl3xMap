@@ -27,7 +27,7 @@
   "accessWidener": "pl3xmap.accesswidener",
   "depends": {
     "fabricloader": ">=${fabricLoaderVersion}",
-    "fabric": "*",
+    "fabric": ">=${fabricApiVersion}",
     "minecraft": "~${minecraftVersion}",
     "java": ">=17"
   },

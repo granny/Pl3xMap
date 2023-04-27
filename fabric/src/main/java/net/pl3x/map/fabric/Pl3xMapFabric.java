@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.kyori.adventure.platform.AudienceProvider;
@@ -42,6 +45,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -51,6 +55,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.player.Player;
+import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.fabric.command.FabricCommandManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -59,6 +65,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitializer {
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
+    private final PlayerListener playerListener = new PlayerListener();
 
     private MinecraftServer server;
     private ModContainer modContainer;
@@ -86,21 +93,37 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
 
-    public void enable(@NonNull MinecraftServer server) {
-        this.server = server;
-        this.adventure = FabricServerAudiences.of(this.server);
-        enable();
-    }
+        ServerTickEvents.END_SERVER_TICK.register(server -> getScheduler().tick());
 
-    @Override
-    public void disable() {
-        super.disable();
-        if (this.adventure != null) {
-            this.adventure.close();
-            this.adventure = null;
-        }
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayer player = handler.getPlayer();
+            Player fabricPlayer = getPlayerRegistry().getOrDefault(player.getUUID(), () -> new FabricPlayer(player));
+            this.playerListener.onJoin(fabricPlayer);
+        });
+
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ServerPlayer player = handler.getPlayer();
+            Player fabricPlayer = getPlayerRegistry().unregister(player.getUUID());
+            if (fabricPlayer != null) {
+                this.playerListener.onQuit(fabricPlayer);
+            }
+        });
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            this.server = server;
+            this.adventure = FabricServerAudiences.of(this.server);
+            enable();
+        });
+
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            disable();
+            if (this.adventure != null) {
+                this.adventure.close();
+                this.adventure = null;
+            }
+            getBlockRegistry().unregister();
+        });
     }
 
     public @NonNull ModContainer getModContainer() {
