@@ -3,6 +3,7 @@ name: "${name}"
 main: "${group}.Pl3xMapBukkit"
 version: "${version}"
 api-version: "1.19"
+folia-supported: true
 load: "POSTWORLD"
 authors: ${authors}
 description: "${description}"

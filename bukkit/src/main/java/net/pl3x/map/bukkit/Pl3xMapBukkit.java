@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.bukkit;
 
+import com.destroystokyo.paper.event.server.ServerTickEndEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import net.pl3x.map.bukkit.command.BukkitCommandManager;
 import net.pl3x.map.core.Pl3xMap;
@@ -38,12 +41,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Pl3xMapBukkit extends JavaPlugin implements Listener {
-    private final Pl3xMap pl3xmap;
+    private final Pl3xMapImpl pl3xmap;
     private final PlayerListener playerListener = new PlayerListener();
+
+    private final boolean isFolia;
+    private Timer foliaTimer;
 
     public Pl3xMapBukkit() {
         super();
         this.pl3xmap = new Pl3xMapImpl(this);
+
+        boolean isFolia = false;
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.FoliaGlobalRegionScheduler");
+            isFolia = true;
+        } catch (ClassNotFoundException ignore) {
+        }
+        this.isFolia = isFolia;
     }
 
     @Override
@@ -52,20 +66,39 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(this, this);
 
-        getServer().getScheduler().runTaskTimer(this, () -> this.pl3xmap.getScheduler().tick(), 1, 1);
-
         try {
             new BukkitCommandManager(this);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        if (this.isFolia) {
+            // try to replicate a main tick heartbeat, 50ms
+            this.foliaTimer = new Timer();
+            this.foliaTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    pl3xmap.getScheduler().tick();
+                }
+            }, 50L, 50L);
+        }
     }
 
     @Override
     public void onDisable() {
-        getServer().getScheduler().cancelTasks(this);
+        if (this.foliaTimer != null) {
+            this.foliaTimer.cancel();
+            this.foliaTimer = null;
+        }
 
         this.pl3xmap.disable();
+    }
+
+    @EventHandler
+    public void onServerTick(ServerTickEndEvent event) {
+        if (this.pl3xmap != null && !this.isFolia) {
+            this.pl3xmap.getScheduler().tick();
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
