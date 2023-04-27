@@ -36,6 +36,7 @@ processResources {
                 'version': project.version,
                 //'authors': authors, // fabric is dumb and wont compile with this :/
                 'description': project.properties["description"],
+                'fabricApiVersion': fabricApiVersion,
                 'fabricLoaderVersion': fabricLoaderVersion,
                 'minecraftVersion': minecraftVersion,
                 'website': website,
