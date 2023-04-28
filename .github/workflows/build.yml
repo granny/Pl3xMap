@@ -57,13 +57,13 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
         continue-on-error: true
-#      - name: Notify Discord
-#        uses: sarisia/actions-status-discord@v1
-#        if: success()
-#        with:
-#          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-#          nodetail: true
-#          title: New build of Pl3xMap is ready!
-#          description: |
-#            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
-#            Click [here](https://modrinth.com/mod/pl3xmap) to download!
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        if: success()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: New build of Pl3xMap is ready!
+          description: |
+            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
+            Click [here](https://modrinth.com/mod/pl3xmap) to download!
