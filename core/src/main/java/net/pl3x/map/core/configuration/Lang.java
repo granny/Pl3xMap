@@ -101,6 +101,35 @@ public final class Lang extends AbstractConfig {
     @Key("command.show.success")
     public static String COMMAND_SHOW_SUCCESS = "<grey><player> <green>is no longer hidden from the map";
 
+    @Key("command.version.description")
+    public static String COMMAND_VERSION_DESCRIPTION = "Get version information";
+    @Key("command.version.please-wait")
+    public static String COMMAND_VERSION_PLEASE_WAIT = "<italic>Checking version, please wait...";
+    @Key("command.version.still-checking")
+    public static String COMMAND_VERSION_STILL_CHECKING = "<italic>Still checking...";
+    @Key("command.version.error.not-array")
+    public static String COMMAND_VERSION_ERROR_NOT_ARRAY = "<red>Error: response not an array";
+    @Key("command.version.error.corrupt-json")
+    public static String COMMAND_VERSION_ERROR_CORRUPT_JSON = "<red>Error: response is corrupt json";
+    @Key("command.version.error.unknown-version")
+    public static String COMMAND_VERSION_ERROR_UNKNOWN_VERSION = "<red>Error: response has unknown version";
+    @Key("command.version.error.unable-to-determine")
+    public static String COMMAND_VERSION_ERROR_UNABLE_TO_DETERMINE = "<red>Error: Unable to determine latest build";
+    @Key("command.version.success")
+    public static String COMMAND_VERSION_SUCCESS = "Pl3xMap v3 <version> (<italic><platform></italic>) git-<commit>";
+    @Key("command.version.snapshot")
+    public static String COMMAND_VERSION_SNAPSHOT = "<yellow><italic>You are running a snapshot";
+    @Key("command.version.latest-build-is")
+    public static String COMMAND_VERSION_LATEST_BUILD_IS = "<yellow><italic>Latest build is <build>";
+    @Key("command.version.running-latest-build")
+    public static String COMMAND_VERSION_RUNNING_LATEST_BUILD = "<green><italic>You are running the latest build.";
+    @Key("command.version.builds-behind")
+    public static String COMMAND_VERSION_BUILDS_BEHIND = "<yellow><italic>You are <number> builds behind.";
+    @Key("command.version.download")
+    public static String COMMAND_VERSION_DOWNLOAD = "<yellow><italic>Download new build at: <gold><link>";
+    @Key("command.version.time-traveler")
+    public static String COMMAND_VERSION_TIME_TRAVELER = "<yellow><italic>Are you a time traveler?";
+
     @Key("error.must-specify-player")
     public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
     @Key("error.no-such-player")
@@ -163,5 +192,9 @@ public final class Lang extends AbstractConfig {
 
     public static @NonNull Component parse(@NonNull String msg, @NonNull TagResolver.@NonNull Single... placeholders) {
         return MiniMessage.miniMessage().deserialize(msg, placeholders);
+    }
+
+    public static @NonNull String strip(@NonNull String msg) {
+        return MiniMessage.miniMessage().stripTags(msg);
     }
 }

@@ -52,11 +52,15 @@ public abstract class Sender implements ForwardingAudience.Single {
     public abstract boolean hasPermission(@NonNull String permission);
 
     public void sendMessage(@NonNull String message) {
-        sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message));
+        if (!Lang.strip(message).isBlank()) {
+            sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message));
+        }
     }
 
     public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
-        sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message, placeholders));
+        if (!Lang.strip(message).isBlank()) {
+            sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message, placeholders));
+        }
     }
 
     public void sendMessage(Audience audience, boolean prefix, @NonNull ComponentLike message) {

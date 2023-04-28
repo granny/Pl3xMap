@@ -38,6 +38,9 @@ def combineJars = tasks.register('combineJars', Jar) {
     manifest {
         // this must be here because it overrides the default jar task
         attributes['Main-Class'] = "${rootProject.group}.core.Pl3xMap"
+        def commit = 'git rev-parse --short HEAD'.execute()
+        commit.waitFor()
+        attributes['Git-Commit'] = commit.text.trim()
     }
 }
 

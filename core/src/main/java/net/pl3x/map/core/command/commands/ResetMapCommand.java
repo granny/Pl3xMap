@@ -76,10 +76,9 @@ public class ResetMapCommand extends Pl3xMapCommand {
                 result = Lang.COMMAND_RESETMAP_FAILED;
             }
 
-            // create a new world
+            // create a new world and register it
             Pl3xMap.api().getWorldRegistry().register(Pl3xMap.api().cloneWorld(world));
 
-            // notify sender
             sender.sendMessage(result, worldPlaceholder);
         });
     }

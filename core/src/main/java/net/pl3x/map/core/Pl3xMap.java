@@ -24,12 +24,15 @@
 package net.pl3x.map.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
@@ -61,6 +64,7 @@ public abstract class Pl3xMap {
         return Provider.api();
     }
 
+    private final Attributes manifest;
     private final HttpdServer httpdServer;
     private final RegionProcessor regionProcessor;
     private final Scheduler scheduler;
@@ -74,6 +78,7 @@ public abstract class Pl3xMap {
 
     private ExecutorService renderExecutor;
 
+    private String commit;
     private Metrics metrics;
     private boolean enabled;
 
@@ -92,6 +97,12 @@ public abstract class Pl3xMap {
             api.setAccessible(true);
             api.set(null, this);
         } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (InputStream in = Pl3xMap.class.getResourceAsStream("/META-INF/MANIFEST.MF")) {
+            this.manifest = in == null ? null : new Manifest(in).getMainAttributes();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -268,6 +279,17 @@ public abstract class Pl3xMap {
     public abstract @NonNull String getPlatform();
 
     public abstract @NonNull String getVersion();
+
+    public @NonNull String getVersionCommit() {
+        if (this.commit == null) {
+            if (this.manifest == null) {
+                this.commit = "unknown";
+            } else {
+                this.commit = this.manifest.getValue("Git-Commit");
+            }
+        }
+        return this.commit;
+    }
 
     public abstract int getMaxPlayers();
 
