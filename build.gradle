@@ -65,7 +65,7 @@ def copyWebmap = tasks.register('copyWebmap', Copy) {
     into "$rootDir/core/src/main/resources/web"
 }
 
-build {
+assemble {
     // copy the webmap over
     dependsOn copyWebmap
     mustRunAfter copyWebmap
