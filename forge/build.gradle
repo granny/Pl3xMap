@@ -28,7 +28,7 @@ processResources {
                 'name': rootProject.name,
                 'version': project.version,
                 'authors': authors,
-                'description': project.properties["description"],
+                'description': project.properties['description'],
                 'website': website,
                 'issues': issues,
                 'forgeLoaderVersion': forgeLoaderVersion,

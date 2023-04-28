@@ -27,6 +27,8 @@ jobs:
       - name: Import gradle properties
         shell: bash
         run: cat gradle.properties >> $GITHUB_ENV
+      - name: Shut ForgeGradle Up
+        run: ./gradlew hideOfficialWarningUntilChanged
       - name: Build
         run: ./gradlew build --stacktrace
       - name: Store artifacts

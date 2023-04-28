@@ -8,6 +8,8 @@ plugins {
     id 'io.papermc.hangar-publish-plugin' version '0.0.5'
 }
 
+defaultTasks 'build'
+
 def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
 project.group = 'net.pl3x.map'
 project.version = "$minecraftVersion-$buildNum"
@@ -20,8 +22,6 @@ dependencies {
     compileOnly project(':fabric')
     compileOnly project(':forge')
 }
-
-defaultTasks 'build'
 
 def cleanWebmap = tasks.register('cleanWebmap', Delete) {
     dependsOn clean
@@ -169,14 +169,12 @@ modrinth {
 
 hangarPublish {
     var mcVer = "${minecraftVersion}"
-    var hangarToken = System.getenv('HANGAR_TOKEN')
-    var commitMessage = System.getenv('COMMIT_MESSAGE')
-    publications.register("plugin") {
-        version.set(project.version as String)
+    publications.register('plugin') {
+        version.set("${project.version}")
         namespace('BillyGalbreath', 'Pl3xMap')
         channel.set('Alpha')
-        changelog.set(commitMessage)
-        apiKey.set(hangarToken)
+        changelog.set("${System.getenv('COMMIT_MESSAGE')}")
+        apiKey.set("${System.getenv('HANGAR_TOKEN')}")
         platforms {
             register(Platforms.PAPER) {
                 jar.set(file.get())
@@ -189,10 +187,10 @@ hangarPublish {
 class ModrinthNoBuildPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.tasks.register('modrinth_nobuild', TaskModrinthUpload.class, task -> {
-            task.setGroup("publishing")
-            task.setDescription("Upload project to Modrinth")
-            //task.dependsOn(tasks.named("assemble"))
-            //task.mustRunAfter(tasks.named("build"))
+            task.setGroup('publishing')
+            task.setDescription('Upload project to Modrinth')
+            //task.dependsOn(tasks.named('assemble'))
+            //task.mustRunAfter(tasks.named('build'))
         })
     }
 }
