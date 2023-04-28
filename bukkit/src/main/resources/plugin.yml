@@ -1,4 +1,3 @@
-#file: noinspection YAMLSchemaValidation
 name: "${name}"
 main: "${group}.Pl3xMapBukkit"
 version: "${version}"
@@ -8,3 +7,63 @@ load: "POSTWORLD"
 authors: ${authors}
 description: "${description}"
 website: "${website}"
+
+permissions:
+  pl3xmap.command.map:
+    description: Gives access to the base command
+    default: op
+
+  pl3xmap.command.confirm:
+    description: Gives access to confirm dangerous commands
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.help:
+    description: Gives access to view the help menu
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.hide:
+    description: Gives access to hide self on the map
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.hide.others:
+    description: Gives access to hide others on the map
+    default: op
+    children:
+      pl3xmap.command.hide: true
+
+  pl3xmap.command.reload:
+    description: Gives access to reload the plugin amd configs
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.resetmap:
+    description: Gives access to reset entire maps
+    default: op
+    children:
+      pl3xmap.command.map: true
+      pl3xmap.command.confirm: true
+
+  pl3xmap.command.show:
+    description: Gives access to show self on the map
+    default: op
+    children:
+      pl3xmap.command.map: true
+
+  pl3xmap.command.show.others:
+    description: Gives access to show others on the map
+    default: op
+    children:
+      pl3xmap.command.show: true
+
+  pl3xmap.command.version:
+    description: Gives access to get version information
+    default: op
+    children:
+      pl3xmap.command.map: true
