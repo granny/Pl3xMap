@@ -163,7 +163,7 @@ modrinth {
     versionType = 'alpha'
     uploadFile = file.get()
     gameVersions.addAll(["${minecraftVersion}"])
-    loaders.addAll(['bukkit', 'spigot', 'paper', 'purpur', 'fabric', 'forge'])
+    loaders.addAll(['bukkit', 'fabric', 'folia', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
 }
 
