@@ -127,7 +127,6 @@ public class VersionCommand extends Pl3xMapCommand {
             return;
         }
 
-        // Pl3xMap v3 1.19.4-352 paper git-a1b2c3d
         sender.sendMessage(Lang.COMMAND_VERSION_SUCCESS,
                 Placeholder.unparsed("version", Pl3xMap.api().getVersion()),
                 Placeholder.unparsed("platform", Pl3xMap.api().getPlatform()),

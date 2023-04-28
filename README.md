@@ -47,3 +47,18 @@ Then just run the following command:
 ```
 
 The compiled jars will be in `build/libs/`
+
+## Comparison
+
+Since people love graphs, here is a graph comparing the render speeds of various livemap plugins
+
+![Fullrender Speed Comparison Chart](https://i.imgur.com/b9uJXAm.png)
+
+World size: 5000 block apothem (10k x 10k, 400 regions)<br>
+World type: Normal, pre-generated with Chunky<br>
+Total chunks: 409600<br>
+Render Threads: 16 on all tests<br>
+Paper 1.19.4 build 521<br>
+AMD Ryzen 9 7950X<br>
+64GB DDR5 5200 ram<br>
+2TB nvme (samsung 980 pro)
