@@ -31,11 +31,6 @@ jobs:
         run: ./gradlew hideOfficialWarningUntilChanged
       - name: Build
         run: ./gradlew build --stacktrace
-      - name: Store artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Pl3xMap-v3
-          path: build/libs
       - name: Generate Javadoc
         run: ./gradlew javadoc
       - name: Deploy Javadoc
