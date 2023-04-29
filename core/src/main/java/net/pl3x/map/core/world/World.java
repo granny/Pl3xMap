@@ -42,6 +42,7 @@ import javax.imageio.ImageIO;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.event.world.WorldLoadedEvent;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
@@ -116,6 +117,8 @@ public abstract class World {
         this.regionModifiedState = new RegionModifiedState(this);
         this.regionFileWatcher = new RegionFileWatcher(this);
         this.markerTask = new UpdateMarkerData(this);
+
+        Pl3xMap.api().getEventRegistry().callEvent(new WorldLoadedEvent(this));
 
         if (!isEnabled()) {
             return;

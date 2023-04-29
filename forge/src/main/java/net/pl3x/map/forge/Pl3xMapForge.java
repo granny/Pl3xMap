@@ -58,6 +58,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.event.server.ServerLoadedEvent;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
@@ -139,6 +140,11 @@ public class Pl3xMapForge extends Pl3xMap {
             this.adventure.close();
             this.adventure = null;
         }
+    }
+
+    @SubscribeEvent
+    public void onServerLoad(ServerStartedEvent event) {
+        Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
     }
 
     public @NonNull IModInfo getModInfo() {

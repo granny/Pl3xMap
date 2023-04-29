@@ -52,6 +52,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.event.server.ServerLoadedEvent;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.world.World;
@@ -66,8 +67,9 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
 
     private MinecraftServer server;
     private ModContainer modContainer;
-
     private FabricServerAudiences adventure;
+
+    private boolean firstTick = true;
 
     public Pl3xMapFabric() {
         super();
@@ -81,7 +83,13 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
             throw new RuntimeException(e);
         }
 
-        ServerTickEvents.END_SERVER_TICK.register(server -> getScheduler().tick());
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (this.firstTick) {
+                Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
+                this.firstTick = false;
+            }
+            getScheduler().tick();
+        });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.getPlayer();

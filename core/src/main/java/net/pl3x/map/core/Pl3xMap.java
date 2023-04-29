@@ -37,6 +37,7 @@ import net.kyori.adventure.platform.AudienceProvider;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
+import net.pl3x.map.core.event.EventRegistry;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.log.Logger;
@@ -70,6 +71,7 @@ public abstract class Pl3xMap {
     private final Scheduler scheduler;
 
     private final BlockRegistry blockRegistry;
+    private final EventRegistry eventRegistry;
     private final HeightmapRegistry heightmapRegistry;
     private final IconRegistry iconRegistry;
     private final PlayerRegistry playerRegistry;
@@ -115,6 +117,7 @@ public abstract class Pl3xMap {
 
         // setup registries
         this.blockRegistry = new BlockRegistry();
+        this.eventRegistry = new EventRegistry();
         this.heightmapRegistry = new HeightmapRegistry();
         this.iconRegistry = new IconRegistry();
         this.playerRegistry = new PlayerRegistry();
@@ -136,6 +139,10 @@ public abstract class Pl3xMap {
 
     public @NonNull BlockRegistry getBlockRegistry() {
         return this.blockRegistry;
+    }
+
+    public @NonNull EventRegistry getEventRegistry() {
+        return this.eventRegistry;
     }
 
     public @NonNull HeightmapRegistry getHeightmapRegistry() {

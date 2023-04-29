@@ -28,6 +28,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import net.pl3x.map.bukkit.command.BukkitCommandManager;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.event.server.ServerLoadedEvent;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
@@ -36,6 +37,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -112,5 +114,10 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
         if (bukkitPlayer != null) {
             this.playerListener.onQuit(bukkitPlayer);
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onServerLoaded(ServerLoadEvent event) {
+        Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
     }
 }

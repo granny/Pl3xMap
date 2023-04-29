@@ -25,6 +25,8 @@ package net.pl3x.map.core.registry;
 
 import java.util.function.Supplier;
 import javax.management.openmbean.KeyAlreadyExistsException;
+import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.event.world.WorldUnloadedEvent;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -50,6 +52,7 @@ public class WorldRegistry extends Registry<@NonNull World> {
     public @Nullable World unregister(@NonNull String id) {
         World world = this.entries.remove(id);
         if (world != null) {
+            Pl3xMap.api().getEventRegistry().callEvent(new WorldUnloadedEvent(world));
             world.setPaused(true);
             world.getMarkerTask().cancel();
             world.getRegionFileWatcher().stop();
