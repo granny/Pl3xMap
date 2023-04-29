@@ -46,7 +46,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.World;
@@ -177,8 +176,8 @@ public class Pl3xMapImpl extends Pl3xMap {
     protected void loadWorlds() {
         Bukkit.getWorlds().forEach(world -> {
             ServerLevel level = ((CraftWorld) world).getHandle();
-            WorldConfig worldConfig = new WorldConfig(world.getName());
-            getWorldRegistry().register(new BukkitWorld(level, world.getName(), worldConfig));
+            String name = world.getName();
+            getWorldRegistry().getOrDefault(name, () -> new BukkitWorld(level, name));
         });
     }
 
@@ -192,6 +191,6 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     public @NonNull World cloneWorld(@NonNull World world) {
-        return new BukkitWorld(world.getLevel(), world.getName(), world.getConfig());
+        return new BukkitWorld(world.getLevel(), world.getName());
     }
 }

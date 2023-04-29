@@ -46,14 +46,14 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class ForgeWorld extends World {
     private final ServerLevel level;
 
-    public ForgeWorld(@NonNull ServerLevel level, @NonNull String name, @NonNull WorldConfig worldConfig) {
+    public ForgeWorld(@NonNull ServerLevel level, @NonNull String name) {
         super(
                 name,
                 level.getSeed(),
                 Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getXSpawn()),
                 Type.get(level.dimension().location().toString()),
                 level.getChunkSource().getDataStorage().dataFolder.toPath().getParent().resolve("region"),
-                worldConfig
+                new WorldConfig(name)
         );
         this.level = level;
 

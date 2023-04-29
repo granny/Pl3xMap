@@ -23,12 +23,22 @@
  */
 package net.pl3x.map.core.registry;
 
+import java.util.function.Supplier;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class WorldRegistry extends Registry<@NonNull World> {
+    public @NonNull World getOrDefault(@NonNull String id, @NonNull Supplier<@NonNull World> supplier) {
+        World world = get(id);
+        if (world == null) {
+            world = supplier.get();
+            register(world.getName(), world);
+        }
+        return world;
+    }
+
     public @NonNull World register(@NonNull World world) {
         if (has(world.getName())) {
             throw new KeyAlreadyExistsException("World already registered: " + world.getName());

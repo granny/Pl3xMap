@@ -52,7 +52,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.world.World;
@@ -200,10 +199,7 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     protected void loadWorlds() {
         this.server.getAllLevels().forEach(level -> {
             String name = level.dimension().location().toString();
-            WorldConfig worldConfig = new WorldConfig(name);
-            if (worldConfig.ENABLED) {
-                getWorldRegistry().register(new FabricWorld(level, name, worldConfig));
-            }
+            Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
         });
     }
 
@@ -217,6 +213,6 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
 
     @Override
     public @NonNull World cloneWorld(@NonNull World world) {
-        return new FabricWorld(world.getLevel(), world.getName(), world.getConfig());
+        return new FabricWorld(world.getLevel(), world.getName());
     }
 }

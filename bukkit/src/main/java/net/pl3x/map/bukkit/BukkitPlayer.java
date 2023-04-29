@@ -32,6 +32,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
@@ -42,6 +43,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -72,11 +74,10 @@ public class BukkitPlayer extends Player {
 
     @Override
     public @NonNull World getWorld() {
-        World world = Pl3xMap.api().getWorldRegistry().get(getPlayer().getWorld().getName());
-        if (world == null) {
-            throw new IllegalStateException("Player is in an unloaded world!");
-        }
-        return world;
+        org.bukkit.World world = getPlayer().getWorld();
+        ServerLevel level = ((CraftWorld) world).getHandle();
+        String name = world.getName();
+        return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new BukkitWorld(level, name));
     }
 
     @Override

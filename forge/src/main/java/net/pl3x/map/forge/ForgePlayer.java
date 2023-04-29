@@ -32,6 +32,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -67,11 +68,9 @@ public class ForgePlayer extends Player {
 
     @Override
     public @NonNull World getWorld() {
-        World world = Pl3xMap.api().getWorldRegistry().get(getPlayer().getLevel().dimension().location().toString());
-        if (world == null) {
-            throw new IllegalStateException("Player is in an unloaded world!");
-        }
-        return world;
+        ServerLevel level = getPlayer().getLevel();
+        String name = level.dimension().location().toString();
+        return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new ForgeWorld(level, name));
     }
 
     @Override

@@ -58,7 +58,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
@@ -229,10 +228,7 @@ public class Pl3xMapForge extends Pl3xMap {
     protected void loadWorlds() {
         this.server.getAllLevels().forEach(level -> {
             String name = level.dimension().location().toString();
-            WorldConfig worldConfig = new WorldConfig(name);
-            if (worldConfig.ENABLED) {
-                getWorldRegistry().register(new ForgeWorld(level, name, worldConfig));
-            }
+            Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new ForgeWorld(level, name));
         });
     }
 
@@ -246,6 +242,6 @@ public class Pl3xMapForge extends Pl3xMap {
 
     @Override
     public @NonNull World cloneWorld(@NonNull World world) {
-        return new ForgeWorld(world.getLevel(), world.getName(), world.getConfig());
+        return new ForgeWorld(world.getLevel(), world.getName());
     }
 }

@@ -45,14 +45,14 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class BukkitWorld extends World {
     private final ServerLevel level;
 
-    public BukkitWorld(@NonNull ServerLevel level, @NonNull String name, @NonNull WorldConfig worldConfig) {
+    public BukkitWorld(@NonNull ServerLevel level, @NonNull String name) {
         super(
                 name,
                 level.getSeed(),
                 Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getZSpawn()),
                 Type.get(level.dimension().location().toString()),
                 level.convertable.getDimensionPath(level.dimension()).resolve("region"),
-                worldConfig
+                new WorldConfig(name)
         );
         this.level = level;
 
