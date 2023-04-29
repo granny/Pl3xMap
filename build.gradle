@@ -163,7 +163,7 @@ modrinth {
     projectId = 'pl3xmap'
     versionName = "${project.version}"
     versionNumber = "${project.version}"
-    versionType = 'alpha'
+    versionType = 'beta'
     uploadFile = file.get()
     gameVersions.addAll(["${minecraftVersion}"])
     loaders.addAll(['bukkit', 'fabric', 'folia', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
@@ -178,7 +178,7 @@ hangarPublish {
     publications.register('plugin') {
         version.set("${project.version}")
         namespace('BillyGalbreath', 'Pl3xMap')
-        channel.set('Alpha')
+        channel.set('Beta')
         changelog.set("${System.getenv('COMMIT_MESSAGE')}")
         apiKey.set("${System.getenv('HANGAR_TOKEN')}")
         platforms {
