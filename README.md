@@ -21,20 +21,55 @@
 [![Watchers](https://img.shields.io/github/watchers/BillyGalbreath/Pl3xMap?label=watchers&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9bxSIVh1YQcYhQnSyIiuimVShChVArtOpgcukXNGlIUlwcBdeCgx+LVQcXZ10dXAVB8APE0clJ0UVK/F9SaBHjwXE/3t173L0D/PUyU82OMUDVLCOViAuZ7KrQ9YogwujDEGYkZupzopiE5/i6h4+vdzGe5X3uz9Gj5EwG+ATiWaYbFvEG8dSmpXPeJ46woqQQnxOPGnRB4keuyy6/cS447OeZESOdmieOEAuFNpbbmBUNlXiSOKqoGuX7My4rnLc4q+Uqa96TvzCU01aWuU5zEAksYgkiBMioooQyLMRo1UgxkaL9uId/wPGL5JLJVQIjxwIqUCE5fvA/+N2tmZ8Yd5NCcaDzxbY/hoGuXaBRs+3vY9tunACBZ+BKa/krdWD6k/RaS4seAb3bwMV1S5P3gMsdoP9JlwzJkQI0/fk88H5G35QFwrdA95rbW3Mfpw9AmrpK3gAHh8BIgbLXPd4dbO/t3zPN/n4Ax9dyyerighsAAAAGYktHRAAAAAAAAPlDu38AAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfmCBMVNw4TRw0nAAAA3UlEQVQ4y83SP04CURAG8I0lewHOwAFUaiwkdmAlp8CL4FHopfIvtOIJWE3opIBK489mQPKy6xYWOskkL9/MN/PNzMuyf2fIcYkZVuGzwPI68gle8Yl7jMIfAntBp4o8wAeecFgSP8I8cgZp8DwC12j8oLCBCd7R34ItbHCzT8ZZSC7QTYrcYo1WhjGWaCbdCt+2SGLN4IwPfnu07QjrkhG6oWKB0+TMd7sRAuzHYuqWmO8tsVd1xjmOS8htPEfORVWHTmweHnEVPg2sqPxIicxhFFjhLd7D2q/8J/YFHSJt9VSqQ08AAAAASUVORK5CYII=)](https://github.com/BillyGalbreath/Pl3xMap/watchers)
 
 <big><b>Pl3xMap is the <u>original</u> minimalistic and lightweight world map viewer  
-for Paper servers using the vanilla Minecraft rendering style.</b></big>
+for Minecraft servers using the vanilla Minecraft rendering style.</b></big>
 
 </div>
 
 ## Downloads
 
-Downloads are available on Modrinth.  
-(Currently in alpha stages, use at your own risk!)
+Downloads are available on Modrinth.
+
+The jar download can be used on multiple platforms.  
+Right now we support Bukkit, Fabric, Folia, Forge, Paper, Purpur, Quilt, and Spigot.
 
 [![Download on Modrinth](https://i.imgur.com/5C4fVJC.png)](https://modrinth.com/mod/pl3xmap)
 
 ## bStats
 
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/Pl3xMap.svg)](https://bstats.org/plugin/bukkit/Pl3xMap/10133)
+
+## Accessing the API
+
+Maven
+
+```xml
+<repository>
+  <id>modrinth-repo</id>
+  <url>https://api.modrinth.com/maven/</url>
+</repository>
+
+<dependency>
+  <groupId>maven.modrinth</groupId>
+  <artifactId>pl3xmap</artifactId>
+  <version>1.19.4-361</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+Gradle
+
+```groovy
+repositories {
+    exclusiveContent {
+        forRepository { maven { url = "https://api.modrinth.com/maven" } }
+        filter { includeGroup "maven.modrinth" }
+    }
+}
+
+dependencies {
+    compileOnly 'maven.modrinth:pl3xmap:1.19.4-361'
+}
+```
 
 ## Building from source
 
