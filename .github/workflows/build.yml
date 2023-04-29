@@ -66,4 +66,4 @@ jobs:
           title: New build of Pl3xMap is ready!
           description: |
             Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
-            Click [here](https://modrinth.com/mod/pl3xmap) to download!
+            Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
