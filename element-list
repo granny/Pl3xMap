@@ -5,6 +5,9 @@ net.pl3x.map.core.command.argument.parser
 net.pl3x.map.core.command.commands
 net.pl3x.map.core.command.exception
 net.pl3x.map.core.configuration
+net.pl3x.map.core.event
+net.pl3x.map.core.event.server
+net.pl3x.map.core.event.world
 net.pl3x.map.core.httpd
 net.pl3x.map.core.image
 net.pl3x.map.core.image.io
