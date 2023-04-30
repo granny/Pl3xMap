@@ -129,8 +129,13 @@ public class ChunkAnvil115 extends Chunk {
     }
 
     @Override
+    public boolean noHeightmap() {
+        return this.worldSurfaceHeights.length < 36;
+    }
+
+    @Override
     public int getWorldSurfaceY(int x, int z) {
-        if (this.worldSurfaceHeights.length < 36) {
+        if (noHeightmap()) {
             return 0;
         }
         return (int) MCAMath.getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9);
@@ -151,11 +156,11 @@ public class ChunkAnvil115 extends Chunk {
         for (int blockZ = startX; blockZ < startX + 16; blockZ++) {
             for (int blockX = startZ; blockX < startZ + 16; blockX++) {
                 BlockData data = new BlockData();
-                data.blockY = getWorldSurfaceY(blockX, blockZ) + 1;
+                data.blockY = noHeightmap() ? getWorld().getMaxBuildHeight() : getWorldSurfaceY(blockX, blockZ) + 1;
 
                 // if world has ceiling iterate down until we find air
                 if (getWorld().hasCeiling()) {
-                    data.blockY -= 1; // start down into ceiling
+                    data.blockY = getWorld().getLogicalHeight();
                     do {
                         data.blockY -= 1;
                         data.blockstate = getBlockState(blockX, data.blockY, blockZ);

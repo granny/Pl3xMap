@@ -51,6 +51,11 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
+    public boolean noHeightmap() {
+        return false;
+    }
+
+    @Override
     public int getWorldSurfaceY(int x, int z) {
         return 0;
     }

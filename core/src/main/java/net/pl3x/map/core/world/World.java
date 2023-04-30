@@ -262,6 +262,10 @@ public abstract class World {
 
     public abstract int getMinBuildHeight();
 
+    public abstract int getMaxBuildHeight();
+
+    public abstract int getLogicalHeight();
+
     public abstract @NonNull Border getWorldBorder();
 
     public abstract @NonNull Collection<@NonNull Player> getPlayers();

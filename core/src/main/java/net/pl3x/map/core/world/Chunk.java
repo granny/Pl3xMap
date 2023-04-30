@@ -90,6 +90,8 @@ public abstract class Chunk {
 
     public abstract boolean isFull();
 
+    public abstract boolean noHeightmap();
+
     public abstract int getWorldSurfaceY(int x, int z);
 
     public abstract @NonNull BlockState getBlockState(int x, int y, int z);

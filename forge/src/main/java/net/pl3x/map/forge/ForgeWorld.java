@@ -117,6 +117,16 @@ public class ForgeWorld extends World {
     }
 
     @Override
+    public int getMaxBuildHeight() {
+        return this.level.getMaxBuildHeight();
+    }
+
+    @Override
+    public int getLogicalHeight() {
+        return this.level.getLogicalHeight();
+    }
+
+    @Override
     public @NonNull Border getWorldBorder() {
         return new Border(this.level.getWorldBorder().getCenterX(),
                 this.level.getWorldBorder().getCenterZ(),
