@@ -56,10 +56,8 @@ public final class Lang extends AbstractConfig {
 
     @Key("command.argument.optional-player")
     public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
-    @Key("command.argument.optional-world")
-    public static String COMMAND_ARGUMENT_OPTIONAL_WORLD_DESCRIPTION = "Defaults to the players current world if not provided";
-    @Key("command.argument.optional-center")
-    public static String COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION = "Defaults to (<white>0<gray>,</gray> 0</white>) if unspecified";
+    @Key("command.argument.required-world")
+    public static String COMMAND_ARGUMENT_REQUIRED_WORLD_DESCRIPTION = "World is required";
 
     @Key("command.confirm.description")
     public static String COMMAND_CONFIRM_DESCRIPTION = "Confirm a pending command";
