@@ -202,8 +202,10 @@ public class ChunkAnvil115 extends Chunk {
         this.populated = true;
 
         for (Section section : this.sections) {
-            section.blocks = new long[0];
-            section.palette = new BlockState[0];
+            if (section != null) {
+                section.blocks = new long[0];
+                section.palette = new BlockState[0];
+            }
         }
 
         return this;
