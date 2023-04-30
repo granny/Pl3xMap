@@ -33,7 +33,7 @@ export default class Pl3xMapLeafletMap extends L.Map {
         });
 
         // sets the leaflet attribution prefix to our project page
-        this.attributionControl.setPrefix("<a href='https://modrinth.com/plugin/pl3xmap/'>Pl3xMap &copy; 2022</a>");
+        this.attributionControl.setPrefix("<a href='https://modrinth.com/plugin/pl3xmap/'>Pl3xMap &copy; 2020-2023</a>");
 
         this._pl3xmap = pl3xmap;
     }
