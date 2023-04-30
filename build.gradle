@@ -166,7 +166,7 @@ modrinth {
     versionType = 'beta'
     uploadFile = file.get()
     gameVersions.addAll(["${minecraftVersion}"])
-    loaders.addAll(['bukkit', 'fabric', 'folia', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
+    loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
         optional.project "pl3xmap-claims"

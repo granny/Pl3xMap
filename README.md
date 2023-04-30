@@ -30,7 +30,7 @@ for Minecraft servers using the vanilla Minecraft rendering style.</b></big>
 Downloads are available on Modrinth.
 
 The jar download can be used on multiple platforms.  
-Right now we support Bukkit, Fabric, Folia, Forge, Paper, Purpur, Quilt, and Spigot.
+Right now we support Bukkit, Fabric, Forge, Paper, Purpur, Quilt, and Spigot.
 
 [![Download on Modrinth](https://i.imgur.com/5C4fVJC.png)](https://modrinth.com/mod/pl3xmap)
 
