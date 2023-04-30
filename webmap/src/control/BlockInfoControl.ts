@@ -16,7 +16,15 @@ export class BlockInfoControl extends ControlBox {
 
         getJSON('tiles/blocks.gz').then((json: Palette[]) => {
             Object.entries(json).forEach((data, index) => {
-                this._blockPalette.set(index, String(json[index]));
+                let name = String(json[index]);
+                if (name.indexOf(':') !== -1) {
+                    name = name.split(':')[1];
+                }
+                name = name.replace(/_+/g, ' ')      // replace underscores with spaces
+                    .replace(/\w\S*/g, (w) => // capitalize first letter of every word
+                        w.charAt(0).toUpperCase() + w.substring(1)
+                    );
+                this._blockPalette.set(index, name);
             });
         });
     }

@@ -41,13 +41,16 @@ export class World {
         getJSON(`tiles/${this.name}/biomes.gz`)
             .then((palettes: Palette[]) => {
                 for (const [index, biome] of Object.entries(palettes)) {
-                    this.biomePalette.set(Number(index), String(biome)
-                        .split(".").pop()!        // everything after the last period
+                    let name = String(biome);
+                    if (name.indexOf(':') !== -1) {
+                        name = name.split(':')[1];
+                    }
+                    name = name.split(".").pop()!        // everything after the last period
                         .replace(/_+/g, ' ')      // replace underscores with spaces
                         .replace(/\w\S*/g, (w) => // capitalize first letter of every word
                             w.charAt(0).toUpperCase() + w.substring(1)
                         )
-                    );
+                    this.biomePalette.set(Number(index), name);
                 }
             });
 
