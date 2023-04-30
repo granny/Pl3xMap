@@ -27,6 +27,7 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
@@ -84,8 +85,11 @@ public class Region {
         if (chunk == null) {
             try (RandomAccessFile raf = new RandomAccessFile(getRegionFile(), "r")) {
                 chunk = loadChunk(raf, index);
+            } catch (FileNotFoundException ignore) {
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            if (chunk == null) {
                 return this.chunks[index] = new EmptyChunk(getWorld(), this);
             }
         }
