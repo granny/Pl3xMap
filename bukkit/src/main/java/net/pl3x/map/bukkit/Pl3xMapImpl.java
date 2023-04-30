@@ -160,13 +160,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     protected void loadBlocks() {
         for (Map.Entry<ResourceKey<Block>, Block> entry : MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
-            if (getBlockRegistry().has(id)) {
-                continue;
-            }
             int color = entry.getValue().defaultMaterialColor().col;
-            if (id.startsWith("minecraft:")) {
-                Logger.warn("Registering unknown block vanilla " + id + ": " + Colors.toHex(color));
-            }
             getBlockRegistry().register(id, color);
         }
         getBlockRegistry().saveToDisk();
