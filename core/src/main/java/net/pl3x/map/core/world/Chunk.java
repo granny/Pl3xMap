@@ -88,6 +88,8 @@ public abstract class Chunk {
         return this.inhabitedTime;
     }
 
+    public abstract boolean isFull();
+
     public abstract int getWorldSurfaceY(int x, int z);
 
     public abstract @NonNull BlockState getBlockState(int x, int y, int z);
@@ -107,14 +109,15 @@ public abstract class Chunk {
     }
 
     public static @NonNull Chunk create(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
-        if (!"full".equals(tag.getString("Status"))) {
-            return new EmptyChunk(world, region);
-        }
-        //int version = tag.getInt("DataVersion");
-        //if (version < 2200) return new ChunkAnvil113(world, tag);
-        //if (version < 2500) return new ChunkAnvil115(world, tag);
-        //if (version < 2844) return new ChunkAnvil116(world, tag);
-        return new ChunkAnvil118(world, region, tag);
+        // https://minecraft.fandom.com/wiki/Data_version#List_of_data_versions
+        int version = tag.getInt("DataVersion");
+        Chunk chunk;
+        if (version < 1519) chunk = new EmptyChunk(world, region); // wtf, older than 1.13
+        else if (version < 2200) chunk = new ChunkAnvil113(world, region, tag); // 1.13 - 1.14
+        else if (version < 2500) chunk = new ChunkAnvil115(world, region, tag); // 1.15
+        else if (version < 2844) chunk = new ChunkAnvil116(world, region, tag); // 1.16 - 1.18 (21w42a)
+        else chunk = new ChunkAnvil118(world, region, tag); // 1.18+ (21w43a+)
+        return chunk.isFull() ? chunk : new EmptyChunk(world, region);
     }
 
     @Override

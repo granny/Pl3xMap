@@ -31,6 +31,11 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
+    public boolean isFull() {
+        return true;
+    }
+
+    @Override
     public @NonNull BlockState getBlockState(int x, int y, int z) {
         return Blocks.AIR.getDefaultState();
     }
