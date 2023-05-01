@@ -41,11 +41,11 @@ jobs:
           clean: true
           folder: core/build/docs/javadoc
           target-folder: ./
-      - name: Publish to Hangar
-        run: ./gradlew publishPluginPublicationToHangar --stacktrace
-        env:
-          HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
-          COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
+      #- name: Publish to Hangar
+      #  run: ./gradlew publishPluginPublicationToHangar --stacktrace
+      #  env:
+      #    HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
+      #    COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
       - name: Publish to Modrinth
         run: ./gradlew modrinth_nobuild --stacktrace
         env:
