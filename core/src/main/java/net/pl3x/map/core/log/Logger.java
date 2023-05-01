@@ -26,10 +26,15 @@ package net.pl3x.map.core.log;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
+import org.apache.logging.log4j.LogManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Logger {
+    static {
+        ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new LogFilter());
+    }
+
     public static void debug(@NonNull String message) {
         if (Config.DEBUG_MODE) {
             log("<gray>[<yellow>DEBUG</yellow>] " + message);

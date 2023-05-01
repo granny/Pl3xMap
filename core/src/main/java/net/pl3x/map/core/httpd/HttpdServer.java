@@ -37,6 +37,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
+import net.pl3x.map.core.log.LogFilter;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.FileUtil;
 
@@ -75,7 +76,7 @@ public class HttpdServer {
                 }
             });
 
-            //LogFilter.HIDE_UNDERTOW_LOGS = true;
+            LogFilter.HIDE_UNDERTOW_LOGS = true;
             this.server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
@@ -91,7 +92,7 @@ public class HttpdServer {
                     })
                     .build();
             this.server.start();
-            //LogFilter.HIDE_UNDERTOW_LOGS = false;
+            LogFilter.HIDE_UNDERTOW_LOGS = false;
 
             Logger.info(Lang.HTTPD_STARTED
                     .replace("<bind>", Config.HTTPD_BIND)
@@ -114,9 +115,9 @@ public class HttpdServer {
             return;
         }
 
-        //LogFilter.HIDE_UNDERTOW_LOGS = true;
+        LogFilter.HIDE_UNDERTOW_LOGS = true;
         this.server.stop();
-        //LogFilter.HIDE_UNDERTOW_LOGS = false;
+        LogFilter.HIDE_UNDERTOW_LOGS = false;
 
         this.server = null;
         Logger.info(Lang.HTTPD_STOPPED);
