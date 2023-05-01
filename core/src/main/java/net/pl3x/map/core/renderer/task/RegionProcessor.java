@@ -80,7 +80,10 @@ public class RegionProcessor {
 
     public void addRegions(@NonNull World world, @NonNull Collection<@NonNull Point> regions) {
         for (Point region : regions) {
-            this.regionsToScan.add(new Ticket(world, region));
+            Ticket ticket = new Ticket(world, region);
+            if (!this.regionsToScan.contains(ticket)) {
+                this.regionsToScan.add(ticket);
+            }
         }
     }
 
