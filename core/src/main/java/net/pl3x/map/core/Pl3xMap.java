@@ -37,6 +37,7 @@ import net.kyori.adventure.platform.AudienceProvider;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
+import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.event.EventRegistry;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
@@ -179,6 +180,7 @@ public abstract class Pl3xMap {
         Config.reload();
         Lang.reload();
         ColorsConfig.reload();
+        PlayerTracker.reload();
 
         // initialize icons
         getIconRegistry().init();
