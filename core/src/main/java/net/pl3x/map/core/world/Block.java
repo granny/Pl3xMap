@@ -107,28 +107,29 @@ public final class Block extends Keyed {
         Block other = (Block) o;
         return Objects.equals(getKey(), other.getKey())
                 && color() == other.color()
-                && isFluid() == other.isFluid()
-                && isFoliage() == other.isFoliage()
-                && isGrass() == other.isGrass()
-                && isWater() == other.isWater()
-                && isGlass() == other.isGlass();
+                && getIndex() == other.getIndex()
+                && this.bools == other.bools
+                && getDefaultState().equals(other.defaultState);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey(), color(), isFluid(), isFoliage(), isGrass(), isWater(), isGlass());
+        return Objects.hash(getKey(), color(), getIndex(), this.bools, getDefaultState());
     }
 
     @Override
     public @NonNull String toString() {
         return "BlockState{"
                 + "key=" + getKey()
+                + "index=" + getIndex()
                 + "color=" + color()
+                + "isAir=" + isAir()
                 + "isFluid=" + isFluid()
                 + "isFoliage=" + isFoliage()
                 + "isGrass=" + isGrass()
                 + "isWater=" + isWater()
                 + "isGlass=" + isGlass()
+                + "defaultBlockState=" + getDefaultState()
                 + "}";
     }
 }
