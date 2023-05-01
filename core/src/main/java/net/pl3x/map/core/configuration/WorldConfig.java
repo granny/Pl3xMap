@@ -33,43 +33,46 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @SuppressWarnings("CanBeFinal")
 public final class WorldConfig extends AbstractConfig {
     @Key("enabled")
-    @Comment("Enables this world to be rendered on the map.")
-    public boolean ENABLED = false;
+    @Comment("""
+            Enables this world to be rendered on the map.""")
+    public boolean ENABLED = true;
 
     @Key("render.renderers")
     @Comment("""
             Renderers to use. Each renderer will render a different
-            type of map. The built in renderers include: basic, biomes, flowermap""")
+            type of map. The built-in renderers include:
+            basic, biomes, flowermap, and inhabited""")
     public Map<@NonNull String, @NonNull String> RENDER_RENDERERS = new LinkedHashMap<>() {{
         put("basic", "overworld_basic");
         put("biomes", "overworld_biomes");
+        put("inhabited", "inhabited");
     }};
 
     @Key("render.biome-blend")
     @Comment("""
             Enables blending of biome grass/foliage/water colors similar to
             the client's biome blending option.
-            Note: This may slow down your renders quite drastically if enabled.
-            Values are in range 0-7""")
-    public int RENDER_BIOME_BLEND = 2;
+            Values are clamped to 0-7""")
+    public int RENDER_BIOME_BLEND = 3;
 
     @Key("render.skylight")
     @Comment("""
-            Skylight value for world.
-            Values are 0-15 with 0 being darkest and 15 being full bright.""")
+            World skylight value. This is used for the day/night cycle
+            map (not yet implemented) .Values are clamped to 0-15
+            with 0 being darkest and 15 being full bright.""")
     public int RENDER_SKYLIGHT = 15;
 
     @Key("render.translucent-fluids")
     @Comment("""
             Enable translucent fluids.
-            This will make the fluids look fancier and translucent
+            This will make the fluids look fancier and translucent,
             so you can see the blocks below in shallow fluids.""")
     public boolean RENDER_TRANSLUCENT_FLUIDS = true;
 
     @Key("render.translucent-glass")
     @Comment("""
             Enable translucent glass.
-            This will make the glass look fancier and translucent
+            This will make the glass look fancier and translucent,
             so you can see the blocks below.""")
     public boolean RENDER_TRANSLUCENT_GLASS = true;
 
@@ -93,23 +96,28 @@ public final class WorldConfig extends AbstractConfig {
     public String DISPLAY_NAME = "<world>";
 
     @Key("ui.order")
-    @Comment("The order of the world in the world list")
+    @Comment("""
+            The order of the world in the world list""")
     public int ORDER = 0;
 
     @Key("ui.attribution")
-    @Comment("Shows the footer attributes")
+    @Comment("""
+            Shows the footer attributes""")
     public boolean UI_ATTRIBUTION = true;
 
     @Key("ui.blockinfo")
-    @Comment("The display position for the blockinfo box")
+    @Comment("""
+            The display position for the blockinfo box""")
     public String UI_BLOCKINFO = "bottomleft";
 
     @Key("ui.coords")
-    @Comment("The display position for the coordinates box")
+    @Comment("""
+            The display position for the coordinates box""")
     public String UI_COORDS = "bottomcenter";
 
     @Key("ui.link")
-    @Comment("The display position for the link box")
+    @Comment("""
+            The display position for the link box""")
     public String UI_LINK = "bottomright";
 
     @Key("zoom.default")
@@ -122,7 +130,7 @@ public final class WorldConfig extends AbstractConfig {
     @Comment("""
             The maximum zoom out you can do on the map.
             Each additional level requires a new set of tiles
-            to be rendered, so don't go wild here.""")
+            to be rendered, so don't go too wild here.""")
     public int ZOOM_MAX_OUT = 3;
     @Key("zoom.max-in")
     @Comment("""
@@ -132,10 +140,12 @@ public final class WorldConfig extends AbstractConfig {
     public int ZOOM_MAX_IN = 2;
 
     @Key("markers.spawn.enabled")
-    @Comment("Show the world spawn on the map")
+    @Comment("""
+            Show the world spawn icon on the map.""")
     public boolean MARKERS_SPAWN_ENABLED = true;
     @Key("markers.worldborder.enabled")
-    @Comment("Show the world border on the map")
+    @Comment("""
+            Show the world border outline on the map.""")
     public boolean MARKERS_WORLDBORDER_ENABLED = true;
 
     private final String worldName;

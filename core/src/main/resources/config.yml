@@ -13,11 +13,18 @@ world-settings:
     ui:
       display-name: Overworld
       order: 0
+    render:
+      renderers:
+        basic: overworld_basic
+        biomes: overworld_biomes
+        inhabited: inhabited
+        flowermap: flowermap
   world_nether:
     render:
       renderers:
         basic: nether_basic
         biomes: nether_biomes
+        inhabited: inhabited
       skylight: 0
     ui:
       display-name: The Nether
@@ -27,6 +34,7 @@ world-settings:
       renderers:
         basic: the_end_basic
         biomes: the_end_biomes
+        inhabited: inhabited
       skylight: 0
     ui:
       display-name: The End

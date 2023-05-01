@@ -28,13 +28,15 @@ import net.pl3x.map.core.Pl3xMap;
 @SuppressWarnings("CanBeFinal")
 public final class PlayerTracker extends AbstractConfig {
     @Key("settings.enabled")
-    @Comment("Show online players on the map.")
+    @Comment("""
+            Show online players on the map and sidebar.""")
     public static boolean ENABLED = true;
 
     @Key("settings.pane")
     @Comment("""
             The custom pane layer for the player tracker.
-            This is used to make custom css styled tooltips.""")
+            This is used to make custom css styled tooltips.
+            (see css setting below)""")
     public static String PANE = "nameplates";
 
     @Key("settings.icon")
@@ -44,17 +46,19 @@ public final class PlayerTracker extends AbstractConfig {
     public static String ICON = "players";
 
     @Key("settings.hide.invisible")
-    @Comment("Should invisible players be hidden from the map")
+    @Comment("""
+            Should invisible players be hidden from the map.""")
     public static boolean HIDE_INVISIBLE = true;
 
     @Key("settings.hide.spectators")
-    @Comment("Should spectators be hidden from the map")
+    @Comment("""
+            Should spectators be hidden from the map.""")
     public static boolean HIDE_SPECTATORS = true;
 
     @Key("settings.tooltip")
     @Comment("""
             Tooltip for player markers.
-            Variables: <uuid><name><decoratedName><health><armor>""")
+            Variables: uuid, name, decoratedName, health, armor""")
     public static String TOOLTIP = """
             <ul>
               <li><img src='images/skins/2D/<uuid>.png' class='head' alt='<name>' /></li>
@@ -68,7 +72,7 @@ public final class PlayerTracker extends AbstractConfig {
     @Key("settings.css")
     @Comment("""
             Custom css for players marker layer.
-            Class names use the pane variable in the name.""")
+            Class names use the pane name set above.""")
     public static String CSS = """
             div.leaflet-nameplates-pane div img.head {
               image-rendering: pixelated;

@@ -1057,7 +1057,8 @@ public class ColorsConfig extends AbstractConfig {
     @Comment("""
             List of blocks that are considered foliage when it comes
             to coloring. Blocks listed here will use the biome's
-            foliage color when rendering.""")
+            foliage color when rendering.
+            Note: Birch and Spruce are intentionally absent by default.""")
     public static List<@NonNull String> BLOCKS_FOLIAGE = new ArrayList<>() {{
         add("minecraft:acacia_leaves");
         //add("minecraft:birch_leaves"); // birch 0x80A755
@@ -1125,7 +1126,7 @@ public class ColorsConfig extends AbstractConfig {
 
     @Key("biomes.color-overrides.foliage")
     @Comment("""
-            Override foliage colors per biome""")
+            Override foliage colors per biome.""")
     public static Map<@NonNull String, @NonNull Integer> BIOME_FOLIAGE = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0x9E814D);
         put("minecraft:bamboo_jungle", 0x1F8907);
@@ -1140,7 +1141,7 @@ public class ColorsConfig extends AbstractConfig {
 
     @Key("biomes.color-overrides.grass")
     @Comment("""
-            Override grass colors per biome""")
+            Override grass colors per biome.""")
     public static Map<@NonNull String, @NonNull Integer> BIOME_GRASS = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0x90814D);
         put("minecraft:wooded_badlands", 0x90814D);
@@ -1149,7 +1150,7 @@ public class ColorsConfig extends AbstractConfig {
 
     @Key("biomes.color-overrides.water")
     @Comment("""
-            Override water colors per biome""")
+            Override water colors per biome.""")
     public static Map<@NonNull String, @NonNull Integer> BIOME_WATER = new LinkedHashMap<>();
 
     private static final ColorsConfig CONFIG = new ColorsConfig();

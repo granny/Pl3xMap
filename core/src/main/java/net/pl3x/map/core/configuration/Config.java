@@ -31,7 +31,7 @@ import net.pl3x.map.core.util.FileUtil;
 public final class Config extends AbstractConfig {
     @Key("settings.debug-mode")
     @Comment("""
-            Extra logger output. (can be spammy)""")
+            Extra logger/console output. (can be spammy)""")
     public static boolean DEBUG_MODE = false;
 
     @Key("settings.language-file")
@@ -45,36 +45,39 @@ public final class Config extends AbstractConfig {
             This is a relative path from Pl3xMap's plugin directory,
             unless it starts with / in which case it will be treated
             as an absolute path.""")
-    public static String WEB_DIR = "web";
+    public static String WEB_DIR = "web/";
     @Key("settings.web-directory.read-only")
     @Comment("""
             Set to true if you don't want Pl3xMap to overwrite
             the website files on startup. (Good for servers that
-            customize these files)""")
+            customize these files)
+            Note: Be sure this is false when upgrading.""")
     public static boolean WEB_DIR_READONLY = false;
     @Key("settings.web-directory.tile-format")
     @Comment("""
             The image format for tile images.
-            Built in types: png""")
+            Built in types: bmp, gif, jpeg, png""")
     public static String WEB_TILE_FORMAT = "png";
     @Key("settings.web-directory.tile-quality")
     @Comment("""
             The quality for image tiles (0.0 - 1.0)
             0.0 is low quality, high compression, small file size
             1.0 is high quality, no compression, large file size
-            Note: Not all image formats support this setting.""")
+            Note: Not all image formats honor this setting.""")
     public static double WEB_TILE_QUALITY = 0.0F;
 
     @Key("settings.internal-webserver.enabled")
     @Comment("""
             Enable the built-in web server.
-            Disable this if you want to use a standalone web server such as apache or nginx.""")
+            Disable this if you want to use a standalone web server
+            such as apache or nginx.""")
     public static boolean HTTPD_ENABLED = true;
     @Key("settings.internal-webserver.bind")
     @Comment("""
-            The interface IP the built-in web server should bind to.
+            The interface the built-in web server should bind to.
             This is NOT always the same as your public facing IP.
-            If you don't understand what this is, leave it set to 0.0.0.0""")
+            If you don't understand what this is,
+            leave it set to 0.0.0.0""")
     public static String HTTPD_BIND = "0.0.0.0";
     @Key("settings.internal-webserver.port")
     @Comment("""
@@ -84,13 +87,13 @@ public final class Config extends AbstractConfig {
 
     @Key("settings.performance.render-threads")
     @Comment("""
-            The number of threads to use for loading and scanning chunks.
-            Value of -1 will use 50% of the available cores. (recommended)""")
+            The number of process-threads to use for loading and scanning chunks.
+            Value of -1 will use 50% of the available cpu-threads. (recommended)""")
     public static int RENDER_THREADS = -1;
 
     @Key("settings.performance.gc.when-finished")
     @Comment("""
-            Runs the JVM GC after a render job stops.""")
+            Runs the JVM GC after a render job stops to free up memory immediately.""")
     public static boolean GC_WHEN_FINISHED = true;
 
     @Key("settings.performance.gc.when-running")
