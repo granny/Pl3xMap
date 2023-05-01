@@ -63,6 +63,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class World {
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
+    public static final PathMatcher PNG_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*_*.png");
 
     private final String name;
     private final Path markersDirectory;

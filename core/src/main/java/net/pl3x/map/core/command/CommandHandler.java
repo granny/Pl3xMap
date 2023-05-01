@@ -38,6 +38,7 @@ import net.pl3x.map.core.command.commands.HideCommand;
 import net.pl3x.map.core.command.commands.ReloadCommand;
 import net.pl3x.map.core.command.commands.ResetMapCommand;
 import net.pl3x.map.core.command.commands.ShowCommand;
+import net.pl3x.map.core.command.commands.StitchCommand;
 import net.pl3x.map.core.command.commands.VersionCommand;
 import net.pl3x.map.core.configuration.Lang;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -96,6 +97,7 @@ public interface CommandHandler {
                 new ReloadCommand(this),
                 new ResetMapCommand(this),
                 new ShowCommand(this),
+                new StitchCommand(this),
                 new VersionCommand(this)
         ).forEach(Pl3xMapCommand::register);
     }

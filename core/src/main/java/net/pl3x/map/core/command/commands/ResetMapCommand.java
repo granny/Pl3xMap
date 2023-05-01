@@ -57,7 +57,7 @@ public class ResetMapCommand extends Pl3xMapCommand {
 
     private void execute(@NonNull CommandContext<@NonNull Sender> context) {
         Sender sender = context.getSender();
-        World world = WorldArgument.resolve(context, "world");
+        World world = context.get("world");
 
         TagResolver.Single worldPlaceholder = Placeholder.unparsed("world", world.getName());
         sender.sendMessage(Lang.COMMAND_RESETMAP_BEGIN, worldPlaceholder);

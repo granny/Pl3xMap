@@ -53,13 +53,17 @@ public abstract class Sender implements ForwardingAudience.Single {
 
     public void sendMessage(@NonNull String message) {
         if (!Lang.strip(message).isBlank()) {
-            sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message));
+            for (String part : message.split("\n")) {
+                sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(part));
+            }
         }
     }
 
     public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
         if (!Lang.strip(message).isBlank()) {
-            sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(message, placeholders));
+            for (String part : message.split("\n")) {
+                sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(part, placeholders));
+            }
         }
     }
 

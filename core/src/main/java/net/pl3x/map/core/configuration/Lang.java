@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @SuppressWarnings("CanBeFinal")
 public final class Lang extends AbstractConfig {
     @Key("prefix.command")
-    public static String PREFIX_COMMAND = "<gray>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</gray> ";
+    public static String PREFIX_COMMAND = "<grey>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</grey> ";
     @Key("command.base")
     public static String COMMAND_BASE = "View the map at '<grey><click:open_url:http://localhost:8080/>http://localhost:8080/</grey>'";
 
@@ -56,6 +56,10 @@ public final class Lang extends AbstractConfig {
 
     @Key("command.argument.optional-player")
     public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
+    @Key("command.argument.optional-zoom")
+    public static String COMMAND_ARGUMENT_OPTIONAL_ZOOM_DESCRIPTION = "Map zoom level";
+    @Key("command.argument.required-renderer")
+    public static String COMMAND_ARGUMENT_REQUIRED_RENDERER_DESCRIPTION = "Renderer is required";
     @Key("command.argument.required-world")
     public static String COMMAND_ARGUMENT_REQUIRED_WORLD_DESCRIPTION = "World is required";
 
@@ -99,6 +103,19 @@ public final class Lang extends AbstractConfig {
     @Key("command.show.success")
     public static String COMMAND_SHOW_SUCCESS = "<grey><player> <green>is no longer hidden from the map";
 
+    @Key("command.stitch.description")
+    public static String COMMAND_STITCH_DESCRIPTION = "Stitches tiles into one image";
+    @Key("command.stitch.missing-directory")
+    public static String COMMAND_STITCH_MISSING_DIRECTORY = "<red>Unable to find tiles directory.";
+    @Key("command.stitch.error-reading-directory")
+    public static String COMMAND_STITCH_ERROR_READING_DIRECTORY = "<red>There was a problem reading the tiles directory.";
+    @Key("command.stitch.empty-directory")
+    public static String COMMAND_STITCH_EMPTY_DIRECTORY = "<red>There are no tiles to stitch.";
+    @Key("command.stitch.starting")
+    public static String COMMAND_STITCH_STARTING = "<green>Started stitching <count> tiles..\n<green><italic>(min: <min-x>,<min-z> max: <max-x>,<max-z> size: <size-x>,<size-z>)";
+    @Key("command.stitch.finished")
+    public static String COMMAND_STITCH_FINISHED = "<green>Finished stitching <count> tiles!\n<green>You can find it at <grey>/tiles/<world>/stitched/<filename>";
+
     @Key("command.version.description")
     public static String COMMAND_VERSION_DESCRIPTION = "Get version information";
     @Key("command.version.please-wait")
@@ -132,12 +149,18 @@ public final class Lang extends AbstractConfig {
     public static String ERROR_MUST_SPECIFY_PLAYER = "<red>You must specify the player";
     @Key("error.no-such-player")
     public static String ERROR_NO_SUCH_PLAYER = "<red>No such player <grey><player>";
+    @Key("error.must-specify-renderer")
+    public static String ERROR_MUST_SPECIFY_RENDERER = "<red>You must specify the renderer";
+    @Key("error.no-such-renderer")
+    public static String ERROR_NO_SUCH_RENDERER = "<red>No such renderer <grey><renderer>";
     @Key("error.must-specify-world")
     public static String ERROR_MUST_SPECIFY_WORLD = "<red>You must specify the world";
     @Key("error.no-such-world")
     public static String ERROR_NO_SUCH_WORLD = "<red>No such world <grey><world>";
     @Key("error.world-disabled")
     public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <grey><world>";
+    @Key("error.not-valid-zoom-level")
+    public static String ERROR_NOT_VALID_ZOOM_LEVEL = "<red>Not a valid zoom level";
 
     @Key("ui.layer.players")
     public static String UI_LAYER_PLAYERS = "Players";
