@@ -23,10 +23,15 @@
  */
 package net.pl3x.map.core.configuration;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.markers.area.Area;
+import net.pl3x.map.core.markers.area.Border;
 import net.pl3x.map.core.util.Mathf;
+import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -148,10 +153,19 @@ public final class WorldConfig extends AbstractConfig {
             Show the world border outline on the map.""")
     public boolean MARKERS_WORLDBORDER_ENABLED = true;
 
-    private final String worldName;
+    @Key("render.visible-areas")
+    @Comment("""
+            Visible areas of the world.""")
+    public List<Area> VISIBLE_AREAS = new ArrayList<>(); // defaults added in ctor
 
-    public WorldConfig(@NonNull String worldName) {
-        this.worldName = worldName;
+    private final World world;
+
+    public WorldConfig(@NonNull World world) {
+        this.world = world;
+
+        // we need an instance of the world to get the border
+        VISIBLE_AREAS.add(new Border(world));
+
         reload();
     }
 
@@ -172,12 +186,40 @@ public final class WorldConfig extends AbstractConfig {
         if (getConfig().get("world-settings.default." + path) == null) {
             set("world-settings.default." + path, def);
         }
-        return get("world-settings." + worldName + "." + path,
+        return get("world-settings." + this.world.getName() + "." + path,
                 get("world-settings.default." + path, def));
     }
 
     @Override
     protected void setComment(@NonNull String path, @Nullable String comment) {
         getConfig().setComment("world-settings.default." + path, comment);
+    }
+
+    @Override
+    protected @Nullable Object get(@NonNull String path) {
+        if (!path.contains("render.visible-areas")) {
+            return super.get(path);
+        }
+        Object value = getConfig().get(path);
+        if (!(value instanceof List<?>)) {
+            return value;
+        }
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> list = (List<Map<String, Object>>) value;
+        List<Area> areas = new ArrayList<>();
+        for (Map<String, Object> map : list) {
+            areas.add(Area.deserialize(this.world, map));
+        }
+        return areas;
+    }
+
+    @Override
+    protected void set(@NonNull String path, @Nullable Object value) {
+        if (value != null && path.contains("render.visible-areas")) {
+            @SuppressWarnings("unchecked")
+            List<Area> list = (List<Area>) value;
+            value = list.stream().map(Area::serialize).toList();
+        }
+        getConfig().set(path, value);
     }
 }

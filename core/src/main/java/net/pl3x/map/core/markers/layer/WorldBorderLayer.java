@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.marker.Marker;
+import net.pl3x.map.core.markers.marker.Polyline;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.world.World;
@@ -39,6 +40,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class WorldBorderLayer extends WorldLayer {
     public static final String KEY = "worldborder";
+
+    private final Polyline polyline;
 
     /**
      * Create a new world border layer.
@@ -69,27 +72,17 @@ public class WorldBorderLayer extends WorldLayer {
      */
     public WorldBorderLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
         super(key, world, labelSupplier);
+        this.polyline = Marker.polyline(KEY).setOptions(getOptions());
     }
 
     @Override
     public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
-        World.Border border = getWorld().getWorldBorder();
-
-        int x = (int) border.centerX();
-        int z = (int) border.centerZ();
-        int r = (int) border.size() / 2;
-
-        return Collections.singletonList(Marker.polyline(
-                KEY,
-                Point.of(x - r, z - r),
-                Point.of(x + r, z - r),
-                Point.of(x + r, z + r),
-                Point.of(x - r, z + r),
-                Point.of(x - r, z - r)
-        ).setOptions(Options.builder()
-                .tooltipContent(getLabel())
-                .tooltipDirection(Tooltip.Direction.TOP)
-                .build()
+        return Collections.singletonList(this.polyline.clearPoints().addPoint(
+                Point.of(getWorld().getBorderMinX(), getWorld().getBorderMinZ()),
+                Point.of(getWorld().getBorderMaxX(), getWorld().getBorderMinZ()),
+                Point.of(getWorld().getBorderMaxX(), getWorld().getBorderMaxZ()),
+                Point.of(getWorld().getBorderMinX(), getWorld().getBorderMaxZ()),
+                Point.of(getWorld().getBorderMinX(), getWorld().getBorderMinZ())
         ));
     }
 }

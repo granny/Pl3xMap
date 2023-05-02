@@ -115,7 +115,7 @@ public abstract class AbstractConfig {
         if (!(value instanceof MemorySection)) {
             return value;
         }
-        Map<Object, Object> map = new LinkedHashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         ConfigurationSection section = getConfig().getConfigurationSection(path);
         if (section == null) {
             return map;

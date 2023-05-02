@@ -211,20 +211,24 @@ public class FileUtil {
         List<Point> regions = new ArrayList<>();
         for (Path file : paths) {
             if (file.toFile().length() <= 0) {
-                Logger.debug("Skipping zero length region: " + file.getFileName());
+                Logger.debug("Skipping zero length region file: " + file.getFileName());
                 continue;
             }
             try {
                 String[] split = file.getFileName().toString().split("\\.");
                 int rX = Integer.parseInt(split[1]);
                 int rZ = Integer.parseInt(split[2]);
+                if (!world.containsRegion(rX, rZ)) {
+                    Logger.debug("Skipping region outside of visible areas: " + file.getFileName());
+                    continue;
+                }
                 long storedModifiedTime = world.getRegionModifiedState().get(Mathf.asLong(rX, rZ));
                 long actualModifiedTime = Files.getLastModifiedTime(file).toMillis();
                 if (actualModifiedTime > storedModifiedTime) {
-                    Logger.debug("Adding region: " + file.getFileName());
+                    Logger.debug("Found modified region file: " + file.getFileName());
                     regions.add(Point.of(rX, rZ));
                 } else {
-                    Logger.debug("Skipping unmodified region: " + file.getFileName() + " " + actualModifiedTime + " <= " + storedModifiedTime);
+                    Logger.debug("Skipping unmodified region file: " + file.getFileName() + " " + actualModifiedTime + " <= " + storedModifiedTime);
                 }
             } catch (NumberFormatException ignore) {
             } catch (IOException e) {

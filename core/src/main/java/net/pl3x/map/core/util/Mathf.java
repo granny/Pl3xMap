@@ -47,6 +47,14 @@ public class Mathf {
         return Math.min(Math.max(value, min), max);
     }
 
+    public static int distanceSquared(int x1, int z1, int x2, int z2) {
+        return square(x1 - x2) + square(z1 - z2);
+    }
+
+    public static int square(int n) {
+        return n * n;
+    }
+
     public static int pow2(int value) {
         return 1 << value;
     }

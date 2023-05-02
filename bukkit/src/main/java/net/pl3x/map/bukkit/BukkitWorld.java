@@ -34,7 +34,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.ColorsConfig;
-import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.util.Colors;
@@ -51,14 +50,15 @@ public class BukkitWorld extends World {
                 level.getSeed(),
                 Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getZSpawn()),
                 Type.get(level.dimension().location().toString()),
-                level.convertable.getDimensionPath(level.dimension()).resolve("region"),
-                new WorldConfig(name)
+                level.convertable.getDimensionPath(level.dimension()).resolve("region")
         );
         this.level = level;
 
         if (!isEnabled()) {
             return;
         }
+
+        init();
 
         // register biomes
         for (Map.Entry<ResourceKey<Biome>, Biome> entry : level.registryAccess().registryOrThrow(Registries.BIOME).entrySet()) {
@@ -111,10 +111,23 @@ public class BukkitWorld extends World {
     }
 
     @Override
-    public @NonNull Border getWorldBorder() {
-        return new Border(this.level.getWorldBorder().getCenterX(),
-                this.level.getWorldBorder().getCenterZ(),
-                this.level.getWorldBorder().getSize());
+    public double getBorderMinX() {
+        return this.level.getWorldBorder().getMinX();
+    }
+
+    @Override
+    public double getBorderMinZ() {
+        return this.level.getWorldBorder().getMinZ();
+    }
+
+    @Override
+    public double getBorderMaxX() {
+        return this.level.getWorldBorder().getMaxX();
+    }
+
+    @Override
+    public double getBorderMaxZ() {
+        return this.level.getWorldBorder().getMaxZ();
     }
 
     @Override

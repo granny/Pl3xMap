@@ -46,6 +46,7 @@ import net.pl3x.map.core.event.world.WorldLoadedEvent;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.markers.area.Area;
 import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.layer.PlayersLayer;
 import net.pl3x.map.core.markers.layer.SpawnLayer;
@@ -87,7 +88,7 @@ public abstract class World {
 
     private boolean paused = false;
 
-    public World(@NonNull String name, long seed, @NonNull Point spawn, @NonNull Type type, @NonNull Path regionDirectory, @NonNull WorldConfig worldConfig) {
+    public World(@NonNull String name, long seed, @NonNull Point spawn, @NonNull Type type, @NonNull Path regionDirectory) {
         this.name = name;
         this.seed = seed;
         this.spawn = spawn;
@@ -104,7 +105,7 @@ public abstract class World {
             }
         }
 
-        this.worldConfig = worldConfig;
+        this.worldConfig = new WorldConfig(this);
 
         this.biomeManager = new BiomeManager(hashSeed(getSeed()));
         this.biomeRegistry = new BiomeRegistry();
@@ -120,14 +121,16 @@ public abstract class World {
         this.markerTask = new UpdateMarkerData(this);
 
         Pl3xMap.api().getEventRegistry().callEvent(new WorldLoadedEvent(this));
+    }
 
+    protected void init() {
         if (!isEnabled()) {
             return;
         }
 
         this.regionFileWatcher.start();
 
-        worldConfig.RENDER_RENDERERS.forEach((id, icon) -> {
+        getConfig().RENDER_RENDERERS.forEach((id, icon) -> {
             Renderer.Builder renderer = Pl3xMap.api().getRendererRegistry().get(id);
             if (renderer == null) {
                 return;
@@ -267,9 +270,42 @@ public abstract class World {
 
     public abstract int getLogicalHeight();
 
-    public abstract @NonNull Border getWorldBorder();
+    public abstract double getBorderMinX();
+
+    public abstract double getBorderMinZ();
+
+    public abstract double getBorderMaxX();
+
+    public abstract double getBorderMaxZ();
 
     public abstract @NonNull Collection<@NonNull Player> getPlayers();
+
+    public boolean containsBlock(int blockX, int blockZ) {
+        for (Area area : getConfig().VISIBLE_AREAS) {
+            if (area.containsBlock(blockX, blockZ)) {
+                return true;
+            }
+        }
+        return getConfig().VISIBLE_AREAS.isEmpty();
+    }
+
+    public boolean containsChunk(int chunkX, int chunkZ) {
+        for (Area area : getConfig().VISIBLE_AREAS) {
+            if (area.containsChunk(chunkX, chunkZ)) {
+                return true;
+            }
+        }
+        return getConfig().VISIBLE_AREAS.isEmpty();
+    }
+
+    public boolean containsRegion(int regionX, int regionZ) {
+        for (Area area : getConfig().VISIBLE_AREAS) {
+            if (area.containsRegion(regionX, regionZ)) {
+                return true;
+            }
+        }
+        return getConfig().VISIBLE_AREAS.isEmpty();
+    }
 
     public @NonNull Chunk getChunk(@Nullable Region region, int chunkX, int chunkZ) {
         return getRegion(region, chunkX >> 5, chunkZ >> 5).getChunk(chunkX, chunkZ);
@@ -338,9 +374,6 @@ public abstract class World {
 
     @Override
     public abstract @NonNull String toString();
-
-    public record Border(double centerX, double centerZ, double size) {
-    }
 
     /**
      * Represents a world's type.

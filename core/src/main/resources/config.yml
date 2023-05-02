@@ -10,15 +10,15 @@ world-settings:
       skylight: 15
   world:
     enabled: true
-    ui:
-      display-name: Overworld
-      order: 0
     render:
       renderers:
         basic: overworld_basic
         biomes: overworld_biomes
         inhabited: inhabited
         flowermap: flowermap
+    ui:
+      display-name: Overworld
+      order: 0
   world_nether:
     render:
       renderers:

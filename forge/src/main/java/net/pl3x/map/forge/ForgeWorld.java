@@ -35,7 +35,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.ColorsConfig;
-import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.util.Colors;
@@ -52,14 +51,15 @@ public class ForgeWorld extends World {
                 level.getSeed(),
                 Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getXSpawn()),
                 Type.get(level.dimension().location().toString()),
-                level.getChunkSource().getDataStorage().dataFolder.toPath().getParent().resolve("region"),
-                new WorldConfig(name)
+                level.getChunkSource().getDataStorage().dataFolder.toPath().getParent().resolve("region")
         );
         this.level = level;
 
         if (!isEnabled()) {
             return;
         }
+
+        init();
 
         // we have to do all this because forge throws an error if we use ATs to make the field public :/
         Field climateSettings = null;
@@ -127,10 +127,23 @@ public class ForgeWorld extends World {
     }
 
     @Override
-    public @NonNull Border getWorldBorder() {
-        return new Border(this.level.getWorldBorder().getCenterX(),
-                this.level.getWorldBorder().getCenterZ(),
-                this.level.getWorldBorder().getSize());
+    public double getBorderMinX() {
+        return this.level.getWorldBorder().getMinX();
+    }
+
+    @Override
+    public double getBorderMinZ() {
+        return this.level.getWorldBorder().getMinZ();
+    }
+
+    @Override
+    public double getBorderMaxX() {
+        return this.level.getWorldBorder().getMaxX();
+    }
+
+    @Override
+    public double getBorderMaxZ() {
+        return this.level.getWorldBorder().getMaxZ();
     }
 
     @Override
