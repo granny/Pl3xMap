@@ -62,3 +62,6 @@ jobs:
           description: |
             Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
             Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
+            
+            Changes:
+            ${{ join(github.event.commits.*.message, '\n') }}
