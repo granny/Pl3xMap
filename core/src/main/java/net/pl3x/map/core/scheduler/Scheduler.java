@@ -23,13 +23,13 @@
  */
 package net.pl3x.map.core.scheduler;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Scheduler {
-    private final List<@NonNull Task> tasks = new ArrayList<>();
+    private final Queue<@NonNull Task> tasks = new ConcurrentLinkedQueue<>();
 
     /**
      * Tick this scheduler.
