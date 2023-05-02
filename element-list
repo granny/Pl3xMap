@@ -13,6 +13,7 @@ net.pl3x.map.core.image
 net.pl3x.map.core.image.io
 net.pl3x.map.core.log
 net.pl3x.map.core.markers
+net.pl3x.map.core.markers.area
 net.pl3x.map.core.markers.layer
 net.pl3x.map.core.markers.marker
 net.pl3x.map.core.markers.option
