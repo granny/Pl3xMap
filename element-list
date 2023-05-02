@@ -22,6 +22,7 @@ net.pl3x.map.core.player
 net.pl3x.map.core.registry
 net.pl3x.map.core.renderer
 net.pl3x.map.core.renderer.heightmap
+net.pl3x.map.core.renderer.progress
 net.pl3x.map.core.renderer.task
 net.pl3x.map.core.scheduler
 net.pl3x.map.core.util
