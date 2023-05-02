@@ -95,7 +95,7 @@ public abstract class Renderer extends Keyed {
             int bX = chunkX << 4;
             for (int chunkZ = cZ; chunkZ < cZ + 32; chunkZ++) {
                 // skip any blocks that do not need to be rendered due to visibility limits
-                if (!getWorld().containsChunk(chunkX, chunkZ)) {
+                if (!getWorld().visibleChunk(chunkX, chunkZ)) {
                     continue;
                 }
                 int bZ = chunkZ << 4;
@@ -107,7 +107,7 @@ public abstract class Renderer extends Keyed {
                             return;
                         }
                         // skip any blocks that do not need to be rendered due to visibility limits
-                        if (!getWorld().containsBlock(blockX, blockZ)) {
+                        if (!getWorld().visibleBlock(blockX, blockZ)) {
                             continue;
                         }
                         Chunk.BlockData data = chunk.getData(blockX, blockZ);

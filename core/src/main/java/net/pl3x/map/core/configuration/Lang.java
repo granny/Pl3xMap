@@ -54,6 +54,9 @@ public final class Lang extends AbstractConfig {
     @Key("httpd.disabled")
     public static String HTTPD_DISABLED = "<green>Internal webserver is disabled";
 
+    @Key("progress.eta.unknown")
+    public static String PROGRESS_ETA_UNKNOWN = "Unknown";
+
     @Key("command.argument.optional-player")
     public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
     @Key("command.argument.optional-zoom")
@@ -102,6 +105,9 @@ public final class Lang extends AbstractConfig {
     public static String COMMAND_SHOW_NOT_HIDDEN = "<grey><player> <red>is not hidden from the map";
     @Key("command.show.success")
     public static String COMMAND_SHOW_SUCCESS = "<grey><player> <green>is no longer hidden from the map";
+
+    @Key("command.status.description")
+    public static String COMMAND_STATUS_DESCRIPTION = "View the render status";
 
     @Key("command.stitch.description")
     public static String COMMAND_STITCH_DESCRIPTION = "Stitches tiles into one image";

@@ -280,7 +280,7 @@ public abstract class World {
 
     public abstract @NonNull Collection<@NonNull Player> getPlayers();
 
-    public boolean containsBlock(int blockX, int blockZ) {
+    public boolean visibleBlock(int blockX, int blockZ) {
         for (Area area : getConfig().VISIBLE_AREAS) {
             if (area.containsBlock(blockX, blockZ)) {
                 return true;
@@ -289,7 +289,7 @@ public abstract class World {
         return getConfig().VISIBLE_AREAS.isEmpty();
     }
 
-    public boolean containsChunk(int chunkX, int chunkZ) {
+    public boolean visibleChunk(int chunkX, int chunkZ) {
         for (Area area : getConfig().VISIBLE_AREAS) {
             if (area.containsChunk(chunkX, chunkZ)) {
                 return true;
@@ -298,7 +298,7 @@ public abstract class World {
         return getConfig().VISIBLE_AREAS.isEmpty();
     }
 
-    public boolean containsRegion(int regionX, int regionZ) {
+    public boolean visibleRegion(int regionX, int regionZ) {
         for (Area area : getConfig().VISIBLE_AREAS) {
             if (area.containsRegion(regionX, regionZ)) {
                 return true;

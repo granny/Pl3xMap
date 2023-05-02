@@ -62,6 +62,12 @@ permissions:
     children:
       pl3xmap.command.show: true
 
+  pl3xmap.command.status:
+    description: Gives access to view the render status
+    default: op
+    children:
+      pl3xmap.command.map: true
+
   pl3xmap.command.stitch:
     description: Gives access to stitch tiles into one
     default: op

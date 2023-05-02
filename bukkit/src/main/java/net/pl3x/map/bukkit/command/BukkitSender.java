@@ -26,11 +26,8 @@ package net.pl3x.map.bukkit.command;
 import java.util.Objects;
 import java.util.UUID;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.Sender;
-import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -52,16 +49,6 @@ public class BukkitSender extends Sender {
     @SuppressWarnings("unchecked")
     public @NonNull CommandSender getSender() {
         return super.getSender();
-    }
-
-    @Override
-    public boolean hasPermission(@NonNull String permission) {
-        return getSender().hasPermission(permission);
-    }
-
-    @Override
-    public @NonNull Audience audience() {
-        return ((BukkitAudiences) Pl3xMap.api().adventure()).sender(getSender());
     }
 
     @Override
@@ -102,6 +89,11 @@ public class BukkitSender extends Sender {
         }
 
         @Override
+        public @NonNull Audience audience() {
+            return Pl3xMap.api().adventure().player(getPlayer().getUniqueId());
+        }
+
+        @Override
         public @NonNull UUID getUUID() {
             return getPlayer().getUniqueId();
         }
@@ -109,16 +101,6 @@ public class BukkitSender extends Sender {
         @Override
         public @Nullable World getWorld() {
             return Pl3xMap.api().getWorldRegistry().get(getPlayer().getWorld().getName());
-        }
-
-        @Override
-        public void sendMessage(@NonNull String message) {
-            sendMessage(Pl3xMap.api().adventure().player(getPlayer().getUniqueId()), true, Lang.parse(message));
-        }
-
-        @Override
-        public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
-            sendMessage(Pl3xMap.api().adventure().player(getPlayer().getUniqueId()), true, Lang.parse(message, placeholders));
         }
 
         @Override

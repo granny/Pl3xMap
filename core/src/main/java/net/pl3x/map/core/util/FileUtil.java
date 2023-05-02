@@ -218,7 +218,7 @@ public class FileUtil {
                 String[] split = file.getFileName().toString().split("\\.");
                 int rX = Integer.parseInt(split[1]);
                 int rZ = Integer.parseInt(split[2]);
-                if (!world.containsRegion(rX, rZ)) {
+                if (!world.visibleRegion(rX, rZ)) {
                     Logger.debug("Skipping region outside of visible areas: " + file.getFileName());
                     continue;
                 }

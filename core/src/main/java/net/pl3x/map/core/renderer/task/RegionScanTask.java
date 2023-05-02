@@ -127,6 +127,7 @@ public class RegionScanTask implements Runnable {
             }
             renderer.scanData(region);
         }
+        Pl3xMap.api().getRegionProcessor().getProgress().increment();
     }
 
     private void saveImages() {

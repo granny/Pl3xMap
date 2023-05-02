@@ -49,26 +49,37 @@ public abstract class Sender implements ForwardingAudience.Single {
         return (T) this.sender;
     }
 
-    public abstract boolean hasPermission(@NonNull String permission);
+    @Override
+    public @NonNull Audience audience() {
+        return Pl3xMap.api().adventure().console();
+    }
 
     public void sendMessage(@NonNull String message) {
+        sendMessage(message, true);
+    }
+
+    public void sendMessage(@NonNull String message, boolean prefix) {
         if (!Lang.strip(message).isBlank()) {
             for (String part : message.split("\n")) {
-                sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(part));
+                sendMessage(prefix, Lang.parse(part));
             }
         }
     }
 
     public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
+        sendMessage(message, true, placeholders);
+    }
+
+    public void sendMessage(@NonNull String message, boolean prefix, @NonNull TagResolver.@NonNull Single... placeholders) {
         if (!Lang.strip(message).isBlank()) {
             for (String part : message.split("\n")) {
-                sendMessage(Pl3xMap.api().adventure().console(), true, Lang.parse(part, placeholders));
+                sendMessage(prefix, Lang.parse(part, placeholders));
             }
         }
     }
 
-    public void sendMessage(Audience audience, boolean prefix, @NonNull ComponentLike message) {
-        audience.sendMessage(prefix ? Lang.parse(Lang.PREFIX_COMMAND).append(message) : message);
+    public void sendMessage(boolean prefix, @NonNull ComponentLike message) {
+        audience().sendMessage(prefix ? Lang.parse(Lang.PREFIX_COMMAND).append(message) : message);
     }
 
     @Override

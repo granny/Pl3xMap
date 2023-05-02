@@ -25,15 +25,12 @@ package net.pl3x.map.fabric.command;
 
 import java.util.Objects;
 import java.util.UUID;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.Sender;
-import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -54,11 +51,6 @@ public class FabricSender extends Sender {
     @SuppressWarnings("unchecked")
     public @NonNull CommandSourceStack getSender() {
         return super.getSender();
-    }
-
-    @Override
-    public boolean hasPermission(@NonNull String permission) {
-        return Permissions.check(getSender(), permission, Pl3xMap.api().getOperatorUserPermissionLevel());
     }
 
     @Override
@@ -104,6 +96,11 @@ public class FabricSender extends Sender {
         }
 
         @Override
+        public @NonNull Audience audience() {
+            return Pl3xMap.api().adventure().player(getPlayer().getUUID());
+        }
+
+        @Override
         public @NonNull UUID getUUID() {
             return getPlayer().getUUID();
         }
@@ -111,16 +108,6 @@ public class FabricSender extends Sender {
         @Override
         public @Nullable World getWorld() {
             return Pl3xMap.api().getWorldRegistry().get(getPlayer().getLevel().dimension().location().toString());
-        }
-
-        @Override
-        public void sendMessage(@NonNull String message) {
-            sendMessage(Pl3xMap.api().adventure().player(getPlayer().getUUID()), true, Lang.parse(message));
-        }
-
-        @Override
-        public void sendMessage(@NonNull String message, @NonNull TagResolver.@NonNull Single... placeholders) {
-            sendMessage(Pl3xMap.api().adventure().player(getPlayer().getUUID()), true, Lang.parse(message, placeholders));
         }
 
         @Override

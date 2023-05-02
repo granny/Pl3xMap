@@ -26,33 +26,54 @@ package net.pl3x.map.core.renderer.task;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executor;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
+import net.pl3x.map.core.renderer.progress.Progress;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiralIterator;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class RegionProcessor {
-    private final Deque<@NonNull Ticket> regionsToScan = new ConcurrentLinkedDeque<>();
+    private final Map<@NonNull World, @NonNull Collection<@NonNull Point>> regionsToScan = new ConcurrentHashMap<>();
+    private final Deque<@NonNull Ticket> ticketsToScan = new ConcurrentLinkedDeque<>();
+
     private final Executor executor;
+    private final Progress progress;
 
     private CompletableFuture<@NonNull Void> future;
+
+    private boolean paused;
 
     private long timeStarted;
     private boolean running;
 
     public RegionProcessor() {
         this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Processor");
+        this.progress = new Progress();
+    }
+
+    public boolean isPaused() {
+        return this.paused;
+    }
+
+    public @NonNull Progress getProgress() {
+        return this.progress;
+    }
+
+    public Set<World> getQueuedWorlds() {
+        return this.regionsToScan.keySet();
     }
 
     public void start(long delay) {
@@ -81,8 +102,8 @@ public class RegionProcessor {
     public void addRegions(@NonNull World world, @NonNull Collection<@NonNull Point> regions) {
         for (Point region : regions) {
             Ticket ticket = new Ticket(world, region);
-            if (!this.regionsToScan.contains(ticket)) {
-                this.regionsToScan.add(ticket);
+            if (!this.ticketsToScan.contains(ticket)) {
+                this.ticketsToScan.add(ticket);
             }
         }
     }
@@ -101,26 +122,27 @@ public class RegionProcessor {
         Logger.debug("Region processor started queuing at " + this.timeStarted);
 
         try {
-            Map<World, Collection<Point>> map = new HashMap<>();
-            while (!this.regionsToScan.isEmpty()) {
-                Ticket ticket = this.regionsToScan.poll();
-                Collection<Point> set = map.getOrDefault(ticket.world, new HashSet<>());
+            while (!this.ticketsToScan.isEmpty()) {
+                Ticket ticket = this.ticketsToScan.poll();
+                Collection<Point> set = this.regionsToScan.getOrDefault(ticket.world, new HashSet<>());
                 set.add(ticket.region);
-                map.put(ticket.world, set);
+                this.regionsToScan.put(ticket.world, set);
             }
 
-            for (Map.Entry<World, Collection<Point>> entry : map.entrySet()) {
-                process(entry.getKey(), entry.getValue());
-            }
+            Iterator<Map.Entry<World, Collection<Point>>> iter = this.regionsToScan.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<World, Collection<Point>> entry = iter.next();
+                iter.remove();
+                World world = entry.getKey();
+                Collection<Point> regions = entry.getValue();
+                process(world, regions);
 
-            if (map.isEmpty()) {
-                this.running = false;
             }
         } catch (Throwable t) {
             t.printStackTrace();
-            this.running = false;
         }
 
+        this.running = false;
         Logger.debug("Region processor finished queuing at " + System.currentTimeMillis());
     }
 
@@ -170,6 +192,10 @@ public class RegionProcessor {
     }
 
     private void schedule(@NonNull World world, @NonNull List<@NonNull Point> orderedRegionsToScan) {
+        getProgress().setWorld(world);
+        getProgress().setTotalRegions(orderedRegionsToScan.size());
+        getProgress().setTotalChunks(getProgress().getTotalRegions() * 1024L);
+
         CompletableFuture.allOf(orderedRegionsToScan.stream()
                 .map(pos -> CompletableFuture.runAsync(new RegionScanTask(world, pos), Pl3xMap.api().getRenderExecutor())
                         .whenComplete((result, throwable) -> {
@@ -191,6 +217,9 @@ public class RegionProcessor {
                 throwable.printStackTrace();
             }
 
+            // stop the progress tracker
+            getProgress().finish();
+
             // save region modified times
             world.getRegionModifiedState().save();
 
@@ -206,7 +235,7 @@ public class RegionProcessor {
             this.running = false;
 
             Logger.debug(world.getName() + " Region processor finished task at " + System.currentTimeMillis());
-        });
+        }).join();
     }
 
     private record Ticket(@NonNull World world, @NonNull Point region) {
