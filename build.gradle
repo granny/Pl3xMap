@@ -1,5 +1,4 @@
 import com.modrinth.minotaur.TaskModrinthUpload
-import io.papermc.hangarpublishplugin.model.Platforms
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {

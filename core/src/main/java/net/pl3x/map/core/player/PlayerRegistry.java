@@ -24,6 +24,7 @@
 package net.pl3x.map.core.player;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import net.pl3x.map.core.registry.Registry;
@@ -82,5 +83,10 @@ public class PlayerRegistry extends Registry<@NonNull Player> {
             }
         }
         return null;
+    }
+
+    public @NonNull Optional<Player> optional(@NonNull UUID uuid) {
+        Player player = get(uuid);
+        return player == null ? Optional.empty() : Optional.of(player);
     }
 }
