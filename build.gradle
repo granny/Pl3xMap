@@ -156,8 +156,6 @@ allprojects {
     }
 }
 
-var file = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar")
-
 modrinth {
     autoAddDependsOn = false
     token = System.getenv('MODRINTH_TOKEN')
@@ -165,29 +163,12 @@ modrinth {
     versionName = "${project.version}"
     versionNumber = "${project.version}"
     versionType = 'beta'
-    uploadFile = file.get()
+    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
     gameVersions.addAll(["${minecraftVersion}"])
     loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
         optional.project "pl3xmap-claims"
-    }
-}
-
-hangarPublish {
-    var mcVer = "${minecraftVersion}"
-    publications.register('plugin') {
-        version.set("${project.version}")
-        namespace('BillyGalbreath', 'Pl3xMap')
-        channel.set('Beta')
-        changelog.set("${System.getenv('COMMIT_MESSAGE')}")
-        apiKey.set("${System.getenv('HANGAR_TOKEN')}")
-        platforms {
-            register(Platforms.PAPER) {
-                jar.set(file.get())
-                platformVersions.set([mcVer])
-            }
-        }
     }
 }
 
