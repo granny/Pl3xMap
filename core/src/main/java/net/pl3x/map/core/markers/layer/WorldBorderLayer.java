@@ -53,8 +53,8 @@ public class WorldBorderLayer extends WorldLayer {
         setUpdateInterval(15);
         setShowControls(true);
         setDefaultHidden(false);
-        setPriority(99);
-        setZIndex(99);
+        setPriority(30);
+        setZIndex(500);
         setOptions(Options.builder()
                 .strokeColor(0xFFFF0000)
                 .tooltipContent(getLabel())

@@ -63,6 +63,8 @@ public class SpawnLayer extends WorldLayer {
         }
 
         setUpdateInterval(15);
+        setPriority(10);
+        setZIndex(600);
 
         this.markers = Collections.singletonList(
                 Marker.icon(KEY, getWorld().getSpawn(), KEY, 16)
