@@ -53,7 +53,7 @@ jobs:
           COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
         continue-on-error: true
       - name: Notify Discord
-        uses: sarisia/actions-status-discord@v1
+        uses: BillyGalbreath/actions-status-discord@main
         if: success()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
@@ -62,6 +62,3 @@ jobs:
           description: |
             Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
             Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
-            
-            Changes:
-            ${{ join(github.event.commits.*.message, '\n') }}
