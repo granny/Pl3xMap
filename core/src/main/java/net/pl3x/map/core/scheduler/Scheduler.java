@@ -31,27 +31,38 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class Scheduler {
     private final Queue<@NonNull Task> tasks = new ConcurrentLinkedQueue<>();
 
+    private boolean ticking;
+
     /**
      * Tick this scheduler.
      */
     public void tick() {
-        Iterator<Task> iter = this.tasks.iterator();
-        while (iter.hasNext()) {
-            Task task = iter.next();
-            if (task.tick++ < task.delay) {
-                continue;
-            }
-            if (task.cancelled()) {
-                iter.remove();
-                continue;
-            }
-            task.run();
-            if (task.repeat) {
-                task.tick = 0;
-                continue;
-            }
-            iter.remove();
+        if (this.ticking) {
+            return;
         }
+        this.ticking = true;
+        try {
+            Iterator<Task> iter = this.tasks.iterator();
+            while (iter.hasNext()) {
+                Task task = iter.next();
+                if (task.tick++ < task.delay) {
+                    continue;
+                }
+                if (task.cancelled()) {
+                    iter.remove();
+                    continue;
+                }
+                task.run();
+                if (task.repeat) {
+                    task.tick = 0;
+                    continue;
+                }
+                iter.remove();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        this.ticking = false;
     }
 
     /**
