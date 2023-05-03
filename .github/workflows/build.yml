@@ -57,7 +57,7 @@ jobs:
         if: success()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          nodetail: true
+          noprefix: true
           title: New build of Pl3xMap is ready!
           description: |
             Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
