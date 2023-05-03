@@ -172,10 +172,10 @@ public abstract class World {
         Pl3xMap.api().getScheduler().addTask(1, true, this.markerTask);
 
         // load up custom markers
-        //Logger.debug("Loading custom markers for " + getName());
-        //for (Path file : getCustomMarkerFiles()) {
-        //    CustomLayer.load(this, file);
-        //}
+        Logger.debug("Loading custom markers for " + getName());
+        for (Path file : getCustomMarkerFiles()) {
+            CustomLayer.load(this, file);
+        }
     }
 
     public void cleanup() {

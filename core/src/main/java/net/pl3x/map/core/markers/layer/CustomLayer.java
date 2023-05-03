@@ -23,15 +23,13 @@
  */
 package net.pl3x.map.core.markers.layer;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.FileReader;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.marker.Marker;
@@ -42,8 +40,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * Represents a custom layer of markers and other metadata.
  */
 public class CustomLayer extends WorldLayer {
-    private final Map<@NonNull String, @NonNull Marker<@NonNull ?>> markers = new ConcurrentHashMap<>();
-
     /**
      * Create a new custom layer.
      *
@@ -53,20 +49,19 @@ public class CustomLayer extends WorldLayer {
         super(key, world, labelSupplier);
     }
 
-    @Override
-    public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
-        return this.markers.values();
-    }
-
     public static void load(World world, Path path) {
         CustomLayer layer;
         try {
-            layer = fromJson(world, (JsonObject) JsonParser.parseReader(new FileReader(path.toFile())));
+            JsonObject obj = (JsonObject) JsonParser.parseReader(new FileReader(path.toFile()));
+            layer = fromJson(world, obj);
+            if (obj.get("markers") instanceof JsonArray markers) {
+                markers.forEach(el -> layer.addMarker(Marker.fromJson(el.getAsJsonObject())));
+            }
         } catch (Throwable t) {
             Logger.severe("Error reading custom marker file: " + path.toAbsolutePath(), t);
             return;
         }
-        System.out.println("Layer: " + layer);
+        world.getLayerRegistry().register(layer.getKey(), layer);
     }
 
     public static @NonNull CustomLayer fromJson(@NonNull World world, @NonNull JsonObject obj) {

@@ -55,12 +55,11 @@ public class SimpleLayer extends Layer {
     /**
      * Add a new marker to this layer.
      *
-     * @param key    key
      * @param marker marker
      * @return this layer
      */
-    public @NonNull SimpleLayer addMarker(@NonNull String key, @NonNull Marker<@NonNull ?> marker) {
-        this.markers.put(key, marker);
+    public @NonNull SimpleLayer addMarker(@NonNull Marker<@NonNull ?> marker) {
+        this.markers.put(marker.getKey(), marker);
         return this;
     }
 

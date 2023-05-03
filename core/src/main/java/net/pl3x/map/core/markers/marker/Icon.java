@@ -26,12 +26,17 @@ package net.pl3x.map.core.markers.marker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
+import javax.imageio.ImageIO;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.registry.IconRegistry;
+import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -577,19 +582,35 @@ public class Icon extends Marker<@NonNull Icon> {
         Icon icon = Icon.of(
                 obj.get("key").getAsString(),
                 Point.fromJson((JsonObject) obj.get("point")),
-                obj.get("image").getAsString()
+                Objects.requireNonNull(registerIconImage("image", obj))
         );
-        if ((el = obj.get("retina")) != null && !(el instanceof JsonNull)) icon.setRetina(el.getAsString());
+        icon.setRetina(registerIconImage("retina", obj));
         if ((el = obj.get("size")) != null && !(el instanceof JsonNull)) icon.setSize(Vector.fromJson((JsonObject) obj.get("size")));
         if ((el = obj.get("anchor")) != null && !(el instanceof JsonNull)) icon.setAnchor(Vector.fromJson((JsonObject) obj.get("anchor")));
-        if ((el = obj.get("shadow")) != null && !(el instanceof JsonNull)) icon.setShadow(el.getAsString());
-        if ((el = obj.get("shadowRetina")) != null && !(el instanceof JsonNull)) icon.setShadowRetina(el.getAsString());
+        icon.setShadow(registerIconImage("shadow", obj));
+        icon.setShadowRetina(registerIconImage("shadowRetina", obj));
         if ((el = obj.get("shadowSize")) != null && !(el instanceof JsonNull)) icon.setShadowSize(Vector.fromJson((JsonObject) obj.get("shadowSize")));
         if ((el = obj.get("shadowAnchor")) != null && !(el instanceof JsonNull)) icon.setShadowAnchor(Vector.fromJson((JsonObject) obj.get("shadowAnchor")));
         if ((el = obj.get("rotationAngle")) != null && !(el instanceof JsonNull)) icon.setRotationAngle(el.getAsDouble());
         if ((el = obj.get("rotationOrigin")) != null && !(el instanceof JsonNull)) icon.setRotationOrigin(el.getAsString());
         if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) icon.setPane(el.getAsString());
         return icon;
+    }
+
+    private static @Nullable String registerIconImage(@NonNull String key, @NonNull JsonObject obj) {
+        JsonElement el;
+        String image = null;
+        if ((el = obj.get(key)) != null && !(el instanceof JsonNull)) {
+            try {
+                Path path = FileUtil.getWebDir().resolve("images/icon/" + (image = el.getAsString()) + ".png");
+                IconImage icon = new IconImage(image, ImageIO.read(path.toFile()), "png");
+                Pl3xMap.api().getIconRegistry().register(icon);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        return image;
     }
 
     @Override
