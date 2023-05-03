@@ -44,7 +44,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class UpdateMarkerData extends Task {
     private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
+            //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
             .setLenient()
