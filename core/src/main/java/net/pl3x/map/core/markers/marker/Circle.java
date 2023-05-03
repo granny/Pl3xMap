@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
@@ -143,6 +145,17 @@ public class Circle extends Marker<@NonNull Circle> {
         wrapper.addProperty("radius", getRadius());
         wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Circle fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Circle circle = Circle.of(
+                obj.get("key").getAsString(),
+                Point.fromJson((JsonObject) obj.get("center")),
+                obj.get("radius").getAsInt()
+        );
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) circle.setPane(el.getAsString());
+        return circle;
     }
 
     @Override

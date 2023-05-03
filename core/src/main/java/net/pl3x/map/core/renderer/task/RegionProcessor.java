@@ -220,9 +220,6 @@ public class RegionProcessor {
             // stop the progress tracker
             getProgress().finish();
 
-            // save region modified times
-            world.getRegionModifiedState().save();
-
             // free up some memory
             world.cleanup();
 

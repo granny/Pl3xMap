@@ -32,7 +32,6 @@ import net.pl3x.map.core.markers.marker.Marker;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-
 /**
  * Represents a simple layer of markers and other metadata.
  */

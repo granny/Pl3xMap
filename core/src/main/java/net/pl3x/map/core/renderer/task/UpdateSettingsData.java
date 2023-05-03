@@ -51,7 +51,7 @@ public class UpdateSettingsData extends Task {
             .create();
 
     public UpdateSettingsData() {
-        super(20, true);
+        super(1, true);
     }
 
     @Override

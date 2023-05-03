@@ -31,7 +31,6 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
@@ -75,17 +74,7 @@ public class UpdateMarkerData extends Task {
             String key = entry.getKey();
             Layer layer = entry.getValue();
             try {
-                Map<String, Object> details = new LinkedHashMap<>();
-                details.put("key", layer.getKey());
-                details.put("label", layer.getLabel());
-                details.put("updateInterval", layer.getUpdateInterval());
-                details.put("showControls", layer.shouldShowControls());
-                details.put("defaultHidden", layer.isDefaultHidden());
-                details.put("priority", layer.getPriority());
-                details.put("zIndex", layer.getZIndex());
-                details.put("pane", layer.getPane());
-                details.put("css", layer.getCss());
-                layers.add(details);
+                layers.add(layer.toJson());
 
                 long now = System.currentTimeMillis() / 1000;
                 long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);

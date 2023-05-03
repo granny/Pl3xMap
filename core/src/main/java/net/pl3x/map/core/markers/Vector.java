@@ -24,6 +24,7 @@
 package net.pl3x.map.core.markers;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public record Vector(double x, double z) implements JsonSerializable {
@@ -41,5 +42,9 @@ public record Vector(double x, double z) implements JsonSerializable {
         wrapper.addProperty("x", x());
         wrapper.addProperty("z", z());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Vector fromJson(@NonNull JsonObject obj) {
+        return Vector.of(obj.get("x").getAsDouble(), obj.get("z").getAsDouble());
     }
 }

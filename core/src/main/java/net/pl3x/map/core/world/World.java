@@ -47,6 +47,7 @@ import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.area.Area;
+import net.pl3x.map.core.markers.layer.CustomLayer;
 import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.layer.PlayersLayer;
 import net.pl3x.map.core.markers.layer.SpawnLayer;
@@ -63,10 +64,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class World {
+    public static final PathMatcher JSON_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.json");
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
     public static final PathMatcher PNG_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*_*.png");
 
     private final String name;
+    private final Path customMarkersDirectory;
     private final Path markersDirectory;
     private final Path regionDirectory;
     private final Path tilesDirectory;
@@ -96,6 +99,7 @@ public abstract class World {
 
         this.regionDirectory = regionDirectory;
         this.tilesDirectory = FileUtil.getTilesDir().resolve(name.replace(":", "-"));
+        this.customMarkersDirectory = Pl3xMap.api().getMainDir().resolve("markers").resolve(name);
         this.markersDirectory = getTilesDirectory().resolve("markers");
 
         if (!Files.exists(this.regionDirectory)) {
@@ -165,11 +169,22 @@ public abstract class World {
         Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions());
 
         Logger.debug("Starting marker task");
-        Pl3xMap.api().getScheduler().addTask(20, true, this.markerTask);
+        Pl3xMap.api().getScheduler().addTask(1, true, this.markerTask);
+
+        // load up custom markers
+        //Logger.debug("Loading custom markers for " + getName());
+        //for (Path file : getCustomMarkerFiles()) {
+        //    CustomLayer.load(this, file);
+        //}
     }
 
     public void cleanup() {
         this.regionCache.invalidateAll();
+        getRegionModifiedState().save();
+    }
+
+    public @NonNull Path getCustomMarkersDirectory() {
+        return this.customMarkersDirectory;
     }
 
     public @NonNull Path getMarkersDirectory() {
@@ -331,10 +346,24 @@ public abstract class World {
     }
 
     public @NonNull Collection<@NonNull Path> getRegionFiles() {
+        if (!Files.exists(getRegionDirectory())) {
+            return Collections.emptySet();
+        }
         try (Stream<Path> stream = Files.list(getRegionDirectory())) {
             return stream.filter(MCA_MATCHER::matches).toList();
         } catch (IOException e) {
             throw new RuntimeException("Failed to list region files in directory '" + getRegionDirectory().toAbsolutePath() + "'", e);
+        }
+    }
+
+    public @NonNull Collection<@NonNull Path> getCustomMarkerFiles() {
+        if (!Files.exists(getCustomMarkersDirectory())) {
+            return Collections.emptySet();
+        }
+        try (Stream<Path> stream = Files.list(getCustomMarkersDirectory())) {
+            return stream.filter(JSON_MATCHER::matches).toList();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to list custom marker files in directory '" + getCustomMarkersDirectory().toAbsolutePath() + "'", e);
         }
     }
 

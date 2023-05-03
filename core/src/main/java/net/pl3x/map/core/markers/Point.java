@@ -24,6 +24,7 @@
 package net.pl3x.map.core.markers;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public record Point(int x, int z) implements JsonSerializable {
@@ -43,5 +44,9 @@ public record Point(int x, int z) implements JsonSerializable {
         wrapper.addProperty("x", x());
         wrapper.addProperty("z", z());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Point fromJson(@NonNull JsonObject obj) {
+        return Point.of(obj.get("x").getAsInt(), obj.get("z").getAsInt());
     }
 }

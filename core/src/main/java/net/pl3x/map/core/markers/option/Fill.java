@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.option;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -138,8 +140,8 @@ public class Fill extends Option<@NonNull Fill> {
 
     @Override
     public boolean isDefault() {
-        return isEnabled() == null &&
-                getType() == null &&
+        return (isEnabled() == null || Boolean.TRUE.equals(isEnabled())) &&
+                (getType() == null || getType() == Type.EVENODD) &&
                 getColor() == null;
     }
 
@@ -150,6 +152,15 @@ public class Fill extends Option<@NonNull Fill> {
         wrapper.addProperty("type", getType());
         wrapper.addProperty("color", getColor());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Fill fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Fill fill = new Fill();
+        if ((el = obj.get("enabled")) != null && !(el instanceof JsonNull)) fill.setEnabled(el.getAsBoolean());
+        if ((el = obj.get("type")) != null && !(el instanceof JsonNull)) fill.setType(Type.values()[el.getAsInt()]);
+        if ((el = obj.get("color")) != null && !(el instanceof JsonNull)) fill.setColor(el.getAsInt());
+        return fill;
     }
 
     @Override

@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.option;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
@@ -35,6 +37,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Tooltip properties of a marker.
  */
 public class Tooltip extends Option<@NonNull Tooltip> {
+    public static final Point DEFAULT_OFFSET = Point.ZERO;
+
     private String content;
     private String pane;
     private Point offset;
@@ -237,12 +241,12 @@ public class Tooltip extends Option<@NonNull Tooltip> {
     @Override
     public boolean isDefault() {
         return getContent() == null &&
-                getPane() == null &&
-                getOffset() == null &&
-                getDirection() == null &&
-                isPermanent() == null &&
-                isSticky() == null &&
-                getOpacity() == null;
+                (getPane() == null || getPane().equals("tooltipPane")) &&
+                (getOffset() == null || getOffset().equals(DEFAULT_OFFSET)) &&
+                (getDirection() == null || getDirection() == Direction.AUTO) &&
+                (isPermanent() == null || Boolean.FALSE.equals(isPermanent())) &&
+                (isSticky() == null || Boolean.FALSE.equals(isSticky())) &&
+                (getOpacity() == null || getOpacity() == 0.9D);
     }
 
     @Override
@@ -256,6 +260,19 @@ public class Tooltip extends Option<@NonNull Tooltip> {
         wrapper.addProperty("sticky", isSticky());
         wrapper.addProperty("opacity", getOpacity());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Tooltip fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Tooltip tooltip = new Tooltip();
+        if ((el = obj.get("content")) != null && !(el instanceof JsonNull)) tooltip.setContent(el.getAsString());
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) tooltip.setPane(el.getAsString());
+        if ((el = obj.get("offset")) != null && !(el instanceof JsonNull)) tooltip.setOffset(Point.fromJson((JsonObject) el));
+        if ((el = obj.get("direction")) != null && !(el instanceof JsonNull)) tooltip.setDirection(Direction.values()[el.getAsInt()]);
+        if ((el = obj.get("permanent")) != null && !(el instanceof JsonNull)) tooltip.setPermanent(el.getAsBoolean());
+        if ((el = obj.get("sticky")) != null && !(el instanceof JsonNull)) tooltip.setSticky(el.getAsBoolean());
+        if ((el = obj.get("opacity")) != null && !(el instanceof JsonNull)) tooltip.setOpacity(el.getAsDouble());
+        return tooltip;
     }
 
     @Override

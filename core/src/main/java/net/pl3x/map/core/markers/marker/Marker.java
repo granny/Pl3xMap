@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.core.markers.marker;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.List;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.markers.JsonSerializable;
@@ -511,5 +514,24 @@ public abstract class Marker<@NonNull T extends Marker<@NonNull T>> extends Keye
      */
     public @NonNull T setOptions(Options.@Nullable Builder builder) {
         return setOptions(builder == null ? null : builder.build());
+    }
+
+    public static @NonNull Marker<?> fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        String type = obj.get("type").getAsString();
+        JsonObject data = obj.get("data").getAsJsonObject();
+        Marker<?> marker = switch (type) {
+            case "circ" -> Circle.fromJson(data);
+            case "elli" -> Ellipse.fromJson(data);
+            case "icon" -> Icon.fromJson(data);
+            case "multipoly" -> MultiPolygon.fromJson(data);
+            case "multiline" -> MultiPolyline.fromJson(data);
+            case "poly" -> Polygon.fromJson(data);
+            case "line" -> Polyline.fromJson(data);
+            case "rect" -> Rectangle.fromJson(data);
+            default -> throw new IllegalStateException("Marker type not found: " + type);
+        };
+        if ((el = obj.get("options")) != null && !(el instanceof JsonNull)) marker.setOptions(Options.fromJson((JsonObject) el));
+        return marker;
     }
 }

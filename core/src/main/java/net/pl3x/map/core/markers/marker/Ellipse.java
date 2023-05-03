@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
@@ -331,6 +333,18 @@ public class Ellipse extends Marker<@NonNull Ellipse> {
         wrapper.addProperty("tilt", getTilt());
         wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Ellipse fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Ellipse ellipse = Ellipse.of(
+                obj.get("key").getAsString(),
+                Point.fromJson((JsonObject) obj.get("center")),
+                Vector.fromJson((JsonObject) obj.get("radius"))
+        );
+        if ((el = obj.get("tilt")) != null && !(el instanceof JsonNull)) ellipse.setTilt(el.getAsDouble());
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) ellipse.setPane(el.getAsString());
+        return ellipse;
     }
 
     @Override

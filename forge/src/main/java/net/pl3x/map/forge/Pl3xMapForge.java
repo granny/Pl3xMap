@@ -80,6 +80,8 @@ public class Pl3xMapForge extends Pl3xMap {
 
     private ForgeServerAudiences adventure;
 
+    private int tick;
+
     public Pl3xMapForge() {
         super();
 
@@ -103,7 +105,8 @@ public class Pl3xMapForge extends Pl3xMap {
 
     @SubscribeEvent
     public void onServerTick(TickEvent.@NonNull ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
+        if (event.phase == TickEvent.Phase.END && this.tick++ >= 20) {
+            this.tick = 0;
             getScheduler().tick();
         }
     }

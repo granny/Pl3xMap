@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.option;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.JsonSerializable;
@@ -174,6 +176,16 @@ public class Options implements JsonSerializable {
         wrapper.addProperty("tooltip", getTooltip());
         wrapper.addProperty("popup", getPopup());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Options fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Options options = new Options();
+        if ((el = obj.get("stroke")) != null && !(el instanceof JsonNull)) options.setStroke(Stroke.fromJson((JsonObject) el));
+        if ((el = obj.get("fill")) != null && !(el instanceof JsonNull)) options.setFill(Fill.fromJson((JsonObject) el));
+        if ((el = obj.get("tooltip")) != null && !(el instanceof JsonNull)) options.setTooltip(Tooltip.fromJson((JsonObject) el));
+        if ((el = obj.get("popup")) != null && !(el instanceof JsonNull)) options.setPopup(Popup.fromJson((JsonObject) el));
+        return options;
     }
 
     @Override

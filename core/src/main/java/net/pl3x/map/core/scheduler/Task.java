@@ -33,7 +33,7 @@ public abstract class Task implements Runnable {
     /**
      * Creates a new schedulable task.
      *
-     * @param delay Delay (in ticks) before task starts
+     * @param delay Delay (in seconds) before task starts
      */
     public Task(int delay) {
         this(delay, false);
@@ -42,8 +42,8 @@ public abstract class Task implements Runnable {
     /**
      * Creates a new schedulable task.
      *
-     * @param delay  Delay (in ticks) before task starts
-     * @param repeat Delay (in ticks) before task repeats
+     * @param delay  Delay (in seconds) before task starts
+     * @param repeat Delay (in seconds) before task repeats
      */
     public Task(int delay, boolean repeat) {
         this.delay = delay;

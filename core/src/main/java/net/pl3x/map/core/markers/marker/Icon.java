@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
@@ -568,6 +570,26 @@ public class Icon extends Marker<@NonNull Icon> {
         wrapper.addProperty("rotationOrigin", getRotationOrigin());
         wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Icon fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Icon icon = Icon.of(
+                obj.get("key").getAsString(),
+                Point.fromJson((JsonObject) obj.get("point")),
+                obj.get("image").getAsString()
+        );
+        if ((el = obj.get("retina")) != null && !(el instanceof JsonNull)) icon.setRetina(el.getAsString());
+        if ((el = obj.get("size")) != null && !(el instanceof JsonNull)) icon.setSize(Vector.fromJson((JsonObject) obj.get("size")));
+        if ((el = obj.get("anchor")) != null && !(el instanceof JsonNull)) icon.setAnchor(Vector.fromJson((JsonObject) obj.get("anchor")));
+        if ((el = obj.get("shadow")) != null && !(el instanceof JsonNull)) icon.setShadow(el.getAsString());
+        if ((el = obj.get("shadowRetina")) != null && !(el instanceof JsonNull)) icon.setShadowRetina(el.getAsString());
+        if ((el = obj.get("shadowSize")) != null && !(el instanceof JsonNull)) icon.setShadowSize(Vector.fromJson((JsonObject) obj.get("shadowSize")));
+        if ((el = obj.get("shadowAnchor")) != null && !(el instanceof JsonNull)) icon.setShadowAnchor(Vector.fromJson((JsonObject) obj.get("shadowAnchor")));
+        if ((el = obj.get("rotationAngle")) != null && !(el instanceof JsonNull)) icon.setRotationAngle(el.getAsDouble());
+        if ((el = obj.get("rotationOrigin")) != null && !(el instanceof JsonNull)) icon.setRotationOrigin(el.getAsString());
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) icon.setPane(el.getAsString());
+        return icon;
     }
 
     @Override

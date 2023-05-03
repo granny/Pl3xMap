@@ -23,10 +23,13 @@
  */
 package net.pl3x.map.core.markers.layer;
 
+import com.google.gson.JsonElement;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 import net.pl3x.map.core.Keyed;
+import net.pl3x.map.core.markers.JsonObjectWrapper;
+import net.pl3x.map.core.markers.JsonSerializable;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -36,7 +39,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents a layer of markers and other metadata.
  */
 @SuppressWarnings("UnusedReturnValue")
-public abstract class Layer extends Keyed {
+public abstract class Layer extends Keyed implements JsonSerializable {
     private Supplier<@NonNull String> labelSupplier;
     private int updateInterval = 15;
     private boolean showControls = true;
@@ -249,6 +252,20 @@ public abstract class Layer extends Keyed {
      * @return markers to display
      */
     public abstract @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers();
+
+    public @NonNull JsonElement toJson() {
+        JsonObjectWrapper wrapper = new JsonObjectWrapper();
+        wrapper.addProperty("key", getKey());
+        wrapper.addProperty("label", getLabel());
+        wrapper.addProperty("updateInterval", getUpdateInterval());
+        wrapper.addProperty("showControls", shouldShowControls());
+        wrapper.addProperty("defaultHidden", isDefaultHidden());
+        wrapper.addProperty("priority", getPriority());
+        wrapper.addProperty("zIndex", getZIndex());
+        wrapper.addProperty("pane", getPane());
+        wrapper.addProperty("css", getCss());
+        return wrapper.getJsonObject();
+    }
 
     @Override
     public boolean equals(@Nullable Object o) {

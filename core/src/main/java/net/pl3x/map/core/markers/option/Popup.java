@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.option;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
@@ -34,6 +36,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Popup properties of a marker.
  */
 public class Popup extends Option<@NonNull Popup> {
+    public static final Point DEFAULT_OFFSET = Point.of(0, 7);
+    public static final Point DEFAULT_AUTO_PAN_PADDING = Point.of(5, 5);
+
     private String content;
     private String pane;
     private Point offset;
@@ -448,20 +453,20 @@ public class Popup extends Option<@NonNull Popup> {
     @Override
     public boolean isDefault() {
         return getContent() == null &&
-                getPane() == null &&
-                getOffset() == null &&
-                getMaxWidth() == null &&
-                getMinWidth() == null &&
+                (getPane() == null || getPane().equals("popupPane")) &&
+                (getOffset() == null || getOffset().equals(DEFAULT_OFFSET)) &&
+                (getMaxWidth() == null || getMaxWidth() == 300) &&
+                (getMinWidth() == null || getMinWidth() == 50) &&
                 getMaxHeight() == null &&
-                shouldAutoPan() == null &&
+                (shouldAutoPan() == null || Boolean.TRUE.equals(shouldAutoPan())) &&
                 getAutoPanPaddingTopLeft() == null &&
                 getAutoPanPaddingBottomRight() == null &&
-                getAutoPanPadding() == null &&
-                shouldKeepInView() == null &&
-                hasCloseButton() == null &&
-                shouldAutoClose() == null &&
-                shouldCloseOnEscapeKey() == null &&
-                shouldCloseOnClick() == null;
+                (getAutoPanPadding() == null || getAutoPanPadding().equals(DEFAULT_AUTO_PAN_PADDING)) &&
+                (shouldKeepInView() == null || Boolean.FALSE.equals(shouldKeepInView())) &&
+                (hasCloseButton() == null || Boolean.TRUE.equals(hasCloseButton())) &&
+                (shouldAutoClose() == null || Boolean.TRUE.equals(shouldAutoClose())) &&
+                (shouldCloseOnEscapeKey() == null || Boolean.TRUE.equals(shouldCloseOnEscapeKey())) &&
+                (shouldCloseOnClick() == null || Boolean.TRUE.equals(shouldCloseOnClick()));
     }
 
     @Override
@@ -483,6 +488,27 @@ public class Popup extends Option<@NonNull Popup> {
         wrapper.addProperty("closeOnEscapeKey", shouldCloseOnEscapeKey());
         wrapper.addProperty("closeOnClick", shouldCloseOnClick());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Popup fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Popup popup = new Popup();
+        if ((el = obj.get("content")) != null && !(el instanceof JsonNull)) popup.setContent(el.getAsString());
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) popup.setPane(el.getAsString());
+        if ((el = obj.get("offset")) != null && !(el instanceof JsonNull)) popup.setOffset(Point.fromJson((JsonObject) el));
+        if ((el = obj.get("maxWidth")) != null && !(el instanceof JsonNull)) popup.setMaxWidth(el.getAsInt());
+        if ((el = obj.get("minWidth")) != null && !(el instanceof JsonNull)) popup.setMinWidth(el.getAsInt());
+        if ((el = obj.get("maxHeight")) != null && !(el instanceof JsonNull)) popup.setMaxHeight(el.getAsInt());
+        if ((el = obj.get("autoPan")) != null && !(el instanceof JsonNull)) popup.setShouldAutoPan(el.getAsBoolean());
+        if ((el = obj.get("autoPanPaddingTopLeft")) != null && !(el instanceof JsonNull)) popup.setAutoPanPaddingTopLeft(Point.fromJson((JsonObject) el));
+        if ((el = obj.get("autoPanPaddingBottomRight")) != null && !(el instanceof JsonNull)) popup.setAutoPanPaddingBottomRight(Point.fromJson((JsonObject) el));
+        if ((el = obj.get("autoPanPadding")) != null && !(el instanceof JsonNull)) popup.setAutoPanPadding(Point.fromJson((JsonObject) el));
+        if ((el = obj.get("keepInView")) != null && !(el instanceof JsonNull)) popup.setShouldKeepInView(el.getAsBoolean());
+        if ((el = obj.get("closeButton")) != null && !(el instanceof JsonNull)) popup.setCloseButton(el.getAsBoolean());
+        if ((el = obj.get("autoClose")) != null && !(el instanceof JsonNull)) popup.setShouldAutoClose(el.getAsBoolean());
+        if ((el = obj.get("closeOnEscapeKey")) != null && !(el instanceof JsonNull)) popup.setShouldCloseOnEscapeKey(el.getAsBoolean());
+        if ((el = obj.get("closeOnClick")) != null && !(el instanceof JsonNull)) popup.setShouldCloseOnClick(el.getAsBoolean());
+        return popup;
     }
 
     @Override

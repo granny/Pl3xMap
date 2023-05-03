@@ -24,6 +24,8 @@
 package net.pl3x.map.core.markers.marker;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
@@ -145,6 +147,17 @@ public class Rectangle extends Marker<@NonNull Rectangle> {
         wrapper.addProperty("point2", getPoint2());
         wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull Rectangle fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        Rectangle rectangle = Rectangle.of(
+                obj.get("key").getAsString(),
+                Point.fromJson((JsonObject) obj.get("point1")),
+                Point.fromJson((JsonObject) obj.get("point2"))
+        );
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) rectangle.setPane(el.getAsString());
+        return rectangle;
     }
 
     @Override

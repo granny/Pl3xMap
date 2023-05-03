@@ -70,6 +70,7 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     private FabricServerAudiences adventure;
 
     private boolean firstTick = true;
+    private int tick;
 
     public Pl3xMapFabric() {
         super();
@@ -88,7 +89,10 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
                 Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
                 this.firstTick = false;
             }
-            getScheduler().tick();
+            if (this.tick++ >= 20) {
+                this.tick = 0;
+                getScheduler().tick();
+            }
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
@@ -117,7 +121,6 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
                 this.adventure.close();
                 this.adventure = null;
             }
-            getBlockRegistry().unregister();
         });
     }
 

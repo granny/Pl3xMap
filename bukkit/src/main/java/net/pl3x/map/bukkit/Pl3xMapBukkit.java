@@ -83,7 +83,7 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
                 }
             }, 50L, 50L);
         } else {
-            getServer().getScheduler().runTaskTimerAsynchronously(this, () ->
+            getServer().getScheduler().runTaskTimer(this, () ->
                     this.pl3xmap.getScheduler().tick(), 20, 20);
         }
     }

@@ -23,7 +23,10 @@
  */
 package net.pl3x.map.core.markers.marker;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -212,6 +215,19 @@ public class MultiPolyline extends Marker<@NonNull MultiPolyline> {
         wrapper.addProperty("polylines", getPolylines());
         wrapper.addProperty("pane", getPane());
         return wrapper.getJsonObject();
+    }
+
+    public static @NonNull MultiPolyline fromJson(@NonNull JsonObject obj) {
+        JsonElement el;
+        MultiPolyline multiPolyline = MultiPolyline.of(obj.get("key").getAsString());
+        if ((el = obj.get("polylines")) != null && !(el instanceof JsonNull)) {
+            JsonArray arr = el.getAsJsonArray();
+            for (int i = 0; i < arr.size(); i++) {
+                multiPolyline.addPolyline(Polyline.fromJson((JsonObject) arr.get(i)));
+            }
+        }
+        if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) multiPolyline.setPane(el.getAsString());
+        return multiPolyline;
     }
 
     @Override
