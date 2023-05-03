@@ -91,7 +91,7 @@ public class TileImage extends Keyed {
             Path filePath = dirPath.resolve(String.format(FILE_PATH,
                     this.region.x() >> zoom,
                     this.region.z() >> zoom,
-                    this.io.extension()));
+                    this.io.getKey()));
 
             ReadWriteLock lock = FILE_LOCKS.computeIfAbsent(filePath, k -> new ReentrantReadWriteLock(true));
             lock.writeLock().lock();

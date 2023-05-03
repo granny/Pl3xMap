@@ -24,7 +24,6 @@
 package net.pl3x.map.core.registry;
 
 import java.util.function.Supplier;
-import javax.management.openmbean.KeyAlreadyExistsException;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.world.WorldUnloadedEvent;
 import net.pl3x.map.core.world.World;
@@ -39,13 +38,6 @@ public class WorldRegistry extends Registry<@NonNull World> {
             register(world.getName(), world);
         }
         return world;
-    }
-
-    public @NonNull World register(@NonNull World world) {
-        if (has(world.getName())) {
-            throw new KeyAlreadyExistsException("World already registered: " + world.getName());
-        }
-        return register(world.getName(), world);
     }
 
     @Override

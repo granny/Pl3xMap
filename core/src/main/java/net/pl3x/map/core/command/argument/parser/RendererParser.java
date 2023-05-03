@@ -63,7 +63,7 @@ public class RendererParser<@NonNull C> implements ArgumentParser<@NonNull C, Re
     public @NonNull List<@NonNull String> suggestions(@NonNull CommandContext<@NonNull C> commandContext, @NonNull String input) {
         return Pl3xMap.api().getRendererRegistry()
                 .values().stream()
-                .map(Renderer.Builder::key)
+                .map(Renderer.Builder::getKey)
                 .filter(key -> !key.equals(RendererRegistry.BLOCKINFO))
                 .collect(Collectors.toList());
     }

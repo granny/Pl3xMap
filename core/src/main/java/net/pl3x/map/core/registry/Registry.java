@@ -29,12 +29,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.util.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class Registry<@NonNull T> implements Iterable<@NonNull T> {
+public class Registry<@NonNull T extends Keyed> implements Iterable<@NonNull T> {
     protected final Map<@NonNull String, @NonNull T> entries = new ConcurrentHashMap<>();
+
+    public @NonNull T register(@NonNull T value) {
+        return register(value.getKey(), value);
+    }
 
     public @NonNull T register(@NonNull String id, @NonNull T value) {
         Preconditions.checkNotNull(id, "Id cannot be null");

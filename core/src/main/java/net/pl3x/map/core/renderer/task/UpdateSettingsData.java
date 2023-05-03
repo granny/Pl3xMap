@@ -131,7 +131,7 @@ public class UpdateSettingsData extends Task {
             List<Object> renderers = new ArrayList<>();
             world.getRenderers().forEach((rendererKey, builder) -> {
                 String icon = world.getConfig().RENDER_RENDERERS.get(rendererKey);
-                renderers.add(Map.of("label", rendererKey, "value", builder.name(), "icon", icon));
+                renderers.add(Map.of("label", rendererKey, "value", builder.getName(), "icon", icon));
             });
 
             Map<String, Object> worldsList = new LinkedHashMap<>();

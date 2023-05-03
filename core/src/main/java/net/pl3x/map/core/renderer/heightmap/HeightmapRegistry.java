@@ -37,8 +37,4 @@ public class HeightmapRegistry extends Registry<@NonNull Heightmap> {
         register(new NoneHeightmap());
         register(new OldSchoolHeightmap());
     }
-
-    public void register(@NonNull Heightmap heightmap) {
-        register(heightmap.getKey(), heightmap);
-    }
 }

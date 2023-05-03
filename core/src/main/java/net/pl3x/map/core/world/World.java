@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
+import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.configuration.WorldConfig;
@@ -63,12 +64,11 @@ import net.pl3x.map.core.util.Mathf;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class World {
+public abstract class World extends Keyed {
     public static final PathMatcher JSON_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.json");
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
     public static final PathMatcher PNG_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*_*.png");
 
-    private final String name;
     private final Path customMarkersDirectory;
     private final Path markersDirectory;
     private final Path regionDirectory;
@@ -92,7 +92,8 @@ public abstract class World {
     private boolean paused = false;
 
     public World(@NonNull String name, long seed, @NonNull Point spawn, @NonNull Type type, @NonNull Path regionDirectory) {
-        this.name = name;
+        super(name);
+
         this.seed = seed;
         this.spawn = spawn;
         this.type = type;
@@ -147,7 +148,7 @@ public abstract class World {
                 Logger.severe("Cannot load world renderer icon " + path);
                 e.printStackTrace();
             }
-            this.renderers.put(renderer.key(), renderer);
+            this.renderers.put(renderer.getKey(), renderer);
         });
 
         if (getConfig().MARKERS_WORLDBORDER_ENABLED) {
@@ -229,7 +230,7 @@ public abstract class World {
     }
 
     public @NonNull String getName() {
-        return this.name;
+        return getKey();
     }
 
     public long getSeed() {

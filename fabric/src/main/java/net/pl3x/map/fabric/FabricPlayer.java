@@ -47,7 +47,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FabricPlayer extends Player {
     public FabricPlayer(@NonNull ServerPlayer player) {
-        super(player);
+        super(player.getScoreboardName(), player);
     }
 
     @Override

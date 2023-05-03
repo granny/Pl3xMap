@@ -56,7 +56,7 @@ public class BiomeRegistry extends Registry<@NonNull Biome> {
 
     public void saveToDisk(@NonNull World world) {
         Map<Integer, String> map = new HashMap<>();
-        values().forEach(biome -> map.put(biome.index(), biome.id()));
+        values().forEach(biome -> map.put(biome.index(), biome.getKey()));
         try {
             FileUtil.saveGzip(GSON.toJson(map), world.getTilesDirectory().resolve("biomes.gz"));
         } catch (IOException e) {

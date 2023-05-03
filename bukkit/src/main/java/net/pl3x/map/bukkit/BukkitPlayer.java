@@ -53,7 +53,7 @@ public class BukkitPlayer extends Player {
     private final NamespacedKey hiddenKey = new NamespacedKey(Pl3xMapBukkit.getProvidingPlugin(Pl3xMapBukkit.class), "hidden");
 
     public BukkitPlayer(org.bukkit.entity.@NonNull Player player) {
-        super(player);
+        super(player.getName(), player);
     }
 
     @Override

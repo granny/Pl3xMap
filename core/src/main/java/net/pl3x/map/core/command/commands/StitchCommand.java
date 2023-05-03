@@ -75,7 +75,7 @@ public class StitchCommand extends Pl3xMapCommand {
         Renderer.Builder renderer = context.get("renderer");
         int zoom = context.getOrDefault("zoom", 0);
 
-        Path dir = world.getTilesDirectory().resolve(String.valueOf(zoom)).resolve(renderer.key());
+        Path dir = world.getTilesDirectory().resolve(String.valueOf(zoom)).resolve(renderer.getKey());
         if (!Files.exists(dir)) {
             sender.sendMessage(Lang.COMMAND_STITCH_MISSING_DIRECTORY);
             return;
@@ -160,13 +160,13 @@ public class StitchCommand extends Pl3xMapCommand {
             } catch (IOException ignore) {
             }
         }
-        String filename = renderer.key() + "_" + zoom + "." + io.extension();
+        String filename = renderer.getKey() + "_" + zoom + "." + io.getKey();
         io.write(dir.resolve(filename), stitched);
 
         sender.sendMessage(Lang.COMMAND_STITCH_FINISHED,
                 Placeholder.unparsed("count", String.valueOf(pngFiles.size())),
                 Placeholder.unparsed("world", world.getName()),
-                Placeholder.unparsed("renderer", renderer.key()),
+                Placeholder.unparsed("renderer", renderer.getKey()),
                 Placeholder.unparsed("filename", filename)
         );
     }

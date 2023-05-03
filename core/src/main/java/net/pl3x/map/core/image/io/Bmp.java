@@ -27,9 +27,8 @@ import java.awt.image.BufferedImage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Bmp extends IO.Type {
-    @Override
-    public @NonNull String extension() {
-        return "bmp";
+    public Bmp() {
+        super("bmp");
     }
 
     @Override

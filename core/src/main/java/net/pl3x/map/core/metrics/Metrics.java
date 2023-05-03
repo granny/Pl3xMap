@@ -122,8 +122,8 @@ public class Metrics {
             Map<String, Integer> map = new HashMap<>();
             this.pl3xmap.getWorldRegistry().forEach(world ->
                     world.getRenderers().forEach((id, builder) -> {
-                        int count = map.getOrDefault(builder.name(), 0);
-                        map.put(builder.name(), count + 1);
+                        int count = map.getOrDefault(builder.getName(), 0);
+                        map.put(builder.getName(), count + 1);
                     })
             );
             return map;

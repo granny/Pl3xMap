@@ -47,7 +47,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ForgePlayer extends Player {
     public ForgePlayer(@NonNull ServerPlayer player) {
-        super(player);
+        super(player.getScoreboardName(), player);
     }
 
     @Override

@@ -35,6 +35,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
+import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.registry.Registry;
@@ -75,8 +76,10 @@ public abstract class IO {
         return type;
     }
 
-    public abstract static class Type {
-        public abstract @NonNull String extension();
+    public abstract static class Type extends Keyed {
+        public Type(@NonNull String key) {
+            super(key);
+        }
 
         public @NonNull BufferedImage createBuffer() {
             return new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
@@ -90,7 +93,7 @@ public abstract class IO {
             BufferedImage buffer = null;
             ImageReader reader = null;
             try (ImageInputStream in = ImageIO.createImageInputStream(Files.newInputStream(path))) {
-                reader = ImageIO.getImageReadersBySuffix(extension()).next();
+                reader = ImageIO.getImageReadersBySuffix(getKey()).next();
                 reader.setInput(in, false, true);
                 buffer = reader.read(0);
                 in.flush();
@@ -108,7 +111,7 @@ public abstract class IO {
         public void write(@NonNull Path path, @NonNull BufferedImage buffer) {
             ImageWriter writer = null;
             try (ImageOutputStream out = ImageIO.createImageOutputStream(path.toFile())) {
-                writer = ImageIO.getImageWritersBySuffix(extension()).next();
+                writer = ImageIO.getImageWritersBySuffix(getKey()).next();
                 ImageWriteParam param = writer.getDefaultWriteParam();
                 if (param.canWriteCompressed()) {
                     param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

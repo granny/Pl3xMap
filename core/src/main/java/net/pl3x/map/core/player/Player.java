@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -38,13 +39,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents a player.
  */
-public abstract class Player {
+public abstract class Player extends Keyed {
     private final Object player;
 
     private Map<@NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String>, @NonNull Integer> nameDecorators = new LinkedHashMap<>();
     private boolean hidden;
 
-    public <@NonNull T> Player(@NonNull T player) {
+    public <@NonNull T> Player(@NonNull String key, @NonNull T player) {
+        super(key);
         this.player = player;
     }
 

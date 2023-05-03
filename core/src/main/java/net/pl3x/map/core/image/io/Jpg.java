@@ -27,9 +27,8 @@ import java.awt.image.BufferedImage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Jpg extends IO.Type {
-    @Override
-    public @NonNull String extension() {
-        return "jpg";
+    public Jpg() {
+        super("jpg");
     }
 
     @Override

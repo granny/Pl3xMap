@@ -68,23 +68,6 @@ public class IconRegistry extends Registry<@NonNull IconImage> {
      *
      * @param image image to register or null
      * @return registered image
-     * @throws IllegalArgumentException if image is already registered
-     * @throws IllegalStateException    if image failed to save to disk
-     */
-    public @Nullable IconImage register(@Nullable IconImage image) {
-        if (image == null) {
-            return null;
-        }
-        return register(image.getKey(), image);
-    }
-
-    /**
-     * Register a new image.
-     * <p>
-     * Will return null if the image is already registered.
-     *
-     * @param image image to register or null
-     * @return registered image
      * @throws IllegalStateException if image failed to save to disk
      */
     @Override

@@ -43,7 +43,7 @@ public final class BiomeRenderer extends Renderer {
         if (Colors.getRawBlockColor(data.getBlockState().getBlock()) > 0) {
             // determine the biome
             Biome biome = data.getBiome(region, blockX, blockZ);
-            int color = ColorsConfig.BIOME_COLORS.getOrDefault(biome.id(), 0);
+            int color = ColorsConfig.BIOME_COLORS.getOrDefault(biome.getKey(), 0);
             pixelColor = Colors.setAlpha(0xFF, color);
 
             // work out the heightmap

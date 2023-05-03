@@ -24,6 +24,7 @@
 package net.pl3x.map.core.renderer;
 
 import java.util.Locale;
+import java.util.Objects;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.image.TileImage;
@@ -49,9 +50,9 @@ public abstract class Renderer extends Keyed {
     private TileImage tileImage;
 
     public Renderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
-        super(builder.key());
+        super(builder.getKey());
         this.task = task;
-        this.name = builder.name();
+        this.name = builder.getName();
         this.world = task.getWorld();
 
         String key = getWorld().getConfig().RENDER_HEIGHTMAP_TYPE.toLowerCase(Locale.ROOT);
@@ -204,6 +205,45 @@ public abstract class Renderer extends Keyed {
         }
     }
 
-    public record Builder(@NonNull String key, @NonNull String name, @NonNull Class<@NonNull ? extends @NonNull Renderer> clazz) {
+    public static final class Builder extends Keyed {
+        private final @NonNull String name;
+        private final @NonNull Class<@NonNull ? extends @NonNull Renderer> clazz;
+
+        public Builder(@NonNull String key, @NonNull String name, @NonNull Class<@NonNull ? extends @NonNull Renderer> clazz) {
+            super(key);
+            this.name = name;
+            this.clazz = clazz;
+        }
+
+        public @NonNull String getName() {
+            return name;
+        }
+
+        public @NonNull Class<@NonNull ? extends @NonNull Renderer> getClazz() {
+            return clazz;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            Builder other = (Builder) obj;
+            return getKey().equals(other.getKey()) &&
+                    Objects.equals(this.name, other.name) &&
+                    Objects.equals(this.clazz, other.clazz);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(getKey(), name, clazz);
+        }
+
+        @Override
+        public @NonNull String toString() {
+            return "Builder[" +
+                    "key=" + getKey() + ", " +
+                    "name=" + name + ", " +
+                    "clazz=" + clazz + ']';
+        }
     }
 }
