@@ -37,7 +37,6 @@ import net.pl3x.map.core.util.StringUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.simpleyaml.configuration.ConfigurationSection;
-import org.simpleyaml.configuration.MemorySection;
 import org.simpleyaml.configuration.comments.CommentType;
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
@@ -112,14 +111,10 @@ public abstract class AbstractConfig {
 
     protected @Nullable Object get(@NonNull String path) {
         Object value = getConfig().get(path);
-        if (!(value instanceof MemorySection)) {
+        if (!(value instanceof ConfigurationSection section)) {
             return value;
         }
         Map<String, Object> map = new LinkedHashMap<>();
-        ConfigurationSection section = getConfig().getConfigurationSection(path);
-        if (section == null) {
-            return map;
-        }
         for (String key : section.getKeys(false)) {
             String rawValue = section.getString(key);
             if (rawValue == null) {
