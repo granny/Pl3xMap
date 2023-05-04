@@ -23,6 +23,7 @@ export class Pl3xMap {
     private readonly _playerManager: PlayerManager;
     private readonly _worldManager: WorldManager;
 
+    private _langPalette: Map<string, string> = new Map();
     private _settings?: Settings;
 
     private _timer: NodeJS.Timeout | undefined;
@@ -39,6 +40,11 @@ export class Pl3xMap {
         getJSON('tiles/settings.json').then((json) => {
             this._settings = json as Settings;
             document.title = this._settings.lang.title;
+            getJSON('lang/' + this._settings.lang.langFile).then((json): void => {
+                Object.entries(json).forEach((data: [string, unknown]): void => {
+                    this._langPalette.set(data[0], <string>data[1]);
+                });
+            });
             this.controlManager.sidebarControl = new SidebarControl(this);
             const promise = this.worldManager.init(this._settings);
             this.update();
@@ -73,6 +79,10 @@ export class Pl3xMap {
 
     get worldManager(): WorldManager {
         return this._worldManager;
+    }
+
+    get langPalette(): Map<string, string> {
+        return this._langPalette;
     }
 
     get settings(): Settings | undefined {

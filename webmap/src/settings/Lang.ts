@@ -3,6 +3,7 @@
  */
 export class Lang {
     private readonly _title: string;
+    private readonly _langFile: string;
     private readonly _coords: Label;
     private readonly _blockInfo: Label;
     private readonly _layers: Label;
@@ -11,8 +12,9 @@ export class Lang {
     private readonly _players: Label;
     private readonly _worlds: Label;
 
-    constructor(title: string, coords: Label, blockInfo: Label, layers: Label, link: Label, markers: Label, players: Label, worlds: Label) {
+    constructor(title: string, langFile: string, coords: Label, blockInfo: Label, layers: Label, link: Label, markers: Label, players: Label, worlds: Label) {
         this._title = title;
+        this._langFile = langFile;
         this._coords = coords;
         this._blockInfo = blockInfo;
         this._layers = layers;
@@ -24,6 +26,10 @@ export class Lang {
 
     get title(): string {
         return this._title;
+    }
+
+    get langFile(): string {
+        return this._langFile;
     }
 
     get coords(): Label {

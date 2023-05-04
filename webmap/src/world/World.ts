@@ -1,7 +1,6 @@
 import {Pl3xMap} from "../Pl3xMap";
 import {MarkerLayer} from "../layergroup/MarkerLayer";
 import {BlockInfo} from "../palette/BlockInfo";
-import {Palette} from "../palette/Palette";
 import {Label} from "../settings/Lang";
 import {Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
 import {DoubleTileLayer} from "../tilelayer/DoubleTileLayer";
@@ -38,21 +37,23 @@ export class World {
             return Promise.resolve(this);
         }
 
-        getJSON(`tiles/${this.name}/biomes.gz`)
-            .then((palettes: Palette[]) => {
-                for (const [index, biome] of Object.entries(palettes)) {
-                    let name = String(biome);
+        getJSON(`tiles/${this.name}/biomes.gz`).then((json): void => {
+            Object.entries(json).forEach((data: [string, unknown]): void => {
+                let name: string = <string>data[1];
+                if (name.startsWith('minecraft:')) {
+                    name = this._pl3xmap.langPalette.get('biome.minecraft.' + name.split('minecraft:')[1]) ?? name;
                     if (name.indexOf(':') !== -1) {
-                        name = name.split(':')[1];
+                        name = name.split(':')[1]             // split out the namespace
+                            .split(".").pop()!                // everything after the last period
+                            .replace(/_+/g, ' ')              // replace underscores with spaces
+                            .replace(/\w\S*/g, (w: string) => // capitalize first letter of every word
+                                w.charAt(0).toUpperCase() + w.substring(1)
+                            )
                     }
-                    name = name.split(".").pop()!        // everything after the last period
-                        .replace(/_+/g, ' ')      // replace underscores with spaces
-                        .replace(/\w\S*/g, (w) => // capitalize first letter of every word
-                            w.charAt(0).toUpperCase() + w.substring(1)
-                        )
-                    this.biomePalette.set(Number(index), name);
                 }
+                this._biomePalette.set(Number(data[0]), name);
             });
+        });
 
         //TODO: Handle errors
         return new Promise((resolve) => {

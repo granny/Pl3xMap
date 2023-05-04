@@ -177,6 +177,8 @@ public final class Lang extends AbstractConfig {
 
     @Key("ui.title")
     public static String UI_TITLE = "Pl3xMap";
+    @Key("ui.block-and-biome-lang-file")
+    public static String UI_BLOCK_AND_BIOME_LANG_FILE = "en_us.json";
     @Key("ui.blockinfo.label")
     public static String UI_BLOCKINFO_LABEL = "BlockInfo";
     @Key("ui.blockinfo.value")

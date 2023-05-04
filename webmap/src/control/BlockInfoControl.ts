@@ -1,7 +1,6 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Block} from "../palette/Block";
-import {Palette} from "../palette/Palette";
 import {ControlBox} from "./ControlBox";
 import {getJSON} from "../util/Util";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
@@ -14,17 +13,20 @@ export class BlockInfoControl extends ControlBox {
     constructor(pl3xmap: Pl3xMap, position: string) {
         super(pl3xmap, position);
 
-        getJSON('tiles/blocks.gz').then((json: Palette[]) => {
-            Object.entries(json).forEach((data, index) => {
-                let name = String(json[index]);
-                if (name.indexOf(':') !== -1) {
-                    name = name.split(':')[1];
+        getJSON('tiles/blocks.gz').then((json): void => {
+            Object.entries(json).forEach((data: [string, unknown]): void => {
+                let name: string = <string>data[1];
+                if (name.startsWith('minecraft:')) {
+                    name = this._pl3xmap.langPalette.get('block.minecraft.' + name.split('minecraft:')[1]) ?? name;
+                    if (name.indexOf(':') !== -1) {
+                        name = name.split(':')[1]                // split out the namespace
+                            .replace(/_+/g, ' ')                 // replace underscores with spaces
+                            .replace(/\w\S*/g, (word: string) => // capitalize first letter of every word
+                                word.charAt(0).toUpperCase() + word.substring(1)
+                            );
+                    }
                 }
-                name = name.replace(/_+/g, ' ')      // replace underscores with spaces
-                    .replace(/\w\S*/g, (w) => // capitalize first letter of every word
-                        w.charAt(0).toUpperCase() + w.substring(1)
-                    );
-                this._blockPalette.set(index, name);
+                this._blockPalette.set(Number(data[0]), name);
             });
         });
     }
