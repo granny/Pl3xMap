@@ -135,7 +135,7 @@ public class ChunkAnvil113 extends Chunk {
         if (noHeightmap()) {
             return 0;
         }
-        return (int) MCAMath.getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9);
+        return (int) MCAMath.getValueFromLongStream(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9);
     }
 
     @Override
@@ -260,7 +260,7 @@ public class ChunkAnvil113 extends Chunk {
                 return Blocks.AIR.getDefaultState();
             }
             int index = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);
-            long value = MCAMath.getValueFromLongArray(this.blocks, index, this.bitsPerBlock);
+            long value = MCAMath.getValueFromLongStream(this.blocks, index, this.bitsPerBlock);
             if (value >= this.palette.length) {
                 return Blocks.AIR.getDefaultState();
             }
