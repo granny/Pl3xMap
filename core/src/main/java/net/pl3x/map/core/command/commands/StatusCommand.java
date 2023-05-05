@@ -57,7 +57,7 @@ public class StatusCommand extends Pl3xMapCommand {
         String lineLast = "└─";
 
         String header = "<color:#5b00ff><strikethrough>---------------</strikethrough> <white>Pl3xMap Status</white> <strikethrough>---------------</strikethrough></color>";
-        String footer = "<color:#5b00ff><strikethrough>---------------------------------------------</strikethrough></color>";
+        String footer = "<color:#5b00ff><strikethrough>----------------------------------------------</strikethrough></color>";
 
         String active = """
                 <gray>Actively running renderers:</gray>
