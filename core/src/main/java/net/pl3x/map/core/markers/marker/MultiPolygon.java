@@ -209,7 +209,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polygons", getPolygons());

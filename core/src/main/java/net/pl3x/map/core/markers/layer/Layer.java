@@ -23,7 +23,7 @@
  */
 package net.pl3x.map.core.markers.layer;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -253,7 +253,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      */
     public abstract @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers();
 
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("label", getLabel());

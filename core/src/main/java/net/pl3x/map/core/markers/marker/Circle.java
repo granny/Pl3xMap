@@ -138,7 +138,7 @@ public class Circle extends Marker<@NonNull Circle> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("center", getCenter());

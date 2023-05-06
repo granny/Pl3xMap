@@ -162,15 +162,15 @@ public class Options implements JsonSerializable {
      */
     public @NonNull Builder asBuilder() {
         Options.Builder builder = new Builder();
-        if (getStroke() != null) builder.stroke(Stroke.fromJson((JsonObject) getStroke().toJson()));
-        if (getFill() != null) builder.fill(Fill.fromJson((JsonObject) getFill().toJson()));
-        if (getTooltip() != null) builder.tooltip(Tooltip.fromJson((JsonObject) getTooltip().toJson()));
-        if (getPopup() != null) builder.popup(Popup.fromJson((JsonObject) getPopup().toJson()));
+        if (getStroke() != null) builder.stroke(Stroke.fromJson(getStroke().toJson()));
+        if (getFill() != null) builder.fill(Fill.fromJson(getFill().toJson()));
+        if (getTooltip() != null) builder.tooltip(Tooltip.fromJson(getTooltip().toJson()));
+        if (getPopup() != null) builder.popup(Popup.fromJson(getPopup().toJson()));
         return builder;
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("stroke", getStroke());
         wrapper.addProperty("fill", getFill());

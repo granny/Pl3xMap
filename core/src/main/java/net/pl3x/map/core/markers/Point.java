@@ -23,7 +23,6 @@
  */
 package net.pl3x.map.core.markers;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -39,7 +38,7 @@ public record Point(int x, int z) implements JsonSerializable {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("x", x());
         wrapper.addProperty("z", z());

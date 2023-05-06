@@ -266,7 +266,7 @@ public class Polyline extends Marker<@NonNull Polyline> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("points", getPoints());

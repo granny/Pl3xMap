@@ -259,7 +259,7 @@ public class Stroke extends Option<@NonNull Stroke> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("enabled", isEnabled());
         wrapper.addProperty("weight", getWeight());

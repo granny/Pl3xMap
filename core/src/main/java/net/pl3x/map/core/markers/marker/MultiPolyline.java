@@ -209,7 +209,7 @@ public class MultiPolyline extends Marker<@NonNull MultiPolyline> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polylines", getPolylines());

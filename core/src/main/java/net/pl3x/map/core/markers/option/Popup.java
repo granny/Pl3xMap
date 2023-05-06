@@ -470,7 +470,7 @@ public class Popup extends Option<@NonNull Popup> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("content", getContent());
         wrapper.addProperty("pane", getPane());

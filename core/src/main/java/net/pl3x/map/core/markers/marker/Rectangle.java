@@ -140,7 +140,7 @@ public class Rectangle extends Marker<@NonNull Rectangle> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("point1", getPoint1());

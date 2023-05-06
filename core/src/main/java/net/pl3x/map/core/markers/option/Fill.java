@@ -146,7 +146,7 @@ public class Fill extends Option<@NonNull Fill> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("enabled", isEnabled());
         wrapper.addProperty("type", getType());

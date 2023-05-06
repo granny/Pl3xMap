@@ -250,7 +250,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
     }
 
     @Override
-    public @NonNull JsonElement toJson() {
+    public @NonNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("content", getContent());
         wrapper.addProperty("pane", getPane());
