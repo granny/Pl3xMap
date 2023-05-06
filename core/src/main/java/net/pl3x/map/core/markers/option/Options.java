@@ -161,11 +161,12 @@ public class Options implements JsonSerializable {
      * @return new builder
      */
     public @NonNull Builder asBuilder() {
-        return new Builder()
-                .stroke(getStroke())
-                .fill(getFill())
-                .tooltip(getTooltip())
-                .popup(getPopup());
+        Options.Builder builder = new Builder();
+        if (getStroke() != null) builder.stroke(Stroke.fromJson((JsonObject) getStroke().toJson()));
+        if (getFill() != null) builder.fill(Fill.fromJson((JsonObject) getFill().toJson()));
+        if (getTooltip() != null) builder.tooltip(Tooltip.fromJson((JsonObject) getTooltip().toJson()));
+        if (getPopup() != null) builder.popup(Popup.fromJson((JsonObject) getPopup().toJson()));
+        return builder;
     }
 
     @Override
