@@ -25,20 +25,42 @@ for Minecraft servers using the vanilla Minecraft rendering style.</b></big>
 
 </div>
 
+## Features
+
+* Ultra-fast render times. Get your map rendered in minutes, not next week.
+* Simple vanilla-like top down 2D view, designed for navigation.
+* Player markers showing yaw rotation, health, and armor.
+* Easy to [set up](https://github.com/BillyGalbreath/Pl3xMap/wiki/Installation) and [configure](https://github.com/BillyGalbreath/Pl3xMap/wiki/Configuration).
+* Up-to-date Leaflet front-end.
+* [Addons and integrations](https://github.com/BillyGalbreath/Pl3xMap/wiki/pl3xmap-integrations) for many popular plugins.
+* [Robust API](https://github.com/BillyGalbreath/Pl3xMap/wiki/Pl3xMap-API) to create your own addons and/or integrations with ease.
+
+## Supported Platforms
+
+* [CraftBukkit](https://dev.bukkit.org/)
+* [Spigot](https://spigotmc.org/)
+* [Paper](https://papermc.io/)
+* [Purpur](https://purpurmc.org/)
+* [Fabric](https://fabricmc.net/) (requires [Fabric API](https://modrinth.com/mod/fabric-api))
+* [Forge](https://minecraftforge.net/)
+
 ## Downloads
 
 Downloads are available on Modrinth.
 
-The jar download can be used on multiple platforms.  
-Right now we support Bukkit, Fabric, Forge, Paper, Purpur, Quilt, and Spigot.
-
 [![Download on Modrinth](https://i.imgur.com/5C4fVJC.png)](https://modrinth.com/mod/pl3xmap)
+
+## Demo
+
+You can demo Pl3xMap (and it's top competitors) at:
+
+[https://pl3x.net/demo/](https://pl3x.net/demo/)
 
 ## bStats
 
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/Pl3xMap.svg)](https://bstats.org/plugin/bukkit/Pl3xMap/10133)
 
-## Accessing the API
+## Developers
 
 Maven
 
@@ -73,7 +95,7 @@ dependencies {
 
 ## Building from source
 
-To build this project ensure `npm` is installed.
+To build this project ensure `npm` is installed and on your PATH.
 
 Then just run the following command:
 
