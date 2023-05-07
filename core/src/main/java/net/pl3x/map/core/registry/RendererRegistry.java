@@ -29,6 +29,7 @@ import net.pl3x.map.core.renderer.BiomeRenderer;
 import net.pl3x.map.core.renderer.BlockInfoRenderer;
 import net.pl3x.map.core.renderer.FlowerMapRenderer;
 import net.pl3x.map.core.renderer.InhabitedRenderer;
+import net.pl3x.map.core.renderer.NightRenderer;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -39,6 +40,7 @@ public class RendererRegistry extends Registry<Renderer.@NonNull Builder> {
     public static final String BLOCKINFO = "blockinfo";
     public static final String FLOWERMAP = "flowermap";
     public static final String INHABITED = "inhabited";
+    public static final String NIGHT = "night";
 
     public void register() {
         register(BASIC, new Renderer.Builder(BASIC, "Basic", BasicRenderer.class));
@@ -46,6 +48,7 @@ public class RendererRegistry extends Registry<Renderer.@NonNull Builder> {
         register(BLOCKINFO, new Renderer.Builder(BLOCKINFO, "BlockInfo", BlockInfoRenderer.class));
         register(FLOWERMAP, new Renderer.Builder(FLOWERMAP, "FlowerMap", FlowerMapRenderer.class));
         register(INHABITED, new Renderer.Builder(INHABITED, "Inhabited", InhabitedRenderer.class));
+        register(NIGHT, new Renderer.Builder(NIGHT, "Night", NightRenderer.class));
     }
 
     public @NonNull Renderer createRenderer(@NonNull RegionScanTask task, Renderer.@NonNull Builder builder) {

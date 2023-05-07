@@ -49,6 +49,7 @@ public final class WorldConfig extends AbstractConfig {
             basic, biomes, flowermap, and inhabited""")
     public Map<@NonNull String, @NonNull String> RENDER_RENDERERS = new LinkedHashMap<>() {{
         put("basic", "overworld_basic");
+        put("night", "overworld_night");
         put("biomes", "overworld_biomes");
         put("inhabited", "inhabited");
     }};

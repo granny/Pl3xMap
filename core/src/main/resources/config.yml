@@ -6,13 +6,16 @@ world-settings:
     render:
       renderers:
         basic: overworld_basic
+        night: overworld_night
         biomes: overworld_biomes
+        inhabited: inhabited
       skylight: 15
   world:
     enabled: true
     render:
       renderers:
         basic: overworld_basic
+        night: overworld_night
         biomes: overworld_biomes
         inhabited: inhabited
         flowermap: flowermap
@@ -23,6 +26,7 @@ world-settings:
     render:
       renderers:
         basic: nether_basic
+        night: nether_night
         biomes: nether_biomes
         inhabited: inhabited
       skylight: 0
@@ -33,6 +37,7 @@ world-settings:
     render:
       renderers:
         basic: the_end_basic
+        night: the_end_night
         biomes: the_end_biomes
         inhabited: inhabited
       skylight: 0
