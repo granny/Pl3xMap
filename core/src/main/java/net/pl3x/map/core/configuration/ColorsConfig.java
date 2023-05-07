@@ -1088,7 +1088,6 @@ public class ColorsConfig extends AbstractConfig {
         add("minecraft:grass"); //
         add("minecraft:grass_block"); //
         add("minecraft:large_fern"); //
-        add("minecraft:pink_petals"); //
         add("minecraft:potted_fern"); //
         add("minecraft:tall_grass"); //
     }};
