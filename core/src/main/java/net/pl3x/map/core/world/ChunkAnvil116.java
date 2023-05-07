@@ -196,8 +196,17 @@ public class ChunkAnvil116 extends Chunk {
                         continue;
                     }
 
+                    // just get a quick color for now
+                    int blockColor = Colors.getRawBlockColor(data.blockstate.getBlock());
+
+                    if (getWorld().getConfig().RENDER_TRANSLUCENT_GLASS && data.blockstate.getBlock().isGlass()) {
+                        // translucent glass. store this color and keep iterating
+                        data.glass.addFirst(Colors.setAlpha(0x99, blockColor));
+                        continue;
+                    }
+
                     // test if block is renderable. we ignore blocks with black color
-                    if (Colors.getRawBlockColor(data.blockstate.getBlock()) > 0) {
+                    if (blockColor > 0) {
                         break;
                     }
                 } while (data.blockY > getWorld().getMinBuildHeight());

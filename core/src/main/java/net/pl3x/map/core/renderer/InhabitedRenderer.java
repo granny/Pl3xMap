@@ -53,7 +53,7 @@ public final class InhabitedRenderer extends Renderer {
             pixelColor = this.basic.getTileImage().getPixel(blockX, blockZ);
         } else {
             // could not find basic renderer (disabled?), we have to draw it ourselves
-            pixelColor = basicPixelColor(region, data.getBlockState(), data.getFluidState(), data.getBiome(region, blockX, blockZ), blockX, data.getBlockY(), blockZ, data.getFluidY());
+            pixelColor = basicPixelColor(region, data, blockX, blockZ);
         }
 
         // we hsb lerp between blue and red with ratio being the

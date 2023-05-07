@@ -125,16 +125,19 @@ public abstract class Renderer extends Keyed {
 
     public abstract void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ);
 
-    public int basicPixelColor(@NonNull Region region, @Nullable BlockState blockstate, @Nullable BlockState fluidstate, @NonNull Biome biome, int blockX, int blockY, int blockZ, int fluidY) {
+    public int basicPixelColor(@NonNull Region region, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
         // fluid stuff
-        boolean isFluid = fluidstate != null;
+        boolean isFluid = data.getFluidState() != null;
         boolean flatFluid = isFluid && !region.getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
+
+        // get biome once
+        Biome biome = data.getBiome(region, blockX, blockZ);
 
         // fix true block color
         int pixelColor = 0;
         if (!flatFluid) {
             // not flat fluids, we need to draw land
-            pixelColor = blockstate == null ? 0 : Colors.fixBlockColor(region, biome, blockstate, blockX, blockZ);
+            pixelColor = Colors.fixBlockColor(region, biome, data.getBlockState(), blockX, blockZ);
             if (pixelColor != 0) {
                 // fix alpha
                 pixelColor = Colors.setAlpha(0xFF, pixelColor);
@@ -149,15 +152,15 @@ public abstract class Renderer extends Keyed {
                 pixelColor = Colors.getWaterColor(region, biome, blockX, blockZ);
             } else {
                 // fancy fluids, yum
-                int fluidColor = fancyFluids(region, biome, fluidstate, blockX, blockZ, (fluidY - blockY) * 0.025F);
+                int fluidColor = fancyFluids(region, biome, data.getFluidState(), blockX, blockZ, (data.getFluidY() - data.getBlockY()) * 0.025F);
                 pixelColor = Colors.blend(fluidColor, pixelColor);
             }
         }
 
         // if there was translucent glass, mix it in here
-        //for (int color : data.getGlassColors()) {
-        //    pixelColor = Colors.blend(color, pixelColor);
-        //}
+        for (int color : data.getGlassColors()) {
+            pixelColor = Colors.blend(color, pixelColor);
+        }
 
         return pixelColor;
     }

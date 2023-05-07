@@ -50,7 +50,7 @@ public final class BasicRenderer extends Renderer {
 
     @Override
     public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
-        int pixelColor = basicPixelColor(region, data.getBlockState(), data.getFluidState(), data.getBiome(region, blockX, blockZ), blockX, data.getBlockY(), blockZ, data.getFluidY());
+        int pixelColor = basicPixelColor(region, data, blockX, blockZ);
         getTileImage().setPixel(blockX, blockZ, pixelColor);
 
         // get light level right above this block

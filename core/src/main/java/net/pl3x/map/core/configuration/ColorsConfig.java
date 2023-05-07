@@ -1076,6 +1076,39 @@ public class ColorsConfig extends AbstractConfig {
             blocks below it when rendering.""")
     public static List<@NonNull String> BLOCKS_GLASS = new ArrayList<>() {{
         add("minecraft:glass");
+        add("minecraft:black_stained_glass");
+        add("minecraft:blue_stained_glass");
+        add("minecraft:brown_stained_glass");
+        add("minecraft:cyan_stained_glass");
+        add("minecraft:gray_stained_glass");
+        add("minecraft:green_stained_glass");
+        add("minecraft:light_blue_stained_glass");
+        add("minecraft:light_gray_stained_glass");
+        add("minecraft:lime_stained_glass");
+        add("minecraft:magenta_stained_glass");
+        add("minecraft:orange_stained_glass");
+        add("minecraft:pink_stained_glass");
+        add("minecraft:purple_stained_glass");
+        add("minecraft:red_stained_glass");
+        add("minecraft:white_stained_glass");
+        add("minecraft:yellow_stained_glass");
+        add("minecraft:glass_pane");
+        add("minecraft:black_stained_glass_pane");
+        add("minecraft:blue_stained_glass_pane");
+        add("minecraft:brown_stained_glass_pane");
+        add("minecraft:cyan_stained_glass_pane");
+        add("minecraft:gray_stained_glass_pane");
+        add("minecraft:green_stained_glass_pane");
+        add("minecraft:light_blue_stained_glass_pane");
+        add("minecraft:light_gray_stained_glass_pane");
+        add("minecraft:lime_stained_glass_pane");
+        add("minecraft:magenta_stained_glass_pane");
+        add("minecraft:orange_stained_glass_pane");
+        add("minecraft:pink_stained_glass_pane");
+        add("minecraft:purple_stained_glass_pane");
+        add("minecraft:red_stained_glass_pane");
+        add("minecraft:white_stained_glass_pane");
+        add("minecraft:yellow_stained_glass_pane");
     }};
 
     @Key("blocks.grass")

@@ -23,6 +23,8 @@
  */
 package net.pl3x.map.core.world;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import net.querz.nbt.tag.CompoundTag;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -160,7 +162,7 @@ public abstract class Chunk {
         protected BlockState blockstate, fluidstate = null;
         protected Biome biome;
 
-        //protected final LinkedList<Integer> glass = new LinkedList<>();
+        protected final LinkedList<Integer> glass = new LinkedList<>();
 
         public int getBlockY() {
             return this.blockY;
@@ -184,6 +186,10 @@ public abstract class Chunk {
                 this.biome = region.getWorld().getBiomeManager().getBiome(region, x, this.blockY, z);
             }
             return this.biome;
+        }
+
+        public List<Integer> getGlassColors() {
+            return this.glass;
         }
     }
 }
