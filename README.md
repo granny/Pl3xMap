@@ -1,9 +1,9 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v2/webmap/public/images/og.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v2/webmap/public/images/og.png">
-  <img src="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v2/webmap/public/images/og.png" alt="Pl3xMap">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v3/webmap/public/images/og.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v3/webmap/public/images/og.png">
+  <img src="https://raw.githubusercontent.com/BillyGalbreath/Pl3xMap/v3/webmap/public/images/og.png" alt="Pl3xMap">
 </picture>
 
 # Pl3xMap
