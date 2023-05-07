@@ -1084,12 +1084,12 @@ public class ColorsConfig extends AbstractConfig {
             to coloring. Blocks listed here will use the biome's
             grass color modifier when rendering.""")
     public static List<@NonNull String> BLOCKS_GRASS = new ArrayList<>() {{
-        add("minecraft:fern"); //
-        add("minecraft:grass"); //
-        add("minecraft:grass_block"); //
-        add("minecraft:large_fern"); //
-        add("minecraft:potted_fern"); //
-        add("minecraft:tall_grass"); //
+        add("minecraft:fern");
+        add("minecraft:grass");
+        add("minecraft:grass_block");
+        add("minecraft:large_fern");
+        add("minecraft:potted_fern");
+        add("minecraft:tall_grass");
     }};
 
     @Key("blocks.water")
