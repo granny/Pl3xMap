@@ -3,6 +3,7 @@ package net.pl3x.map.core.renderer.progress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -108,7 +109,7 @@ public class Progress implements Runnable {
     }
 
     private void runProgress() {
-        if (this.world == null || this.world.isPaused()) {
+        if (this.world == null || Pl3xMap.api().getRegionProcessor().isPaused()) {
             return;
         }
 

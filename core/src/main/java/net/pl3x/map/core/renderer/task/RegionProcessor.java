@@ -64,8 +64,22 @@ public class RegionProcessor {
         this.progress = new Progress();
     }
 
+    @SuppressWarnings("BusyWait")
+    public void checkPaused() {
+        while (isPaused()) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException ignore) {
+            }
+        }
+    }
+
     public boolean isPaused() {
         return this.paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     public @NonNull Progress getProgress() {
@@ -85,7 +99,9 @@ public class RegionProcessor {
             }
 
             // run the task
-            run();
+            if (!isPaused()) {
+                run();
+            }
 
             // rinse and repeat
             start(1000L);

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.util.Objects;
+import net.pl3x.map.core.Pl3xMap;
 import net.querz.mca.CompressionType;
 import net.querz.nbt.io.NBTInputStream;
 import net.querz.nbt.io.NamedTag;
@@ -102,9 +103,7 @@ public class Region {
         }
         try (RandomAccessFile raf = new RandomAccessFile(getRegionFile(), "r")) {
             for (int index = 0; index < this.chunks.length; index++) {
-                if (getWorld().isPaused()) {
-                    return;
-                }
+                Pl3xMap.api().getRegionProcessor().checkPaused();
                 loadChunk(raf, index);
             }
         }

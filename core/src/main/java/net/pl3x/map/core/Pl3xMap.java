@@ -234,10 +234,14 @@ public abstract class Pl3xMap {
             e.printStackTrace();
         }
 
+        Pl3xMap.api().getRegionProcessor().setPaused(false);
+
         this.enabled = true;
     }
 
     public void disable() {
+        Pl3xMap.api().getRegionProcessor().setPaused(true);
+
         if (this.metrics != null) {
             this.metrics.shutdown();
             this.metrics = null;

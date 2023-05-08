@@ -45,7 +45,6 @@ public class WorldRegistry extends Registry<@NonNull World> {
         World world = this.entries.remove(id);
         if (world != null) {
             Pl3xMap.api().getEventRegistry().callEvent(new WorldUnloadedEvent(world));
-            world.setPaused(true);
             world.getMarkerTask().cancel();
             world.getRegionFileWatcher().stop();
             world.cleanup();

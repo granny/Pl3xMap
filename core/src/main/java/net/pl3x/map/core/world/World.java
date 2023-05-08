@@ -89,8 +89,6 @@ public abstract class World extends Keyed {
     private final UpdateMarkerData markerTask;
     private final Map<@NonNull String, Renderer.@NonNull Builder> renderers = new LinkedHashMap<>();
 
-    private boolean paused = false;
-
     public World(@NonNull String name, long seed, @NonNull Point spawn, @NonNull Type type, @NonNull Path regionDirectory) {
         super(name);
 
@@ -252,14 +250,6 @@ public abstract class World extends Keyed {
      */
     public @NonNull Type getType() {
         return this.type;
-    }
-
-    public boolean isPaused() {
-        return this.paused;
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
     }
 
     public @NonNull BiomeManager getBiomeManager() {

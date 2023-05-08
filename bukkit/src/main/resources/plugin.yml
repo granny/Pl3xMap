@@ -43,6 +43,12 @@ permissions:
     children:
       pl3xmap.command.hide: true
 
+  pl3xmap.command.pause:
+    description: Gives access to pause the renderers
+    default: op
+    children:
+      pl3xmap.command.map: true
+
   pl3xmap.command.radiusrender:
     description: Gives access to start a radius render
     default: op

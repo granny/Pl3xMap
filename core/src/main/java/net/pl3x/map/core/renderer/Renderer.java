@@ -104,9 +104,7 @@ public abstract class Renderer extends Keyed {
                 // iterate each block in this chunk
                 for (int blockX = bX; blockX < bX + 16; blockX++) {
                     for (int blockZ = bZ; blockZ < bZ + 16; blockZ++) {
-                        if (getWorld().isPaused()) {
-                            return;
-                        }
+                        Pl3xMap.api().getRegionProcessor().checkPaused();
                         // skip any blocks that do not need to be rendered due to visibility limits
                         if (!getWorld().visibleBlock(blockX, blockZ)) {
                             continue;

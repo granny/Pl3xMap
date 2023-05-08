@@ -33,6 +33,7 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.renderer.Renderer;
+import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -79,21 +80,15 @@ public class RegionScanTask implements Runnable {
         try {
             Logger.debug("[" + this.world.getName() + "] Scanning " + regionPos + " -- " + Thread.currentThread().getName());
 
-            if (getWorld().isPaused()) {
-                return;
-            }
+            Pl3xMap.api().getRegionProcessor().checkPaused();
 
             allocateImages();
 
-            if (getWorld().isPaused()) {
-                return;
-            }
+            Pl3xMap.api().getRegionProcessor().checkPaused();
 
             scanRegion(loadRegion());
 
-            if (getWorld().isPaused()) {
-                return;
-            }
+            Pl3xMap.api().getRegionProcessor().checkPaused();
 
             saveImages();
         } catch (Throwable t) {
@@ -103,9 +98,7 @@ public class RegionScanTask implements Runnable {
 
     private void allocateImages() {
         for (Renderer renderer : this.renderers.values()) {
-            if (getWorld().isPaused()) {
-                return;
-            }
+            Pl3xMap.api().getRegionProcessor().checkPaused();
             renderer.allocateData(this.regionPos);
         }
     }
@@ -122,9 +115,7 @@ public class RegionScanTask implements Runnable {
 
     private void scanRegion(@NonNull Region region) {
         for (Renderer renderer : this.renderers.values()) {
-            if (getWorld().isPaused()) {
-                return;
-            }
+            Pl3xMap.api().getRegionProcessor().checkPaused();
             renderer.scanData(region);
         }
         Pl3xMap.api().getRegionProcessor().getProgress().increment();
@@ -132,10 +123,10 @@ public class RegionScanTask implements Runnable {
 
     private void saveImages() {
         for (Renderer renderer : this.renderers.values()) {
-            if (getWorld().isPaused()) {
-                return;
-            }
+            Pl3xMap.api().getRegionProcessor().checkPaused();
             renderer.saveData(this.regionPos);
         }
+        // set region modified time
+        world.getRegionModifiedState().set(Mathf.asLong(this.regionPos), System.currentTimeMillis());
     }
 }

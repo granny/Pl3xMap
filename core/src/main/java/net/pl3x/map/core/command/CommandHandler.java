@@ -36,6 +36,7 @@ import net.pl3x.map.core.command.commands.ConfirmCommand;
 import net.pl3x.map.core.command.commands.FullRenderCommand;
 import net.pl3x.map.core.command.commands.HelpCommand;
 import net.pl3x.map.core.command.commands.HideCommand;
+import net.pl3x.map.core.command.commands.PauseCommand;
 import net.pl3x.map.core.command.commands.RadiusRenderCommand;
 import net.pl3x.map.core.command.commands.ReloadCommand;
 import net.pl3x.map.core.command.commands.ResetMapCommand;
@@ -98,6 +99,7 @@ public interface CommandHandler {
                 new FullRenderCommand(this),
                 new HelpCommand(this),
                 new HideCommand(this),
+                new PauseCommand(this),
                 new RadiusRenderCommand(this),
                 new ReloadCommand(this),
                 new ResetMapCommand(this),

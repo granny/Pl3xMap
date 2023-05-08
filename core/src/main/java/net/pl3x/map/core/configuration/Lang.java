@@ -92,6 +92,13 @@ public final class Lang extends AbstractConfig {
     @Key("command.hide.success")
     public static String COMMAND_HIDE_SUCCESS = "<grey><player> <green>is now hidden from the map";
 
+    @Key("command.pause.description")
+    public static String COMMAND_PAUSE_DESCRIPTION = "Toggle the pause state of renderers";
+    @Key("command.pause.paused")
+    public static String COMMAND_PAUSE_PAUSED = "<green>Renderers are now paused";
+    @Key("command.pause.unpaused")
+    public static String COMMAND_PAUSE_UNPAUSED = "<green>Renderers are now unpaused";
+
     @Key("command.radiusrender.description")
     public static String COMMAND_RADIUSRENDER_DESCRIPTION = "Render a section of a world";
     @Key("command.radiusrender.starting")
