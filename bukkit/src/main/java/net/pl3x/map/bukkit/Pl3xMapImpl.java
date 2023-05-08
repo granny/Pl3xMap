@@ -103,6 +103,11 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
+    public String getServerVersion() {
+        return Bukkit.getVersion();
+    }
+
+    @Override
     public int getOperatorUserPermissionLevel() {
         return MinecraftServer.getServer().getOperatorUserPermissionLevel();
     }

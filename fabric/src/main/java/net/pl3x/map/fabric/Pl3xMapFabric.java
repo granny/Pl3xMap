@@ -36,6 +36,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -149,6 +150,11 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     @Override
     public boolean getOnlineMode() {
         return this.server.usesAuthentication();
+    }
+
+    @Override
+    public String getServerVersion() {
+        return SharedConstants.getCurrentVersion().getName();
     }
 
     @Override

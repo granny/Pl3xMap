@@ -153,7 +153,7 @@ public class Metrics {
     private void appendPlatformData(@NonNull JsonObjectBuilder builder) {
         builder.appendField("playerAmount", this.pl3xmap.getPlayerRegistry().size());
         builder.appendField("onlineMode", this.pl3xmap.getOnlineMode() ? 1 : 0);
-        builder.appendField("bukkitVersion", this.pl3xmap.getVersion());
+        builder.appendField("bukkitVersion", this.pl3xmap.getServerVersion());
         builder.appendField("bukkitName", this.pl3xmap.getPlatform());
         builder.appendField("javaVersion", System.getProperty("java.version"));
         builder.appendField("osName", System.getProperty("os.name"));

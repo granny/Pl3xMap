@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.forge.ForgeServerAudiences;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -175,6 +176,11 @@ public class Pl3xMapForge extends Pl3xMap {
     @Override
     public boolean getOnlineMode() {
         return this.server.usesAuthentication();
+    }
+
+    @Override
+    public String getServerVersion() {
+        return SharedConstants.getCurrentVersion().getName();
     }
 
     @Override

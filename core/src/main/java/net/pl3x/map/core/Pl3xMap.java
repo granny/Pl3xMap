@@ -304,6 +304,8 @@ public abstract class Pl3xMap {
 
     public abstract boolean getOnlineMode();
 
+    public abstract String getServerVersion();
+
     public abstract int getOperatorUserPermissionLevel();
 
     public abstract @NonNull AudienceProvider adventure();
