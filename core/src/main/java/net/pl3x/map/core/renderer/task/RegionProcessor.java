@@ -88,7 +88,7 @@ public class RegionProcessor {
             run();
 
             // rinse and repeat
-            start(10000L);
+            start(1000L);
         }, this.executor);
     }
 
@@ -166,9 +166,9 @@ public class RegionProcessor {
         int numberOfSkippedRegions = 0;
         while (spiralIterator.hasNext()) {
             // let us not get stuck in an endless loop
-            if (numberOfSkippedRegions > 500000) {
+            if (numberOfSkippedRegions > 1000000) {
                 Logger.debug("Failsafe triggered.");
-                // we scanned over half a million non-existent regions straight
+                // we scanned over a million non-existent regions straight
                 // quit the spiral and add the remaining regions to the end
                 orderedRegionsToScan.addAll(regionPositions);
                 break;

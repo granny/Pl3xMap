@@ -108,11 +108,6 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public int getOperatorUserPermissionLevel() {
-        return MinecraftServer.getServer().getOperatorUserPermissionLevel();
-    }
-
-    @Override
     public @NonNull AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");

@@ -167,7 +167,7 @@ public abstract class World extends Keyed {
         }
 
         Logger.debug("Checking all region files");
-        Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions());
+        Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions(false));
 
         Logger.debug("Starting marker task");
         Pl3xMap.api().getScheduler().addTask(1, true, this.markerTask);
@@ -368,8 +368,8 @@ public abstract class World extends Keyed {
         }
     }
 
-    public @NonNull Collection<@NonNull Point> listRegions() {
-        return FileUtil.regionPathsToPoints(this, getRegionFiles());
+    public @NonNull Collection<@NonNull Point> listRegions(boolean ignoreTimestamp) {
+        return FileUtil.regionPathsToPoints(this, getRegionFiles(), ignoreTimestamp);
     }
 
     private @NonNull Region loadRegion(long pos) {

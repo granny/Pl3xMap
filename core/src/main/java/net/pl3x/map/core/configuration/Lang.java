@@ -59,6 +59,8 @@ public final class Lang extends AbstractConfig {
 
     @Key("command.argument.optional-player")
     public static String COMMAND_ARGUMENT_OPTIONAL_PLAYER_DESCRIPTION = "Defaults to the executing player if unspecified (console must specify a player)";
+    @Key("command.argument.optional-center")
+    public static String COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION = "Defaults to (<white>0<gray>,</gray> 0</white>) if unspecified";
     @Key("command.argument.optional-zoom")
     public static String COMMAND_ARGUMENT_OPTIONAL_ZOOM_DESCRIPTION = "Map zoom level";
     @Key("command.argument.required-renderer")
@@ -73,6 +75,11 @@ public final class Lang extends AbstractConfig {
     @Key("command.confirm.success")
     public static String COMMAND_CONFIRM_NO_PENDING_MESSAGE = "<red>You don't have any pending confirmations";
 
+    @Key("command.fullrender.description")
+    public static String COMMAND_FULLRENDER_DESCRIPTION = "Fully render a world";
+    @Key("command.fullrender.starting")
+    public static String COMMAND_FULLRENDER_STARTING = "<green>Full render starting. Check </grey>/map status</grey> for more info";
+
     @Key("command.help.description")
     public static String COMMAND_HELP_DESCRIPTION = "Get help for Pl3xmap commands";
     @Key("command.help.argument.query")
@@ -84,6 +91,11 @@ public final class Lang extends AbstractConfig {
     public static String COMMAND_HIDE_ALREADY_HIDDEN = "<grey><player> <red>is already hidden from the map";
     @Key("command.hide.success")
     public static String COMMAND_HIDE_SUCCESS = "<grey><player> <green>is now hidden from the map";
+
+    @Key("command.radiusrender.description")
+    public static String COMMAND_RADIUSRENDER_DESCRIPTION = "Render a section of a world";
+    @Key("command.radiusrender.starting")
+    public static String COMMAND_RADIUSRENDER_STARTING = "<green>Radius render starting. Check </grey>/map status</grey> for more info";
 
     @Key("command.reload.description")
     public static String COMMAND_RELOAD_DESCRIPTION = "Reloads the plugin";
@@ -167,6 +179,8 @@ public final class Lang extends AbstractConfig {
     public static String ERROR_WORLD_DISABLED = "<red>Pl3xMap is disabled for world <grey><world>";
     @Key("error.not-valid-zoom-level")
     public static String ERROR_NOT_VALID_ZOOM_LEVEL = "<red>Not a valid zoom level";
+    @Key("error.point-invalid-format")
+    public static String ERROR_POINT_INVALID_FORMAT = "'<point>' is not a valid location. Required format is '<x> <z>'";
 
     @Key("ui.layer.players")
     public static String UI_LAYER_PLAYERS = "Players";

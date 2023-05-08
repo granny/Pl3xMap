@@ -204,7 +204,7 @@ public class FileUtil {
         }
     }
 
-    public static @NonNull Collection<@NonNull Point> regionPathsToPoints(@NonNull World world, @Nullable Collection<@NonNull Path> paths) {
+    public static @NonNull Collection<@NonNull Point> regionPathsToPoints(@NonNull World world, @Nullable Collection<@NonNull Path> paths, boolean ignoreTimestamp) {
         if (paths == null || paths.isEmpty()) {
             return Collections.emptyList();
         }
@@ -220,6 +220,10 @@ public class FileUtil {
                 int rZ = Integer.parseInt(split[2]);
                 if (!world.visibleRegion(rX, rZ)) {
                     Logger.debug("Skipping region outside of visible areas: " + file.getFileName());
+                    continue;
+                }
+                if (ignoreTimestamp) {
+                    regions.add(Point.of(rX, rZ));
                     continue;
                 }
                 long storedModifiedTime = world.getRegionModifiedState().get(Mathf.asLong(rX, rZ));

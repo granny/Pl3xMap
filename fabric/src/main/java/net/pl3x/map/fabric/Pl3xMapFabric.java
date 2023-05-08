@@ -158,11 +158,6 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     }
 
     @Override
-    public int getOperatorUserPermissionLevel() {
-        return this.server.getOperatorUserPermissionLevel();
-    }
-
-    @Override
     public @NonNull AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");

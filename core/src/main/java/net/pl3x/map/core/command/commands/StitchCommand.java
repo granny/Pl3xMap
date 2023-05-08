@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.pl3x.map.core.command.CommandHandler;
@@ -66,7 +67,7 @@ public class StitchCommand extends Pl3xMapCommand {
     }
 
     private void execute(@NonNull CommandContext<@NonNull Sender> context) {
-        new Thread(() -> executeAsync(context)).start();
+        CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
     private void executeAsync(@NonNull CommandContext<@NonNull Sender> context) {

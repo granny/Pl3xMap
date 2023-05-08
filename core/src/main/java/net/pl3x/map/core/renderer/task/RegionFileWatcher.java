@@ -127,7 +127,7 @@ public class RegionFileWatcher implements Runnable {
                 }
                 key.reset();
 
-                Collection<Point> points = FileUtil.regionPathsToPoints(this.world, modifiedFiles);
+                Collection<Point> points = FileUtil.regionPathsToPoints(this.world, modifiedFiles, true);
                 Pl3xMap.api().getRegionProcessor().addRegions(this.world, points);
             }
 

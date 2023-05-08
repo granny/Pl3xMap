@@ -19,6 +19,12 @@ permissions:
     children:
       pl3xmap.command.map: true
 
+  pl3xmap.command.fullrender:
+    description: Gives access to start a full render
+    default: op
+    children:
+      pl3xmap.command.map: true
+
   pl3xmap.command.help:
     description: Gives access to view the help menu
     default: op
@@ -36,6 +42,12 @@ permissions:
     default: op
     children:
       pl3xmap.command.hide: true
+
+  pl3xmap.command.radiusrender:
+    description: Gives access to start a radius render
+    default: op
+    children:
+      pl3xmap.command.map: true
 
   pl3xmap.command.reload:
     description: Gives access to reload the plugin amd configs

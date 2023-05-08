@@ -306,8 +306,6 @@ public abstract class Pl3xMap {
 
     public abstract String getServerVersion();
 
-    public abstract int getOperatorUserPermissionLevel();
-
     public abstract @NonNull AudienceProvider adventure();
 
     public abstract @NonNull Path getMainDir();

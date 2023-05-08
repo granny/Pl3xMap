@@ -24,38 +24,36 @@
 package net.pl3x.map.core.command.commands;
 
 import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
-import java.io.IOException;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.command.argument.WorldArgument;
+import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class ResetMapCommand extends Pl3xMapCommand {
-    public ResetMapCommand(@NonNull CommandHandler handler) {
+public class FullRenderCommand extends Pl3xMapCommand {
+    public FullRenderCommand(@NonNull CommandHandler handler) {
         super(handler);
     }
 
     @Override
     public void register() {
-        getHandler().registerSubcommand(builder -> builder.literal("resetmap")
+        getHandler().registerSubcommand(builder -> builder.literal("fullrender")
                 .argument(WorldArgument.of("world"), description(Lang.COMMAND_ARGUMENT_REQUIRED_WORLD_DESCRIPTION))
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RESETMAP_DESCRIPTION))
-                .meta(CommandConfirmationManager.META_CONFIRMATION_REQUIRED, true)
-                .permission("pl3xmap.command.resetmap")
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_FULLRENDER_DESCRIPTION))
+                .permission("pl3xmap.command.fullrender")
                 .handler(this::execute));
     }
 
-    private void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    public void execute(@NonNull CommandContext<@NonNull Sender> context) {
         CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
@@ -63,26 +61,14 @@ public class ResetMapCommand extends Pl3xMapCommand {
         Sender sender = context.getSender();
         World world = context.get("world");
 
-        TagResolver.Single worldPlaceholder = Placeholder.unparsed("world", world.getName());
-        sender.sendMessage(Lang.COMMAND_RESETMAP_BEGIN, worldPlaceholder);
+        Collection<Point> regions = world.listRegions(true);
 
-        CompletableFuture.runAsync(() -> {
-            // unregister the world
-            Pl3xMap.api().getWorldRegistry().unregister(world.getName());
+        if (Config.DEBUG_MODE) {
+            regions.forEach(region -> Logger.debug("Adding region: " + region));
+        }
 
-            // delete world files
-            String result;
-            try {
-                FileUtil.deleteDirectory(world.getTilesDirectory());
-                result = Lang.COMMAND_RESETMAP_SUCCESS;
-            } catch (IOException e) {
-                result = Lang.COMMAND_RESETMAP_FAILED;
-            }
+        Pl3xMap.api().getRegionProcessor().addRegions(world, regions);
 
-            // create a new world and register it
-            Pl3xMap.api().getWorldRegistry().register(Pl3xMap.api().cloneWorld(world));
-
-            sender.sendMessage(result, worldPlaceholder);
-        });
+        sender.sendMessage(Lang.COMMAND_FULLRENDER_STARTING);
     }
 }

@@ -23,66 +23,69 @@
  */
 package net.pl3x.map.core.command.commands;
 
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
-import java.io.IOException;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
+import net.pl3x.map.core.command.argument.PointArgument;
 import net.pl3x.map.core.command.argument.WorldArgument;
+import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class ResetMapCommand extends Pl3xMapCommand {
-    public ResetMapCommand(@NonNull CommandHandler handler) {
+public class RadiusRenderCommand extends Pl3xMapCommand {
+    public RadiusRenderCommand(@NonNull CommandHandler handler) {
         super(handler);
     }
 
     @Override
     public void register() {
-        getHandler().registerSubcommand(builder -> builder.literal("resetmap")
+        getHandler().registerSubcommand(builder -> builder.literal("radiusrender")
                 .argument(WorldArgument.of("world"), description(Lang.COMMAND_ARGUMENT_REQUIRED_WORLD_DESCRIPTION))
-                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RESETMAP_DESCRIPTION))
-                .meta(CommandConfirmationManager.META_CONFIRMATION_REQUIRED, true)
-                .permission("pl3xmap.command.resetmap")
+                .argument(IntegerArgument.<Sender>builder("radius").withMin(1).withMax(1000000).build())
+                .argument(PointArgument.optional("center"), description(Lang.COMMAND_ARGUMENT_OPTIONAL_CENTER_DESCRIPTION))
+                .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Lang.parse(Lang.COMMAND_RADIUSRENDER_DESCRIPTION))
+                .permission("pl3xmap.command.radiusrender")
                 .handler(this::execute));
     }
 
-    private void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    public void execute(@NonNull CommandContext<@NonNull Sender> context) {
         CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
     private void executeAsync(@NonNull CommandContext<@NonNull Sender> context) {
         Sender sender = context.getSender();
         World world = context.get("world");
+        int radius = context.get("radius");
+        Point center = PointArgument.resolve(context, "center");
 
-        TagResolver.Single worldPlaceholder = Placeholder.unparsed("world", world.getName());
-        sender.sendMessage(Lang.COMMAND_RESETMAP_BEGIN, worldPlaceholder);
+        int rX = center.x() >> 9;
+        int rZ = center.z() >> 9;
+        int rR = radius >> 9;
 
-        CompletableFuture.runAsync(() -> {
-            // unregister the world
-            Pl3xMap.api().getWorldRegistry().unregister(world.getName());
+        int minX = rX - rR;
+        int minZ = rZ - rR;
+        int maxX = rX + rR;
+        int maxZ = rZ + rR;
 
-            // delete world files
-            String result;
-            try {
-                FileUtil.deleteDirectory(world.getTilesDirectory());
-                result = Lang.COMMAND_RESETMAP_SUCCESS;
-            } catch (IOException e) {
-                result = Lang.COMMAND_RESETMAP_FAILED;
-            }
+        Collection<Point> regions = world.listRegions(true);
 
-            // create a new world and register it
-            Pl3xMap.api().getWorldRegistry().register(Pl3xMap.api().cloneWorld(world));
+        regions.removeIf(region -> region.x() < minX || region.z() < minZ || region.x() > maxX || region.z() > maxZ);
 
-            sender.sendMessage(result, worldPlaceholder);
-        });
+        if (Config.DEBUG_MODE) {
+            regions.forEach(region -> Logger.debug("Adding region: " + region));
+        }
+
+        Pl3xMap.api().getRegionProcessor().addRegions(world, regions);
+
+        sender.sendMessage(Lang.COMMAND_RADIUSRENDER_STARTING);
     }
 }
