@@ -129,7 +129,6 @@ public class ChunkAnvil116 extends Chunk {
         if (this.biomes.length < 16) {
             return Biome.DEFAULT;
         }
-        // TODO: fix this for 1.17+ worlds with negative y?
         int index = ((y >> 2) << 4) + (((z & 0xF) >> 2) << 2) + ((x & 0xF) >> 2);
         if (index >= this.biomes.length) {
             index -= (((index - this.biomes.length) >> 4) + 1) << 4;
