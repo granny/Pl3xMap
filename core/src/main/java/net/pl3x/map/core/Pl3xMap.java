@@ -182,6 +182,9 @@ public abstract class Pl3xMap {
         ColorsConfig.reload();
         PlayerTracker.reload();
 
+        // initialize block registry
+        getBlockRegistry().init();
+
         // initialize icons
         getIconRegistry().init();
 

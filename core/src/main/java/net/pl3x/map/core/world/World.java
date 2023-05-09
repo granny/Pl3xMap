@@ -131,6 +131,8 @@ public abstract class World extends Keyed {
             return;
         }
 
+        getBiomeRegistry().init(this);
+
         this.regionFileWatcher.start();
 
         getConfig().RENDER_RENDERERS.forEach((id, icon) -> {

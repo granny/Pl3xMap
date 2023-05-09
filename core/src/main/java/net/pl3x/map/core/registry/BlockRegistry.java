@@ -25,9 +25,14 @@ package net.pl3x.map.core.registry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Block;
@@ -37,6 +42,43 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class BlockRegistry extends Registry<@NonNull Block> {
     private static final Gson GSON = new GsonBuilder().create();
 
+    private final Map<String, Integer> indexMap;
+
+    public BlockRegistry() {
+        this.indexMap = new HashMap<>();
+    }
+
+    public void init() {
+        Path file = FileUtil.getTilesDir().resolve("blocks.gz");
+        if (!Files.exists(file)) {
+            return;
+        }
+        try {
+            TypeToken<Map<Integer, String>> token = new TypeToken<>() {
+            };
+            this.indexMap.putAll(GSON.fromJson(FileUtil.readGzip(file), token).entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)));
+        } catch (FileNotFoundException ignore) {
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int getNextIndex(String id) {
+        int index = this.indexMap.getOrDefault(id, -1);
+        if (index > -1) {
+            return index;
+        }
+        int i = 0;
+        while (true) {
+            if (!this.indexMap.containsValue(i)) {
+                this.indexMap.put(id, i);
+                return i;
+            }
+            i++;
+        }
+    }
+
     public @NonNull Block register(@NonNull String id, int color) {
         Block block = super.get(id);
         if (block != null) {
@@ -45,7 +87,7 @@ public class BlockRegistry extends Registry<@NonNull Block> {
         if (id.startsWith("minecraft:")) {
             Logger.warn("Registering unknown vanilla block " + id);
         }
-        return register(id, new Block(size(), id, color)); // todo - use old index from disk
+        return register(id, new Block(getNextIndex(id), id, color));
     }
 
     @Override

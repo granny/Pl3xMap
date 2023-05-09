@@ -29,10 +29,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -174,6 +178,21 @@ public class FileUtil {
             byte[] bytes = gzipIn.readAllBytes();
             gzipIn.close();
             buffer.put(bytes);
+        }
+    }
+
+    public static String readGzip(@NonNull Path file) throws IOException {
+        try (
+                InputStream fileIn = Files.newInputStream(file);
+                GZIPInputStream gzipIn = new GZIPInputStream(fileIn);
+                Reader reader = new InputStreamReader(gzipIn, StandardCharsets.UTF_8);
+                Writer writer = new StringWriter();
+        ) {
+            char[] buffer = new char[4096];
+            for (int length; (length = reader.read(buffer)) > 0; ) {
+                writer.write(buffer, 0, length);
+            }
+            return writer.toString();
         }
     }
 

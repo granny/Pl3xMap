@@ -25,9 +25,13 @@ package net.pl3x.map.core.registry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Biome;
@@ -35,18 +39,49 @@ import net.pl3x.map.core.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BiomeRegistry extends Registry<@NonNull Biome> {
-    private static final Gson GSON = new GsonBuilder()
-            //.setPrettyPrinting()
-            .disableHtmlEscaping()
-            .serializeNulls()
-            .setLenient()
-            .create();
+    private static final Gson GSON = new GsonBuilder().create();
+
+    private final Map<String, Integer> indexMap;
+
+    public BiomeRegistry() {
+        this.indexMap = new HashMap<>();
+    }
+
+    public void init(@NonNull World world) {
+        Path file = world.getTilesDirectory().resolve("biomes.gz");
+        if (!Files.exists(file)) {
+            return;
+        }
+        try {
+            TypeToken<Map<Integer, String>> token = new TypeToken<>() {
+            };
+            this.indexMap.putAll(GSON.fromJson(FileUtil.readGzip(file), token).entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int getNextIndex(String id) {
+        int index = this.indexMap.getOrDefault(id, -1);
+        if (index > -1) {
+            return index;
+        }
+        int i = 0;
+        while (true) {
+            if (!this.indexMap.containsValue(i)) {
+                this.indexMap.put(id, i);
+                return i;
+            }
+            i++;
+        }
+    }
 
     public @NonNull Biome register(@NonNull String id, int color, int foliage, int grass, int water, Biome.@NonNull GrassModifier grassModifier) {
         if (has(id)) {
             throw new KeyAlreadyExistsException("Biome already registered: " + id);
         }
-        return register(id, new Biome(size(), id, color, foliage, grass, water, grassModifier));
+        return register(id, new Biome(getNextIndex(id), id, color, foliage, grass, water, grassModifier));
     }
 
     @Override
