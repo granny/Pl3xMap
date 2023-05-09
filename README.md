@@ -30,9 +30,10 @@ for Minecraft servers using the vanilla Minecraft rendering style.</b></big>
 * Ultra-fast render times. Get your map rendered in minutes, not next week.
 * Simple vanilla-like top down 2D view, designed for navigation.
 * Player markers showing yaw rotation, health, and armor.
-* Easy to [set up](https://github.com/BillyGalbreath/Pl3xMap/wiki/Installation) and [configure](https://github.com/BillyGalbreath/Pl3xMap/wiki/Configuration).
-* Up-to-date Leaflet front-end.
 * [Addons and integrations](https://github.com/BillyGalbreath/Pl3xMap/wiki/pl3xmap-integrations) for many popular plugins.
+* Multiple render types including built-in basic, night, biomes, inhabited, and flowermap.
+* Easy to [set up](https://github.com/BillyGalbreath/Pl3xMap/wiki/Installation) and [configure](https://github.com/BillyGalbreath/Pl3xMap/wiki/Configuration).
+* Up-to-date Leaflet front-end for a better browser experience.
 * [Robust API](https://github.com/BillyGalbreath/Pl3xMap/wiki/Pl3xMap-API) to create your own addons and/or integrations with ease.
 
 ## Supported Platforms
