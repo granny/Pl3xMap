@@ -109,7 +109,7 @@ The compiled jars will be in `build/libs/`
 
 Since people love graphs, here is a graph comparing the render speeds of various livemap plugins
 
-![Fullrender Speed Comparison Chart](https://i.imgur.com/b9uJXAm.png)
+![Fullrender Speed Comparison Chart](https://i.imgur.com/eVGl8GI.png)
 
 World size: 5000 block apothem (10k x 10k, 400 regions)<br>
 World type: Normal, pre-generated with Chunky<br>
