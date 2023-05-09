@@ -83,10 +83,10 @@ public class Pl3xMapForge extends Pl3xMap {
 
     private int tick;
 
+    @SuppressWarnings("InstantiationOfUtilityClass")
     public Pl3xMapForge() {
         super();
 
-        //noinspection InstantiationOfUtilityClass
         new CloudForgeEntrypoint();
 
         MinecraftForge.EVENT_BUS.register(this);
