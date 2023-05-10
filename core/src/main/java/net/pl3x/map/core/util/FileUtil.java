@@ -251,7 +251,7 @@ public class FileUtil {
                     Logger.debug("Found modified region file: " + file.getFileName());
                     regions.add(Point.of(rX, rZ));
                 } else {
-                    Logger.debug("Skipping unmodified region file: " + file.getFileName() + " " + actualModifiedTime + " <= " + storedModifiedTime);
+                    //Logger.debug("Skipping unmodified region file: " + file.getFileName() + " " + actualModifiedTime + " <= " + storedModifiedTime);
                 }
             } catch (NumberFormatException ignore) {
             } catch (IOException e) {

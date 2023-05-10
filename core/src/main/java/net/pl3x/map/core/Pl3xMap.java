@@ -49,6 +49,7 @@ import net.pl3x.map.core.registry.IconRegistry;
 import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.registry.WorldRegistry;
 import net.pl3x.map.core.renderer.heightmap.HeightmapRegistry;
+import net.pl3x.map.core.renderer.task.RegionDoubleChecker;
 import net.pl3x.map.core.renderer.task.RegionProcessor;
 import net.pl3x.map.core.renderer.task.UpdateSettingsData;
 import net.pl3x.map.core.scheduler.Scheduler;
@@ -69,6 +70,7 @@ public abstract class Pl3xMap {
     private final Attributes manifest;
     private final HttpdServer httpdServer;
     private final RegionProcessor regionProcessor;
+    private final RegionDoubleChecker regionDoubleChecker;
     private final Scheduler scheduler;
 
     private final BlockRegistry blockRegistry;
@@ -114,6 +116,7 @@ public abstract class Pl3xMap {
 
         // setup tasks
         this.regionProcessor = new RegionProcessor();
+        this.regionDoubleChecker = new RegionDoubleChecker();
         this.scheduler = new Scheduler();
 
         // setup registries
@@ -136,6 +139,10 @@ public abstract class Pl3xMap {
 
     public @NonNull RegionProcessor getRegionProcessor() {
         return this.regionProcessor;
+    }
+
+    public @NonNull RegionDoubleChecker getRegionDoubleChecker() {
+        return this.regionDoubleChecker;
     }
 
     public @NonNull BlockRegistry getBlockRegistry() {
@@ -224,6 +231,7 @@ public abstract class Pl3xMap {
         // start tasks
         Logger.debug("Starting region processor");
         getRegionProcessor().start(10000L);
+        getRegionDoubleChecker().start(250000L);
 
         Logger.debug("Starting update settings data task");
         getScheduler().addTask(new UpdateSettingsData());
@@ -255,6 +263,7 @@ public abstract class Pl3xMap {
         // stop tasks
         Logger.debug("Stopping tasks");
         getScheduler().cancelAll();
+        getRegionDoubleChecker().stop();
         getRegionProcessor().stop();
         if (this.renderExecutor != null) {
             this.renderExecutor.shutdownNow();

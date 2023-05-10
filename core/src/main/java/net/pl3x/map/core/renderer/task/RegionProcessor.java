@@ -92,7 +92,7 @@ public class RegionProcessor {
 
     public void start(long delay) {
         this.future = CompletableFuture.runAsync(() -> {
-            // wait 10 seconds...
+            // wait...
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException ignore) {
@@ -104,7 +104,7 @@ public class RegionProcessor {
             }
 
             // rinse and repeat
-            start(1000L);
+            start(5000L);
         }, this.executor);
     }
 
