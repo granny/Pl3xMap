@@ -57,6 +57,16 @@ You can demo Pl3xMap (and it's top competitors) at:
 
 [https://pl3x.net/demo/](https://pl3x.net/demo/)
 
+## Support the Developers
+
+BillyGalbreath on:
+* [GitHub Sponsors](https://github.com/sponsors/BillyGalbreath)
+* [Patreon](https://www.patreon.com/billygalbreath)
+* [Ko-Fi](https://ko-fi.com/billygalbreath)
+
+JLyne on:
+* [Ko-Fi](https://ko-fi.com/jlyne)
+
 ## bStats
 
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/Pl3xMap.svg)](https://bstats.org/plugin/bukkit/Pl3xMap/10133)
