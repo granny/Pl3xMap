@@ -28,8 +28,12 @@ export default class Pl3xMapLeafletMap extends L.Map {
             preferCanvas: true
         });
 
-        this.on('mousedown', () => {
+        this.on('mousedown', (): void => {
             pl3xmap.playerManager.follow = undefined;
+        });
+
+        this.on('zoomstart', (event: L.LeafletEvent): void => {
+            event.target.options.wheelPxPerZoomLevel = 120;
         });
 
         // sets the leaflet attribution prefix to our project page
@@ -44,10 +48,10 @@ export default class Pl3xMapLeafletMap extends L.Map {
         this._controlContainer = L.DomUtil.create('div', 'leaflet-control-container', this._container);
 
         const corners: { [x: string]: HTMLDivElement; } = this._controlCorners = {},
-            top = L.DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
-            bottom = L.DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
+            top: HTMLDivElement = L.DomUtil.create('div', 'leaflet-control-container-top', this._controlContainer),
+            bottom: HTMLDivElement = L.DomUtil.create('div', 'leaflet-control-container-bottom', this._controlContainer);
 
-        function createCorner(vSide: string, hSide: string) {
+        function createCorner(vSide: string, hSide: string): void {
             corners[`${vSide}${hSide}`] = L.DomUtil.create('div', `leaflet-${vSide} leaflet-${hSide}`, vSide === 'top' ? top : bottom);
         }
 
@@ -59,7 +63,7 @@ export default class Pl3xMapLeafletMap extends L.Map {
         createCorner('bottom', 'right');
     }
 
-    public centerOn(x: number, z: number, zoom: number) {
+    public centerOn(x: number, z: number, zoom: number): void {
         this.setView(toLatLng([x, z]), this.getMaxZoomOut() - zoom);
     }
 
