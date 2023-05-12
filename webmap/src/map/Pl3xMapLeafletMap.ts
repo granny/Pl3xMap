@@ -39,7 +39,6 @@ export default class Pl3xMapLeafletMap extends L.Map {
     }
 
     // https://stackoverflow.com/a/60391674/3530727
-    // noinspection JSUnusedGlobalSymbols
     _initControlPos(): void {
         this._controlContainer = L.DomUtil.create('div', 'leaflet-control-container', this._container);
 
