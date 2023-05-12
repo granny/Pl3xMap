@@ -32,10 +32,6 @@ export default class Pl3xMapLeafletMap extends L.Map {
             pl3xmap.playerManager.follow = undefined;
         });
 
-        this.on('zoomstart', (event: L.LeafletEvent): void => {
-            event.target.options.wheelPxPerZoomLevel = 120;
-        });
-
         // sets the leaflet attribution prefix to our project page
         this.attributionControl.setPrefix("<a href='https://modrinth.com/plugin/pl3xmap/'>Pl3xMap &copy; 2020-2023</a>");
 
