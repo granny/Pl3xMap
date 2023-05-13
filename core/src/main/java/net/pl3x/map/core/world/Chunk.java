@@ -26,7 +26,10 @@ package net.pl3x.map.core.world;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import net.querz.nbt.tag.ByteTag;
 import net.querz.nbt.tag.CompoundTag;
+import net.querz.nbt.tag.IntTag;
+import net.querz.nbt.tag.Tag;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -59,9 +62,12 @@ public abstract class Chunk {
         this.world = world;
         this.region = region;
 
-        this.xPos = tag.getInt("xPos");
-        this.yPos = tag.getInt("yPos");
-        this.zPos = tag.getInt("zPos");
+        Tag<?> pos = tag.get("xPos");
+        this.xPos = pos instanceof IntTag ? ((IntTag) pos).asInt() : ((ByteTag) pos).asInt();
+        pos = tag.get("yPos");
+        this.yPos = pos instanceof IntTag ? ((IntTag) pos).asInt() : ((ByteTag) pos).asInt();
+        pos = tag.get("zPos");
+        this.zPos = pos instanceof IntTag ? ((IntTag) pos).asInt() : ((ByteTag) pos).asInt();
 
         this.inhabitedTime = tag.getLong("InhabitedTime");
     }

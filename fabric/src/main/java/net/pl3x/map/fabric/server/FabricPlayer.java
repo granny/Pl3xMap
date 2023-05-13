@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric;
+package net.pl3x.map.fabric.server;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,7 +41,7 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.world.World;
-import net.pl3x.map.fabric.duck.AccessServerPlayer;
+import net.pl3x.map.fabric.server.duck.AccessServerPlayer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric;
+package net.pl3x.map.fabric.server;
 
 import java.util.Collection;
 import java.util.Map;

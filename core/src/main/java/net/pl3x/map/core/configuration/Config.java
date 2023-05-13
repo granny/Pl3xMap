@@ -39,6 +39,12 @@ public final class Config extends AbstractConfig {
             The language file to use from the locale folder.""")
     public static String LANGUAGE_FILE = "lang-en.yml";
 
+    @Key("settings.web-address")
+    @Comment("""
+            Set the web address players use to connect to your map. This
+            is only used for the client mod to know where to connect.""")
+    public static String WEB_ADDRESS = "http://localhost:8080";
+
     @Key("settings.web-directory.path")
     @Comment("""
             The directory that houses the website and world tiles.

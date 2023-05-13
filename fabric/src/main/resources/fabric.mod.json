@@ -15,14 +15,24 @@
   },
   "license": "MIT",
   "icon": "pl3xmap.png",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
+    "client": [
+      "${group}.client.Pl3xMapFabricClient"
+    ],
     "server": [
-      "${group}.Pl3xMapFabric"
+      "${group}.server.Pl3xMapFabricServer"
     ]
   },
   "mixins": [
-    "pl3xmap.mixins.json"
+    {
+      "config": "pl3xmap.client.mixins.json",
+      "environment": "client"
+    },
+    {
+      "config": "pl3xmap.server.mixins.json",
+      "environment": "server"
+    }
   ],
   "accessWidener": "pl3xmap.accesswidener",
   "depends": {
@@ -37,7 +47,8 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/nhGzEkwXQX"
+        "modmenu.discord": "https://discord.gg/nhGzEkwXQX",
+        "pl3xmap.plugin.link": "https://modrinth.com/plugin/pl3xmap/"
       }
     }
   }

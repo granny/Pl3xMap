@@ -83,6 +83,8 @@ public class Pl3xMapForge extends Pl3xMap {
 
     private int tick;
 
+    private ForgeNetwork network;
+
     @SuppressWarnings("InstantiationOfUtilityClass")
     public Pl3xMapForge() {
         super();
@@ -134,12 +136,22 @@ public class Pl3xMapForge extends Pl3xMap {
     public void onServerStarted(@NonNull ServerStartedEvent event) {
         this.server = event.getServer();
         this.adventure = new ForgeServerAudiences(this.server);
+
         enable();
+
+        this.network = new ForgeNetwork(this);
+        this.network.register();
     }
 
     @SubscribeEvent
     public void onServerStopping(@NonNull ServerStoppingEvent event) {
+        if (this.network != null) {
+            this.network.unregister();
+            this.network = null;
+        }
+
         disable();
+
         if (this.adventure != null) {
             this.adventure.close();
             this.adventure = null;
@@ -253,5 +265,9 @@ public class Pl3xMapForge extends Pl3xMap {
     @Override
     public @NonNull World cloneWorld(@NonNull World world) {
         return new ForgeWorld(world.getLevel(), world.getName());
+    }
+
+    public @Nullable MinecraftServer getServer() {
+        return this.server;
     }
 }

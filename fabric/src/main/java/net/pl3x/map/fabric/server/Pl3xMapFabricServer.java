@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric;
+package net.pl3x.map.fabric.server;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -57,11 +57,11 @@ import net.pl3x.map.core.event.server.ServerLoadedEvent;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.world.World;
-import net.pl3x.map.fabric.command.FabricCommandManager;
+import net.pl3x.map.fabric.server.command.FabricCommandManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitializer {
+public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModInitializer {
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
     private final PlayerListener playerListener = new PlayerListener();
@@ -73,7 +73,9 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     private boolean firstTick = true;
     private int tick;
 
-    public Pl3xMapFabric() {
+    private FabricNetwork network;
+
+    public Pl3xMapFabricServer() {
         super();
     }
 
@@ -113,11 +115,21 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             this.server = server;
             this.adventure = FabricServerAudiences.of(this.server);
+
             enable();
+
+            this.network = new FabricNetwork(this);
+            this.network.register();
         });
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            if (this.network != null) {
+                this.network.unregister();
+                this.network = null;
+            }
+
             disable();
+
             if (this.adventure != null) {
                 this.adventure.close();
                 this.adventure = null;
@@ -226,5 +238,9 @@ public class Pl3xMapFabric extends Pl3xMap implements DedicatedServerModInitiali
     @Override
     public @NonNull World cloneWorld(@NonNull World world) {
         return new FabricWorld(world.getLevel(), world.getName());
+    }
+
+    public @Nullable MinecraftServer getServer() {
+        return this.server;
     }
 }

@@ -29,6 +29,7 @@ import java.util.UUID;
 import net.pl3x.map.bukkit.command.BukkitCommandManager;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.server.ServerLoadedEvent;
+import net.pl3x.map.core.network.Network;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
@@ -48,6 +49,8 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     private final boolean isFolia;
     private Timer foliaTimer;
 
+    private Network network;
+
     public Pl3xMapBukkit() {
         super();
         this.pl3xmap = new Pl3xMapImpl(this);
@@ -66,6 +69,9 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
         this.pl3xmap.enable();
 
         getServer().getPluginManager().registerEvents(this, this);
+
+        this.network = new BukkitNetwork(this);
+        this.network.register();
 
         try {
             new BukkitCommandManager(this);
@@ -90,6 +96,11 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        if (this.network != null) {
+            this.network.unregister();
+            this.network = null;
+        }
+
         if (this.foliaTimer != null) {
             this.foliaTimer.cancel();
             this.foliaTimer = null;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric.command;
+package net.pl3x.map.fabric.server.command;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
