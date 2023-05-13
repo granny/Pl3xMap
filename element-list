@@ -18,6 +18,7 @@ net.pl3x.map.core.markers.layer
 net.pl3x.map.core.markers.marker
 net.pl3x.map.core.markers.option
 net.pl3x.map.core.metrics
+net.pl3x.map.core.network
 net.pl3x.map.core.player
 net.pl3x.map.core.registry
 net.pl3x.map.core.renderer
