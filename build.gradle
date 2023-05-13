@@ -168,7 +168,11 @@ modrinth {
     loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
+        optional.project "pl3xmap-banners"
         optional.project "pl3xmap-claims"
+        optional.project "pl3xmap-mobs"
+        optional.project "pl3xmap-signs"
+        optional.project "deathspots"
     }
 }
 
