@@ -19,7 +19,7 @@ dependencies {
     compileOnly project(':core')
     compileOnly project(':bukkit')
     compileOnly project(':fabric')
-    compileOnly project(':forge')
+    //compileOnly project(':forge')
 }
 
 def cleanWebmap = tasks.register('cleanWebmap', Delete) {
@@ -165,7 +165,7 @@ modrinth {
     versionType = 'beta'
     uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
     gameVersions.addAll(["${minecraftVersion}"])
-    loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
+    loaders.addAll(['bukkit', 'fabric', /*'forge',*/ 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
         optional.project "pl3xmap-claims"
