@@ -39,3 +39,7 @@ shadowJar {
             'org.yaml.snakeyaml',
     ].forEach { relocate it, "libs.$it" }
 }
+
+processResources {
+    dependsOn ":copyWebmap"
+}

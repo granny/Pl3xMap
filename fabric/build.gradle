@@ -27,6 +27,10 @@ base {
     archivesName = "${rootProject.name}-${project.name}"
 }
 
+remapJar {
+    dependsOn ":core:shadowJar"
+}
+
 processResources {
     filesMatching('fabric.mod.json') {
         expand(
