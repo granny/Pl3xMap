@@ -24,7 +24,7 @@
 package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.world.Region;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class NoneHeightmap extends Heightmap {
     public NoneHeightmap() {
@@ -32,7 +32,7 @@ public class NoneHeightmap extends Heightmap {
     }
 
     @Override
-    public int getColor(@NonNull Region region, int blockX, int blockZ) {
+    public int getColor(@NotNull Region region, int blockX, int blockZ) {
         return 0x22 << 24;
     }
 }

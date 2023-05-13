@@ -13,8 +13,8 @@
  */
 package net.pl3x.map.core.util;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Preconditions {
     public static void checkArgument(boolean condition, @Nullable Object error) {
@@ -23,7 +23,7 @@ public class Preconditions {
         }
     }
 
-    public static <@NonNull T> @NonNull T checkNotNull(@Nullable T value, @Nullable Object error) {
+    public static <T> @NotNull T checkNotNull(@Nullable T value, @Nullable Object error) {
         if (value == null) {
             throw new NullPointerException(String.valueOf(error));
         }

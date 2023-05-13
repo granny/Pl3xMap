@@ -30,11 +30,11 @@ import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.util.FileUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnusedReturnValue")
-public class IconRegistry extends Registry<@NonNull IconImage> {
+public class IconRegistry extends Registry<@NotNull IconImage> {
     private Path registeredDir;
 
     /**
@@ -57,7 +57,7 @@ public class IconRegistry extends Registry<@NonNull IconImage> {
      *
      * @return icons directory
      */
-    public @NonNull Path getDir() {
+    public @NotNull Path getDir() {
         return this.registeredDir;
     }
 
@@ -71,7 +71,7 @@ public class IconRegistry extends Registry<@NonNull IconImage> {
      * @throws IllegalStateException if image failed to save to disk
      */
     @Override
-    public @NonNull IconImage register(@NonNull String id, @NonNull IconImage image) {
+    public @NotNull IconImage register(@NotNull String id, @NotNull IconImage image) {
         try {
             String filename = id + "." + image.getType();
             File file = getDir().resolve(filename).toFile();
@@ -93,7 +93,7 @@ public class IconRegistry extends Registry<@NonNull IconImage> {
      * @throws IllegalStateException if image failed to delete from disk
      */
     @Override
-    public @Nullable IconImage unregister(@NonNull String id) {
+    public @Nullable IconImage unregister(@NotNull String id) {
         IconImage image = super.unregister(id);
         if (image != null) {
             try {

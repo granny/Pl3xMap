@@ -26,8 +26,8 @@ package net.pl3x.map.core.markers.area;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Rectangle implements Area {
     private final int minX;
@@ -74,7 +74,7 @@ public class Rectangle implements Area {
     }
 
     @Override
-    public @NonNull Map<String, Object> serialize() {
+    public @NotNull Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("type", "rectangle");
         map.put("min-x", getMinX());
@@ -84,7 +84,7 @@ public class Rectangle implements Area {
         return map;
     }
 
-    public static @NonNull Rectangle deserialize(Map<String, Object> map) {
+    public static @NotNull Rectangle deserialize(Map<String, Object> map) {
         return new Rectangle(
                 (int) map.get("min-x"),
                 (int) map.get("min-z"),
@@ -117,7 +117,7 @@ public class Rectangle implements Area {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Rectangle{"
                 + "minX=" + getMinX()
                 + ",minZ=" + getMinZ()

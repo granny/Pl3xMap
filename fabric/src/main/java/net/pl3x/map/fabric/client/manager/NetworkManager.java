@@ -34,12 +34,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import net.pl3x.map.fabric.client.duck.MapInstance;
+import org.jetbrains.annotations.NotNull;
 
 public class NetworkManager {
     private final ResourceLocation channel = new ResourceLocation(Constants.MODID, Constants.MODID);
     private final Pl3xMapFabricClient mod;
 
-    public NetworkManager(Pl3xMapFabricClient mod) {
+    public NetworkManager(@NotNull Pl3xMapFabricClient mod) {
         this.mod = mod;
     }
 
@@ -100,7 +101,7 @@ public class NetworkManager {
         sendPacket(out);
     }
 
-    private void sendPacket(ByteArrayDataOutput packet) {
+    private void sendPacket(@NotNull ByteArrayDataOutput packet) {
         if (Minecraft.getInstance().getConnection() == null) {
             // not in game yet; reschedule
             this.mod.getScheduler().addTask(20, () -> sendPacket(packet));
@@ -110,12 +111,12 @@ public class NetworkManager {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    private ByteArrayDataOutput out() {
+    private @NotNull ByteArrayDataOutput out() {
         return ByteStreams.newDataOutput();
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    private ByteArrayDataInput in(byte[] bytes) {
+    private @NotNull ByteArrayDataInput in(byte[] bytes) {
         return ByteStreams.newDataInput(bytes);
     }
 }

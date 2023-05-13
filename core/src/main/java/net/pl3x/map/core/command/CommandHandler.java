@@ -45,7 +45,7 @@ import net.pl3x.map.core.command.commands.StatusCommand;
 import net.pl3x.map.core.command.commands.StitchCommand;
 import net.pl3x.map.core.command.commands.VersionCommand;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the command handler.
@@ -56,14 +56,14 @@ public interface CommandHandler {
      *
      * @return command manager
      */
-    @NonNull CommandManager<@NonNull Sender> getManager();
+    @NotNull CommandManager<@NotNull Sender> getManager();
 
     /**
      * Get the root command.
      *
      * @return the root command
      */
-    Command.@NonNull Builder<@NonNull Sender> getRoot();
+    Command.@NotNull Builder<@NotNull Sender> getRoot();
 
     default void setupExceptionHandlers() {
         new MinecraftExceptionHandler<Sender>()
@@ -82,11 +82,11 @@ public interface CommandHandler {
      *
      * @param builder command builder
      */
-    default void registerSubcommand(@NonNull UnaryOperator<Command.@NonNull Builder<@NonNull Sender>> builder) {
+    default void registerSubcommand(@NotNull UnaryOperator<Command.@NotNull Builder<@NotNull Sender>> builder) {
         this.getManager().command(builder.apply(getRoot()));
     }
 
-    default Command.@NonNull Builder<@NonNull Sender> buildRoot() {
+    default Command.@NotNull Builder<@NotNull Sender> buildRoot() {
         return getManager().commandBuilder("map", "pl3xmap")
                 .permission("pl3xmap.command.map")
                 .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'")

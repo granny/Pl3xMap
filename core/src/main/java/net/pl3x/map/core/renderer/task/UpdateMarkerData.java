@@ -39,7 +39,7 @@ import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class UpdateMarkerData extends Task {
     private final Gson gson = new GsonBuilder()
@@ -51,9 +51,9 @@ public class UpdateMarkerData extends Task {
             .create();
 
     private final World world;
-    private final Map<@NonNull String, @NonNull Long> lastUpdated = new HashMap<>();
+    private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
 
-    public UpdateMarkerData(@NonNull World world) {
+    public UpdateMarkerData(@NotNull World world) {
         super(20, true);
         this.world = world;
     }
@@ -92,9 +92,9 @@ public class UpdateMarkerData extends Task {
         FileUtil.write(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
     }
 
-    private static class Adapter implements JsonSerializer<@NonNull Marker<@NonNull ?>> {
+    private static class Adapter implements JsonSerializer<@NotNull Marker<?>> {
         @Override
-        public @NonNull JsonElement serialize(@NonNull Marker<@NonNull ?> marker, @NonNull Type type, @NonNull JsonSerializationContext context) {
+        public @NotNull JsonElement serialize(@NotNull Marker<?> marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
             JsonObjectWrapper wrapper = new JsonObjectWrapper();
             wrapper.addProperty("type", marker.getType());
             wrapper.addProperty("data", marker);

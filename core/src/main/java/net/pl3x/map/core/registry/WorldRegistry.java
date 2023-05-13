@@ -27,11 +27,11 @@ import java.util.function.Supplier;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.world.WorldUnloadedEvent;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class WorldRegistry extends Registry<@NonNull World> {
-    public @NonNull World getOrDefault(@NonNull String id, @NonNull Supplier<@NonNull World> supplier) {
+public class WorldRegistry extends Registry<@NotNull World> {
+    public @NotNull World getOrDefault(@NotNull String id, @NotNull Supplier<@NotNull World> supplier) {
         World world = get(id);
         if (world == null) {
             world = supplier.get();
@@ -41,7 +41,7 @@ public class WorldRegistry extends Registry<@NonNull World> {
     }
 
     @Override
-    public @Nullable World unregister(@NonNull String id) {
+    public @Nullable World unregister(@NotNull String id) {
         World world = this.entries.remove(id);
         if (world != null) {
             Pl3xMap.api().getEventRegistry().callEvent(new WorldUnloadedEvent(world));

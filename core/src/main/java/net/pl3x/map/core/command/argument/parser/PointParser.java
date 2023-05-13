@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Queue;
 import net.pl3x.map.core.command.exception.PointParseException;
 import net.pl3x.map.core.markers.Point;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
@@ -42,9 +42,9 @@ import static cloud.commandframework.arguments.parser.ArgumentParseResult.succes
  *
  * @param <C> command sender type
  */
-public class PointParser<@NonNull C> implements ArgumentParser<@NonNull C, @NonNull Point> {
+public class PointParser<C> implements ArgumentParser<@NotNull C, @NotNull Point> {
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Point> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> queue) {
+    public @NotNull ArgumentParseResult<@NotNull Point> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         if (queue.size() < 2) {
             StringBuilder input = new StringBuilder();
             for (int i = 0; i < queue.size(); i++) {
@@ -65,11 +65,11 @@ public class PointParser<@NonNull C> implements ArgumentParser<@NonNull C, @NonN
     }
 
     @Override
-    public @NonNull List<@NonNull String> suggestions(@NonNull CommandContext<@NonNull C> commandContext, @NonNull String input) {
+    public @NotNull List<@NotNull String> suggestions(@NotNull CommandContext<@NotNull C> commandContext, @NotNull String input) {
         return IntegerArgument.IntegerParser.getSuggestions(Integer.MIN_VALUE, Integer.MAX_VALUE, input);
     }
 
-    public @NonNull ArgumentParseResult<@NonNull Integer> parseCoord(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> queue) {
+    public @NotNull ArgumentParseResult<@NotNull Integer> parseCoord(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
             return failure(new NoInputProvidedException(PointParser.class, context));

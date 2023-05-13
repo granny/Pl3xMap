@@ -25,8 +25,8 @@ package net.pl3x.map.core;
 
 import java.util.Objects;
 import net.pl3x.map.core.util.Preconditions;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a key identified object.
@@ -39,7 +39,7 @@ public abstract class Keyed {
      *
      * @param key key for object
      */
-    public Keyed(@NonNull String key) {
+    public Keyed(@NotNull String key) {
         this.key = Preconditions.checkNotNull(key, "Key is null");
     }
 
@@ -48,7 +48,7 @@ public abstract class Keyed {
      *
      * @return the key
      */
-    public @NonNull String getKey() {
+    public @NotNull String getKey() {
         return this.key;
     }
 
@@ -73,7 +73,7 @@ public abstract class Keyed {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return this.key;
     }
 }

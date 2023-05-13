@@ -31,11 +31,11 @@ import net.minecraft.commands.arguments.DimensionArgument;
 import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.command.argument.parser.WorldParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class FabricCommandManager implements CommandHandler {
-    private final FabricServerCommandManager<@NonNull Sender> manager;
-    private final Command.Builder<@NonNull Sender> root;
+    private final FabricServerCommandManager<@NotNull Sender> manager;
+    private final Command.Builder<@NotNull Sender> root;
 
     public FabricCommandManager() {
         this.manager = new FabricServerCommandManager<>(CommandExecutionCoordinator.simpleCoordinator(), FabricSender::create, Sender::getSender);
@@ -53,12 +53,12 @@ public class FabricCommandManager implements CommandHandler {
     }
 
     @Override
-    public @NonNull FabricServerCommandManager<@NonNull Sender> getManager() {
+    public @NotNull FabricServerCommandManager<@NotNull Sender> getManager() {
         return this.manager;
     }
 
     @Override
-    public Command.@NonNull Builder<@NonNull Sender> getRoot() {
+    public Command.@NotNull Builder<@NotNull Sender> getRoot() {
         return this.root;
     }
 }

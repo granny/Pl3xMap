@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.exception.PlayerParseException;
 import net.pl3x.map.core.player.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
@@ -41,9 +41,9 @@ import static cloud.commandframework.arguments.parser.ArgumentParseResult.succes
  *
  * @param <C> command sender type
  */
-public class PlayerParser<@NonNull C> implements ArgumentParser<@NonNull C, @NonNull Player> {
+public class PlayerParser<C> implements ArgumentParser<@NotNull C, @NotNull Player> {
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Player> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> queue) {
+    public @NotNull ArgumentParseResult<@NotNull Player> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
             return failure(new PlayerParseException(null, PlayerParseException.MUST_SPECIFY_PLAYER));
@@ -59,7 +59,7 @@ public class PlayerParser<@NonNull C> implements ArgumentParser<@NonNull C, @Non
     }
 
     @Override
-    public @NonNull List<@NonNull String> suggestions(@NonNull CommandContext<@NonNull C> commandContext, @NonNull String input) {
+    public @NotNull List<@NotNull String> suggestions(@NotNull CommandContext<@NotNull C> commandContext, @NotNull String input) {
         return Pl3xMap.api().getPlayerRegistry()
                 .values().stream()
                 .map(Player::getName)

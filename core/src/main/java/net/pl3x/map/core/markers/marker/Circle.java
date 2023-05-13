@@ -30,18 +30,18 @@ import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Preconditions;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a circle marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Circle extends Marker<@NonNull Circle> {
+public class Circle extends Marker<@NotNull Circle> {
     private Point center;
     private double radius;
 
-    private Circle(@NonNull String key) {
+    private Circle(@NotNull String key) {
         super("circ", key);
     }
 
@@ -53,7 +53,7 @@ public class Circle extends Marker<@NonNull Circle> {
      * @param centerZ center z location
      * @param radius  circle radius
      */
-    public Circle(@NonNull String key, double centerX, double centerZ, double radius) {
+    public Circle(@NotNull String key, double centerX, double centerZ, double radius) {
         this(key);
         setCenter(Point.of(centerX, centerZ));
         setRadius(radius);
@@ -66,7 +66,7 @@ public class Circle extends Marker<@NonNull Circle> {
      * @param center center location
      * @param radius circle radius
      */
-    public Circle(@NonNull String key, @NonNull Point center, double radius) {
+    public Circle(@NotNull String key, @NotNull Point center, double radius) {
         this(key);
         setCenter(center);
         setRadius(radius);
@@ -81,7 +81,7 @@ public class Circle extends Marker<@NonNull Circle> {
      * @param radius  circle radius
      * @return a new circle
      */
-    public static @NonNull Circle of(@NonNull String key, double centerX, double centerZ, double radius) {
+    public static @NotNull Circle of(@NotNull String key, double centerX, double centerZ, double radius) {
         return new Circle(key, centerX, centerZ, radius);
     }
 
@@ -93,7 +93,7 @@ public class Circle extends Marker<@NonNull Circle> {
      * @param radius circle radius
      * @return a new circle
      */
-    public static @NonNull Circle of(@NonNull String key, @NonNull Point center, double radius) {
+    public static @NotNull Circle of(@NotNull String key, @NotNull Point center, double radius) {
         return new Circle(key, center, radius);
     }
 
@@ -102,7 +102,7 @@ public class Circle extends Marker<@NonNull Circle> {
      *
      * @return center point
      */
-    public @NonNull Point getCenter() {
+    public @NotNull Point getCenter() {
         return this.center;
     }
 
@@ -112,7 +112,7 @@ public class Circle extends Marker<@NonNull Circle> {
      * @param center new center
      * @return this circle
      */
-    public @NonNull Circle setCenter(@NonNull Point center) {
+    public @NotNull Circle setCenter(@NotNull Point center) {
         this.center = Preconditions.checkNotNull(center, "Circle center is null");
         return this;
     }
@@ -132,13 +132,13 @@ public class Circle extends Marker<@NonNull Circle> {
      * @param radius new radius
      * @return this circle
      */
-    public @NonNull Circle setRadius(double radius) {
+    public @NotNull Circle setRadius(double radius) {
         this.radius = radius;
         return this;
     }
 
     @Override
-    public @NonNull JsonObject toJson() {
+    public @NotNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("center", getCenter());
@@ -147,7 +147,7 @@ public class Circle extends Marker<@NonNull Circle> {
         return wrapper.getJsonObject();
     }
 
-    public static @NonNull Circle fromJson(@NonNull JsonObject obj) {
+    public static @NotNull Circle fromJson(@NotNull JsonObject obj) {
         JsonElement el;
         Circle circle = Circle.of(
                 obj.get("key").getAsString(),
@@ -183,7 +183,7 @@ public class Circle extends Marker<@NonNull Circle> {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Circle{"
                 + "key=" + getKey()
                 + ",center=" + getCenter()

@@ -25,8 +25,8 @@ package net.pl3x.map.core.world;
 
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class Biome extends Keyed {
     public static final Biome DEFAULT = new Biome(0, "minecraft:default", 0x000070, 0x73A74E, 0x8EB971, 0x3F76E4, (x, z, def) -> def);
@@ -35,9 +35,9 @@ public final class Biome extends Keyed {
     private final int foliage;
     private final int grass;
     private final int water;
-    private final @NonNull GrassModifier grassModifier;
+    private final @NotNull GrassModifier grassModifier;
 
-    public Biome(int index, @NonNull String key, int color, int foliage, int grass, int water, @NonNull GrassModifier grassModifier) {
+    public Biome(int index, @NotNull String key, int color, int foliage, int grass, int water, @NotNull GrassModifier grassModifier) {
         super(key);
         this.index = index;
         this.color = color;
@@ -71,7 +71,7 @@ public final class Biome extends Keyed {
         return water;
     }
 
-    public @NonNull GrassModifier grassModifier() {
+    public @NotNull GrassModifier grassModifier() {
         return grassModifier;
     }
 
@@ -95,7 +95,7 @@ public final class Biome extends Keyed {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Biome[" +
                 "index=" + index + ", " +
                 "key=" + getKey() + ", " +

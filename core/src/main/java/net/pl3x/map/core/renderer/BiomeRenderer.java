@@ -29,15 +29,15 @@ import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class BiomeRenderer extends Renderer {
-    public BiomeRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+    public BiomeRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
         super(task, builder);
     }
 
     @Override
-    public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
         int pixelColor = 0;
 
         if (Colors.getRawBlockColor(data.getBlockState().getBlock()) > 0) {

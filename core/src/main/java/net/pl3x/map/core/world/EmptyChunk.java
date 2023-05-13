@@ -23,10 +23,10 @@
  */
 package net.pl3x.map.core.world;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class EmptyChunk extends Chunk {
-    protected EmptyChunk(@NonNull World world, @NonNull Region region) {
+    protected EmptyChunk(@NotNull World world, @NotNull Region region) {
         super(world, region);
     }
 
@@ -36,7 +36,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public @NonNull BlockState getBlockState(int x, int y, int z) {
+    public @NotNull BlockState getBlockState(int x, int y, int z) {
         return Blocks.AIR.getDefaultState();
     }
 
@@ -46,7 +46,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public @NonNull Biome getBiome(int x, int y, int z) {
+    public @NotNull Biome getBiome(int x, int y, int z) {
         return Biome.DEFAULT;
     }
 
@@ -61,7 +61,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public @NonNull Chunk populate() {
+    public @NotNull Chunk populate() {
         return this;
     }
 }

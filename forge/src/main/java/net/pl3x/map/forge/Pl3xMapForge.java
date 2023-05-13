@@ -66,8 +66,8 @@ import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.forge.capability.HiddenCapability;
 import net.pl3x.map.forge.command.ForgeCommandManager;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Mod("pl3xmap")
 public class Pl3xMapForge extends Pl3xMap {
@@ -107,7 +107,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onServerTick(TickEvent.@NonNull ServerTickEvent event) {
+    public void onServerTick(TickEvent.@NotNull ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && this.tick++ >= 20) {
             this.tick = 0;
             getScheduler().tick();
@@ -115,7 +115,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.@NonNull PlayerLoggedInEvent event) {
+    public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
         UUID uuid = event.getEntity().getUUID();
         Player forgePlayer = registry.getOrDefault(uuid, () -> new ForgePlayer((ServerPlayer) event.getEntity()));
@@ -123,7 +123,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedOut(PlayerEvent.@NonNull PlayerLoggedOutEvent event) {
+    public void onPlayerLoggedOut(PlayerEvent.@NotNull PlayerLoggedOutEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
         UUID uuid = event.getEntity().getUUID();
         Player forgePlayer = registry.unregister(uuid);
@@ -133,7 +133,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onServerStarted(@NonNull ServerStartedEvent event) {
+    public void onServerStarted(@NotNull ServerStartedEvent event) {
         this.server = event.getServer();
         this.adventure = new ForgeServerAudiences(this.server);
 
@@ -144,7 +144,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onServerStopping(@NonNull ServerStoppingEvent event) {
+    public void onServerStopping(@NotNull ServerStoppingEvent event) {
         if (this.network != null) {
             this.network.unregister();
             this.network = null;
@@ -163,7 +163,7 @@ public class Pl3xMapForge extends Pl3xMap {
         Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
     }
 
-    public @NonNull IModInfo getModInfo() {
+    public @NotNull IModInfo getModInfo() {
         if (this.modInfo == null) {
             this.modInfo = ModList.get().getModContainerById("pl3xmap").orElseThrow().getModInfo();
         }
@@ -171,12 +171,12 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
-    public @NonNull String getPlatform() {
+    public @NotNull String getPlatform() {
         return this.server.getServerModName().toLowerCase(Locale.ROOT);
     }
 
     @Override
-    public @NonNull String getVersion() {
+    public @NotNull String getVersion() {
         return getModInfo().getVersion().toString();
     }
 
@@ -196,7 +196,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
-    public @NonNull AudienceProvider adventure() {
+    public @NotNull AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");
         }
@@ -204,12 +204,12 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
-    public @NonNull Path getMainDir() {
+    public @NotNull Path getMainDir() {
         return FMLPaths.GAMEDIR.get().resolve("config").resolve("pl3xmap");
     }
 
     @Override
-    public @NonNull Path getJarPath() {
+    public @NotNull Path getJarPath() {
         return getModInfo().getOwningFile().getFile().getFilePath();
     }
 
@@ -219,7 +219,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
-    public net.pl3x.map.core.world.@Nullable Block getFlower(@NonNull World world, net.pl3x.map.core.world.@NonNull Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(@NotNull World world, net.pl3x.map.core.world.@NotNull Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
         Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(new ResourceLocation(biome.getKey()));
         if (nms == null) {
@@ -263,7 +263,7 @@ public class Pl3xMapForge extends Pl3xMap {
     }
 
     @Override
-    public @NonNull World cloneWorld(@NonNull World world) {
+    public @NotNull World cloneWorld(@NotNull World world) {
         return new ForgeWorld(world.getLevel(), world.getName());
     }
 

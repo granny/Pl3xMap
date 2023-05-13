@@ -38,7 +38,7 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
@@ -52,7 +52,7 @@ public class RegionFileWatcher implements Runnable {
 
     private boolean stopped;
 
-    public RegionFileWatcher(@NonNull World world) {
+    public RegionFileWatcher(@NotNull World world) {
         this.world = world;
     }
 

@@ -43,16 +43,16 @@ import net.pl3x.map.core.renderer.progress.Progress;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiralIterator;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class RegionProcessor {
-    private final Map<@NonNull World, @NonNull Collection<@NonNull Point>> regionsToScan = new ConcurrentHashMap<>();
-    private final Deque<@NonNull Ticket> ticketsToScan = new ConcurrentLinkedDeque<>();
+    private final Map<@NotNull World, @NotNull Collection<@NotNull Point>> regionsToScan = new ConcurrentHashMap<>();
+    private final Deque<@NotNull Ticket> ticketsToScan = new ConcurrentLinkedDeque<>();
 
     private final Executor executor;
     private final Progress progress;
 
-    private CompletableFuture<@NonNull Void> future;
+    private CompletableFuture<@NotNull Void> future;
 
     private boolean paused;
 
@@ -82,7 +82,7 @@ public class RegionProcessor {
         this.paused = paused;
     }
 
-    public @NonNull Progress getProgress() {
+    public @NotNull Progress getProgress() {
         return this.progress;
     }
 
@@ -115,7 +115,7 @@ public class RegionProcessor {
         }
     }
 
-    public void addRegions(@NonNull World world, @NonNull Collection<@NonNull Point> regions) {
+    public void addRegions(@NotNull World world, @NotNull Collection<@NotNull Point> regions) {
         for (Point region : regions) {
             Ticket ticket = new Ticket(world, region);
             if (!this.ticketsToScan.contains(ticket)) {
@@ -162,7 +162,7 @@ public class RegionProcessor {
         Logger.debug("Region processor finished queuing at " + System.currentTimeMillis());
     }
 
-    private void process(@NonNull World world, @NonNull Collection<@NonNull Point> regionPositions) {
+    private void process(@NotNull World world, @NotNull Collection<@NotNull Point> regionPositions) {
         Logger.debug(world.getName() + " Region processor started processing at " + System.currentTimeMillis());
 
         // find max radius for spiral iterator
@@ -207,7 +207,7 @@ public class RegionProcessor {
         Logger.debug(world.getName() + " Region processor finished processing at " + System.currentTimeMillis());
     }
 
-    private void schedule(@NonNull World world, @NonNull List<@NonNull Point> orderedRegionsToScan) {
+    private void schedule(@NotNull World world, @NotNull List<@NotNull Point> orderedRegionsToScan) {
         getProgress().setWorld(world);
         getProgress().setTotalRegions(orderedRegionsToScan.size());
         getProgress().setTotalChunks(getProgress().getTotalRegions() * 1024L);
@@ -251,6 +251,6 @@ public class RegionProcessor {
         }).join();
     }
 
-    private record Ticket(@NonNull World world, @NonNull Point region) {
+    private record Ticket(@NotNull World world, @NotNull Point region) {
     }
 }

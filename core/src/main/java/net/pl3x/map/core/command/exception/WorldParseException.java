@@ -25,8 +25,8 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Thrown to indicate that a method has been passed an illegal or inappropriate {@link World} argument.
@@ -42,7 +42,7 @@ public class WorldParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public WorldParseException(@Nullable String input, @NonNull Reason reason) {
+    public WorldParseException(@Nullable String input, @NotNull Reason reason) {
         super(input, "<world>", reason);
     }
 }

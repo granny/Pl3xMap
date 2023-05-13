@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.exception.WorldParseException;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
@@ -41,9 +41,9 @@ import static cloud.commandframework.arguments.parser.ArgumentParseResult.succes
  *
  * @param <C> command sender type
  */
-public class WorldParser<@NonNull C> implements ArgumentParser<@NonNull C, @NonNull World> {
+public class WorldParser<C> implements ArgumentParser<@NotNull C, @NotNull World> {
     @Override
-    public @NonNull ArgumentParseResult<@NonNull World> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> queue) {
+    public @NotNull ArgumentParseResult<@NotNull World> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
             return failure(new WorldParseException(null, WorldParseException.MUST_SPECIFY_WORLD));
@@ -68,7 +68,7 @@ public class WorldParser<@NonNull C> implements ArgumentParser<@NonNull C, @NonN
     }
 
     @Override
-    public @NonNull List<@NonNull String> suggestions(@NonNull CommandContext<@NonNull C> commandContext, @NonNull String input) {
+    public @NotNull List<@NotNull String> suggestions(@NotNull CommandContext<@NotNull C> commandContext, @NotNull String input) {
         return Pl3xMap.api().getWorldRegistry()
                 .values().stream()
                 .filter(World::isEnabled)

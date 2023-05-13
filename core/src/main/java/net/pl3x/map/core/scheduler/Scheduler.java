@@ -26,10 +26,10 @@ package net.pl3x.map.core.scheduler;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class Scheduler {
-    private final Queue<@NonNull Task> tasks = new ConcurrentLinkedQueue<>();
+    private final Queue<@NotNull Task> tasks = new ConcurrentLinkedQueue<>();
 
     private boolean ticking;
 
@@ -81,7 +81,7 @@ public class Scheduler {
      *
      * @param task Task to add
      */
-    public void addTask(@NonNull Task task) {
+    public void addTask(@NotNull Task task) {
         this.tasks.add(task);
     }
 
@@ -91,7 +91,7 @@ public class Scheduler {
      * @param delay    Delay (in seconds) before task starts
      * @param runnable Task to add
      */
-    public void addTask(int delay, @NonNull Runnable runnable) {
+    public void addTask(int delay, @NotNull Runnable runnable) {
         addTask(delay, false, runnable);
     }
 
@@ -102,7 +102,7 @@ public class Scheduler {
      * @param repeat   Delay (in seconds) before task repeats
      * @param runnable Task to add
      */
-    public void addTask(int delay, boolean repeat, @NonNull Runnable runnable) {
+    public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {
         addTask(new Task(delay, repeat) {
             @Override
             public void run() {

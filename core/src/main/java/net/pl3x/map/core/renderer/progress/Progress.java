@@ -29,8 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Progress implements Runnable {
     private final CPSTracker cpsTracker = new CPSTracker();
@@ -101,11 +101,11 @@ public class Progress implements Runnable {
         return this.cps;
     }
 
-    public @NonNull String getETA() {
+    public @NotNull String getETA() {
         return this.eta;
     }
 
-    public @NonNull AtomicLong getProcessedChunks() {
+    public @NotNull AtomicLong getProcessedChunks() {
         return this.processedChunks;
     }
 
@@ -114,7 +114,7 @@ public class Progress implements Runnable {
         this.prevProcessedChunks = processedChunks;
     }
 
-    public @NonNull AtomicLong getProcessedRegions() {
+    public @NotNull AtomicLong getProcessedRegions() {
         return this.processedRegions;
     }
 
@@ -149,7 +149,7 @@ public class Progress implements Runnable {
         }
     }
 
-    public static @NonNull String formatMilliseconds(long time) {
+    public static @NotNull String formatMilliseconds(long time) {
         int hrs = (int) TimeUnit.MILLISECONDS.toHours(time);
         int min = (int) TimeUnit.MILLISECONDS.toMinutes(time) % 60;
         int sec = (int) TimeUnit.MILLISECONDS.toSeconds(time) % 60;

@@ -25,16 +25,16 @@ package net.pl3x.map.core.event.world;
 
 import net.pl3x.map.core.event.Event;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class WorldEvent extends Event {
     private final World world;
 
-    public WorldEvent(@NonNull World world) {
+    public WorldEvent(@NotNull World world) {
         this.world = world;
     }
 
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         return this.world;
     }
 }

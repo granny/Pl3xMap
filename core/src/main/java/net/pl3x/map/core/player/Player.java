@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a player.
@@ -42,16 +42,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class Player extends Keyed {
     private final Object player;
 
-    private Map<@NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String>, @NonNull Integer> nameDecorators = new LinkedHashMap<>();
+    private Map<@NotNull BiFunction<@NotNull Player, @NotNull String, @NotNull String>, @NotNull Integer> nameDecorators = new LinkedHashMap<>();
     private boolean hidden;
 
-    public <@NonNull T> Player(@NonNull String key, @NonNull T player) {
+    public <T> Player(@NotNull String key, @NotNull T player) {
         super(key);
         this.player = player;
     }
 
     @SuppressWarnings("unchecked")
-    public <@NonNull T> @NonNull T getPlayer() {
+    public <T> @NotNull T getPlayer() {
         return (T) this.player;
     }
 
@@ -60,28 +60,28 @@ public abstract class Player extends Keyed {
      *
      * @return player's name
      */
-    public abstract @NonNull String getName();
+    public abstract @NotNull String getName();
 
     /**
      * Get the player's UUID.
      *
      * @return player's UUID
      */
-    public abstract @NonNull UUID getUUID();
+    public abstract @NotNull UUID getUUID();
 
     /**
      * Get the world this player is currently in.
      *
      * @return player's world
      */
-    public abstract @NonNull World getWorld();
+    public abstract @NotNull World getWorld();
 
     /**
      * Get the player's current position.
      *
      * @return player's position
      */
-    public abstract @NonNull Point getPosition();
+    public abstract @NotNull Point getPosition();
 
     /**
      * Get the player's current yaw.
@@ -184,7 +184,7 @@ public abstract class Player extends Keyed {
      * @param priority  Priority of decorator
      * @param decorator Name decorator to register
      */
-    public void registerNameDecorator(int priority, @NonNull BiFunction<@NonNull Player, @NonNull String, @NonNull String> decorator) {
+    public void registerNameDecorator(int priority, @NotNull BiFunction<@NotNull Player, @NotNull String, @NotNull String> decorator) {
         this.nameDecorators.put(decorator, priority);
         this.nameDecorators = this.nameDecorators.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
@@ -197,7 +197,7 @@ public abstract class Player extends Keyed {
      *
      * @return decorated name
      */
-    public @NonNull String getDecoratedName() {
+    public @NotNull String getDecoratedName() {
         String name = getName();
         for (BiFunction<Player, String, String> fn : this.nameDecorators.keySet()) {
             name = fn.apply(this, name);

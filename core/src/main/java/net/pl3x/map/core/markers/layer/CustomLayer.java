@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a custom layer of markers and other metadata.
@@ -45,7 +45,7 @@ public class CustomLayer extends WorldLayer {
      *
      * @param key key for layer
      */
-    public CustomLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
+    public CustomLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
         super(key, world, labelSupplier);
     }
 
@@ -64,7 +64,7 @@ public class CustomLayer extends WorldLayer {
         world.getLayerRegistry().register(layer.getKey(), layer);
     }
 
-    public static @NonNull CustomLayer fromJson(@NonNull World world, @NonNull JsonObject obj) {
+    public static @NotNull CustomLayer fromJson(@NotNull World world, @NotNull JsonObject obj) {
         JsonElement el;
         CustomLayer layer = new CustomLayer(obj.get("key").getAsString(), world, () -> obj.get("label").getAsString());
         if ((el = obj.get("updateInterval")) != null && !(el instanceof JsonNull)) layer.setUpdateInterval(el.getAsInt());

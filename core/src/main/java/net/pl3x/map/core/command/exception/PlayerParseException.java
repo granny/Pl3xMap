@@ -25,7 +25,7 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.command.Sender.Player;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,7 +41,7 @@ public class PlayerParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public PlayerParseException(@Nullable String input, @NonNull Reason reason) {
+    public PlayerParseException(@Nullable String input, @NotNull Reason reason) {
         super(input, "<player>", reason);
     }
 }

@@ -25,12 +25,12 @@ package net.pl3x.map.core.event;
 
 import java.util.List;
 import net.pl3x.map.core.Pl3xMap;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Event {
     public void callEvent() {
         Pl3xMap.api().getEventRegistry().callEvent(this);
     }
 
-    public abstract @NonNull List<@NonNull RegisteredHandler> getHandlers();
+    public abstract @NotNull List<@NotNull RegisteredHandler> getHandlers();
 }

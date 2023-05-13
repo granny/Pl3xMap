@@ -29,15 +29,15 @@ import cloud.commandframework.context.CommandContext;
 import java.util.List;
 import java.util.function.BiFunction;
 import net.pl3x.map.core.command.argument.parser.ZoomParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link Integer} argument that belongs to a command.
  *
  * @param <C> command sender type
  */
-public class ZoomArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNull Integer> {
-    protected ZoomArgument(boolean required, @NonNull String name, @NonNull String defaultValue, @NonNull BiFunction<@NonNull CommandContext<@NonNull C>, @NonNull String, @NonNull List<@NonNull String>> suggestionsProvider, @NonNull ArgumentDescription defaultDescription) {
+public class ZoomArgument<C> extends CommandArgument<@NotNull C, @NotNull Integer> {
+    protected ZoomArgument(boolean required, @NotNull String name, @NotNull String defaultValue, @NotNull BiFunction<@NotNull CommandContext<@NotNull C>, @NotNull String, @NotNull List<@NotNull String>> suggestionsProvider, @NotNull ArgumentDescription defaultDescription) {
         super(required, name, new ZoomParser<>(), defaultValue, Integer.class, suggestionsProvider, defaultDescription);
     }
 
@@ -47,7 +47,7 @@ public class ZoomArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNu
      * @param name argument name
      * @return new player argument builder
      */
-    public static <@NonNull C> CommandArgument.@NonNull Builder<@NonNull C, @NonNull Integer> newBuilder(@NonNull String name) {
+    public static <C> CommandArgument.@NotNull Builder<@NotNull C, @NotNull Integer> newBuilder(@NotNull String name) {
         return new Builder<>(name);
     }
 
@@ -57,8 +57,8 @@ public class ZoomArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNu
      * @param name argument name
      * @return constructed player argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Integer> of(@NonNull String name) {
-        return ZoomArgument.<@NonNull C>newBuilder(name).asRequired().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Integer> of(@NotNull String name) {
+        return ZoomArgument.<@NotNull C>newBuilder(name).asRequired().build();
     }
 
     /**
@@ -69,8 +69,8 @@ public class ZoomArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNu
      * @param name argument name
      * @return constructed player argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Integer> optional(@NonNull String name) {
-        return ZoomArgument.<@NonNull C>newBuilder(name).asOptional().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Integer> optional(@NotNull String name) {
+        return ZoomArgument.<@NotNull C>newBuilder(name).asOptional().build();
     }
 
     /**
@@ -82,8 +82,8 @@ public class ZoomArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNu
      * @param defaultValue default value that will be used if none was supplied
      * @return constructed player argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Integer> optional(@NonNull String name, @NonNull String defaultValue) {
-        return ZoomArgument.<@NonNull C>newBuilder(name).asOptionalWithDefault(defaultValue).build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Integer> optional(@NotNull String name, @NotNull String defaultValue) {
+        return ZoomArgument.<@NotNull C>newBuilder(name).asOptionalWithDefault(defaultValue).build();
     }
 
     /**
@@ -91,13 +91,13 @@ public class ZoomArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNu
      *
      * @param <C> command sender type
      */
-    public static class Builder<@NonNull C> extends CommandArgument.Builder<@NonNull C, @NonNull Integer> {
-        private Builder(@NonNull String name) {
+    public static class Builder<C> extends CommandArgument.Builder<@NotNull C, @NotNull Integer> {
+        private Builder(@NotNull String name) {
             super(Integer.class, name);
         }
 
         @Override
-        public @NonNull CommandArgument<@NonNull C, @NonNull Integer> build() {
+        public @NotNull CommandArgument<@NotNull C, @NotNull Integer> build() {
             return new ZoomArgument<>(isRequired(), getName(), getDefaultValue(), getSuggestionsProvider(), getDefaultDescription());
         }
     }

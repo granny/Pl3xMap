@@ -33,12 +33,12 @@ import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class HelpCommand extends Pl3xMapCommand {
-    private final MinecraftHelp<@NonNull Sender> minecraftHelp;
+    private final MinecraftHelp<@NotNull Sender> minecraftHelp;
 
-    public HelpCommand(@NonNull CommandHandler handler) {
+    public HelpCommand(@NotNull CommandHandler handler) {
         super(handler);
         this.minecraftHelp = MinecraftHelp.createNative("/map help", handler.getManager());
         this.minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(

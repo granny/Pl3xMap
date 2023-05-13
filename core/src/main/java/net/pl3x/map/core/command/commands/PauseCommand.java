@@ -31,10 +31,10 @@ import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.renderer.task.RegionProcessor;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class PauseCommand extends Pl3xMapCommand {
-    public PauseCommand(@NonNull CommandHandler handler) {
+    public PauseCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -46,7 +46,7 @@ public class PauseCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
         Sender sender = context.getSender();
 
         RegionProcessor processor = Pl3xMap.api().getRegionProcessor();

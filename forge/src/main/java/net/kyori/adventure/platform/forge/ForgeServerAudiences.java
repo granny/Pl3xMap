@@ -40,21 +40,21 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.NotImplementedException;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class ForgeServerAudiences implements AudienceProvider {
     private final MinecraftServer server;
 
-    public ForgeServerAudiences(@NonNull MinecraftServer server) {
+    public ForgeServerAudiences(@NotNull MinecraftServer server) {
         this.server = server;
     }
 
-    private net.minecraft.network.chat.@NonNull Component toNative(@NonNull Component component) {
+    private net.minecraft.network.chat.@NotNull Component toNative(@NotNull Component component) {
         JsonElement tree = GsonComponentSerializer.gson().serializeToTree(component);
         return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(tree));
     }
 
-    public @NonNull Audience audience(@NonNull CommandSource source) {
+    public @NotNull Audience audience(@NotNull CommandSource source) {
         if (source instanceof MinecraftServer) {
             return audience(this.server.createCommandSourceStack());
         } else if (source instanceof ServerPlayer player) {
@@ -64,54 +64,54 @@ public class ForgeServerAudiences implements AudienceProvider {
         }
     }
 
-    public @NonNull Audience audience(@NonNull CommandSourceStack stack) {
+    public @NotNull Audience audience(@NotNull CommandSourceStack stack) {
         return new Audience() {
             @Override
             @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-            public void sendMessage(@NonNull Identity identity, @NonNull Component text, @NonNull MessageType type) {
+            public void sendMessage(@NotNull Identity identity, @NotNull Component text, @NotNull MessageType type) {
                 stack.sendSystemMessage(toNative(text));
             }
         };
     }
 
     @Override
-    public @NonNull Audience all() {
+    public @NotNull Audience all() {
         return Audience.audience(console(), players());
     }
 
     @Override
-    public @NonNull Audience console() {
+    public @NotNull Audience console() {
         return audience(this.server);
     }
 
     @Override
-    public @NonNull Audience players() {
+    public @NotNull Audience players() {
         return Audience.audience(this.server.getPlayerList().getPlayers().stream().map(this::audience).collect(Collectors.toList()));
     }
 
     @Override
-    public @NonNull Audience player(@NonNull UUID uuid) {
+    public @NotNull Audience player(@NotNull UUID uuid) {
         ServerPlayer player = this.server.getPlayerList().getPlayer(uuid);
         return player != null ? audience(player) : Audience.empty();
     }
 
     @Override
-    public @NonNull Audience permission(@NonNull String permission) {
+    public @NotNull Audience permission(@NotNull String permission) {
         return Audience.empty();
     }
 
     @Override
-    public @NonNull Audience world(@NonNull Key world) {
+    public @NotNull Audience world(@NotNull Key world) {
         return Audience.empty();
     }
 
     @Override
-    public @NonNull Audience server(@NonNull String serverName) {
+    public @NotNull Audience server(@NotNull String serverName) {
         return Audience.empty();
     }
 
     @Override
-    public @NonNull ComponentFlattener flattener() {
+    public @NotNull ComponentFlattener flattener() {
         throw new NotImplementedException();
     }
 

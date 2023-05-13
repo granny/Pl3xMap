@@ -36,7 +36,7 @@ import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Manages world spawn marker.
@@ -44,14 +44,14 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class SpawnLayer extends WorldLayer {
     public static final String KEY = "spawn";
 
-    private final Collection<@NonNull Marker<@NonNull ?>> markers;
+    private final Collection<@NotNull Marker<?>> markers;
 
     /**
      * Create a new spawn layer.
      *
      * @param world world
      */
-    public SpawnLayer(@NonNull World world) {
+    public SpawnLayer(@NotNull World world) {
         super(KEY, world, () -> Lang.UI_LAYER_SPAWN);
 
         Path icon = FileUtil.getWebDir().resolve("images/icon/" + KEY + ".png");
@@ -77,7 +77,7 @@ public class SpawnLayer extends WorldLayer {
     }
 
     @Override
-    public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
+    public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
         return this.markers;
     }
 }

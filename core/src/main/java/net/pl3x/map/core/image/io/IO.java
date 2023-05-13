@@ -39,11 +39,11 @@ import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.registry.Registry;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class IO {
-    private static final Registry<@NonNull Type> TYPES = new Registry<>();
+    private static final Registry<@NotNull Type> TYPES = new Registry<>();
 
     public static void register() {
         IO.register("bmp", new Bmp());
@@ -53,7 +53,7 @@ public abstract class IO {
         IO.register("png", new Png());
     }
 
-    public static void register(@NonNull String name, @NonNull Type type) {
+    public static void register(@NotNull String name, @NotNull Type type) {
         if (TYPES.has(name)) {
             throw new IllegalStateException(String.format("IO type %s already registered", name));
         }
@@ -64,11 +64,11 @@ public abstract class IO {
         TYPES.unregister();
     }
 
-    public static void unregister(@NonNull String name) {
+    public static void unregister(@NotNull String name) {
         TYPES.unregister(name);
     }
 
-    public static @NonNull Type get(@NonNull String format) {
+    public static @NotNull Type get(@NotNull String format) {
         Type type = TYPES.get(format.toLowerCase(Locale.ROOT));
         if (type == null) {
             throw new IllegalStateException("Unknown or unsupported image format");
@@ -77,11 +77,11 @@ public abstract class IO {
     }
 
     public abstract static class Type extends Keyed {
-        public Type(@NonNull String key) {
+        public Type(@NotNull String key) {
             super(key);
         }
 
-        public @NonNull BufferedImage createBuffer() {
+        public @NotNull BufferedImage createBuffer() {
             return new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
         }
 
@@ -89,7 +89,7 @@ public abstract class IO {
             return argb;
         }
 
-        public @Nullable BufferedImage read(@NonNull Path path) {
+        public @Nullable BufferedImage read(@NotNull Path path) {
             BufferedImage buffer = null;
             ImageReader reader = null;
             try (ImageInputStream in = ImageIO.createImageInputStream(Files.newInputStream(path))) {
@@ -108,7 +108,7 @@ public abstract class IO {
             return buffer;
         }
 
-        public void write(@NonNull Path path, @NonNull BufferedImage buffer) {
+        public void write(@NotNull Path path, @NotNull BufferedImage buffer) {
             ImageWriter writer = null;
             try (ImageOutputStream out = ImageIO.createImageOutputStream(path.toFile())) {
                 writer = ImageIO.getImageWritersBySuffix(getKey()).next();

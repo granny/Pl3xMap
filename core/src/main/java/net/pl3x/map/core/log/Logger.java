@@ -27,40 +27,40 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import org.apache.logging.log4j.LogManager;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Logger {
     static {
         ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new LogFilter());
     }
 
-    public static void debug(@NonNull String message) {
+    public static void debug(@NotNull String message) {
         if (Config.DEBUG_MODE) {
             log("<gray>[<yellow>DEBUG</yellow>] " + message);
         }
     }
 
-    public static void info(@NonNull String message) {
+    public static void info(@NotNull String message) {
         log("<gray>[INFO] " + message);
     }
 
-    public static void severe(@NonNull String message) {
+    public static void severe(@NotNull String message) {
         severe(message, null);
     }
 
-    public static void severe(@NonNull String message, @Nullable Throwable throwable) {
+    public static void severe(@NotNull String message, @Nullable Throwable throwable) {
         log("<gray>[<red>ERROR</red>]</gray> <red>" + message);
         if (throwable != null) {
             throwable.printStackTrace();
         }
     }
 
-    public static void warn(@NonNull String message) {
+    public static void warn(@NotNull String message) {
         warn(message, null);
     }
 
-    public static void warn(@NonNull String message, @Nullable Throwable throwable) {
+    public static void warn(@NotNull String message, @Nullable Throwable throwable) {
         log("<gray>[<yellow>WARN</yellow>]</gray> <yellow>" + message);
         if (throwable != null) {
             throwable.printStackTrace();

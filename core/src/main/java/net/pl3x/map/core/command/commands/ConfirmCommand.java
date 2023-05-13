@@ -32,10 +32,10 @@ import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfirmCommand extends Pl3xMapCommand {
-    private final CommandConfirmationManager<@NonNull Sender> confirmationManager = new CommandConfirmationManager<>(
+    private final CommandConfirmationManager<@NotNull Sender> confirmationManager = new CommandConfirmationManager<>(
             15L, TimeUnit.SECONDS,
             context -> context.getCommandContext().getSender().sendMessage(
                     Component.text().append(Lang.parse(Lang.COMMAND_CONFIRM_CONFIRMATION_REQUIRED_MESSAGE))
@@ -45,7 +45,7 @@ public class ConfirmCommand extends Pl3xMapCommand {
             sender -> sender.sendMessage(Lang.COMMAND_CONFIRM_NO_PENDING_MESSAGE)
     );
 
-    public ConfirmCommand(@NonNull CommandHandler handler) {
+    public ConfirmCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 

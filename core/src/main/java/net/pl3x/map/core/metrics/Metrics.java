@@ -53,8 +53,8 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.FileUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.simpleyaml.configuration.file.YamlConfiguration;
 
 public class Metrics {
@@ -66,7 +66,7 @@ public class Metrics {
      *
      * @param pl3xmap The Pl3xMap API instance this metrics started with.
      */
-    public Metrics(@NonNull Pl3xMap pl3xmap) throws IOException {
+    public Metrics(@NotNull Pl3xMap pl3xmap) throws IOException {
         this.pl3xmap = pl3xmap;
         // Get the config file
         Path bStatsFolder = this.pl3xmap.getMainDir().resolve("../bStats");
@@ -146,11 +146,11 @@ public class Metrics {
      *
      * @param chart The chart to add.
      */
-    public void addCustomChart(@NonNull CustomChart chart) {
+    public void addCustomChart(@NotNull CustomChart chart) {
         this.metricsBase.addCustomChart(chart);
     }
 
-    private void appendPlatformData(@NonNull JsonObjectBuilder builder) {
+    private void appendPlatformData(@NotNull JsonObjectBuilder builder) {
         builder.appendField("playerAmount", this.pl3xmap.getPlayerRegistry().size());
         builder.appendField("onlineMode", this.pl3xmap.getOnlineMode() ? 1 : 0);
         builder.appendField("bukkitVersion", this.pl3xmap.getServerVersion());
@@ -162,7 +162,7 @@ public class Metrics {
         builder.appendField("coreCount", Runtime.getRuntime().availableProcessors());
     }
 
-    private void appendServiceData(@NonNull JsonObjectBuilder builder) {
+    private void appendServiceData(@NotNull JsonObjectBuilder builder) {
         builder.appendField("pluginVersion", this.pl3xmap.getVersion());
     }
 
@@ -207,15 +207,15 @@ public class Metrics {
          * @param logResponseStatusText       Whether the response status text should be logged.
          */
         public MetricsBase(
-                @NonNull String platform,
-                @NonNull String serverUuid,
+                @NotNull String platform,
+                @NotNull String serverUuid,
                 boolean enabled,
-                @NonNull Consumer<@NonNull JsonObjectBuilder> appendPlatformDataConsumer,
-                @NonNull Consumer<@NonNull JsonObjectBuilder> appendServiceDataConsumer,
-                @NonNull Consumer<@NonNull Runnable> submitTaskConsumer,
-                @NonNull Supplier<@NonNull Boolean> checkServiceEnabledSupplier,
-                @NonNull BiConsumer<@NonNull String, @NonNull Throwable> errorLogger,
-                @NonNull Consumer<@NonNull String> infoLogger,
+                @NotNull Consumer<@NotNull JsonObjectBuilder> appendPlatformDataConsumer,
+                @NotNull Consumer<@NotNull JsonObjectBuilder> appendServiceDataConsumer,
+                @NotNull Consumer<@NotNull Runnable> submitTaskConsumer,
+                @NotNull Supplier<@NotNull Boolean> checkServiceEnabledSupplier,
+                @NotNull BiConsumer<@NotNull String, @NotNull Throwable> errorLogger,
+                @NotNull Consumer<@NotNull String> infoLogger,
                 boolean logErrors,
                 boolean logSentData,
                 boolean logResponseStatusText) {
@@ -244,7 +244,7 @@ public class Metrics {
             }
         }
 
-        public void addCustomChart(@NonNull CustomChart chart) {
+        public void addCustomChart(@NotNull CustomChart chart) {
             this.customCharts.add(chart);
         }
 
@@ -304,7 +304,7 @@ public class Metrics {
             });
         }
 
-        private void sendData(JsonObjectBuilder.@NonNull JsonObject data) throws Exception {
+        private void sendData(JsonObjectBuilder.@NotNull JsonObject data) throws Exception {
             if (this.logSentData) {
                 this.infoLogger.accept("Sent bStats metrics data: " + data);
             }
@@ -362,7 +362,7 @@ public class Metrics {
          * @param chartId  The id of the chart.
          * @param callable The callable which is used to request the chart data.
          */
-        public SimplePie(@NonNull String chartId, @NonNull Callable<@Nullable String> callable) {
+        public SimplePie(@NotNull String chartId, @NotNull Callable<@Nullable String> callable) {
             super(chartId);
             this.callable = callable;
         }
@@ -379,7 +379,7 @@ public class Metrics {
     }
 
     public static class AdvancedPie extends CustomChart {
-        private final Callable<@Nullable Map<@NonNull String, @NonNull Integer>> callable;
+        private final Callable<@Nullable Map<@NotNull String, @NotNull Integer>> callable;
 
         /**
          * Class constructor.
@@ -387,7 +387,7 @@ public class Metrics {
          * @param chartId  The id of the chart.
          * @param callable The callable which is used to request the chart data.
          */
-        public AdvancedPie(@NonNull String chartId, @NonNull Callable<@Nullable Map<@NonNull String, @NonNull Integer>> callable) {
+        public AdvancedPie(@NotNull String chartId, @NotNull Callable<@Nullable Map<@NotNull String, @NotNull Integer>> callable) {
             super(chartId);
             this.callable = callable;
         }
@@ -395,13 +395,13 @@ public class Metrics {
         @Override
         protected JsonObjectBuilder.@Nullable JsonObject getChartData() throws Exception {
             JsonObjectBuilder valuesBuilder = new JsonObjectBuilder();
-            Map<@NonNull String, @NonNull Integer> map = this.callable.call();
+            Map<@NotNull String, @NotNull Integer> map = this.callable.call();
             if (map == null || map.isEmpty()) {
                 // Null = skip the chart
                 return null;
             }
             boolean allSkipped = true;
-            for (Map.Entry<@NonNull String, @NonNull Integer> entry : map.entrySet()) {
+            for (Map.Entry<@NotNull String, @NotNull Integer> entry : map.entrySet()) {
                 if (entry.getValue() == 0) {
                     // Skip this invalid
                     continue;
@@ -418,7 +418,7 @@ public class Metrics {
     }
 
     public static class DrilldownPie extends CustomChart {
-        private final Callable<@Nullable Map<@NonNull String, @NonNull Map<@NonNull String, @NonNull Integer>>> callable;
+        private final Callable<@Nullable Map<@NotNull String, @NotNull Map<@NotNull String, @NotNull Integer>>> callable;
 
         /**
          * Class constructor.
@@ -426,7 +426,7 @@ public class Metrics {
          * @param chartId  The id of the chart.
          * @param callable The callable which is used to request the chart data.
          */
-        public DrilldownPie(@NonNull String chartId, @NonNull Callable<@Nullable Map<@NonNull String, @NonNull Map<@NonNull String, @NonNull Integer>>> callable) {
+        public DrilldownPie(@NotNull String chartId, @NotNull Callable<@Nullable Map<@NotNull String, @NotNull Map<@NotNull String, @NotNull Integer>>> callable) {
             super(chartId);
             this.callable = callable;
         }
@@ -434,16 +434,16 @@ public class Metrics {
         @Override
         public JsonObjectBuilder.JsonObject getChartData() throws Exception {
             JsonObjectBuilder valuesBuilder = new JsonObjectBuilder();
-            Map<@NonNull String, @NonNull Map<@NonNull String, @NonNull Integer>> map = this.callable.call();
+            Map<@NotNull String, @NotNull Map<@NotNull String, @NotNull Integer>> map = this.callable.call();
             if (map == null || map.isEmpty()) {
                 // Null = skip the chart
                 return null;
             }
             boolean reallyAllSkipped = true;
-            for (Map.Entry<@NonNull String, @NonNull Map<@NonNull String, @NonNull Integer>> entryValues : map.entrySet()) {
+            for (Map.Entry<@NotNull String, @NotNull Map<@NotNull String, @NotNull Integer>> entryValues : map.entrySet()) {
                 JsonObjectBuilder valueBuilder = new JsonObjectBuilder();
                 boolean allSkipped = true;
-                for (Map.Entry<@NonNull String, @NonNull Integer> valueEntry : map.get(entryValues.getKey()).entrySet()) {
+                for (Map.Entry<@NotNull String, @NotNull Integer> valueEntry : map.get(entryValues.getKey()).entrySet()) {
                     valueBuilder.appendField(valueEntry.getKey(), valueEntry.getValue());
                     allSkipped = false;
                 }
@@ -470,7 +470,7 @@ public class Metrics {
             this.chartId = chartId;
         }
 
-        public JsonObjectBuilder.@Nullable JsonObject getRequestJsonObject(@NonNull BiConsumer<@NonNull String, @NonNull Throwable> errorLogger, boolean logErrors) {
+        public JsonObjectBuilder.@Nullable JsonObject getRequestJsonObject(@NotNull BiConsumer<@NotNull String, @NotNull Throwable> errorLogger, boolean logErrors) {
             JsonObjectBuilder builder = new JsonObjectBuilder();
             builder.appendField("chartId", this.chartId);
             try {
@@ -512,7 +512,7 @@ public class Metrics {
          * @param value The value of the field.
          * @return A reference to this object.
          */
-        public @NonNull JsonObjectBuilder appendField(@NonNull String key, @Nullable String value) {
+        public @NotNull JsonObjectBuilder appendField(@NotNull String key, @Nullable String value) {
             if (value == null) {
                 throw new IllegalArgumentException("JSON value must not be null");
             }
@@ -527,7 +527,7 @@ public class Metrics {
          * @param value The value of the field.
          * @return A reference to this object.
          */
-        public @NonNull JsonObjectBuilder appendField(@NonNull String key, int value) {
+        public @NotNull JsonObjectBuilder appendField(@NotNull String key, int value) {
             appendFieldUnescaped(key, String.valueOf(value));
             return this;
         }
@@ -539,7 +539,7 @@ public class Metrics {
          * @param object The object.
          * @return A reference to this object.
          */
-        public @NonNull JsonObjectBuilder appendField(@NonNull String key, @Nullable JsonObject object) {
+        public @NotNull JsonObjectBuilder appendField(@NotNull String key, @Nullable JsonObject object) {
             if (object == null) {
                 throw new IllegalArgumentException("JSON object must not be null");
             }
@@ -554,7 +554,7 @@ public class Metrics {
          * @param values The integer array.
          * @return A reference to this object.
          */
-        public @NonNull JsonObjectBuilder appendField(@NonNull String key, @NonNull JsonObject[] values) {
+        public @NotNull JsonObjectBuilder appendField(@NotNull String key, @NotNull JsonObject[] values) {
             if (values == null) {
                 throw new IllegalArgumentException("JSON values must not be null");
             }
@@ -590,7 +590,7 @@ public class Metrics {
          *
          * @return The built JSON string.
          */
-        public @NonNull JsonObject build() {
+        public @NotNull JsonObject build() {
             if (this.builder == null) {
                 throw new IllegalStateException("JSON has already been built");
             }
@@ -609,7 +609,7 @@ public class Metrics {
          * @return The escaped value.
          */
         @SuppressWarnings("UnnecessaryUnicodeEscape")
-        private static @NonNull String escape(@NonNull String value) {
+        private static @NotNull String escape(@NotNull String value) {
             final StringBuilder builder = new StringBuilder();
             for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
@@ -638,12 +638,12 @@ public class Metrics {
         public static class JsonObject {
             private final String value;
 
-            private JsonObject(@NonNull String value) {
+            private JsonObject(@NotNull String value) {
                 this.value = value;
             }
 
             @Override
-            public @NonNull String toString() {
+            public @NotNull String toString() {
                 return value;
             }
         }

@@ -32,29 +32,29 @@ import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FabricSender extends Sender {
-    public static @NonNull Sender create(@NonNull CommandSourceStack stack) {
+    public static @NotNull Sender create(@NotNull CommandSourceStack stack) {
         if (stack.source instanceof ServerPlayer) {
             return new Player(stack);
         }
         return new FabricSender(stack);
     }
 
-    public FabricSender(@NonNull CommandSourceStack sender) {
+    public FabricSender(@NotNull CommandSourceStack sender) {
         super(sender);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NonNull CommandSourceStack getSender() {
+    public @NotNull CommandSourceStack getSender() {
         return super.getSender();
     }
 
     @Override
-    public @NonNull Audience audience() {
+    public @NotNull Audience audience() {
         return ((FabricServerAudiences) Pl3xMap.api().adventure()).audience(getSender());
     }
 
@@ -79,29 +79,29 @@ public class FabricSender extends Sender {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "FabricSender{"
                 + "sender=" + getSender().getTextName()
                 + "}";
     }
 
     public static class Player extends FabricSender implements Audience, Sender.Player<ServerPlayer> {
-        public Player(@NonNull CommandSourceStack sender) {
+        public Player(@NotNull CommandSourceStack sender) {
             super(sender);
         }
 
         @Override
-        public @NonNull ServerPlayer getPlayer() {
+        public @NotNull ServerPlayer getPlayer() {
             return (ServerPlayer) getSender().source;
         }
 
         @Override
-        public @NonNull Audience audience() {
+        public @NotNull Audience audience() {
             return Pl3xMap.api().adventure().player(getPlayer().getUUID());
         }
 
         @Override
-        public @NonNull UUID getUUID() {
+        public @NotNull UUID getUUID() {
             return getPlayer().getUUID();
         }
 
@@ -111,7 +111,7 @@ public class FabricSender extends Sender {
         }
 
         @Override
-        public @NonNull String toString() {
+        public @NotNull String toString() {
             return "FabricSender$Player{"
                     + "player=" + getPlayer().getUUID()
                     + "}";

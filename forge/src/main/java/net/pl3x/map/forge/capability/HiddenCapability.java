@@ -41,15 +41,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.forge.ForgePlayer;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @AutoRegisterCapability
 public class HiddenCapability {
     private static final ResourceLocation KEY = new ResourceLocation("pl3xmap", "hidden");
-    private static final Capability<@NonNull HiddenCapability> CAPABILITY = CapabilityManager.get(new HiddenCapability.Token());
+    private static final Capability<@NotNull HiddenCapability> CAPABILITY = CapabilityManager.get(new HiddenCapability.Token());
 
-    public static @NonNull LazyOptional<@NonNull HiddenCapability> get(@NonNull ServerPlayer player) {
+    public static @NotNull LazyOptional<@NotNull HiddenCapability> get(@NotNull ServerPlayer player) {
         return player.getCapability(CAPABILITY);
     }
 
@@ -64,14 +64,14 @@ public class HiddenCapability {
     }
 
     @SubscribeEvent
-    public void onAttachCapabilitiesEvent(@NonNull AttachCapabilitiesEvent<@NonNull Entity> event) {
+    public void onAttachCapabilitiesEvent(@NotNull AttachCapabilitiesEvent<@NotNull Entity> event) {
         if (event.getObject() instanceof ServerPlayer) {
             event.addCapability(HiddenCapability.KEY, new HiddenCapability.Provider());
         }
     }
 
     @SubscribeEvent
-    public void onPlayerCloneEvent(PlayerEvent.@NonNull Clone event) {
+    public void onPlayerCloneEvent(PlayerEvent.@NotNull Clone event) {
         if (!(event.getEntity() instanceof ServerPlayer newPlayer)) {
             return;
         }
@@ -94,11 +94,11 @@ public class HiddenCapability {
     }
 
     public static class Provider implements ICapabilityProvider, INBTSerializable<ByteTag> {
-        private final LazyOptional<@NonNull HiddenCapability> supplier = LazyOptional.of(this::getOrCreate);
+        private final LazyOptional<@NotNull HiddenCapability> supplier = LazyOptional.of(this::getOrCreate);
 
         private HiddenCapability capability;
 
-        private @NonNull HiddenCapability getOrCreate() {
+        private @NotNull HiddenCapability getOrCreate() {
             if (this.capability == null) {
                 this.capability = new HiddenCapability();
             }
@@ -106,21 +106,21 @@ public class HiddenCapability {
         }
 
         @Override
-        public @NonNull <@NonNull T> LazyOptional<@NonNull T> getCapability(@NonNull Capability<@NonNull T> cap, @Nullable Direction facing) {
+        public @NotNull <T> LazyOptional<@NotNull T> getCapability(@NotNull Capability<@NotNull T> cap, @Nullable Direction facing) {
             return CAPABILITY.orEmpty(cap, this.supplier);
         }
 
         @Override
-        public @NonNull ByteTag serializeNBT() {
+        public @NotNull ByteTag serializeNBT() {
             return ByteTag.valueOf(getOrCreate().isHidden());
         }
 
         @Override
-        public void deserializeNBT(@NonNull ByteTag nbt) {
+        public void deserializeNBT(@NotNull ByteTag nbt) {
             getOrCreate().setHidden(nbt.getAsByte() != (byte) 0);
         }
     }
 
-    private static class Token extends CapabilityToken<@NonNull HiddenCapability> {
+    private static class Token extends CapabilityToken<@NotNull HiddenCapability> {
     }
 }

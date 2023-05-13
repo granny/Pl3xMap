@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import net.pl3x.map.core.command.argument.parser.RendererParser;
 import net.pl3x.map.core.renderer.Renderer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link Renderer} argument that belongs to a command.
@@ -38,8 +38,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <C> command sender type
  */
 @SuppressWarnings("unused")
-public class RendererArgument<@NonNull C> extends CommandArgument<@NonNull C, Renderer.@NonNull Builder> {
-    protected RendererArgument(boolean required, @NonNull String name, @NonNull String defaultValue, @NonNull BiFunction<@NonNull CommandContext<@NonNull C>, @NonNull String, @NonNull List<@NonNull String>> suggestionsProvider, @NonNull ArgumentDescription defaultDescription) {
+public class RendererArgument<C> extends CommandArgument<@NotNull C, Renderer.@NotNull Builder> {
+    protected RendererArgument(boolean required, @NotNull String name, @NotNull String defaultValue, @NotNull BiFunction<@NotNull CommandContext<@NotNull C>, @NotNull String, @NotNull List<@NotNull String>> suggestionsProvider, @NotNull ArgumentDescription defaultDescription) {
         super(required, name, new RendererParser<>(), defaultValue, Renderer.Builder.class, suggestionsProvider, defaultDescription);
     }
 
@@ -49,7 +49,7 @@ public class RendererArgument<@NonNull C> extends CommandArgument<@NonNull C, Re
      * @param name argument name
      * @return new renderer argument builder
      */
-    public static <@NonNull C> CommandArgument.@NonNull Builder<@NonNull C, Renderer.@NonNull Builder> builder(@NonNull String name) {
+    public static <C> CommandArgument.@NotNull Builder<@NotNull C, Renderer.@NotNull Builder> builder(@NotNull String name) {
         return new RendererArgument.Builder<>(name);
     }
 
@@ -59,8 +59,8 @@ public class RendererArgument<@NonNull C> extends CommandArgument<@NonNull C, Re
      * @param name argument name
      * @return constructed renderer argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, Renderer.@NonNull Builder> of(@NonNull String name) {
-        return RendererArgument.<@NonNull C>builder(name).asRequired().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, Renderer.@NotNull Builder> of(@NotNull String name) {
+        return RendererArgument.<@NotNull C>builder(name).asRequired().build();
     }
 
     /**
@@ -71,8 +71,8 @@ public class RendererArgument<@NonNull C> extends CommandArgument<@NonNull C, Re
      * @param name argument name
      * @return constructed renderer argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, Renderer.@NonNull Builder> optional(@NonNull String name) {
-        return RendererArgument.<@NonNull C>builder(name).asOptional().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, Renderer.@NotNull Builder> optional(@NotNull String name) {
+        return RendererArgument.<@NotNull C>builder(name).asOptional().build();
     }
 
     /**
@@ -84,8 +84,8 @@ public class RendererArgument<@NonNull C> extends CommandArgument<@NonNull C, Re
      * @param defaultValue default value that will be used if none was supplied
      * @return constructed renderer argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, Renderer.@NonNull Builder> optional(@NonNull String name, @NonNull String defaultValue) {
-        return RendererArgument.<@NonNull C>builder(name).asOptionalWithDefault(defaultValue).build();
+    public static <C> @NotNull CommandArgument<@NotNull C, Renderer.@NotNull Builder> optional(@NotNull String name, @NotNull String defaultValue) {
+        return RendererArgument.<@NotNull C>builder(name).asOptionalWithDefault(defaultValue).build();
     }
 
     /**
@@ -93,13 +93,13 @@ public class RendererArgument<@NonNull C> extends CommandArgument<@NonNull C, Re
      *
      * @param <C> command sender type
      */
-    public static class Builder<@NonNull C> extends CommandArgument.Builder<@NonNull C, Renderer.@NonNull Builder> {
-        private Builder(@NonNull String name) {
+    public static class Builder<C> extends CommandArgument.Builder<@NotNull C, Renderer.@NotNull Builder> {
+        private Builder(@NotNull String name) {
             super(Renderer.Builder.class, name);
         }
 
         @Override
-        public @NonNull CommandArgument<@NonNull C, Renderer.@NonNull Builder> build() {
+        public @NotNull CommandArgument<@NotNull C, Renderer.@NotNull Builder> build() {
             return new RendererArgument<>(isRequired(), getName(), getDefaultValue(), getSuggestionsProvider(), getDefaultDescription());
         }
     }

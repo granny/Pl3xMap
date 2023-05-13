@@ -36,6 +36,8 @@ import net.pl3x.map.core.scheduler.Scheduler;
 import net.pl3x.map.fabric.client.duck.MapInstance;
 import net.pl3x.map.fabric.client.manager.NetworkManager;
 import net.pl3x.map.fabric.client.manager.TileManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class Pl3xMapFabricClient implements ClientModInitializer {
@@ -104,15 +106,15 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
         });
     }
 
-    public NetworkManager getNetworkManager() {
+    public @NotNull NetworkManager getNetworkManager() {
         return this.networkManager;
     }
 
-    public Scheduler getScheduler() {
+    public @NotNull Scheduler getScheduler() {
         return this.scheduler;
     }
 
-    public TileManager getTileManager() {
+    public @NotNull TileManager getTileManager() {
         return this.tileManager;
     }
 
@@ -132,7 +134,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
         this.isOnServer = isOnServer;
     }
 
-    public String getServerUrl() {
+    public @Nullable String getServerUrl() {
         return this.serverUrl;
     }
 

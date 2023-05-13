@@ -38,10 +38,10 @@ import net.pl3x.map.core.command.argument.WorldArgument;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class ResetMapCommand extends Pl3xMapCommand {
-    public ResetMapCommand(@NonNull CommandHandler handler) {
+    public ResetMapCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -55,11 +55,11 @@ public class ResetMapCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
         CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
-    private void executeAsync(@NonNull CommandContext<@NonNull Sender> context) {
+    private void executeAsync(@NotNull CommandContext<@NotNull Sender> context) {
         Sender sender = context.getSender();
         World world = context.get("world");
 

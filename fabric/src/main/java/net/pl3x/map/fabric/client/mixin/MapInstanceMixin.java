@@ -29,8 +29,10 @@ import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import net.pl3x.map.fabric.client.duck.MapInstance;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -62,13 +64,13 @@ public abstract class MapInstanceMixin implements MapInstance {
     private boolean skip;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void ctor(MapRenderer renderer, int id, MapItemSavedData data, CallbackInfo ci) {
+    private void ctor(@NotNull MapRenderer renderer, int id, @NotNull MapItemSavedData data, @NotNull CallbackInfo ci) {
         this.mod = Pl3xMapFabricClient.getInstance(); // there's got to be a better way :3
         this.id = id;
     }
 
     @Inject(method = "updateTexture()V", at = @At("HEAD"), cancellable = true)
-    private void updateTexture(CallbackInfo ci) {
+    private void updateTexture(@NotNull CallbackInfo ci) {
         if (!this.mod.isEnabled()) {
             // custom map renderers are disabled; show vanilla map
             return;
@@ -111,7 +113,7 @@ public abstract class MapInstanceMixin implements MapInstance {
     }
 
     @Override
-    public void setData(byte scale, int centerX, int centerZ, String world) {
+    public void setData(byte scale, int centerX, int centerZ, @NotNull String world) {
         // received data from server
         this.scale = scale;
         this.centerX = centerX;
@@ -149,7 +151,7 @@ public abstract class MapInstanceMixin implements MapInstance {
                 img = this.mod.getTileManager().get(this.world, blockX >> 9, blockZ >> 9);
 
                 // get pixel color from tile
-                this.image.setRGB(x, z, rgb2bgr(img.getRGB(blockX & 511, blockZ & 511)));
+                this.image.setRGB(x, z, Colors.rgb2bgr(img.getRGB(blockX & 511, blockZ & 511)));
             }
         }
 
@@ -194,15 +196,5 @@ public abstract class MapInstanceMixin implements MapInstance {
         // finalize the texture
         this.texture.upload();
         return true;
-    }
-
-    private int rgb2bgr(int color) {
-        // Minecraft flips red and blue for some reason
-        // lets flip them back
-        int a = color >> 24 & 0xFF;
-        int r = color >> 16 & 0xFF;
-        int g = color >> 8 & 0xFF;
-        int b = color & 0xFF;
-        return (a << 24) | (b << 16) | (g << 8) | r;
     }
 }

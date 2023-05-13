@@ -26,7 +26,7 @@ package net.pl3x.map.core.command;
 import cloud.commandframework.minecraft.extras.RichDescription;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a Pl3xMap command.
@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public abstract class Pl3xMapCommand {
     private final CommandHandler handler;
 
-    protected Pl3xMapCommand(@NonNull CommandHandler handler) {
+    protected Pl3xMapCommand(@NotNull CommandHandler handler) {
         this.handler = handler;
     }
 
@@ -43,7 +43,7 @@ public abstract class Pl3xMapCommand {
      *
      * @return command handler
      */
-    public @NonNull CommandHandler getHandler() {
+    public @NotNull CommandHandler getHandler() {
         return this.handler;
     }
 
@@ -59,7 +59,7 @@ public abstract class Pl3xMapCommand {
      * @param placeholders placeholders
      * @return rich description
      */
-    protected static @NonNull RichDescription description(@NonNull String description, @NonNull TagResolver.@NonNull Single... placeholders) {
+    protected static @NotNull RichDescription description(@NotNull String description, @NotNull TagResolver.@NotNull Single... placeholders) {
         return RichDescription.of(Lang.parse(description, placeholders));
     }
 }

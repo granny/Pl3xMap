@@ -23,10 +23,12 @@
  */
 package net.pl3x.map.fabric.client.duck;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface MapInstance {
     void skip();
 
-    void setData(byte scale, int centerX, int centerZ, String world);
+    void setData(byte scale, int centerX, int centerZ, @NotNull String world);
 
     void updateImage();
 }

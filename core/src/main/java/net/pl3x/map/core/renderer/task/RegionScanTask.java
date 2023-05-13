@@ -36,16 +36,16 @@ import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RegionScanTask implements Runnable {
     private final World world;
     private final Point regionPos;
 
-    private final Map<@NonNull String, @NonNull Renderer> renderers = new LinkedHashMap<>();
+    private final Map<@NotNull String, @NotNull Renderer> renderers = new LinkedHashMap<>();
 
-    public RegionScanTask(@NonNull World world, @NonNull Point regionPos) {
+    public RegionScanTask(@NotNull World world, @NotNull Point regionPos) {
         this.world = world;
         this.regionPos = regionPos;
 
@@ -63,11 +63,11 @@ public class RegionScanTask implements Runnable {
         });
     }
 
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         return this.world;
     }
 
-    public @Nullable Renderer getRenderer(@NonNull String id) {
+    public @Nullable Renderer getRenderer(@NotNull String id) {
         return this.renderers.get(id);
     }
 
@@ -103,7 +103,7 @@ public class RegionScanTask implements Runnable {
         }
     }
 
-    private @NonNull Region loadRegion() {
+    private @NotNull Region loadRegion() {
         Region region = this.world.getRegion(null, this.regionPos.x(), this.regionPos.z());
         try {
             region.loadChunks();
@@ -113,7 +113,7 @@ public class RegionScanTask implements Runnable {
         return region;
     }
 
-    private void scanRegion(@NonNull Region region) {
+    private void scanRegion(@NotNull Region region) {
         for (Renderer renderer : this.renderers.values()) {
             Pl3xMap.api().getRegionProcessor().checkPaused();
             renderer.scanData(region);

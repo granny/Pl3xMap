@@ -38,8 +38,8 @@ import net.pl3x.map.core.world.BlockState;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Renderer extends Keyed {
     private final RegionScanTask task;
@@ -49,7 +49,7 @@ public abstract class Renderer extends Keyed {
 
     private TileImage tileImage;
 
-    public Renderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+    public Renderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
         super(builder.getKey());
         this.task = task;
         this.name = builder.getName();
@@ -59,35 +59,35 @@ public abstract class Renderer extends Keyed {
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
     }
 
-    public @NonNull RegionScanTask getRegionScanTask() {
+    public @NotNull RegionScanTask getRegionScanTask() {
         return this.task;
     }
 
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         return this.world;
     }
 
-    public @NonNull String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 
-    public @NonNull Heightmap getHeightmap() {
+    public @NotNull Heightmap getHeightmap() {
         return this.heightmap;
     }
 
-    public @NonNull TileImage getTileImage() {
+    public @NotNull TileImage getTileImage() {
         return this.tileImage;
     }
 
-    public void allocateData(@NonNull Point region) {
+    public void allocateData(@NotNull Point region) {
         this.tileImage = new TileImage(getKey(), getWorld(), region);
     }
 
-    public void saveData(@NonNull Point region) {
+    public void saveData(@NotNull Point region) {
         this.tileImage.saveToDisk();
     }
 
-    public void scanData(@NonNull Region region) {
+    public void scanData(@NotNull Region region) {
         int cX = region.getX() << 5;
         int cZ = region.getZ() << 5;
 
@@ -121,9 +121,9 @@ public abstract class Renderer extends Keyed {
         }
     }
 
-    public abstract void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ);
+    public abstract void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ);
 
-    public int basicPixelColor(@NonNull Region region, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
+    public int basicPixelColor(@NotNull Region region, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
         // fluid stuff
         boolean isFluid = data.getFluidState() != null;
         boolean flatFluid = isFluid && !region.getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
@@ -163,7 +163,7 @@ public abstract class Renderer extends Keyed {
         return pixelColor;
     }
 
-    public int fancyFluids(@NonNull Region region, @NonNull Biome biome, @NonNull BlockState fluidstate, int blockX, int blockZ, float depth) {
+    public int fancyFluids(@NotNull Region region, @NotNull Biome biome, @NotNull BlockState fluidstate, int blockX, int blockZ, float depth) {
         // let's do some maths to get pretty fluid colors based on depth
         int color;
         if (fluidstate.getBlock().isWater()) {
@@ -178,7 +178,7 @@ public abstract class Renderer extends Keyed {
         return color;
     }
 
-    public int calculateLight(@NonNull Chunk chunk, @Nullable BlockState fluidState, int blockX, int blockY, int blockZ, int fluidY, int pixelColor) {
+    public int calculateLight(@NotNull Chunk chunk, @Nullable BlockState fluidState, int blockX, int blockY, int blockZ, int fluidY, int pixelColor) {
         // get light level right above this block
         int blockLight;
         if (fluidState != null && !fluidState.getBlock().isWater()) {
@@ -207,20 +207,20 @@ public abstract class Renderer extends Keyed {
     }
 
     public static final class Builder extends Keyed {
-        private final @NonNull String name;
-        private final @NonNull Class<@NonNull ? extends @NonNull Renderer> clazz;
+        private final @NotNull String name;
+        private final @NotNull Class<? extends @NotNull Renderer> clazz;
 
-        public Builder(@NonNull String key, @NonNull String name, @NonNull Class<@NonNull ? extends @NonNull Renderer> clazz) {
+        public Builder(@NotNull String key, @NotNull String name, @NotNull Class<? extends @NotNull Renderer> clazz) {
             super(key);
             this.name = name;
             this.clazz = clazz;
         }
 
-        public @NonNull String getName() {
+        public @NotNull String getName() {
             return name;
         }
 
-        public @NonNull Class<@NonNull ? extends @NonNull Renderer> getClazz() {
+        public @NotNull Class<? extends @NotNull Renderer> getClazz() {
             return clazz;
         }
 
@@ -240,7 +240,7 @@ public abstract class Renderer extends Keyed {
         }
 
         @Override
-        public @NonNull String toString() {
+        public @NotNull String toString() {
             return "Builder[" +
                     "key=" + getKey() + ", " +
                     "name=" + name + ", " +

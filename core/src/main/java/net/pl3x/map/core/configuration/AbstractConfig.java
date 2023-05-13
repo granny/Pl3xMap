@@ -34,8 +34,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.StringUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.comments.CommentType;
 import org.simpleyaml.configuration.file.YamlFile;
@@ -44,11 +44,11 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public abstract class AbstractConfig {
     private YamlFile config;
 
-    public @NonNull YamlFile getConfig() {
+    public @NotNull YamlFile getConfig() {
         return this.config;
     }
 
-    protected void reload(@NonNull Path path, @NonNull Class<? extends @NonNull AbstractConfig> clazz) {
+    protected void reload(@NotNull Path path, @NotNull Class<? extends @NotNull AbstractConfig> clazz) {
         // read yaml from file
         this.config = new YamlFile(path.toFile());
         try {
@@ -93,23 +93,23 @@ public abstract class AbstractConfig {
         return null;
     }
 
-    protected @Nullable Object getValue(@NonNull String path, @Nullable Object def) {
+    protected @Nullable Object getValue(@NotNull String path, @Nullable Object def) {
         if (getConfig().get(path) == null) {
             set(path, def);
         }
         return get(path, def);
     }
 
-    protected void setComment(@NonNull String path, @Nullable String comment) {
+    protected void setComment(@NotNull String path, @Nullable String comment) {
         getConfig().setComment(path, comment, CommentType.BLOCK);
     }
 
-    protected @Nullable Object get(@NonNull String path, @Nullable Object def) {
+    protected @Nullable Object get(@NotNull String path, @Nullable Object def) {
         Object val = get(path);
         return val == null ? def : val;
     }
 
-    protected @Nullable Object get(@NonNull String path) {
+    protected @Nullable Object get(@NotNull String path) {
         Object value = getConfig().get(path);
         if (!(value instanceof ConfigurationSection section)) {
             return value;
@@ -125,23 +125,23 @@ public abstract class AbstractConfig {
         return map;
     }
 
-    protected @NonNull Object addToMap(@NonNull String rawValue) {
+    protected @NotNull Object addToMap(@NotNull String rawValue) {
         return rawValue;
     }
 
-    protected void set(@NonNull String path, @Nullable Object value) {
+    protected void set(@NotNull String path, @Nullable Object value) {
         getConfig().set(path, value);
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Key {
-        @NonNull String value();
+        @NotNull String value();
     }
 
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Comment {
-        @NonNull String value();
+        @NotNull String value();
     }
 }

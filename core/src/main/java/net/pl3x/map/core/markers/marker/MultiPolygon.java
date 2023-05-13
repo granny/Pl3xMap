@@ -33,17 +33,17 @@ import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.util.Preconditions;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a multi-polygon marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
-    private final List<@NonNull Polygon> polygons = new ArrayList<>();
+public class MultiPolygon extends Marker<@NotNull MultiPolygon> {
+    private final List<@NotNull Polygon> polygons = new ArrayList<>();
 
-    private MultiPolygon(@NonNull String key) {
+    private MultiPolygon(@NotNull String key) {
         super("multipoly", key);
     }
 
@@ -53,7 +53,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param key     identifying key
      * @param polygon polygon to add
      */
-    public MultiPolygon(@NonNull String key, @NonNull Polygon polygon) {
+    public MultiPolygon(@NotNull String key, @NotNull Polygon polygon) {
         this(key);
         addPolygon(polygon);
     }
@@ -64,7 +64,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param key      identifying key
      * @param polygons polygons to add
      */
-    public MultiPolygon(@NonNull String key, @NonNull Polygon @NonNull ... polygons) {
+    public MultiPolygon(@NotNull String key, @NotNull Polygon @NotNull ... polygons) {
         this(key);
         addPolygon(polygons);
     }
@@ -75,7 +75,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param key      identifying key
      * @param polygons polygons to add
      */
-    public MultiPolygon(@NonNull String key, @NonNull Collection<@NonNull Polygon> polygons) {
+    public MultiPolygon(@NotNull String key, @NotNull Collection<@NotNull Polygon> polygons) {
         this(key);
         addPolygon(polygons);
     }
@@ -87,7 +87,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygon polygon to add
      * @return a new multi-polygon
      */
-    public static @NonNull MultiPolygon of(@NonNull String key, @NonNull Polygon polygon) {
+    public static @NotNull MultiPolygon of(@NotNull String key, @NotNull Polygon polygon) {
         return new MultiPolygon(key, polygon);
     }
 
@@ -98,7 +98,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    public static @NonNull MultiPolygon of(@NonNull String key, @NonNull Polygon @NonNull ... polygons) {
+    public static @NotNull MultiPolygon of(@NotNull String key, @NotNull Polygon @NotNull ... polygons) {
         return new MultiPolygon(key, polygons);
     }
 
@@ -109,7 +109,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    public static @NonNull MultiPolygon of(@NonNull String key, @NonNull Collection<@NonNull Polygon> polygons) {
+    public static @NotNull MultiPolygon of(@NotNull String key, @NotNull Collection<@NotNull Polygon> polygons) {
         return new MultiPolygon(key, polygons);
     }
 
@@ -118,7 +118,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      *
      * @return list of polygons
      */
-    public @NonNull List<@NonNull Polygon> getPolygons() {
+    public @NotNull List<@NotNull Polygon> getPolygons() {
         return this.polygons;
     }
 
@@ -127,7 +127,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      *
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon clearPolygons() {
+    public @NotNull MultiPolygon clearPolygons() {
         this.polygons.clear();
         return this;
     }
@@ -138,7 +138,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygon polygon to add
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon addPolygon(@NonNull Polygon polygon) {
+    public @NotNull MultiPolygon addPolygon(@NotNull Polygon polygon) {
         Preconditions.checkNotNull(polygon, "MultiPolygon polygon is null");
         this.polygons.add(polygon);
         return this;
@@ -150,7 +150,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygons polygons to add
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon addPolygon(@NonNull Polygon @NonNull ... polygons) {
+    public @NotNull MultiPolygon addPolygon(@NotNull Polygon @NotNull ... polygons) {
         Preconditions.checkNotNull(polygons, "MultiPolygon polygons is null");
         for (Polygon polygon : polygons) {
             addPolygon(polygon);
@@ -164,7 +164,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygons polygons to add
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon addPolygon(@NonNull Collection<@NonNull Polygon> polygons) {
+    public @NotNull MultiPolygon addPolygon(@NotNull Collection<@NotNull Polygon> polygons) {
         Preconditions.checkNotNull(polygons, "MultiPolygon polygons is null");
         this.polygons.addAll(polygons);
         return this;
@@ -176,7 +176,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygon polygon to remove
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon removePoly(@NonNull Polygon polygon) {
+    public @NotNull MultiPolygon removePoly(@NotNull Polygon polygon) {
         Preconditions.checkNotNull(polygon, "MultiPolygon polygon is null");
         this.polygons.remove(polygon);
         return this;
@@ -188,7 +188,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygons polygons to remove
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon removePoly(@NonNull Polygon @NonNull ... polygons) {
+    public @NotNull MultiPolygon removePoly(@NotNull Polygon @NotNull ... polygons) {
         Preconditions.checkNotNull(polygons, "MultiPolygon polygons is null");
         for (Polygon polygon : polygons) {
             removePoly(polygon);
@@ -202,14 +202,14 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
      * @param polygons polygons to remove
      * @return this multi-polygon
      */
-    public @NonNull MultiPolygon removePoly(@NonNull Collection<@NonNull Polygon> polygons) {
+    public @NotNull MultiPolygon removePoly(@NotNull Collection<@NotNull Polygon> polygons) {
         Preconditions.checkNotNull(polygons, "MultiPolygon polygons is null");
         this.polygons.removeAll(polygons);
         return this;
     }
 
     @Override
-    public @NonNull JsonObject toJson() {
+    public @NotNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polygons", getPolygons());
@@ -217,7 +217,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
         return wrapper.getJsonObject();
     }
 
-    public static @NonNull MultiPolygon fromJson(@NonNull JsonObject obj) {
+    public static @NotNull MultiPolygon fromJson(@NotNull JsonObject obj) {
         JsonElement el;
         MultiPolygon multiPolygon = MultiPolygon.of(obj.get("key").getAsString());
         if ((el = obj.get("polygons")) != null && !(el instanceof JsonNull)) {
@@ -254,7 +254,7 @@ public class MultiPolygon extends Marker<@NonNull MultiPolygon> {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "MultiPolygon{"
                 + "key=" + getKey()
                 + ",polygons=" + getPolygons()

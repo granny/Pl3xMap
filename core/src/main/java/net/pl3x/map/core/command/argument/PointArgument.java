@@ -33,7 +33,7 @@ import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.command.argument.parser.PointParser;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link Point} argument that belongs to a command.
@@ -41,8 +41,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <C> command sender type
  */
 @SuppressWarnings("unused")
-public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNull Point> {
-    protected PointArgument(boolean required, @NonNull String name, @NonNull String defaultValue, @NonNull BiFunction<@NonNull CommandContext<@NonNull C>, @NonNull String, @NonNull List<@NonNull String>> suggestionsProvider, @NonNull ArgumentDescription defaultDescription) {
+public class PointArgument<C> extends CommandArgument<@NotNull C, @NotNull Point> {
+    protected PointArgument(boolean required, @NotNull String name, @NotNull String defaultValue, @NotNull BiFunction<@NotNull CommandContext<@NotNull C>, @NotNull String, @NotNull List<@NotNull String>> suggestionsProvider, @NotNull ArgumentDescription defaultDescription) {
         super(required, name, new PointParser<>(), defaultValue, Point.class, suggestionsProvider, defaultDescription);
     }
 
@@ -52,7 +52,7 @@ public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name argument name
      * @return new point argument builder
      */
-    public static <@NonNull C> CommandArgument.@NonNull Builder<@NonNull C, @NonNull Point> builder(@NonNull String name) {
+    public static <C> CommandArgument.@NotNull Builder<@NotNull C, @NotNull Point> builder(@NotNull String name) {
         return new PointArgument.Builder<>(name);
     }
 
@@ -62,8 +62,8 @@ public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name argument name
      * @return constructed point argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Point> of(@NonNull String name) {
-        return PointArgument.<@NonNull C>builder(name).asRequired().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Point> of(@NotNull String name) {
+        return PointArgument.<@NotNull C>builder(name).asRequired().build();
     }
 
     /**
@@ -74,8 +74,8 @@ public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name argument name
      * @return constructed point argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Point> optional(@NonNull String name) {
-        return PointArgument.<@NonNull C>builder(name).asOptional().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Point> optional(@NotNull String name) {
+        return PointArgument.<@NotNull C>builder(name).asOptional().build();
     }
 
     /**
@@ -87,8 +87,8 @@ public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param defaultValue default value that will be used if none was supplied
      * @return constructed point argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Point> optional(@NonNull String name, @NonNull String defaultValue) {
-        return PointArgument.<@NonNull C>builder(name).asOptionalWithDefault(defaultValue).build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Point> optional(@NotNull String name, @NotNull String defaultValue) {
+        return PointArgument.<@NotNull C>builder(name).asOptionalWithDefault(defaultValue).build();
     }
 
     /**
@@ -100,7 +100,7 @@ public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name    argument name
      * @return player
      */
-    public static @NonNull Point resolve(@NonNull CommandContext<@NonNull Sender> context, @NonNull String name) {
+    public static @NotNull Point resolve(@NotNull CommandContext<@NotNull Sender> context, @NotNull String name) {
         Sender sender = context.getSender();
         Point point = context.getOrDefault(name, null);
         if (point != null) {
@@ -120,13 +120,13 @@ public class PointArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      *
      * @param <C> command sender type
      */
-    public static class Builder<@NonNull C> extends CommandArgument.Builder<@NonNull C, @NonNull Point> {
-        private Builder(@NonNull String name) {
+    public static class Builder<C> extends CommandArgument.Builder<@NotNull C, @NotNull Point> {
+        private Builder(@NotNull String name) {
             super(Point.class, name);
         }
 
         @Override
-        public @NonNull CommandArgument<@NonNull C, @NonNull Point> build() {
+        public @NotNull CommandArgument<@NotNull C, @NotNull Point> build() {
             return new PointArgument<>(isRequired(), getName(), getDefaultValue(), getSuggestionsProvider(), getDefaultDescription());
         }
     }

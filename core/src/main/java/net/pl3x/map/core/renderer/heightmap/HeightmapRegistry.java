@@ -24,9 +24,9 @@
 package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.registry.Registry;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
-public class HeightmapRegistry extends Registry<@NonNull Heightmap> {
+public class HeightmapRegistry extends Registry<@NotNull Heightmap> {
     public void register() {
         register(new EvenOddHeightmap());
         register(new EvenOddLowContrastHeightmap());

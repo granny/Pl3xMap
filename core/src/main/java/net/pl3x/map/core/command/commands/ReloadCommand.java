@@ -31,10 +31,10 @@ import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class ReloadCommand extends Pl3xMapCommand {
-    public ReloadCommand(@NonNull CommandHandler handler) {
+    public ReloadCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -46,7 +46,7 @@ public class ReloadCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    public void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    public void execute(@NotNull CommandContext<@NotNull Sender> context) {
         Pl3xMap.api().disable();
 
         Pl3xMap.api().enable();

@@ -24,7 +24,7 @@
 package net.pl3x.map.core.image.io;
 
 import java.awt.image.BufferedImage;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class Jpg extends IO.Type {
     public Jpg() {
@@ -32,7 +32,7 @@ public class Jpg extends IO.Type {
     }
 
     @Override
-    public @NonNull BufferedImage createBuffer() {
+    public @NotNull BufferedImage createBuffer() {
         return new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
     }
 

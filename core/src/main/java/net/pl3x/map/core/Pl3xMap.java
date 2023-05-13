@@ -59,11 +59,11 @@ import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Pl3xMap {
-    public static @NonNull Pl3xMap api() {
+    public static @NotNull Pl3xMap api() {
         return Provider.api();
     }
 
@@ -133,51 +133,51 @@ public abstract class Pl3xMap {
         return this.enabled;
     }
 
-    public @NonNull HttpdServer getHttpdServer() {
+    public @NotNull HttpdServer getHttpdServer() {
         return this.httpdServer;
     }
 
-    public @NonNull RegionProcessor getRegionProcessor() {
+    public @NotNull RegionProcessor getRegionProcessor() {
         return this.regionProcessor;
     }
 
-    public @NonNull RegionDoubleChecker getRegionDoubleChecker() {
+    public @NotNull RegionDoubleChecker getRegionDoubleChecker() {
         return this.regionDoubleChecker;
     }
 
-    public @NonNull BlockRegistry getBlockRegistry() {
+    public @NotNull BlockRegistry getBlockRegistry() {
         return this.blockRegistry;
     }
 
-    public @NonNull EventRegistry getEventRegistry() {
+    public @NotNull EventRegistry getEventRegistry() {
         return this.eventRegistry;
     }
 
-    public @NonNull HeightmapRegistry getHeightmapRegistry() {
+    public @NotNull HeightmapRegistry getHeightmapRegistry() {
         return this.heightmapRegistry;
     }
 
-    public @NonNull IconRegistry getIconRegistry() {
+    public @NotNull IconRegistry getIconRegistry() {
         return this.iconRegistry;
     }
 
-    public @NonNull PlayerRegistry getPlayerRegistry() {
+    public @NotNull PlayerRegistry getPlayerRegistry() {
         return this.playerRegistry;
     }
 
-    public @NonNull RendererRegistry getRendererRegistry() {
+    public @NotNull RendererRegistry getRendererRegistry() {
         return this.rendererRegistry;
     }
 
-    public @NonNull WorldRegistry getWorldRegistry() {
+    public @NotNull WorldRegistry getWorldRegistry() {
         return this.worldRegistry;
     }
 
-    public @NonNull ExecutorService getRenderExecutor() {
+    public @NotNull ExecutorService getRenderExecutor() {
         return this.renderExecutor;
     }
 
-    public @NonNull Scheduler getScheduler() {
+    public @NotNull Scheduler getScheduler() {
         return this.scheduler;
     }
 
@@ -301,11 +301,11 @@ public abstract class Pl3xMap {
         getBlockRegistry().unregister();
     }
 
-    public abstract @NonNull String getPlatform();
+    public abstract @NotNull String getPlatform();
 
-    public abstract @NonNull String getVersion();
+    public abstract @NotNull String getVersion();
 
-    public @NonNull String getVersionCommit() {
+    public @NotNull String getVersionCommit() {
         if (this.commit == null) {
             if (this.manifest == null) {
                 this.commit = "unknown";
@@ -322,15 +322,15 @@ public abstract class Pl3xMap {
 
     public abstract String getServerVersion();
 
-    public abstract @NonNull AudienceProvider adventure();
+    public abstract @NotNull AudienceProvider adventure();
 
-    public abstract @NonNull Path getMainDir();
+    public abstract @NotNull Path getMainDir();
 
-    public abstract @NonNull Path getJarPath();
+    public abstract @NotNull Path getJarPath();
 
     public abstract int getColorForPower(byte power);
 
-    public abstract @Nullable Block getFlower(@NonNull World world, @NonNull Biome biome, int blockX, int blockY, int blockZ);
+    public abstract @Nullable Block getFlower(@NotNull World world, @NotNull Biome biome, int blockX, int blockY, int blockZ);
 
     protected abstract void loadBlocks();
 
@@ -338,12 +338,12 @@ public abstract class Pl3xMap {
 
     protected abstract void loadPlayers();
 
-    public abstract @NonNull World cloneWorld(@NonNull World world);
+    public abstract @NotNull World cloneWorld(@NotNull World world);
 
     protected static final class Provider {
         static Pl3xMap api;
 
-        static @NonNull Pl3xMap api() {
+        static @NotNull Pl3xMap api() {
             return Provider.api;
         }
     }
@@ -354,27 +354,27 @@ public abstract class Pl3xMap {
 
         private final AtomicInteger id = new AtomicInteger();
 
-        public ThreadFactory(@NonNull String name, int threads) {
+        public ThreadFactory(@NotNull String name, int threads) {
             this.name = name;
             this.threads = threads;
         }
 
-        public static @NonNull ExecutorService createService(@NonNull String name) {
+        public static @NotNull ExecutorService createService(@NotNull String name) {
             return createService(new ThreadFactory(name, 1));
         }
 
-        public static @NonNull ExecutorService createService(@NonNull String name, int threads) {
+        public static @NotNull ExecutorService createService(@NotNull String name, int threads) {
             int max = Runtime.getRuntime().availableProcessors() / 2;
             int parallelism = Mathf.clamp(1, max, threads < 1 ? max : threads);
             return createService(new ThreadFactory(name, parallelism));
         }
 
-        private static @NonNull ExecutorService createService(@NonNull ThreadFactory factory) {
+        private static @NotNull ExecutorService createService(@NotNull ThreadFactory factory) {
             return new ForkJoinPool(factory.threads, factory, null, false);
         }
 
         @Override
-        public @NonNull ForkJoinWorkerThread newThread(@NonNull ForkJoinPool pool) {
+        public @NotNull ForkJoinWorkerThread newThread(@NotNull ForkJoinPool pool) {
             ForkJoinWorkerThread thread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
             // use current classloader, this fixes ClassLoading issues with forge
             thread.setContextClassLoader(Pl3xMap.class.getClassLoader());

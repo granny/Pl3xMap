@@ -29,14 +29,14 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.util.Preconditions;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages player specific data
  */
-public class PlayerRegistry extends Registry<@NonNull Player> {
-    public @NonNull Player getOrDefault(@NonNull UUID uuid, @NonNull Supplier<@NonNull Player> supplier) {
+public class PlayerRegistry extends Registry<@NotNull Player> {
+    public @NotNull Player getOrDefault(@NotNull UUID uuid, @NotNull Supplier<@NotNull Player> supplier) {
         Player player = get(uuid);
         if (player == null) {
             player = supplier.get();
@@ -45,13 +45,13 @@ public class PlayerRegistry extends Registry<@NonNull Player> {
         return player;
     }
 
-    public @NonNull Player register(@NonNull UUID uuid, @NonNull Player player) {
+    public @NotNull Player register(@NotNull UUID uuid, @NotNull Player player) {
         Preconditions.checkNotNull(uuid, "UUID cannot be null");
         Preconditions.checkNotNull(player, "Player cannot be null");
         return super.register(uuid.toString(), player);
     }
 
-    public @Nullable Player unregister(@NonNull UUID uuid) {
+    public @Nullable Player unregister(@NotNull UUID uuid) {
         return super.unregister(uuid.toString());
     }
 
@@ -63,7 +63,7 @@ public class PlayerRegistry extends Registry<@NonNull Player> {
      * @param uuid player uuid
      * @return registered player or null
      */
-    public @Nullable Player get(@NonNull UUID uuid) {
+    public @Nullable Player get(@NotNull UUID uuid) {
         return super.get(uuid.toString());
     }
 
@@ -75,7 +75,7 @@ public class PlayerRegistry extends Registry<@NonNull Player> {
      * @param name player name
      * @return registered player or null
      */
-    public @Nullable Player get(@NonNull String name) {
+    public @Nullable Player get(@NotNull String name) {
         String lowercaseName = name.toLowerCase(Locale.ROOT);
         for (Player player : values()) {
             if (player.getName().toLowerCase(Locale.ROOT).equals(lowercaseName)) {
@@ -85,7 +85,7 @@ public class PlayerRegistry extends Registry<@NonNull Player> {
         return null;
     }
 
-    public @NonNull Optional<Player> optional(@NonNull UUID uuid) {
+    public @NotNull Optional<Player> optional(@NotNull UUID uuid) {
         Player player = get(uuid);
         return player == null ? Optional.empty() : Optional.of(player);
     }

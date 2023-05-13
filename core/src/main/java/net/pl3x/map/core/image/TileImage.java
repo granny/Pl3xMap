@@ -39,11 +39,11 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TileImage extends Keyed {
-    private static final Map<@NonNull Path, @NonNull ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+    private static final Map<@NotNull Path, @NotNull ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     public static final String DIR_PATH = "%d/%s/";
     public static final String FILE_PATH = "%d_%d.%s";
@@ -57,7 +57,7 @@ public class TileImage extends Keyed {
 
     private boolean written = false;
 
-    public TileImage(@NonNull String key, @NonNull World world, @NonNull Point region) {
+    public TileImage(@NotNull String key, @NotNull World world, @NotNull Point region) {
         super(key);
         this.world = world;
         this.region = region;
@@ -114,7 +114,7 @@ public class TileImage extends Keyed {
         }
     }
 
-    private @NonNull BufferedImage getBuffer(@NonNull Path path) throws IOException {
+    private @NotNull BufferedImage getBuffer(@NotNull Path path) throws IOException {
         BufferedImage buffer = null;
 
         // try to read existing image
@@ -130,7 +130,7 @@ public class TileImage extends Keyed {
         return buffer;
     }
 
-    private void writePixels(@NonNull BufferedImage buffer, int size, int zoom) {
+    private void writePixels(@NotNull BufferedImage buffer, int size, int zoom) {
         int step = 1 << zoom;
         int baseX = (this.region.x() * size) & 0x1FF;
         int baseZ = (this.region.z() * size) & 0x1FF;
@@ -191,7 +191,7 @@ public class TileImage extends Keyed {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "TileImage{"
                 + "key=" + getKey()
                 + ",region=" + this.region

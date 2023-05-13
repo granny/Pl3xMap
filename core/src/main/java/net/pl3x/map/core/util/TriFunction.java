@@ -23,9 +23,9 @@
  */
 package net.pl3x.map.core.util;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface
-public interface TriFunction<@NonNull T, @NonNull U, @NonNull V, @NonNull R> {
-    @NonNull R apply(@NonNull T t, @NonNull U u, @NonNull V v);
+public interface TriFunction<T, U, V, R> {
+    @NotNull R apply(@NotNull T t, @NotNull U u, @NotNull V v);
 }

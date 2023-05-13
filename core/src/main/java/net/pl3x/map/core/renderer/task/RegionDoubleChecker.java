@@ -10,11 +10,11 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Mathf;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class RegionDoubleChecker implements Runnable {
     private final Executor executor;
-    private CompletableFuture<@NonNull Void> future;
+    private CompletableFuture<@NotNull Void> future;
 
     private boolean running;
 

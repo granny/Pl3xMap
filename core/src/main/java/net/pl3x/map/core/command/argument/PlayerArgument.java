@@ -34,15 +34,15 @@ import net.pl3x.map.core.command.argument.parser.PlayerParser;
 import net.pl3x.map.core.command.exception.PlayerParseException;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.player.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link Player} argument that belongs to a command.
  *
  * @param <C> command sender type
  */
-public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNull Player> {
-    protected PlayerArgument(boolean required, @NonNull String name, @NonNull String defaultValue, @NonNull BiFunction<@NonNull CommandContext<@NonNull C>, @NonNull String, @NonNull List<@NonNull String>> suggestionsProvider, @NonNull ArgumentDescription defaultDescription) {
+public class PlayerArgument<C> extends CommandArgument<@NotNull C, @NotNull Player> {
+    protected PlayerArgument(boolean required, @NotNull String name, @NotNull String defaultValue, @NotNull BiFunction<@NotNull CommandContext<@NotNull C>, @NotNull String, @NotNull List<@NotNull String>> suggestionsProvider, @NotNull ArgumentDescription defaultDescription) {
         super(required, name, new PlayerParser<>(), defaultValue, Player.class, suggestionsProvider, defaultDescription);
     }
 
@@ -52,7 +52,7 @@ public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @Non
      * @param name argument name
      * @return new player argument builder
      */
-    public static <@NonNull C> CommandArgument.@NonNull Builder<@NonNull C, @NonNull Player> newBuilder(@NonNull String name) {
+    public static <C> CommandArgument.@NotNull Builder<@NotNull C, @NotNull Player> newBuilder(@NotNull String name) {
         return new Builder<>(name);
     }
 
@@ -62,8 +62,8 @@ public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @Non
      * @param name argument name
      * @return constructed player argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Player> of(@NonNull String name) {
-        return PlayerArgument.<@NonNull C>newBuilder(name).asRequired().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Player> of(@NotNull String name) {
+        return PlayerArgument.<@NotNull C>newBuilder(name).asRequired().build();
     }
 
     /**
@@ -74,8 +74,8 @@ public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @Non
      * @param name argument name
      * @return constructed player argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Player> optional(@NonNull String name) {
-        return PlayerArgument.<@NonNull C>newBuilder(name).asOptional().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Player> optional(@NotNull String name) {
+        return PlayerArgument.<@NotNull C>newBuilder(name).asOptional().build();
     }
 
     /**
@@ -87,8 +87,8 @@ public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @Non
      * @param defaultValue default value that will be used if none was supplied
      * @return constructed player argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull Player> optional(@NonNull String name, @NonNull String defaultValue) {
-        return PlayerArgument.<@NonNull C>newBuilder(name).asOptionalWithDefault(defaultValue).build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull Player> optional(@NotNull String name, @NotNull String defaultValue) {
+        return PlayerArgument.<@NotNull C>newBuilder(name).asOptionalWithDefault(defaultValue).build();
     }
 
     /**
@@ -101,7 +101,7 @@ public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @Non
      * @return player
      * @throws PlayerParseException if context did not contain a {@link Player} and the sender is not a {@link net.pl3x.map.core.command.Sender.Player}
      */
-    public static @NonNull Player resolve(@NonNull CommandContext<@NonNull Sender> context, @NonNull String name) {
+    public static @NotNull Player resolve(@NotNull CommandContext<@NotNull Sender> context, @NotNull String name) {
         Sender sender = context.getSender();
         Player player = context.getOrDefault(name, null);
         if (player != null) {
@@ -122,13 +122,13 @@ public class PlayerArgument<@NonNull C> extends CommandArgument<@NonNull C, @Non
      *
      * @param <C> command sender type
      */
-    public static class Builder<@NonNull C> extends CommandArgument.Builder<@NonNull C, @NonNull Player> {
-        private Builder(@NonNull String name) {
+    public static class Builder<C> extends CommandArgument.Builder<@NotNull C, @NotNull Player> {
+        private Builder(@NotNull String name) {
             super(Player.class, name);
         }
 
         @Override
-        public @NonNull CommandArgument<@NonNull C, @NonNull Player> build() {
+        public @NotNull CommandArgument<@NotNull C, @NotNull Player> build() {
             return new PlayerArgument<>(isRequired(), getName(), getDefaultValue(), getSuggestionsProvider(), getDefaultDescription());
         }
     }

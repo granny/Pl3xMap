@@ -37,9 +37,9 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
-public class BlockRegistry extends Registry<@NonNull Block> {
+public class BlockRegistry extends Registry<@NotNull Block> {
     private static final Gson GSON = new GsonBuilder().create();
 
     private final Map<String, Integer> indexMap;
@@ -79,7 +79,7 @@ public class BlockRegistry extends Registry<@NonNull Block> {
         }
     }
 
-    public @NonNull Block register(@NonNull String id, int color) {
+    public @NotNull Block register(@NotNull String id, int color) {
         Block block = super.get(id);
         if (block != null) {
             return block; // block already registered
@@ -91,7 +91,7 @@ public class BlockRegistry extends Registry<@NonNull Block> {
     }
 
     @Override
-    public @NonNull Block get(@NonNull String id) {
+    public @NotNull Block get(@NotNull String id) {
         return getOrDefault(id, Blocks.AIR);
     }
 

@@ -32,9 +32,9 @@ import net.pl3x.map.core.renderer.InhabitedRenderer;
 import net.pl3x.map.core.renderer.NightRenderer;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
-public class RendererRegistry extends Registry<Renderer.@NonNull Builder> {
+public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
     public static final String BASIC = "basic";
     public static final String BIOMES = "biomes";
     public static final String BLOCKINFO = "blockinfo";
@@ -51,7 +51,7 @@ public class RendererRegistry extends Registry<Renderer.@NonNull Builder> {
         register(NIGHT, new Renderer.Builder(NIGHT, "Night", NightRenderer.class));
     }
 
-    public @NonNull Renderer createRenderer(@NonNull RegionScanTask task, Renderer.@NonNull Builder builder) {
+    public @NotNull Renderer createRenderer(@NotNull RegionScanTask task, Renderer.@NotNull Builder builder) {
         try {
             return builder.getClazz().getConstructor(RegionScanTask.class, Renderer.Builder.class).newInstance(task, builder);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {

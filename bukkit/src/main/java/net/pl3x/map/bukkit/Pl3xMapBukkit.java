@@ -40,7 +40,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     private final Pl3xMapImpl pl3xmap;
@@ -110,7 +110,7 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerJoin(@NonNull PlayerJoinEvent event) {
+    public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
         UUID uuid = event.getPlayer().getUniqueId();
         Player bukkitPlayer = registry.getOrDefault(uuid, () -> new BukkitPlayer(event.getPlayer()));
@@ -118,7 +118,7 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(@NonNull PlayerQuitEvent event) {
+    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
         UUID uuid = event.getPlayer().getUniqueId();
         Player bukkitPlayer = registry.unregister(uuid);

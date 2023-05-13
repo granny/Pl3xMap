@@ -33,7 +33,7 @@ import net.pl3x.map.core.markers.marker.Polyline;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Manages world border marker.
@@ -48,7 +48,7 @@ public class WorldBorderLayer extends WorldLayer {
      *
      * @param world world
      */
-    public WorldBorderLayer(@NonNull World world) {
+    public WorldBorderLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_WORLDBORDER);
         setUpdateInterval(15);
         setShowControls(true);
@@ -70,13 +70,13 @@ public class WorldBorderLayer extends WorldLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public WorldBorderLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
+    public WorldBorderLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
         super(key, world, labelSupplier);
         this.polyline = Marker.polyline(KEY).setOptions(getOptions());
     }
 
     @Override
-    public @NonNull Collection<@NonNull Marker<@NonNull ?>> getMarkers() {
+    public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
         return Collections.singletonList(this.polyline.clearPoints().addPoint(
                 Point.of(getWorld().getBorderMinX(), getWorld().getBorderMinZ()),
                 Point.of(getWorld().getBorderMaxX(), getWorld().getBorderMinZ()),

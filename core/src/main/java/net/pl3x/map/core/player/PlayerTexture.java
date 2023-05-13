@@ -35,7 +35,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Task to fetch and save a players skin.
@@ -58,7 +58,7 @@ public class PlayerTexture extends Thread {
     private final UUID uuid;
     private final URL url;
 
-    public PlayerTexture(@NonNull Player player) {
+    public PlayerTexture(@NotNull Player player) {
         this.uuid = player.getUUID();
         URL url = player.getSkin();
         if (url == null) {
@@ -92,11 +92,11 @@ public class PlayerTexture extends Thread {
         }
     }
 
-    private static @NonNull BufferedImage get2DHead(@NonNull BufferedImage source) {
+    private static @NotNull BufferedImage get2DHead(@NotNull BufferedImage source) {
         return getPart(source, 8, 8);
     }
 
-    private static @NonNull BufferedImage get3DHead(@NonNull BufferedImage source) {
+    private static @NotNull BufferedImage get3DHead(@NotNull BufferedImage source) {
         // get parts
         BufferedImage left = getPart(source, 8, 8);
         BufferedImage right = getPart(source, 16, 8);
@@ -134,7 +134,7 @@ public class PlayerTexture extends Thread {
         return result;
     }
 
-    private static @NonNull BufferedImage getPart(@NonNull BufferedImage source, int x, int y) {
+    private static @NotNull BufferedImage getPart(@NotNull BufferedImage source, int x, int y) {
         BufferedImage head = source.getSubimage(x, y, 8, 8);
         BufferedImage helm = source.getSubimage(x + 32, y, 8, 8);
         BufferedImage result = new BufferedImage(32, 32, source.getType());
@@ -150,14 +150,14 @@ public class PlayerTexture extends Thread {
         return result;
     }
 
-    private static @NonNull BufferedImage flip(@NonNull BufferedImage src) {
+    private static @NotNull BufferedImage flip(@NotNull BufferedImage src) {
         AffineTransform at = new AffineTransform();
         at.concatenate(AffineTransform.getScaleInstance(-1, 1));
         at.concatenate(AffineTransform.getTranslateInstance(-src.getWidth(), 0));
         return transform(src, at);
     }
 
-    private static @NonNull BufferedImage rotate(@NonNull BufferedImage src, double angle) {
+    private static @NotNull BufferedImage rotate(@NotNull BufferedImage src, double angle) {
         int w = src.getWidth();
         int h = src.getHeight();
         double sin = Math.abs(Math.sin(angle));
@@ -176,17 +176,17 @@ public class PlayerTexture extends Thread {
         return dest;
     }
 
-    private static @NonNull BufferedImage scale(@NonNull BufferedImage src, double scaleX, double scaleY) {
+    private static @NotNull BufferedImage scale(@NotNull BufferedImage src, double scaleX, double scaleY) {
         AffineTransform at = AffineTransform.getScaleInstance(scaleX, scaleY);
         return transform(src, at);
     }
 
-    private static @NonNull BufferedImage shear(@NonNull BufferedImage src) {
+    private static @NotNull BufferedImage shear(@NotNull BufferedImage src) {
         AffineTransform at = AffineTransform.getShearInstance(0.577375, 0);
         return transform(src, at);
     }
 
-    private static @NonNull BufferedImage transform(@NonNull BufferedImage src, @NonNull AffineTransform at) {
+    private static @NotNull BufferedImage transform(@NotNull BufferedImage src, @NotNull AffineTransform at) {
         return new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC).filter(src, null);
     }
 }

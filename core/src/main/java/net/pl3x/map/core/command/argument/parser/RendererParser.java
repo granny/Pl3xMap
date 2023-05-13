@@ -33,7 +33,7 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.exception.RendererParseException;
 import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.renderer.Renderer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
@@ -42,9 +42,9 @@ import static cloud.commandframework.arguments.parser.ArgumentParseResult.succes
  *
  * @param <C> command sender type
  */
-public class RendererParser<@NonNull C> implements ArgumentParser<@NonNull C, Renderer.@NonNull Builder> {
+public class RendererParser<C> implements ArgumentParser<@NotNull C, Renderer.@NotNull Builder> {
     @Override
-    public @NonNull ArgumentParseResult<Renderer.@NonNull Builder> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> queue) {
+    public @NotNull ArgumentParseResult<Renderer.@NotNull Builder> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
             return failure(new RendererParseException(null, RendererParseException.MUST_SPECIFY_RENDERER));
@@ -60,7 +60,7 @@ public class RendererParser<@NonNull C> implements ArgumentParser<@NonNull C, Re
     }
 
     @Override
-    public @NonNull List<@NonNull String> suggestions(@NonNull CommandContext<@NonNull C> commandContext, @NonNull String input) {
+    public @NotNull List<@NotNull String> suggestions(@NotNull CommandContext<@NotNull C> commandContext, @NotNull String input) {
         return Pl3xMap.api().getRendererRegistry()
                 .values().stream()
                 .map(Renderer.Builder::getKey)

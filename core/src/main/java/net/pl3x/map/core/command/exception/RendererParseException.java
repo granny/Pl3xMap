@@ -25,7 +25,7 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.renderer.Renderer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,7 +41,7 @@ public class RendererParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public RendererParseException(@Nullable String input, @NonNull Reason reason) {
+    public RendererParseException(@Nullable String input, @NotNull Reason reason) {
         super(input, "<renderer>", reason);
     }
 }

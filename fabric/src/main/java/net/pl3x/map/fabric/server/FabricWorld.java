@@ -39,12 +39,12 @@ import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class FabricWorld extends World {
     private final ServerLevel level;
 
-    public FabricWorld(@NonNull ServerLevel level, @NonNull String name) {
+    public FabricWorld(@NotNull ServerLevel level, @NotNull String name) {
         super(
                 name,
                 level.getSeed(),
@@ -81,8 +81,8 @@ public class FabricWorld extends World {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public <@NonNull T> @NonNull T getLevel() {
-        return (@NonNull T) this.level;
+    public <T> @NotNull T getLevel() {
+        return (@NotNull T) this.level;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class FabricWorld extends World {
     }
 
     @Override
-    public @NonNull Collection<@NonNull Player> getPlayers() {
+    public @NotNull Collection<@NotNull Player> getPlayers() {
         return this.<ServerLevel>getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
                 .filter(Objects::nonNull)
@@ -139,7 +139,7 @@ public class FabricWorld extends World {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "FabricWorld{"
                 + "name=" + getName()
                 + ",seed=" + getSeed()

@@ -33,13 +33,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class RegionModifiedState {
-    private final Map<@NonNull Long, @NonNull Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
+    private final Map<@NotNull Long, @NotNull Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
     private final File file;
 
-    public RegionModifiedState(@NonNull World world) {
+    public RegionModifiedState(@NotNull World world) {
         this.file = world.getTilesDirectory().resolve(".rms").toFile();
 
         if (this.file.exists()) {

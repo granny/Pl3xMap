@@ -28,18 +28,18 @@ import java.util.Objects;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Region;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Heightmap extends Keyed {
     public final int[] x = new int[16];
     public final int[] z = new int[16];
 
-    public Heightmap(@NonNull String name) {
+    public Heightmap(@NotNull String name) {
         super(name);
     }
 
-    public abstract int getColor(@NonNull Region region, int blockX, int blockZ);
+    public abstract int getColor(@NotNull Region region, int blockX, int blockZ);
 
     public int getColor(int y1, int y2, int heightColor, int step) {
         if (y1 > y2) {
@@ -73,7 +73,7 @@ public abstract class Heightmap extends Keyed {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Heightmap{"
                 + "key=" + getKey()
                 + ",x=" + Arrays.toString(this.x)

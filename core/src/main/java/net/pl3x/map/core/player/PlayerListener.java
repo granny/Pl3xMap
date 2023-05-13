@@ -23,7 +23,7 @@
  */
 package net.pl3x.map.core.player;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Player event listener.
@@ -34,7 +34,7 @@ public class PlayerListener {
      *
      * @param player player that joined
      */
-    public void onJoin(@NonNull Player player) {
+    public void onJoin(@NotNull Player player) {
         if (player.isHidden()) {
             player.setHidden(true, false);
         }
@@ -46,6 +46,6 @@ public class PlayerListener {
      *
      * @param player player that left
      */
-    public void onQuit(@NonNull Player player) {
+    public void onQuit(@NotNull Player player) {
     }
 }

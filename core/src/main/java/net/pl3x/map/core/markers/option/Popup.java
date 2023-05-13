@@ -29,13 +29,13 @@ import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Popup properties of a marker.
  */
-public class Popup extends Option<@NonNull Popup> {
+public class Popup extends Option<@NotNull Popup> {
     public static final Point DEFAULT_OFFSET = Point.of(0, 7);
     public static final Point DEFAULT_AUTO_PAN_PADDING = Point.of(5, 5);
 
@@ -91,7 +91,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param content popup content
      * @return this popup rule
      */
-    public @NonNull Popup setContent(@Nullable String content) {
+    public @NotNull Popup setContent(@Nullable String content) {
         this.content = content;
         return this;
     }
@@ -117,7 +117,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param pane map pane
      * @return this popup rule
      */
-    public @NonNull Popup setPane(@Nullable String pane) {
+    public @NotNull Popup setPane(@Nullable String pane) {
         this.pane = pane;
         return this;
     }
@@ -141,7 +141,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param offset popup offset
      * @return this popup rule
      */
-    public @NonNull Popup setOffset(@Nullable Point offset) {
+    public @NotNull Popup setOffset(@Nullable Point offset) {
         this.offset = offset;
         return this;
     }
@@ -165,7 +165,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param maxWidth max width
      * @return this popup rule
      */
-    public @NonNull Popup setMaxWidth(@Nullable Integer maxWidth) {
+    public @NotNull Popup setMaxWidth(@Nullable Integer maxWidth) {
         this.maxWidth = maxWidth;
         return this;
     }
@@ -189,7 +189,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param minWidth min width
      * @return this popup rule
      */
-    public @NonNull Popup setMinWidth(@Nullable Integer minWidth) {
+    public @NotNull Popup setMinWidth(@Nullable Integer minWidth) {
         this.minWidth = minWidth;
         return this;
     }
@@ -215,7 +215,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param maxHeight max height
      * @return this popup rule
      */
-    public @NonNull Popup setMaxHeight(@Nullable Integer maxHeight) {
+    public @NotNull Popup setMaxHeight(@Nullable Integer maxHeight) {
         this.maxHeight = maxHeight;
         return this;
     }
@@ -239,7 +239,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param autoPan true to auto pan
      * @return this popup rule
      */
-    public @NonNull Popup setShouldAutoPan(@Nullable Boolean autoPan) {
+    public @NotNull Popup setShouldAutoPan(@Nullable Boolean autoPan) {
         this.autoPan = autoPan;
         return this;
     }
@@ -265,7 +265,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param autoPanPaddingTopLeft top left corner padding margins
      * @return this popup rule
      */
-    public @NonNull Popup setAutoPanPaddingTopLeft(@Nullable Point autoPanPaddingTopLeft) {
+    public @NotNull Popup setAutoPanPaddingTopLeft(@Nullable Point autoPanPaddingTopLeft) {
         this.autoPanPaddingTopLeft = autoPanPaddingTopLeft;
         return this;
     }
@@ -291,7 +291,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param autoPanPaddingBottomRight bottom right corner padding margins
      * @return this popup rule
      */
-    public @NonNull Popup setAutoPanPaddingBottomRight(@Nullable Point autoPanPaddingBottomRight) {
+    public @NotNull Popup setAutoPanPaddingBottomRight(@Nullable Point autoPanPaddingBottomRight) {
         this.autoPanPaddingBottomRight = autoPanPaddingBottomRight;
         return this;
     }
@@ -321,7 +321,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param autoPanPadding padding margins
      * @return this popup rule
      */
-    public @NonNull Popup setAutoPanPadding(@Nullable Point autoPanPadding) {
+    public @NotNull Popup setAutoPanPadding(@Nullable Point autoPanPadding) {
         this.autoPanPadding = autoPanPadding;
         return this;
     }
@@ -349,7 +349,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param keepInView true to keep popup in view
      * @return this popup rule
      */
-    public @NonNull Popup setShouldKeepInView(@Nullable Boolean keepInView) {
+    public @NotNull Popup setShouldKeepInView(@Nullable Boolean keepInView) {
         this.keepInView = keepInView;
         return this;
     }
@@ -373,7 +373,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param closeButton true if popup has close button
      * @return this popup rule
      */
-    public @NonNull Popup setCloseButton(@Nullable Boolean closeButton) {
+    public @NotNull Popup setCloseButton(@Nullable Boolean closeButton) {
         this.closeButton = closeButton;
         return this;
     }
@@ -397,7 +397,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param autoClose true if popup auto closes
      * @return this popup rule
      */
-    public @NonNull Popup setShouldAutoClose(@Nullable Boolean autoClose) {
+    public @NotNull Popup setShouldAutoClose(@Nullable Boolean autoClose) {
         this.autoClose = autoClose;
         return this;
     }
@@ -421,7 +421,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param closeOnEscapeKey true to close with escape
      * @return this popup rule
      */
-    public @NonNull Popup setShouldCloseOnEscapeKey(@Nullable Boolean closeOnEscapeKey) {
+    public @NotNull Popup setShouldCloseOnEscapeKey(@Nullable Boolean closeOnEscapeKey) {
         this.closeOnEscapeKey = closeOnEscapeKey;
         return this;
     }
@@ -445,7 +445,7 @@ public class Popup extends Option<@NonNull Popup> {
      * @param closeOnClick true to close on map click
      * @return this popup rule
      */
-    public @NonNull Popup setShouldCloseOnClick(@Nullable Boolean closeOnClick) {
+    public @NotNull Popup setShouldCloseOnClick(@Nullable Boolean closeOnClick) {
         this.closeOnClick = closeOnClick;
         return this;
     }
@@ -470,7 +470,7 @@ public class Popup extends Option<@NonNull Popup> {
     }
 
     @Override
-    public @NonNull JsonObject toJson() {
+    public @NotNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("content", getContent());
         wrapper.addProperty("pane", getPane());
@@ -490,7 +490,7 @@ public class Popup extends Option<@NonNull Popup> {
         return wrapper.getJsonObject();
     }
 
-    public static @NonNull Popup fromJson(@NonNull JsonObject obj) {
+    public static @NotNull Popup fromJson(@NotNull JsonObject obj) {
         JsonElement el;
         Popup popup = new Popup();
         if ((el = obj.get("content")) != null && !(el instanceof JsonNull)) popup.setContent(el.getAsString());
@@ -531,13 +531,13 @@ public class Popup extends Option<@NonNull Popup> {
                 && isClosingEqual(other);
     }
 
-    private boolean isSizeEqual(@NonNull Popup other) {
+    private boolean isSizeEqual(@NotNull Popup other) {
         return Objects.equals(getMaxWidth(), other.getMaxWidth())
                 && Objects.equals(getMinWidth(), other.getMinWidth())
                 && Objects.equals(getMaxHeight(), other.getMaxHeight());
     }
 
-    private boolean isPanningEqual(@NonNull Popup other) {
+    private boolean isPanningEqual(@NotNull Popup other) {
         return Objects.equals(shouldAutoPan(), other.shouldAutoPan())
                 && Objects.equals(getAutoPanPaddingTopLeft(), other.getAutoPanPaddingTopLeft())
                 && Objects.equals(getAutoPanPaddingBottomRight(), other.getAutoPanPaddingBottomRight())
@@ -545,7 +545,7 @@ public class Popup extends Option<@NonNull Popup> {
                 && Objects.equals(shouldKeepInView(), other.shouldKeepInView());
     }
 
-    private boolean isClosingEqual(@NonNull Popup other) {
+    private boolean isClosingEqual(@NotNull Popup other) {
         return Objects.equals(hasCloseButton(), other.hasCloseButton())
                 && Objects.equals(shouldAutoClose(), other.shouldAutoClose())
                 && Objects.equals(shouldCloseOnEscapeKey(), other.shouldCloseOnEscapeKey())
@@ -560,7 +560,7 @@ public class Popup extends Option<@NonNull Popup> {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Popup{"
                 + ",content=" + getContent()
                 + ",pane=" + getPane()

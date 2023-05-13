@@ -58,8 +58,8 @@ import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.fabric.server.command.FabricCommandManager;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModInitializer {
     @SuppressWarnings("deprecation")
@@ -137,7 +137,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
         });
     }
 
-    public @NonNull ModContainer getModContainer() {
+    public @NotNull ModContainer getModContainer() {
         if (this.modContainer == null) {
             this.modContainer = FabricLoader.getInstance().getModContainer("pl3xmap").orElseThrow();
         }
@@ -145,12 +145,12 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     }
 
     @Override
-    public @NonNull String getPlatform() {
+    public @NotNull String getPlatform() {
         return this.server.getServerModName().toLowerCase(Locale.ROOT);
     }
 
     @Override
-    public @NonNull String getVersion() {
+    public @NotNull String getVersion() {
         return getModContainer().getMetadata().getVersion().getFriendlyString();
     }
 
@@ -170,7 +170,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     }
 
     @Override
-    public @NonNull AudienceProvider adventure() {
+    public @NotNull AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");
         }
@@ -178,12 +178,12 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     }
 
     @Override
-    public @NonNull Path getMainDir() {
+    public @NotNull Path getMainDir() {
         return FabricLoader.getInstance().getGameDir().resolve("config").resolve("pl3xmap");
     }
 
     @Override
-    public @NonNull Path getJarPath() {
+    public @NotNull Path getJarPath() {
         return getModContainer().getOrigin().getPaths().get(0);
     }
 
@@ -193,7 +193,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     }
 
     @Override
-    public net.pl3x.map.core.world.@Nullable Block getFlower(@NonNull World world, net.pl3x.map.core.world.@NonNull Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(@NotNull World world, net.pl3x.map.core.world.@NotNull Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
         Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(new ResourceLocation(biome.getKey()));
         if (nms == null) {
@@ -236,7 +236,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     }
 
     @Override
-    public @NonNull World cloneWorld(@NonNull World world) {
+    public @NotNull World cloneWorld(@NotNull World world) {
         return new FabricWorld(world.getLevel(), world.getName());
     }
 

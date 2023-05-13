@@ -50,8 +50,8 @@ import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Pl3xMapImpl extends Pl3xMap {
     @SuppressWarnings("deprecation")
@@ -61,7 +61,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     private BukkitAudiences adventure;
     private Path jarPath;
 
-    public Pl3xMapImpl(@NonNull JavaPlugin plugin) {
+    public Pl3xMapImpl(@NotNull JavaPlugin plugin) {
         super();
         this.plugin = plugin;
     }
@@ -82,13 +82,13 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NonNull String getPlatform() {
+    public @NotNull String getPlatform() {
         return Bukkit.getName().toLowerCase(Locale.ROOT);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public @NonNull String getVersion() {
+    public @NotNull String getVersion() {
         return this.plugin.getDescription().getVersion();
     }
 
@@ -108,7 +108,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NonNull AudienceProvider adventure() {
+    public @NotNull AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");
         }
@@ -116,12 +116,12 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NonNull Path getMainDir() {
+    public @NotNull Path getMainDir() {
         return this.plugin.getDataFolder().toPath();
     }
 
     @Override
-    public @NonNull Path getJarPath() {
+    public @NotNull Path getJarPath() {
         if (this.jarPath == null) {
             try {
                 this.jarPath = Path.of(Pl3xMap.class.getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -138,7 +138,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public net.pl3x.map.core.world.@Nullable Block getFlower(@NonNull World world, net.pl3x.map.core.world.@NonNull Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(@NotNull World world, net.pl3x.map.core.world.@NotNull Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
         Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(new ResourceLocation(biome.getKey()));
         if (nms == null) {
@@ -182,7 +182,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NonNull World cloneWorld(@NonNull World world) {
+    public @NotNull World cloneWorld(@NotNull World world) {
         return new BukkitWorld(world.getLevel(), world.getName());
     }
 }

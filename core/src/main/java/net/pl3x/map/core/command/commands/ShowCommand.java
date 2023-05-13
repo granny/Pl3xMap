@@ -32,10 +32,10 @@ import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.command.argument.PlayerArgument;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.player.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class ShowCommand extends Pl3xMapCommand {
-    public ShowCommand(@NonNull CommandHandler handler) {
+    public ShowCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -52,7 +52,7 @@ public class ShowCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
         Sender sender = context.getSender();
         Player target = PlayerArgument.resolve(context, "player");
 

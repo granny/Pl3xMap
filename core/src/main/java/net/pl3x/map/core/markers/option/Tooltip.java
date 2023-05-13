@@ -30,13 +30,13 @@ import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Mathf;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Tooltip properties of a marker.
  */
-public class Tooltip extends Option<@NonNull Tooltip> {
+public class Tooltip extends Option<@NotNull Tooltip> {
     public static final Point DEFAULT_OFFSET = Point.ZERO;
 
     private String content;
@@ -83,7 +83,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param content tooltip content
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setContent(@Nullable String content) {
+    public @NotNull Tooltip setContent(@Nullable String content) {
         this.content = content;
         return this;
     }
@@ -109,7 +109,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param pane map pane
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setPane(@Nullable String pane) {
+    public @NotNull Tooltip setPane(@Nullable String pane) {
         this.pane = pane;
         return this;
     }
@@ -133,7 +133,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param offset tooltip offset
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setOffset(@Nullable Point offset) {
+    public @NotNull Tooltip setOffset(@Nullable Point offset) {
         this.offset = offset;
         return this;
     }
@@ -157,7 +157,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param direction opening direction
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setDirection(@Nullable Direction direction) {
+    public @NotNull Tooltip setDirection(@Nullable Direction direction) {
         this.direction = direction;
         return this;
     }
@@ -181,7 +181,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param permanent opened permanently
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setPermanent(@Nullable Boolean permanent) {
+    public @NotNull Tooltip setPermanent(@Nullable Boolean permanent) {
         this.permanent = permanent;
         return this;
     }
@@ -209,7 +209,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param sticky sticky state
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setSticky(@Nullable Boolean sticky) {
+    public @NotNull Tooltip setSticky(@Nullable Boolean sticky) {
         this.sticky = sticky;
         return this;
     }
@@ -233,7 +233,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
      * @param opacity tooltip opacity
      * @return this tooltip rule
      */
-    public @NonNull Tooltip setOpacity(@Nullable Double opacity) {
+    public @NotNull Tooltip setOpacity(@Nullable Double opacity) {
         this.opacity = opacity == null ? null : Mathf.clamp(0D, 1D, opacity);
         return this;
     }
@@ -250,7 +250,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
     }
 
     @Override
-    public @NonNull JsonObject toJson() {
+    public @NotNull JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("content", getContent());
         wrapper.addProperty("pane", getPane());
@@ -262,7 +262,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
         return wrapper.getJsonObject();
     }
 
-    public static @NonNull Tooltip fromJson(@NonNull JsonObject obj) {
+    public static @NotNull Tooltip fromJson(@NotNull JsonObject obj) {
         JsonElement el;
         Tooltip tooltip = new Tooltip();
         if ((el = obj.get("content")) != null && !(el instanceof JsonNull)) tooltip.setContent(el.getAsString());
@@ -302,7 +302,7 @@ public class Tooltip extends Option<@NonNull Tooltip> {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Tooltip{"
                 + ",content=" + getContent()
                 + ",pane=" + getPane()

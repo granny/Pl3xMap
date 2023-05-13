@@ -61,8 +61,8 @@ import net.pl3x.map.core.renderer.task.RegionFileWatcher;
 import net.pl3x.map.core.renderer.task.UpdateMarkerData;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Mathf;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class World extends Keyed {
     public static final PathMatcher JSON_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.json");
@@ -81,15 +81,15 @@ public abstract class World extends Keyed {
 
     private final BiomeManager biomeManager;
     private final BiomeRegistry biomeRegistry;
-    private final Registry<@NonNull Layer> layerRegistry;
+    private final Registry<@NotNull Layer> layerRegistry;
 
-    private final LoadingCache<@NonNull Long, @NonNull Region> regionCache;
+    private final LoadingCache<@NotNull Long, @NotNull Region> regionCache;
     private final RegionModifiedState regionModifiedState;
     private final RegionFileWatcher regionFileWatcher;
     private final UpdateMarkerData markerTask;
-    private final Map<@NonNull String, Renderer.@NonNull Builder> renderers = new LinkedHashMap<>();
+    private final Map<@NotNull String, Renderer.@NotNull Builder> renderers = new LinkedHashMap<>();
 
-    public World(@NonNull String name, long seed, @NonNull Point spawn, @NonNull Type type, @NonNull Path regionDirectory) {
+    public World(@NotNull String name, long seed, @NotNull Point spawn, @NotNull Type type, @NotNull Path regionDirectory) {
         super(name);
 
         this.seed = seed;
@@ -184,39 +184,39 @@ public abstract class World extends Keyed {
         getRegionModifiedState().save();
     }
 
-    public @NonNull Path getCustomMarkersDirectory() {
+    public @NotNull Path getCustomMarkersDirectory() {
         return this.customMarkersDirectory;
     }
 
-    public @NonNull Path getMarkersDirectory() {
+    public @NotNull Path getMarkersDirectory() {
         return this.markersDirectory;
     }
 
-    public @NonNull Path getRegionDirectory() {
+    public @NotNull Path getRegionDirectory() {
         return this.regionDirectory;
     }
 
-    public @NonNull Path getTilesDirectory() {
+    public @NotNull Path getTilesDirectory() {
         return this.tilesDirectory;
     }
 
-    public @NonNull WorldConfig getConfig() {
+    public @NotNull WorldConfig getConfig() {
         return this.worldConfig;
     }
 
-    public @NonNull RegionModifiedState getRegionModifiedState() {
+    public @NotNull RegionModifiedState getRegionModifiedState() {
         return this.regionModifiedState;
     }
 
-    public @NonNull RegionFileWatcher getRegionFileWatcher() {
+    public @NotNull RegionFileWatcher getRegionFileWatcher() {
         return this.regionFileWatcher;
     }
 
-    public @NonNull UpdateMarkerData getMarkerTask() {
+    public @NotNull UpdateMarkerData getMarkerTask() {
         return this.markerTask;
     }
 
-    public @NonNull Map<@NonNull String, Renderer.@NonNull Builder> getRenderers() {
+    public @NotNull Map<@NotNull String, Renderer.@NotNull Builder> getRenderers() {
         return Collections.unmodifiableMap(this.renderers);
     }
 
@@ -229,7 +229,7 @@ public abstract class World extends Keyed {
         return getConfig().ENABLED;
     }
 
-    public @NonNull String getName() {
+    public @NotNull String getName() {
         return getKey();
     }
 
@@ -237,7 +237,7 @@ public abstract class World extends Keyed {
         return this.seed;
     }
 
-    public @NonNull Point getSpawn() {
+    public @NotNull Point getSpawn() {
         return this.spawn;
     }
 
@@ -250,23 +250,23 @@ public abstract class World extends Keyed {
      *
      * @return world type
      */
-    public @NonNull Type getType() {
+    public @NotNull Type getType() {
         return this.type;
     }
 
-    public @NonNull BiomeManager getBiomeManager() {
+    public @NotNull BiomeManager getBiomeManager() {
         return this.biomeManager;
     }
 
-    public @NonNull BiomeRegistry getBiomeRegistry() {
+    public @NotNull BiomeRegistry getBiomeRegistry() {
         return this.biomeRegistry;
     }
 
-    public @NonNull Registry<Layer> getLayerRegistry() {
+    public @NotNull Registry<Layer> getLayerRegistry() {
         return this.layerRegistry;
     }
 
-    public abstract <@NonNull T> @NonNull T getLevel();
+    public abstract <T> @NotNull T getLevel();
 
     public abstract long hashSeed(long seed);
 
@@ -286,7 +286,7 @@ public abstract class World extends Keyed {
 
     public abstract double getBorderMaxZ();
 
-    public abstract @NonNull Collection<@NonNull Player> getPlayers();
+    public abstract @NotNull Collection<@NotNull Player> getPlayers();
 
     public boolean visibleBlock(int blockX, int blockZ) {
         for (Area area : getConfig().VISIBLE_AREAS) {
@@ -315,18 +315,18 @@ public abstract class World extends Keyed {
         return getConfig().VISIBLE_AREAS.isEmpty();
     }
 
-    public @NonNull Chunk getChunk(@Nullable Region region, int chunkX, int chunkZ) {
+    public @NotNull Chunk getChunk(@Nullable Region region, int chunkX, int chunkZ) {
         return getRegion(region, chunkX >> 5, chunkZ >> 5).getChunk(chunkX, chunkZ);
     }
 
-    public @NonNull Region getRegion(@Nullable Region region, int regionX, int regionZ) {
+    public @NotNull Region getRegion(@Nullable Region region, int regionX, int regionZ) {
         if (region != null && region.getX() == regionX && region.getZ() == regionZ) {
             return region;
         }
         return getRegion(Mathf.asLong(regionX, regionZ));
     }
 
-    private @NonNull Region getRegion(long pos) {
+    private @NotNull Region getRegion(long pos) {
         return this.regionCache.get(pos);
     }
 
@@ -338,7 +338,7 @@ public abstract class World extends Keyed {
         this.regionCache.invalidate(pos);
     }
 
-    public @NonNull Collection<@NonNull Path> getRegionFiles() {
+    public @NotNull Collection<@NotNull Path> getRegionFiles() {
         if (!Files.exists(getRegionDirectory())) {
             return Collections.emptySet();
         }
@@ -349,7 +349,7 @@ public abstract class World extends Keyed {
         }
     }
 
-    public @NonNull Collection<@NonNull Path> getCustomMarkerFiles() {
+    public @NotNull Collection<@NotNull Path> getCustomMarkerFiles() {
         if (!Files.exists(getCustomMarkersDirectory())) {
             return Collections.emptySet();
         }
@@ -360,17 +360,17 @@ public abstract class World extends Keyed {
         }
     }
 
-    public @NonNull Collection<@NonNull Point> listRegions(boolean ignoreTimestamp) {
+    public @NotNull Collection<@NotNull Point> listRegions(boolean ignoreTimestamp) {
         return FileUtil.regionPathsToPoints(this, getRegionFiles(), ignoreTimestamp);
     }
 
-    private @NonNull Region loadRegion(long pos) {
+    private @NotNull Region loadRegion(long pos) {
         int x = Mathf.longToX(pos);
         int z = Mathf.longToZ(pos);
         return new Region(this, x, z, getMCAFile(x, z));
     }
 
-    private @NonNull Path getMCAFile(int regionX, int regionZ) {
+    private @NotNull Path getMCAFile(int regionX, int regionZ) {
         return getRegionDirectory().resolve("r." + regionX + "." + regionZ + ".mca");
     }
 
@@ -395,7 +395,7 @@ public abstract class World extends Keyed {
     }
 
     @Override
-    public abstract @NonNull String toString();
+    public abstract @NotNull String toString();
 
     /**
      * Represents a world's type.
@@ -418,7 +418,7 @@ public abstract class World extends Keyed {
          * @param dimension dimension name
          * @return world type
          */
-        public static @NonNull Type get(@NonNull String dimension) {
+        public static @NotNull Type get(@NotNull String dimension) {
             return switch (dimension) {
                 case "minecraft:overworld" -> OVERWORLD;
                 case "minecraft:the_nether" -> NETHER;
@@ -428,7 +428,7 @@ public abstract class World extends Keyed {
         }
 
         @Override
-        public @NonNull String toString() {
+        public @NotNull String toString() {
             return this.name;
         }
     }

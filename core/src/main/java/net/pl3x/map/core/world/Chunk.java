@@ -30,8 +30,8 @@ import net.querz.nbt.tag.ByteTag;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntTag;
 import net.querz.nbt.tag.Tag;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Chunk {
     private final World world;
@@ -47,7 +47,7 @@ public abstract class Chunk {
 
     protected boolean populated;
 
-    protected Chunk(@NonNull World world, @NonNull Region region) {
+    protected Chunk(@NotNull World world, @NotNull Region region) {
         this.world = world;
         this.region = region;
 
@@ -58,7 +58,7 @@ public abstract class Chunk {
         this.inhabitedTime = 0;
     }
 
-    protected Chunk(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
+    protected Chunk(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag) {
         this.world = world;
         this.region = region;
 
@@ -72,11 +72,11 @@ public abstract class Chunk {
         this.inhabitedTime = tag.getLong("InhabitedTime");
     }
 
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         return this.world;
     }
 
-    public @NonNull Region getRegion() {
+    public @NotNull Region getRegion() {
         return this.region;
     }
 
@@ -102,15 +102,15 @@ public abstract class Chunk {
 
     public abstract int getWorldSurfaceY(int x, int z);
 
-    public abstract @NonNull BlockState getBlockState(int x, int y, int z);
+    public abstract @NotNull BlockState getBlockState(int x, int y, int z);
 
     public abstract int getLight(int x, int y, int z);
 
-    public abstract @NonNull Biome getBiome(int x, int y, int z);
+    public abstract @NotNull Biome getBiome(int x, int y, int z);
 
-    public abstract @NonNull Chunk populate();
+    public abstract @NotNull Chunk populate();
 
-    public @NonNull BlockData[] getData() {
+    public @NotNull BlockData[] getData() {
         return this.data;
     }
 
@@ -118,7 +118,7 @@ public abstract class Chunk {
         return this.data[((z & 0xF) << 4) + (x & 0xF)];
     }
 
-    public static @NonNull Chunk create(@NonNull World world, @NonNull Region region, @NonNull CompoundTag tag) {
+    public static @NotNull Chunk create(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag) {
         // https://minecraft.fandom.com/wiki/Data_version#List_of_data_versions
         int version = tag.getInt("DataVersion");
         Chunk chunk;
@@ -154,7 +154,7 @@ public abstract class Chunk {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "Chunk{"
                 + "world=" + getWorld()
                 + ",xPos=" + getX()
@@ -178,7 +178,7 @@ public abstract class Chunk {
             return this.fluidY;
         }
 
-        public @NonNull BlockState getBlockState() {
+        public @NotNull BlockState getBlockState() {
             return this.blockstate;
         }
 
@@ -186,7 +186,7 @@ public abstract class Chunk {
             return this.fluidstate;
         }
 
-        public @NonNull Biome getBiome(@NonNull Region region, int x, int z) {
+        public @NotNull Biome getBiome(@NotNull Region region, int x, int z) {
             if (this.biome == null) {
                 // calculate real biome
                 this.biome = region.getWorld().getBiomeManager().getBiome(region, x, this.blockY, z);

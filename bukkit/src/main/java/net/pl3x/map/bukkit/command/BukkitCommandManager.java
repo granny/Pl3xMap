@@ -31,13 +31,13 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Sender;
 import org.bukkit.plugin.Plugin;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class BukkitCommandManager implements CommandHandler {
-    private final PaperCommandManager<@NonNull Sender> manager;
-    private final Command.Builder<@NonNull Sender> root;
+    private final PaperCommandManager<@NotNull Sender> manager;
+    private final Command.Builder<@NotNull Sender> root;
 
-    public BukkitCommandManager(@NonNull Plugin plugin) throws Exception {
+    public BukkitCommandManager(@NotNull Plugin plugin) throws Exception {
         this.manager = new PaperCommandManager<>(plugin, CommandExecutionCoordinator.simpleCoordinator(), BukkitSender::create, Sender::getSender);
 
         if (getManager().hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
@@ -60,12 +60,12 @@ public class BukkitCommandManager implements CommandHandler {
     }
 
     @Override
-    public @NonNull PaperCommandManager<@NonNull Sender> getManager() {
+    public @NotNull PaperCommandManager<@NotNull Sender> getManager() {
         return this.manager;
     }
 
     @Override
-    public Command.@NonNull Builder<@NonNull Sender> getRoot() {
+    public Command.@NotNull Builder<@NotNull Sender> getRoot() {
         return this.root;
     }
 }

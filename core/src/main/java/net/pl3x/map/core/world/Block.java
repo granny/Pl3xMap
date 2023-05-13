@@ -26,8 +26,8 @@ package net.pl3x.map.core.world;
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.ColorsConfig;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class Block extends Keyed {
     private final int index;
@@ -35,7 +35,7 @@ public final class Block extends Keyed {
     private final byte bools;
     private final BlockState defaultState;
 
-    public Block(int index, @NonNull String id, int color) {
+    public Block(int index, @NotNull String id, int color) {
         super(id);
         this.index = index;
         this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, color);
@@ -89,7 +89,7 @@ public final class Block extends Keyed {
         return (this.bools & 1) > 0;
     }
 
-    public @NonNull BlockState getDefaultState() {
+    public @NotNull BlockState getDefaultState() {
         return this.defaultState;
     }
 
@@ -118,7 +118,7 @@ public final class Block extends Keyed {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "BlockState{"
                 + "key=" + getKey()
                 + "index=" + getIndex()

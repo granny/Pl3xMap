@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.pl3x.map.core.markers.option.Option;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a wrapped {@link JsonObject} with extra '<code>addProperty</code>' methods,
@@ -48,7 +48,7 @@ public class JsonObjectWrapper {
      *
      * @return JsonObject
      */
-    public @NonNull JsonObject getJsonObject() {
+    public @NotNull JsonObject getJsonObject() {
         return this.wrapped;
     }
 
@@ -61,7 +61,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the enum value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable Enum<@NonNull ?> value) {
+    public void addProperty(@NotNull String property, @Nullable Enum<?> value) {
         if (value == null) {
             return;
         }
@@ -75,7 +75,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the json serializable value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable JsonSerializable value) {
+    public void addProperty(@NotNull String property, @Nullable JsonSerializable value) {
         if (value == null) {
             return;
         }
@@ -89,7 +89,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the option value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable Option<@NonNull ?> value) {
+    public void addProperty(@NotNull String property, @Nullable Option<?> value) {
         if (value == null) {
             return;
         }
@@ -103,7 +103,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the value associated with the member.
      */
-    public void addProperty(@NonNull String property, @Nullable List<@NonNull ? extends @NonNull JsonSerializable> value) {
+    public void addProperty(@NotNull String property, @Nullable List<? extends @NotNull JsonSerializable> value) {
         if (value == null) {
             return;
         }

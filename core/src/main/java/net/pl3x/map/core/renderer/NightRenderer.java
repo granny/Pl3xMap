@@ -27,23 +27,23 @@ import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class NightRenderer extends Renderer {
     private Renderer basic;
 
-    public NightRenderer(@NonNull RegionScanTask task, @NonNull Builder builder) {
+    public NightRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
         super(task, builder);
     }
 
-    public void scanData(@NonNull Region region) {
+    public void scanData(@NotNull Region region) {
         // get the basic renderer so we can copy its tiles
         this.basic = getRegionScanTask().getRenderer(RendererRegistry.BASIC);
         super.scanData(region);
     }
 
     @Override
-    public void scanBlock(@NonNull Region region, @NonNull Chunk chunk, Chunk.@NonNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
         // get basic pixel color
         int pixelColor;
         if (this.basic != null) {

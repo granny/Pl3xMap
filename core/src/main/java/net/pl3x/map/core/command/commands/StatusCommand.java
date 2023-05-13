@@ -35,10 +35,10 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.renderer.progress.Progress;
 import net.pl3x.map.core.renderer.task.RegionProcessor;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class StatusCommand extends Pl3xMapCommand {
-    public StatusCommand(@NonNull CommandHandler handler) {
+    public StatusCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -50,7 +50,7 @@ public class StatusCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    public void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    public void execute(@NotNull CommandContext<@NotNull Sender> context) {
         Sender sender = context.getSender();
 
         String lineNext = "├─";

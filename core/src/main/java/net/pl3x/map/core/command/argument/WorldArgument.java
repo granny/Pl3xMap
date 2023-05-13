@@ -33,7 +33,7 @@ import net.pl3x.map.core.command.argument.parser.WorldParser;
 import net.pl3x.map.core.command.exception.WorldParseException;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link World} argument that belongs to a command.
@@ -41,8 +41,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <C> command sender type
  */
 @SuppressWarnings("unused")
-public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonNull World> {
-    protected WorldArgument(boolean required, @NonNull String name, @NonNull String defaultValue, @NonNull BiFunction<@NonNull CommandContext<@NonNull C>, @NonNull String, @NonNull List<@NonNull String>> suggestionsProvider, @NonNull ArgumentDescription defaultDescription) {
+public class WorldArgument<C> extends CommandArgument<@NotNull C, @NotNull World> {
+    protected WorldArgument(boolean required, @NotNull String name, @NotNull String defaultValue, @NotNull BiFunction<@NotNull CommandContext<@NotNull C>, @NotNull String, @NotNull List<@NotNull String>> suggestionsProvider, @NotNull ArgumentDescription defaultDescription) {
         super(required, name, new WorldParser<>(), defaultValue, World.class, suggestionsProvider, defaultDescription);
     }
 
@@ -52,7 +52,7 @@ public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name argument name
      * @return new world argument builder
      */
-    public static <@NonNull C> CommandArgument.@NonNull Builder<@NonNull C, @NonNull World> builder(@NonNull String name) {
+    public static <C> CommandArgument.@NotNull Builder<@NotNull C, @NotNull World> builder(@NotNull String name) {
         return new WorldArgument.Builder<>(name);
     }
 
@@ -62,8 +62,8 @@ public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name argument name
      * @return constructed world argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull World> of(@NonNull String name) {
-        return WorldArgument.<@NonNull C>builder(name).asRequired().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull World> of(@NotNull String name) {
+        return WorldArgument.<@NotNull C>builder(name).asRequired().build();
     }
 
     /**
@@ -74,8 +74,8 @@ public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param name argument name
      * @return constructed world argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull World> optional(@NonNull String name) {
-        return WorldArgument.<@NonNull C>builder(name).asOptional().build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull World> optional(@NotNull String name) {
+        return WorldArgument.<@NotNull C>builder(name).asOptional().build();
     }
 
     /**
@@ -87,8 +87,8 @@ public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      * @param defaultValue default value that will be used if none was supplied
      * @return constructed world argument
      */
-    public static <@NonNull C> @NonNull CommandArgument<@NonNull C, @NonNull World> optional(@NonNull String name, @NonNull String defaultValue) {
-        return WorldArgument.<@NonNull C>builder(name).asOptionalWithDefault(defaultValue).build();
+    public static <C> @NotNull CommandArgument<@NotNull C, @NotNull World> optional(@NotNull String name, @NotNull String defaultValue) {
+        return WorldArgument.<@NotNull C>builder(name).asOptionalWithDefault(defaultValue).build();
     }
 
     /**
@@ -103,7 +103,7 @@ public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      *                             and the sender is not a {@link Player}, or
      *                             the world is not enabled
      */
-    public static @NonNull World resolve(@NonNull CommandContext<@NonNull Sender> context, @NonNull String name) {
+    public static @NotNull World resolve(@NotNull CommandContext<@NotNull Sender> context, @NotNull String name) {
         Sender sender = context.getSender();
         World world = context.getOrDefault(name, null);
         if (world != null) {
@@ -128,13 +128,13 @@ public class WorldArgument<@NonNull C> extends CommandArgument<@NonNull C, @NonN
      *
      * @param <C> command sender type
      */
-    public static class Builder<@NonNull C> extends CommandArgument.Builder<@NonNull C, @NonNull World> {
-        private Builder(@NonNull String name) {
+    public static class Builder<C> extends CommandArgument.Builder<@NotNull C, @NotNull World> {
+        private Builder(@NotNull String name) {
             super(World.class, name);
         }
 
         @Override
-        public @NonNull CommandArgument<@NonNull C, @NonNull World> build() {
+        public @NotNull CommandArgument<@NotNull C, @NotNull World> build() {
             return new WorldArgument<>(isRequired(), getName(), getDefaultValue(), getSuggestionsProvider(), getDefaultDescription());
         }
     }

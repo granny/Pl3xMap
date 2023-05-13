@@ -29,7 +29,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("CanBeFinal")
 public final class Lang extends AbstractConfig {
@@ -240,11 +240,11 @@ public final class Lang extends AbstractConfig {
         CONFIG.reload(localeDir.resolve(Config.LANGUAGE_FILE), Lang.class);
     }
 
-    public static @NonNull Component parse(@NonNull String msg, @NonNull TagResolver.@NonNull Single... placeholders) {
+    public static @NotNull Component parse(@NotNull String msg, @NotNull TagResolver.@NotNull Single... placeholders) {
         return MiniMessage.miniMessage().deserialize(msg, placeholders);
     }
 
-    public static @NonNull String strip(@NonNull String msg) {
+    public static @NotNull String strip(@NotNull String msg) {
         return MiniMessage.miniMessage().stripTags(msg);
     }
 }

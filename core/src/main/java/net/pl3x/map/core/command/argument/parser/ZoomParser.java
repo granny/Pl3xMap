@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.pl3x.map.core.command.exception.ZoomParseException;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
 import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
@@ -47,7 +47,7 @@ import static cloud.commandframework.arguments.parser.ArgumentParseResult.succes
  */
 public class ZoomParser<C> implements ArgumentParser<C, Integer> {
     @Override
-    public @NonNull ArgumentParseResult<Integer> parse(@NonNull CommandContext<C> context, @NonNull Queue<@NonNull String> inputQueue) {
+    public @NotNull ArgumentParseResult<Integer> parse(@NotNull CommandContext<C> context, @NotNull Queue<@NotNull String> inputQueue) {
         String input = inputQueue.peek();
         if (input == null) {
             return failure(new NoInputProvidedException(IntegerArgument.IntegerParser.class, context));
@@ -65,7 +65,7 @@ public class ZoomParser<C> implements ArgumentParser<C, Integer> {
     }
 
     @Override
-    public @NonNull List<@NonNull String> suggestions(@NonNull CommandContext<C> context, @NonNull String input) {
+    public @NotNull List<@NotNull String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
         Set<Long> numbers = new TreeSet<>();
         try {
             long inputNum = Long.parseLong(input.equals("-") ? "-0" : input.isEmpty() ? "0" : input);
@@ -91,7 +91,7 @@ public class ZoomParser<C> implements ArgumentParser<C, Integer> {
         }
     }
 
-    private int getMax(@NonNull CommandContext<C> context) {
+    private int getMax(@NotNull CommandContext<C> context) {
         return ((World) context.get("world")).getConfig().ZOOM_MAX_OUT;
     }
 }

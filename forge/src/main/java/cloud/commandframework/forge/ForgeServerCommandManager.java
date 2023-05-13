@@ -81,7 +81,7 @@ public final class ForgeServerCommandManager<C> extends ForgeCommandManager<C> {
         );
 
         if (CloudForgeEntrypoint.hasServerAlreadyStarted()) {
-            throw new IllegalStateException("ForgefabrServerCommandManager was created too late! Because command registration "
+            throw new IllegalStateException("ForgeServerCommandManager was created too late! Because command registration "
                 + "occurs before the server instance is created, commands should be registered in mod initializers.");
         }
     }

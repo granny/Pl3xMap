@@ -19,7 +19,7 @@ package net.pl3x.map.core.util;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 // from apache commons StringEscapeUtils
 

@@ -40,7 +40,7 @@ import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Pl3xMapCommand;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class VersionCommand extends Pl3xMapCommand {
     private static final String URL = "https://api.modrinth.com/v2/project/pl3xmap/version?featured=true&game_versions=[%%22%s%%22]&loaders=[%%22%s%%22]";
@@ -49,7 +49,7 @@ public class VersionCommand extends Pl3xMapCommand {
     private String version;
     private long lastChecked;
 
-    public VersionCommand(@NonNull CommandHandler handler) {
+    public VersionCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -61,7 +61,7 @@ public class VersionCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    public void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    public void execute(@NotNull CommandContext<@NotNull Sender> context) {
         Sender sender = context.getSender();
 
         long now = System.currentTimeMillis();

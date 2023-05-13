@@ -25,8 +25,8 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.markers.Point;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Thrown to indicate that a method has been passed an illegal or inappropriate {@link Point} argument.
@@ -40,7 +40,7 @@ public class PointParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public PointParseException(@Nullable String input, @NonNull Reason reason) {
+    public PointParseException(@Nullable String input, @NotNull Reason reason) {
         super(input, "<point>", reason);
     }
 }

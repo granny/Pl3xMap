@@ -26,8 +26,8 @@ package net.pl3x.map.core.markers.layer;
 import java.util.function.Supplier;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a layer for worlds.
@@ -45,12 +45,12 @@ public abstract class WorldLayer extends SimpleLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public WorldLayer(@NonNull String key, @NonNull World world, @NonNull Supplier<@NonNull String> labelSupplier) {
+    public WorldLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
         super(key, labelSupplier);
         this.world = world;
     }
 
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         return this.world;
     }
 
@@ -58,7 +58,7 @@ public abstract class WorldLayer extends SimpleLayer {
         return this.options;
     }
 
-    public @NonNull WorldLayer setOptions(@Nullable Options options) {
+    public @NotNull WorldLayer setOptions(@Nullable Options options) {
         this.options = options;
         return this;
     }

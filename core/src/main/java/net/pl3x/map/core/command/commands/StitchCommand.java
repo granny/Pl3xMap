@@ -47,11 +47,11 @@ import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import static net.pl3x.map.core.world.World.PNG_MATCHER;
 
 public class StitchCommand extends Pl3xMapCommand {
-    public StitchCommand(@NonNull CommandHandler handler) {
+    public StitchCommand(@NotNull CommandHandler handler) {
         super(handler);
     }
 
@@ -66,11 +66,11 @@ public class StitchCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NonNull CommandContext<@NonNull Sender> context) {
+    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
         CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
-    private void executeAsync(@NonNull CommandContext<@NonNull Sender> context) {
+    private void executeAsync(@NotNull CommandContext<@NotNull Sender> context) {
         Sender sender = context.getSender();
         World world = context.get("world");
         Renderer.Builder renderer = context.get("renderer");

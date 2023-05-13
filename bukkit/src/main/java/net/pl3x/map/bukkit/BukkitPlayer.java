@@ -46,34 +46,34 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.persistence.PersistentDataType;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BukkitPlayer extends Player {
     private final NamespacedKey hiddenKey = new NamespacedKey(Pl3xMapBukkit.getProvidingPlugin(Pl3xMapBukkit.class), "hidden");
 
-    public BukkitPlayer(org.bukkit.entity.@NonNull Player player) {
+    public BukkitPlayer(org.bukkit.entity.@NotNull Player player) {
         super(player.getName(), player);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public org.bukkit.entity.@NonNull Player getPlayer() {
+    public org.bukkit.entity.@NotNull Player getPlayer() {
         return super.getPlayer();
     }
 
     @Override
-    public @NonNull String getName() {
+    public @NotNull String getName() {
         return getPlayer().getName();
     }
 
     @Override
-    public @NonNull UUID getUUID() {
+    public @NotNull UUID getUUID() {
         return getPlayer().getUniqueId();
     }
 
     @Override
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         org.bukkit.World world = getPlayer().getWorld();
         ServerLevel level = ((CraftWorld) world).getHandle();
         String name = world.getName();
@@ -81,7 +81,7 @@ public class BukkitPlayer extends Player {
     }
 
     @Override
-    public @NonNull Point getPosition() {
+    public @NotNull Point getPosition() {
         Location loc = getPlayer().getLocation();
         return Point.of(loc.getBlockX(), loc.getBlockZ());
     }
@@ -159,7 +159,7 @@ public class BukkitPlayer extends Player {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "BukkitPlayer{"
                 + "player=" + getPlayer().getUniqueId()
                 + "}";

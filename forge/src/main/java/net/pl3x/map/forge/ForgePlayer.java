@@ -42,39 +42,39 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.forge.capability.HiddenCapability;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ForgePlayer extends Player {
-    public ForgePlayer(@NonNull ServerPlayer player) {
+    public ForgePlayer(@NotNull ServerPlayer player) {
         super(player.getScoreboardName(), player);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NonNull ServerPlayer getPlayer() {
+    public @NotNull ServerPlayer getPlayer() {
         return super.getPlayer();
     }
 
     @Override
-    public @NonNull String getName() {
+    public @NotNull String getName() {
         return getPlayer().getScoreboardName();
     }
 
     @Override
-    public @NonNull UUID getUUID() {
+    public @NotNull UUID getUUID() {
         return getPlayer().getUUID();
     }
 
     @Override
-    public @NonNull World getWorld() {
+    public @NotNull World getWorld() {
         ServerLevel level = getPlayer().getLevel();
         String name = level.dimension().location().toString();
         return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new ForgeWorld(level, name));
     }
 
     @Override
-    public @NonNull Point getPosition() {
+    public @NotNull Point getPosition() {
         Vec3 loc = getPlayer().position();
         return Point.of(loc.x(), loc.z());
     }
@@ -152,7 +152,7 @@ public class ForgePlayer extends Player {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "ForgePlayer{"
                 + "player=" + getPlayer().getUUID()
                 + "}";

@@ -24,8 +24,8 @@
 package net.pl3x.map.core.world;
 
 import java.util.Arrays;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class LegacyBiomes {
     private static final Biome[] BIOME_IDS = new Biome[174];
@@ -114,7 +114,7 @@ public class LegacyBiomes {
         BIOME_IDS[173] = create("minecraft:basalt_deltas", 2.0F, 0.0F, 0x403636, 0xA9A52C, 0xBFB755, 0x3F76E4);
     }
 
-    private static @NonNull Biome create(@NonNull String id, float temperature, float humidity, int color, int foliage, int grass, int water) {
+    private static @NotNull Biome create(@NotNull String id, float temperature, float humidity, int color, int foliage, int grass, int water) {
         return new Biome(0, id, color, foliage, grass, water, (x, z, def) -> def);
     }
 

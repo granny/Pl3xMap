@@ -35,7 +35,7 @@ import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.BlockState;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class Colors {
@@ -57,7 +57,7 @@ public class Colors {
         mapFoliage = getColorsFromImage(imgFoliage);
     }
 
-    private static int[] getColorsFromImage(@NonNull BufferedImage image) {
+    private static int[] getColorsFromImage(@NotNull BufferedImage image) {
         int[] map = new int[256 * 256];
         for (int x = 0; x < 256; ++x) {
             for (int y = 0; y < 256; ++y) {
@@ -81,6 +81,16 @@ public class Colors {
         int j = (int) ((1.0 - (humidity * temperature)) * 255.0);
         int k = j << 8 | i;
         return k > map.length ? 0 : map[k];
+    }
+
+    public static int rgb2bgr(int color) {
+        // Minecraft flips red and blue for some reason
+        // lets flip them back
+        int a = color >> 24 & 0xFF;
+        int r = color >> 16 & 0xFF;
+        int g = color >> 8 & 0xFF;
+        int b = color & 0xFF;
+        return (a << 24) | (b << 16) | (g << 8) | r;
     }
 
     public static int lerpRGB(int color0, int color1, float delta) {
@@ -199,19 +209,19 @@ public class Colors {
         return rgb(r >> 1, g >> 1, b >> 2);
     }
 
-    public static int getFoliageColor(@NonNull Region region, @NonNull Biome biome, int color, int x, int z) {
+    public static int getFoliageColor(@NotNull Region region, @NotNull Biome biome, int color, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> mix(biome2.foliage(), color));
     }
 
-    public static int getGrassColor(@NonNull Region region, @NonNull Biome biome, int color, int x, int z) {
+    public static int getGrassColor(@NotNull Region region, @NotNull Biome biome, int color, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> mix(biome2.grass(x2, z2), color));
     }
 
-    public static int getWaterColor(@NonNull Region region, @NonNull Biome biome, int x, int z) {
+    public static int getWaterColor(@NotNull Region region, @NotNull Biome biome, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> biome2.water());
     }
 
-    private static int sampleNeighbors(@NonNull Region region, @NonNull Biome biome, int x, int z, @NonNull Sampler colorSampler) {
+    private static int sampleNeighbors(@NotNull Region region, @NotNull Biome biome, int x, int z, @NotNull Sampler colorSampler) {
         int radius = region.getWorld().getConfig().RENDER_BIOME_BLEND;
         int color = colorSampler.apply(biome, x, z);
         if (radius < 1) {
@@ -242,12 +252,12 @@ public class Colors {
         return rgb(red / count, green / count, blue / count);
     }
 
-    public static int getRawBlockColor(@NonNull Block block) {
+    public static int getRawBlockColor(@NotNull Block block) {
         int color = ColorsConfig.BLOCK_COLORS.getOrDefault(block.getKey(), -1);
         return color < 0 ? block.color() : color;
     }
 
-    public static int fixBlockColor(@NonNull Region region, @NonNull Biome biome, @NonNull BlockState blockstate, int x, int z) {
+    public static int fixBlockColor(@NotNull Region region, @NotNull Biome biome, @NotNull BlockState blockstate, int x, int z) {
         int color = blockstate.getBlock().color();
         if (color <= 0) {
             return 0;
@@ -313,18 +323,18 @@ public class Colors {
         return (alpha << 24) | (argb & 0xFFFFFF);
     }
 
-    public static int fromHex(@NonNull String color) {
+    public static int fromHex(@NotNull String color) {
         return (int) Long.parseLong(color.replace("#", ""), 16);
     }
 
-    public static @NonNull String toHex(int argb) {
+    public static @NotNull String toHex(int argb) {
         return String.format("#%06X", (0xFFFFFF & argb));
     }
 
-    public static @NonNull String toHex8(int argb) {
+    public static @NotNull String toHex8(int argb) {
         return String.format("#%08X", argb);
     }
 
-    public interface Sampler extends TriFunction<@NonNull Biome, @NonNull Integer, @NonNull Integer, @NonNull Integer> {
+    public interface Sampler extends TriFunction<@NotNull Biome, @NotNull Integer, @NotNull Integer, @NotNull Integer> {
     }
 }

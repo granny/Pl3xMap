@@ -30,24 +30,24 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.world.World;
 import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BukkitSender extends Sender {
-    public static @NonNull Sender create(@NonNull CommandSender sender) {
+    public static @NotNull Sender create(@NotNull CommandSender sender) {
         if (sender instanceof org.bukkit.entity.Player) {
             return new Player(sender);
         }
         return new BukkitSender(sender);
     }
 
-    public BukkitSender(@NonNull CommandSender sender) {
+    public BukkitSender(@NotNull CommandSender sender) {
         super(sender);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NonNull CommandSender getSender() {
+    public @NotNull CommandSender getSender() {
         return super.getSender();
     }
 
@@ -72,29 +72,29 @@ public class BukkitSender extends Sender {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "BukkitSender{"
                 + "sender=" + getSender().getName()
                 + "}";
     }
 
     public static class Player extends BukkitSender implements Audience, Sender.Player<org.bukkit.entity.Player> {
-        public Player(@NonNull CommandSender sender) {
+        public Player(@NotNull CommandSender sender) {
             super(sender);
         }
 
         @Override
-        public org.bukkit.entity.@NonNull Player getPlayer() {
+        public org.bukkit.entity.@NotNull Player getPlayer() {
             return (org.bukkit.entity.Player) getSender();
         }
 
         @Override
-        public @NonNull Audience audience() {
+        public @NotNull Audience audience() {
             return Pl3xMap.api().adventure().player(getPlayer().getUniqueId());
         }
 
         @Override
-        public @NonNull UUID getUUID() {
+        public @NotNull UUID getUUID() {
             return getPlayer().getUniqueId();
         }
 
@@ -104,7 +104,7 @@ public class BukkitSender extends Sender {
         }
 
         @Override
-        public @NonNull String toString() {
+        public @NotNull String toString() {
             return "BukkitSender$Player{"
                     + "player=" + getPlayer().getUniqueId()
                     + "}";

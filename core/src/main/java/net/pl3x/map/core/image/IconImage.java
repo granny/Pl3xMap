@@ -26,8 +26,8 @@ package net.pl3x.map.core.image;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents an icon image
@@ -43,7 +43,7 @@ public class IconImage extends Keyed {
      * @param image buffered image
      * @param type  image type
      */
-    public IconImage(@NonNull String key, @NonNull BufferedImage image, @NonNull String type) {
+    public IconImage(@NotNull String key, @NotNull BufferedImage image, @NotNull String type) {
         super(key);
         this.image = image;
         this.type = type;
@@ -54,7 +54,7 @@ public class IconImage extends Keyed {
      *
      * @return buffered image
      */
-    public @NonNull BufferedImage getImage() {
+    public @NotNull BufferedImage getImage() {
         return this.image;
     }
 
@@ -63,7 +63,7 @@ public class IconImage extends Keyed {
      *
      * @return image type
      */
-    public @NonNull String getType() {
+    public @NotNull String getType() {
         return this.type;
     }
 
@@ -90,7 +90,7 @@ public class IconImage extends Keyed {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         return "IconImage{"
                 + "key=" + getKey()
                 + ",image=" + getImage()

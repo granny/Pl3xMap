@@ -30,8 +30,8 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("CanBeFinal")
 public class ColorsConfig extends AbstractConfig {
@@ -41,7 +41,7 @@ public class ColorsConfig extends AbstractConfig {
             pick your own color here for any blocks you want to change.
             Any blocks _not_ in this list will use Mojang's color.
             Setting a color to black (#000000) will make it invisible.""")
-    public static Map<@NonNull String, @NonNull Integer> BLOCK_COLORS = new LinkedHashMap<>() {{
+    public static Map<@NotNull String, @NotNull Integer> BLOCK_COLORS = new LinkedHashMap<>() {{
         put("minecraft:acacia_button", 0x000000);
         put("minecraft:acacia_door", 0xA85F3D);
         put("minecraft:acacia_fence", 0xA85A32);
@@ -977,7 +977,7 @@ public class ColorsConfig extends AbstractConfig {
     @Comment("""
             Each biome has a specific color assigned to it. You can
             pick your own color here for any biomes you want to change.""")
-    public static Map<@NonNull String, @NonNull Integer> BIOME_COLORS = new LinkedHashMap<>() {{
+    public static Map<@NotNull String, @NotNull Integer> BIOME_COLORS = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0xD94515);
         put("minecraft:bamboo_jungle", 0x768E14);
         put("minecraft:basalt_deltas", 0x403636);
@@ -1047,7 +1047,7 @@ public class ColorsConfig extends AbstractConfig {
     @Comment("""
             List of blocks that are considered air when it comes
             to coloring. Blocks listed here will not be rendered.""")
-    public static List<@NonNull String> BLOCKS_AIR = new ArrayList<>() {{
+    public static List<@NotNull String> BLOCKS_AIR = new ArrayList<>() {{
         add("minecraft:air");
         add("minecraft:cave_air");
         add("minecraft:void_air");
@@ -1059,7 +1059,7 @@ public class ColorsConfig extends AbstractConfig {
             to coloring. Blocks listed here will use the biome's
             foliage color when rendering.
             Note: Birch and Spruce are intentionally absent by default.""")
-    public static List<@NonNull String> BLOCKS_FOLIAGE = new ArrayList<>() {{
+    public static List<@NotNull String> BLOCKS_FOLIAGE = new ArrayList<>() {{
         add("minecraft:acacia_leaves");
         //add("minecraft:birch_leaves"); // birch 0x80A755
         add("minecraft:dark_oak_leaves");
@@ -1074,7 +1074,7 @@ public class ColorsConfig extends AbstractConfig {
             List of blocks that are considered glass when it comes
             to coloring. Blocks listed here will use blend with
             blocks below it when rendering.""")
-    public static List<@NonNull String> BLOCKS_GLASS = new ArrayList<>() {{
+    public static List<@NotNull String> BLOCKS_GLASS = new ArrayList<>() {{
         add("minecraft:glass");
         add("minecraft:black_stained_glass");
         add("minecraft:blue_stained_glass");
@@ -1116,7 +1116,7 @@ public class ColorsConfig extends AbstractConfig {
             List of blocks that are considered grass when it comes
             to coloring. Blocks listed here will use the biome's
             grass color modifier when rendering.""")
-    public static List<@NonNull String> BLOCKS_GRASS = new ArrayList<>() {{
+    public static List<@NotNull String> BLOCKS_GRASS = new ArrayList<>() {{
         add("minecraft:fern");
         add("minecraft:grass");
         add("minecraft:grass_block");
@@ -1130,7 +1130,7 @@ public class ColorsConfig extends AbstractConfig {
             List of blocks that are considered water when it comes
             to coloring. Blocks listed here will use the biome's
             water color when rendering.""")
-    public static List<@NonNull String> BLOCKS_WATER = new ArrayList<>() {{
+    public static List<@NotNull String> BLOCKS_WATER = new ArrayList<>() {{
         add("minecraft:water");
         add("minecraft:bubble_column");
         add("minecraft:water_cauldron");
@@ -1159,7 +1159,7 @@ public class ColorsConfig extends AbstractConfig {
     @Key("biomes.color-overrides.foliage")
     @Comment("""
             Override foliage colors per biome.""")
-    public static Map<@NonNull String, @NonNull Integer> BIOME_FOLIAGE = new LinkedHashMap<>() {{
+    public static Map<@NotNull String, @NotNull Integer> BIOME_FOLIAGE = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0x9E814D);
         put("minecraft:bamboo_jungle", 0x1F8907);
         put("minecraft:dark_forest", 0x1C7B07);
@@ -1174,7 +1174,7 @@ public class ColorsConfig extends AbstractConfig {
     @Key("biomes.color-overrides.grass")
     @Comment("""
             Override grass colors per biome.""")
-    public static Map<@NonNull String, @NonNull Integer> BIOME_GRASS = new LinkedHashMap<>() {{
+    public static Map<@NotNull String, @NotNull Integer> BIOME_GRASS = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0x90814D);
         put("minecraft:wooded_badlands", 0x90814D);
         put("minecraft:eroded_badlands", 0x90814D);
@@ -1183,7 +1183,7 @@ public class ColorsConfig extends AbstractConfig {
     @Key("biomes.color-overrides.water")
     @Comment("""
             Override water colors per biome.""")
-    public static Map<@NonNull String, @NonNull Integer> BIOME_WATER = new LinkedHashMap<>();
+    public static Map<@NotNull String, @NotNull Integer> BIOME_WATER = new LinkedHashMap<>();
 
     private static final ColorsConfig CONFIG = new ColorsConfig();
 
@@ -1195,12 +1195,12 @@ public class ColorsConfig extends AbstractConfig {
     }
 
     @Override
-    protected @NonNull Object addToMap(@NonNull String rawValue) {
+    protected @NotNull Object addToMap(@NotNull String rawValue) {
         return Colors.fromHex(rawValue);
     }
 
     @Override
-    protected void set(@NonNull String path, @Nullable Object value) {
+    protected void set(@NotNull String path, @Nullable Object value) {
         if (value instanceof Map<?, ?> map && !map.isEmpty()) {
             map.forEach((key, rawValue) -> getConfig().set(path + "." + key, Colors.toHex((int) rawValue)));
         } else {
