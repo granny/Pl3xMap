@@ -101,12 +101,10 @@ public abstract class World extends Keyed {
         this.customMarkersDirectory = Pl3xMap.api().getMainDir().resolve("markers").resolve(name);
         this.markersDirectory = getTilesDirectory().resolve("markers");
 
-        if (!Files.exists(this.regionDirectory)) {
-            try {
-                Files.createDirectories(this.regionDirectory);
-            } catch (IOException ignore) {
-            }
-        }
+        FileUtil.createDirs(this.regionDirectory);
+        FileUtil.createDirs(this.tilesDirectory);
+        FileUtil.createDirs(this.customMarkersDirectory);
+        FileUtil.createDirs(this.markersDirectory);
 
         this.worldConfig = new WorldConfig(this);
 
