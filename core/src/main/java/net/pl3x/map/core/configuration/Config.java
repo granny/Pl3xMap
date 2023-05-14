@@ -70,7 +70,27 @@ public final class Config extends AbstractConfig {
             0.0 is low quality, high compression, small file size
             1.0 is high quality, no compression, large file size
             Note: Not all image formats honor this setting.""")
-    public static double WEB_TILE_QUALITY = 0.0F;
+    public static double WEB_TILE_QUALITY = 0.0D;
+
+    @Key("settings.map.zoom.snap")
+    @Comment("""
+            Forces the map's zoom level to always be a multiple of this.
+            By default, the zoom level snaps to the nearest integer; lower
+            values (e.g. 0.5 or 0.1) allow for greater granularity. A
+            value of 0 means the zoom level will not be snapped.""")
+    public static double MAP_ZOOM_SNAP = 0.25D;
+    @Key("settings.map.zoom.delta")
+    @Comment("""
+            Controls how much the map's zoom level will change after a zoom in,
+            zoom out, pressing + or - on the keyboard, or using the zoom controls.
+            Values smaller than 1 (e.g. 0.5) allow for greater granularity.""")
+    public static double MAP_ZOOM_DELTA = 0.25D;
+    @Key("settings.map.zoom.wheel")
+    @Comment("""
+            How many scroll pixels (as reported by L.DomEvent.getWheelDelta) mean
+            a change of one full zoom level. Smaller values will make wheel-zooming
+            faster (and vice versa).""")
+    public static int MAP_ZOOM_WHEEL = 120;
 
     @Key("settings.internal-webserver.enabled")
     @Comment("""

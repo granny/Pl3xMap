@@ -162,10 +162,16 @@ public class UpdateSettingsData extends Task {
         lang.put("players", Map.of("label", Lang.UI_PLAYERS_LABEL, "value", Lang.UI_PLAYERS_VALUE));
         lang.put("worlds", Map.of("label", Lang.UI_WORLDS_LABEL, "value", Lang.UI_WORLDS_VALUE));
 
+        Map<String, Object> zoom = new LinkedHashMap<>();
+        zoom.put("snap", Config.MAP_ZOOM_SNAP);
+        zoom.put("delta", Config.MAP_ZOOM_DELTA);
+        zoom.put("wheel", Config.MAP_ZOOM_WHEEL);
+
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("format", Config.WEB_TILE_FORMAT);
         map.put("maxPlayers", Pl3xMap.api().getMaxPlayers());
         map.put("lang", lang);
+        map.put("zoom", zoom);
 
         try {
             map.put("players", parsePlayers());
