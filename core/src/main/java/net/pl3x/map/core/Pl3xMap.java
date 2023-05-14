@@ -39,6 +39,8 @@ import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.event.EventRegistry;
+import net.pl3x.map.core.event.server.Pl3xMapDisabledEvent;
+import net.pl3x.map.core.event.server.Pl3xMapEnabledEvent;
 import net.pl3x.map.core.httpd.HttpdServer;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.log.Logger;
@@ -248,6 +250,8 @@ public abstract class Pl3xMap {
         Pl3xMap.api().getRegionProcessor().setPaused(false);
 
         this.enabled = true;
+
+        new Pl3xMapEnabledEvent().callEvent();
     }
 
     public void disable() {
@@ -259,6 +263,8 @@ public abstract class Pl3xMap {
         }
 
         this.enabled = false;
+
+        new Pl3xMapDisabledEvent().callEvent();
 
         // stop tasks
         Logger.debug("Stopping tasks");
