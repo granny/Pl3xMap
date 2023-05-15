@@ -57,3 +57,14 @@ jobs:
           description: |
             Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
             Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
+      - name: Notify Discord
+        uses: BillyGalbreath/actions-status-discord@main
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          noprefix: true
+          title: Build Failure!
+          color: 0xff0000
+          description: |
+            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
+            Click [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) to view the run!
