@@ -171,10 +171,10 @@ modrinth {
     versionNumber = "${project.version}"
     versionType = 'beta'
     uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
-    additionalFiles.addAll([
-            rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}-javadoc.jar").get(),
-            rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}-sources.jar").get()
-    ])
+    //additionalFiles.addAll([
+    //        rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}-javadoc.jar").get(),
+    //        rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}-sources.jar").get()
+    //])
     gameVersions.addAll(["${minecraftVersion}"])
     loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
