@@ -12,6 +12,10 @@ dependencies {
     paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:$bukkitVersion")
 }
 
+base {
+    archivesName = "${rootProject.name}-${project.name}"
+}
+
 assemble {
     dependsOn reobfJar
     doLast {

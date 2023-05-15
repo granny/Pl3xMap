@@ -28,6 +28,15 @@ def cleanWebmap = tasks.register('cleanWebmap', Delete) {
     delete "$rootDir/core/src/main/resources/web"
 }
 
+def copyJavadocAndSources = tasks.register('copyJavadocAndSources', Copy) {
+    from("$rootDir/core/build/libs") {
+        include "*-*-*-*-*.jar"
+    }
+    into layout.buildDirectory.dir('libs')
+    rename "${rootProject.name}-core-${version}-javadoc.jar", "${rootProject.name}-${version}-javadoc.jar"
+    rename "${rootProject.name}-core-${version}-sources.jar", "${rootProject.name}-${version}-sources.jar"
+}
+
 def combineJars = tasks.register('combineJars', Jar) {
     mustRunAfter build
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -41,6 +50,7 @@ def combineJars = tasks.register('combineJars', Jar) {
         commit.waitFor()
         attributes['Git-Commit'] = commit.text.trim()
     }
+    finalizedBy copyJavadocAndSources
 }
 
 def npmInstall = tasks.register('npmInstall', Exec) {
@@ -130,6 +140,7 @@ allprojects {
         // provided by mojang
         compileOnly "com.google.code.gson:gson:$gsonVersion"
         compileOnly "com.google.guava:guava:$guavaVersion"
+        //noinspection VulnerableLibrariesLocal
         compileOnly "org.apache.logging.log4j:log4j-core:$log4jVersion"
         compileOnly "org.slf4j:slf4j-api:$slf4jVersion"
     }
@@ -147,13 +158,13 @@ allprojects {
         options.release.set(17)
     }
 
-    javadoc {
-        options.encoding = 'UTF-8'
-    }
-
     processResources {
         filteringCharset = 'UTF-8'
     }
+}
+
+def getFile(classifier) {
+    return rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}${classifier}.jar").get()
 }
 
 modrinth {
@@ -163,16 +174,21 @@ modrinth {
     versionName = "${project.version}"
     versionNumber = "${project.version}"
     versionType = 'beta'
-    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
+    uploadFile = getFile("")
+    additionalFiles.addAll([
+            getFile("-sources"),
+            getFile("-javadoc")
+    ])
     gameVersions.addAll(["${minecraftVersion}"])
     loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
-        optional.project "pl3xmap-banners"
-        optional.project "pl3xmap-claims"
-        optional.project "pl3xmap-mobs"
-        optional.project "pl3xmap-signs"
-        optional.project "deathspots"
+        optional.project 'pl3xmap-banners'
+        optional.project 'pl3xmap-claims'
+        optional.project 'pl3xmap-mobs'
+        optional.project 'pl3xmap-signs'
+        optional.project 'pl3xmap-warps'
+        optional.project 'deathspots'
     }
 }
 

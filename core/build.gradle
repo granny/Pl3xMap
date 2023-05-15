@@ -6,6 +6,15 @@ plugins {
 group = "${rootProject.group}.core"
 version = rootProject.version
 
+base {
+    archivesName = "${rootProject.name}-${project.name}"
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 assemble {
     dependsOn(shadowJar)
     doLast {
@@ -40,6 +49,16 @@ shadowJar {
     ].forEach { relocate it, "libs.$it" }
 }
 
+javadoc {
+    options.encoding = 'UTF-8'
+    options.addBooleanOption('html5', true)
+    title = "${rootProject.name}-${project.version} API"
+}
+
 processResources {
+    dependsOn ":copyWebmap"
+}
+
+sourcesJar {
     dependsOn ":copyWebmap"
 }

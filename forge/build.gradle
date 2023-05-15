@@ -18,6 +18,10 @@ dependencies {
     minecraft "net.minecraftforge:forge:$forgeVersion"
 }
 
+base {
+    archivesName = "${rootProject.name}-${project.name}"
+}
+
 jar {
     finalizedBy 'reobfJar'
 }
