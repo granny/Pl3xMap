@@ -32,7 +32,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
@@ -75,9 +74,8 @@ public class BukkitPlayer extends Player {
     @Override
     public @NotNull World getWorld() {
         org.bukkit.World world = getPlayer().getWorld();
-        ServerLevel level = ((CraftWorld) world).getHandle();
-        String name = world.getName();
-        return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new BukkitWorld(level, name));
+        return Pl3xMap.api().getWorldRegistry().getOrDefault(world.getName(),
+                () -> new BukkitWorld(((CraftWorld) world).getHandle(), world.getName()));
     }
 
     @Override

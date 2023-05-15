@@ -31,6 +31,7 @@ import java.util.UUID;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -110,6 +111,16 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
             if (fabricPlayer != null) {
                 this.playerListener.onQuit(fabricPlayer);
             }
+        });
+
+        ServerWorldEvents.LOAD.register((server, level) -> {
+            String name = level.dimension().location().toString();
+            Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
+        });
+
+        ServerWorldEvents.UNLOAD.register((server, level) -> {
+            String name = level.dimension().location().toString();
+            Pl3xMap.api().getWorldRegistry().unregister(name);
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {

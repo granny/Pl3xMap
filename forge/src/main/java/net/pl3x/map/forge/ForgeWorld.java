@@ -35,6 +35,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.ColorsConfig;
+import net.pl3x.map.core.event.world.WorldLoadedEvent;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.util.Colors;
@@ -93,6 +94,8 @@ public class ForgeWorld extends World {
         }
 
         getBiomeRegistry().saveToDisk(this);
+
+        Pl3xMap.api().getEventRegistry().callEvent(new WorldLoadedEvent(this));
     }
 
     @Override

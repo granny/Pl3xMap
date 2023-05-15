@@ -120,8 +120,6 @@ public abstract class World extends Keyed {
         this.regionModifiedState = new RegionModifiedState(this);
         this.regionFileWatcher = new RegionFileWatcher(this);
         this.markerTask = new UpdateMarkerData(this);
-
-        Pl3xMap.api().getEventRegistry().callEvent(new WorldLoadedEvent(this));
     }
 
     protected void init() {

@@ -50,6 +50,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -130,6 +131,24 @@ public class Pl3xMapForge extends Pl3xMap {
         if (forgePlayer != null) {
             this.playerListener.onQuit(forgePlayer);
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(LevelEvent.Load event) {
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+        String name = level.dimension().location().toString();
+        Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new ForgeWorld(level, name));
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(LevelEvent.Unload event) {
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+        String name = level.dimension().location().toString();
+        Pl3xMap.api().getWorldRegistry().unregister(name);
     }
 
     @SubscribeEvent

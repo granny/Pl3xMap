@@ -166,11 +166,8 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     protected void loadWorlds() {
-        Bukkit.getWorlds().forEach(world -> {
-            ServerLevel level = ((CraftWorld) world).getHandle();
-            String name = world.getName();
-            getWorldRegistry().getOrDefault(name, () -> new BukkitWorld(level, name));
-        });
+        Bukkit.getWorlds().forEach(world -> getWorldRegistry().getOrDefault(world.getName(),
+                () -> new BukkitWorld(((CraftWorld) world).getHandle(), world.getName())));
     }
 
     @Override

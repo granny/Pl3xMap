@@ -33,12 +33,16 @@ import net.pl3x.map.core.network.Network;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
 import net.pl3x.map.core.player.PlayerRegistry;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -125,6 +129,18 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
         if (bukkitPlayer != null) {
             this.playerListener.onQuit(bukkitPlayer);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWorldLoad(WorldLoadEvent event) {
+        World world = event.getWorld();
+        Pl3xMap.api().getWorldRegistry().getOrDefault(world.getName(),
+                () -> new BukkitWorld(((CraftWorld) world).getHandle(), world.getName()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWorldUnload(WorldUnloadEvent event) {
+        Pl3xMap.api().getWorldRegistry().unregister(event.getWorld().getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
