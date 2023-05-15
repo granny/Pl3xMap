@@ -163,10 +163,6 @@ allprojects {
     }
 }
 
-def getFile(classifier) {
-    return rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}${classifier}.jar")
-}
-
 modrinth {
     autoAddDependsOn = false
     token = System.getenv('MODRINTH_TOKEN')
@@ -174,10 +170,10 @@ modrinth {
     versionName = "${project.version}"
     versionNumber = "${project.version}"
     versionType = 'beta'
-    uploadFile = getFile("").get()
+    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar").get()
     additionalFiles.addAll([
-            getFile("-sources").get(),
-            getFile("-javadoc").get()
+            rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}-javadoc.jar").get(),
+            rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}-sources.jar").get()
     ])
     gameVersions.addAll(["${minecraftVersion}"])
     loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
