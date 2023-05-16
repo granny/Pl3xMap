@@ -31,6 +31,7 @@ import net.pl3x.map.core.renderer.FlowerMapRenderer;
 import net.pl3x.map.core.renderer.InhabitedRenderer;
 import net.pl3x.map.core.renderer.NightRenderer;
 import net.pl3x.map.core.renderer.Renderer;
+import net.pl3x.map.core.renderer.VanillaRenderer;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +42,7 @@ public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
     public static final String FLOWERMAP = "flowermap";
     public static final String INHABITED = "inhabited";
     public static final String NIGHT = "night";
+    public static final String VANILLA = "vanilla";
 
     public void register() {
         register(BASIC, new Renderer.Builder(BASIC, "Basic", BasicRenderer.class));
@@ -49,6 +51,7 @@ public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
         register(FLOWERMAP, new Renderer.Builder(FLOWERMAP, "FlowerMap", FlowerMapRenderer.class));
         register(INHABITED, new Renderer.Builder(INHABITED, "Inhabited", InhabitedRenderer.class));
         register(NIGHT, new Renderer.Builder(NIGHT, "Night", NightRenderer.class));
+        register(VANILLA, new Renderer.Builder(VANILLA, "Vanilla", VanillaRenderer.class));
     }
 
     public @NotNull Renderer createRenderer(@NotNull RegionScanTask task, Renderer.@NotNull Builder builder) {

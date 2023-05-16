@@ -116,7 +116,7 @@ public class ChunkAnvil118 extends Chunk {
     @Override
     public int getWorldSurfaceY(int x, int z) {
         if (noHeightmap()) {
-            return 0;
+            return getWorld().getMinBuildHeight();
         }
         return (int) MCAMath.getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
     }
@@ -189,13 +189,6 @@ public class ChunkAnvil118 extends Chunk {
         }
 
         this.populated = true;
-
-        for (Section section : this.sections) {
-            if (section != null) {
-                section.blocks = new long[0];
-                section.blockPalette = new BlockState[0];
-            }
-        }
 
         return this;
     }

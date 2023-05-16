@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public final class Block extends Keyed {
     private final int index;
     private final int color;
+    private final int vanilla;
     private final byte bools;
     private final BlockState defaultState;
 
@@ -39,6 +40,7 @@ public final class Block extends Keyed {
         super(id);
         this.index = index;
         this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, color);
+        this.vanilla = color;
 
         boolean air = ColorsConfig.BLOCKS_AIR.contains(id);
         boolean foliage = ColorsConfig.BLOCKS_FOLIAGE.contains(id);
@@ -63,6 +65,10 @@ public final class Block extends Keyed {
 
     public int color() {
         return this.color;
+    }
+
+    public int vanilla() {
+        return this.vanilla;
     }
 
     public boolean isAir() {
