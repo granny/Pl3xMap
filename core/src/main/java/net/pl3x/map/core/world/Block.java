@@ -36,11 +36,11 @@ public final class Block extends Keyed {
     private final byte bools;
     private final BlockState defaultState;
 
-    public Block(int index, @NotNull String id, int color) {
+    public Block(int index, @NotNull String id, int vanilla) {
         super(id);
         this.index = index;
-        this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, color);
-        this.vanilla = color;
+        this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, vanilla);
+        this.vanilla = vanilla;
 
         boolean air = ColorsConfig.BLOCKS_AIR.contains(id);
         boolean foliage = ColorsConfig.BLOCKS_FOLIAGE.contains(id);
