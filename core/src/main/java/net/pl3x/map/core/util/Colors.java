@@ -29,9 +29,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.world.Biome;
-import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.BlockState;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
@@ -250,11 +248,6 @@ public class Colors {
             }
         }
         return rgb(red / count, green / count, blue / count);
-    }
-
-    public static int getRawBlockColor(@NotNull Block block) {
-        int color = ColorsConfig.BLOCK_COLORS.getOrDefault(block.getKey(), -1);
-        return color < 0 ? block.color() : color;
     }
 
     public static int fixBlockColor(@NotNull Region region, @NotNull Biome biome, @NotNull BlockState blockstate, int x, int z) {

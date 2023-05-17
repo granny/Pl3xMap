@@ -40,7 +40,7 @@ public final class BiomeRenderer extends Renderer {
     public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
         int pixelColor = 0;
 
-        if (Colors.getRawBlockColor(data.getBlockState().getBlock()) > 0) {
+        if (data.getBlockState().getBlock().color() > 0) {
             // determine the biome
             Biome biome = data.getBiome(region, blockX, blockZ);
             int color = ColorsConfig.BIOME_COLORS.getOrDefault(biome.getKey(), 0);
