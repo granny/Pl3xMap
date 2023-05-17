@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.MCAMath;
@@ -76,19 +77,26 @@ public abstract class Chunk {
         this.minHeightmapLength = 0;
     }
 
-    protected Chunk(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag, int minHeightmapLength) {
+    protected Chunk(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag, int index, int minHeightmapLength) {
         this.world = world;
         this.region = region;
 
-        Tag<?> pos = tag.get("xPos");
-        this.xPos = pos instanceof IntTag ? ((IntTag) pos).asInt() : ((ByteTag) pos).asInt();
-        pos = tag.get("yPos");
-        this.yPos = pos instanceof IntTag ? ((IntTag) pos).asInt() : ((ByteTag) pos).asInt();
-        pos = tag.get("zPos");
-        this.zPos = pos instanceof IntTag ? ((IntTag) pos).asInt() : ((ByteTag) pos).asInt();
+        this.xPos = pos(tag.get("xPos"), () -> (region.getX() << 5) + (index & 31));
+        this.yPos = pos(tag.get("yPos"), () -> world.getMinBuildHeight() >> 4);
+        this.zPos = pos(tag.get("zPos"), () -> (region.getZ() << 5) + (index << 5));
 
         this.inhabitedTime = tag.getLong("InhabitedTime");
         this.minHeightmapLength = minHeightmapLength;
+    }
+
+    private int pos(Tag<?> tag, Supplier<Integer> failsafe) {
+        if (tag instanceof IntTag intTag) {
+            return intTag.asInt();
+        }
+        if (tag instanceof ByteTag byteTag) {
+            return byteTag.asInt();
+        }
+        return failsafe.get();
     }
 
     public @NotNull World getWorld() {
@@ -232,15 +240,15 @@ public abstract class Chunk {
         return this.data[((z & 0xF) << 4) + (x & 0xF)];
     }
 
-    public static @NotNull Chunk create(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag) {
+    public static @NotNull Chunk create(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag, int index) {
         // https://minecraft.fandom.com/wiki/Data_version#List_of_data_versions
         int version = tag.getInt("DataVersion");
         Chunk chunk;
         if (version < 1519) chunk = new EmptyChunk(world, region); // wtf, older than 1.13
-        else if (version < 2200) chunk = new ChunkAnvil113(world, region, tag); // 1.13 - 1.14
-        else if (version < 2500) chunk = new ChunkAnvil115(world, region, tag); // 1.15
-        else if (version < 2844) chunk = new ChunkAnvil116(world, region, tag); // 1.16 - 1.18 (21w42a)
-        else chunk = new ChunkAnvil118(world, region, tag); // 1.18+ (21w43a+)
+        else if (version < 2200) chunk = new ChunkAnvil113(world, region, tag, index); // 1.13 - 1.14
+        else if (version < 2500) chunk = new ChunkAnvil115(world, region, tag, index); // 1.15
+        else if (version < 2844) chunk = new ChunkAnvil116(world, region, tag, index); // 1.16 - 1.18 (21w42a)
+        else chunk = new ChunkAnvil118(world, region, tag, index); // 1.18+ (21w43a+)
         return chunk.isFull() ? chunk : new EmptyChunk(world, region);
     }
 

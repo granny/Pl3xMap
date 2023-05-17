@@ -37,8 +37,8 @@ import org.jetbrains.annotations.Nullable;
 public class ChunkAnvil116 extends Chunk {
     private int sectionMin = Integer.MAX_VALUE;
 
-    protected ChunkAnvil116(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag) {
-        super(world, region, chunkTag, 37);
+    protected ChunkAnvil116(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
+        super(world, region, chunkTag, index, 37);
 
         CompoundTag levelData = chunkTag.getCompoundTag("Level");
 

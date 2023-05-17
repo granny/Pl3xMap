@@ -32,8 +32,8 @@ import net.querz.nbt.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
 public class ChunkAnvil113 extends Chunk {
-    protected ChunkAnvil113(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag) {
-        super(world, region, chunkTag, 36);
+    protected ChunkAnvil113(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
+        super(world, region, chunkTag, index, 36);
 
         CompoundTag levelData = chunkTag.getCompoundTag("Level");
 

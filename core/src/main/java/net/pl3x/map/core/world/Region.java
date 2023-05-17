@@ -128,7 +128,7 @@ public class Region {
         DataInputStream dis = new DataInputStream(new BufferedInputStream(compressionType.decompress(new FileInputStream(raf.getFD()))));
         NamedTag tag = new NBTInputStream(dis).readTag(Tag.DEFAULT_MAX_DEPTH);
         if (tag != null && tag.getTag() instanceof CompoundTag compoundTag) {
-            return this.chunks[index] = Chunk.create(getWorld(), this, compoundTag).populate();
+            return this.chunks[index] = Chunk.create(getWorld(), this, compoundTag, index).populate();
         } else {
             throw new IOException("Invalid data tag: " + (tag == null ? "null" : tag.getName()));
         }

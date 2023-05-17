@@ -39,8 +39,8 @@ public class ChunkAnvil118 extends Chunk {
 
     private Section[] sections = new Section[0];
 
-    protected ChunkAnvil118(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag) {
-        super(world, region, chunkTag, 37);
+    protected ChunkAnvil118(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
+        super(world, region, chunkTag, index, 37);
 
         this.full = chunkTag.getString("Status").equals("full");
         if (!this.full) {
