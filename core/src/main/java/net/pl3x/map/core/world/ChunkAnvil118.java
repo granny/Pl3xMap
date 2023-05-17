@@ -25,12 +25,16 @@
 package net.pl3x.map.core.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import net.pl3x.map.core.registry.BiomeRegistry;
+import java.util.Map;
+import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.MCAMath;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
+import net.querz.nbt.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +43,12 @@ public class ChunkAnvil118 extends Chunk {
 
     private Section[] sections = new Section[0];
 
+    protected long[] worldSurfaceHeights = new long[0];
+
+    private final boolean full;
+
     protected ChunkAnvil118(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
-        super(world, region, chunkTag, index, 37);
+        super(world, region, chunkTag, index);
 
         this.full = chunkTag.getString("Status").equals("full");
         if (!this.full) {
@@ -71,6 +79,11 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
+    public boolean isFull() {
+        return this.full;
+    }
+
+    @Override
     public @NotNull BlockState getBlockState(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
@@ -91,57 +104,106 @@ public class ChunkAnvil118 extends Chunk {
         return section == null ? Biome.DEFAULT : section.getBiome(x, y, z);
     }
 
+    @Override
+    public boolean noHeightmap() {
+        return this.worldSurfaceHeights.length < 37;
+    }
+
+    @Override
+    public int getWorldSurfaceY(int x, int z) {
+        if (noHeightmap()) {
+            return getWorld().getMinBuildHeight();
+        }
+        return (int) MCAMath.getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
+    }
+
     private @Nullable Section getSection(int y) {
         y -= this.sectionMin;
         return y < 0 || y >= this.sections.length ? null : this.sections[y];
     }
 
-    protected static class Section extends Chunk.Section {
-        private final BiomeRegistry biomeRegistry;
+    protected static class Section {
+        private final int sectionY;
+        private byte[] blockLight;
+        private long[] blocks;
         private long[] biomes = new long[0];
+        private BlockState[] blockPalette = new BlockState[0];
         private Biome[] biomePalette = new Biome[0];
-        private int bitsPerBiome;
+        private final int bitsPerBlock;
+        private final int bitsPerBiome;
 
-        public Section(@NotNull World world, @NotNull CompoundTag nbt) {
-            super(nbt);
-            this.biomeRegistry = world.getBiomeRegistry();
-        }
+        public Section(@NotNull World world, @NotNull CompoundTag sectionData) {
+            this.sectionY = sectionData.getByte("Y");
+            this.blockLight = sectionData.getByteArray("BlockLight");
+            this.blocks = sectionData.getLongArray("BlockStates");
 
-        @Override
-        protected void init(@NotNull CompoundTag nbt) {
-            //this.blocks = blocks(nbt.getLongArray("BlockStates")); // blocks array is set inside blockPalette() method
-            this.blockLight = light(nbt.getByteArray("BlockLight"));
-            this.blockPalette = blockPalette(nbt);
-            this.bitsPerBlock = this.blocks.length >> 6;
+            CompoundTag blockStatesTag = sectionData.getCompoundTag("block_states");
+            if (blockStatesTag != null) {
+                this.blocks = blockStatesTag.getLongArray("data");
+                ListTag<CompoundTag> paletteTag = blockStatesTag.getListTag("palette").asCompoundTagList();
+                if (paletteTag != null) {
+                    this.blockPalette = new BlockState[paletteTag.size()];
+                    for (int i = 0; i < this.blockPalette.length; i++) {
+                        CompoundTag entry = paletteTag.get(i);
+                        String id = entry.getString("Name");
+                        Block block = Pl3xMap.api().getBlockRegistry().getOrDefault(id, Blocks.AIR);
+                        Map<String, String> properties = new HashMap<>();
+                        CompoundTag propertiesTag = entry.getCompoundTag("Properties");
+                        if (propertiesTag != null) {
+                            for (Map.Entry<String, Tag<?>> property : propertiesTag) {
+                                properties.put(property.getKey().toLowerCase(), ((StringTag) property.getValue()).getValue().toLowerCase());
+                            }
+                        }
+                        this.blockPalette[i] = new BlockState(block, properties);
+                    }
+                }
+            }
 
-            CompoundTag biomesTag = nbt.getCompoundTag("biomes");
+            CompoundTag biomesTag = sectionData.getCompoundTag("biomes");
             if (biomesTag != null) {
                 this.biomes = biomesTag.getLongArray("data");
                 ListTag<StringTag> paletteTag = biomesTag.getListTag("palette").asStringTagList();
                 if (paletteTag != null) {
                     this.biomePalette = new Biome[paletteTag.size()];
                     for (int i = 0; i < this.biomePalette.length; i++) {
-                        biomePalette[i] = this.biomeRegistry.getOrDefault(paletteTag.get(i).getValue(), Biome.DEFAULT);
+                        biomePalette[i] = world.getBiomeRegistry().getOrDefault(paletteTag.get(i).getValue(), Biome.DEFAULT);
                     }
                 }
             }
+
+            if (this.blocks.length < 256 && this.blocks.length > 0) {
+                this.blocks = Arrays.copyOf(this.blocks, 256);
+            }
+            if (this.blockLight.length < 2048 && this.blockLight.length > 0) {
+                this.blockLight = Arrays.copyOf(this.blockLight, 2048);
+            }
+            this.bitsPerBlock = this.blocks.length >> 6;
             this.bitsPerBiome = Integer.SIZE - Integer.numberOfLeadingZeros(this.biomePalette.length - 1);
         }
 
-        @Override
-        protected String paletteKey() {
-            return "palette";
+        public @NotNull BlockState getBlockState(int x, int y, int z) {
+            if (this.blockPalette.length == 1) {
+                return this.blockPalette[0];
+            }
+            if (this.blocks.length == 0) {
+                return Blocks.AIR.getDefaultState();
+            }
+            int blockIndex = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);
+            long value = MCAMath.getValueFromLongArray(this.blocks, blockIndex, this.bitsPerBlock);
+            if (value >= this.blockPalette.length) {
+                return Blocks.AIR.getDefaultState();
+            }
+            return this.blockPalette[(int) value];
         }
 
-        @Override
-        protected @NotNull BlockState[] blockPalette(@NotNull CompoundTag nbt) {
-            BlockState[] palette = new BlockState[0];
-            CompoundTag tag = nbt.getCompoundTag("block_states");
-            if (tag != null) {
-                this.blocks = blocks(tag.getLongArray("data"));
-                palette = super.blockPalette(tag);
+        public int getLight(int x, int y, int z) {
+            if (this.blockLight.length == 0) {
+                return 0;
             }
-            return palette;
+            int blockByteIndex = ((y & 0xF) << 8) + ((z & 0xF) << 4) + (x & 0xF);
+            int blockHalfByteIndex = blockByteIndex >> 1;
+            boolean largeHalf = (blockByteIndex & 0x1) != 0;
+            return MCAMath.getByteHalf(this.blockLight[blockHalfByteIndex], largeHalf);
         }
 
         public @NotNull Biome getBiome(int x, int y, int z) {
