@@ -43,7 +43,6 @@ import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.PlayerTracker;
 import net.pl3x.map.core.configuration.WorldConfig;
-import net.pl3x.map.core.event.world.WorldLoadedEvent;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
@@ -96,9 +95,11 @@ public abstract class World extends Keyed {
         this.spawn = spawn;
         this.type = type;
 
+        String safeNameForDirectories = name.replace(":", "-");
+
         this.regionDirectory = regionDirectory;
-        this.tilesDirectory = FileUtil.getTilesDir().resolve(name.replace(":", "-"));
-        this.customMarkersDirectory = Pl3xMap.api().getMainDir().resolve("markers").resolve(name);
+        this.tilesDirectory = FileUtil.getTilesDir().resolve(safeNameForDirectories);
+        this.customMarkersDirectory = Pl3xMap.api().getMainDir().resolve("markers").resolve(safeNameForDirectories);
         this.markersDirectory = getTilesDirectory().resolve("markers");
 
         FileUtil.createDirs(this.regionDirectory);
