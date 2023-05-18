@@ -156,8 +156,8 @@ public class ChunkAnvil113 extends Chunk {
                 this.blockLight = Arrays.copyOf(this.blockLight, 2048);
             }
 
-            ListTag<CompoundTag> paletteTag = sectionData.getListTag("Palette").asCompoundTagList();
-            if (paletteTag != null) {
+            if (sectionData.containsKey("palette")) {
+                ListTag<CompoundTag> paletteTag = sectionData.getListTag("palette").asCompoundTagList();
                 this.palette = new BlockState[paletteTag.size()];
                 for (int i = 0; i < this.palette.length; i++) {
                     CompoundTag stateTag = paletteTag.get(i);
