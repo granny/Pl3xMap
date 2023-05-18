@@ -162,8 +162,8 @@ public class ChunkAnvil118 extends Chunk {
             CompoundTag biomesTag = sectionData.getCompoundTag("biomes");
             if (biomesTag != null) {
                 this.biomes = biomesTag.getLongArray("data");
-                ListTag<StringTag> paletteTag = biomesTag.getListTag("palette").asStringTagList();
-                if (paletteTag != null) {
+                if (biomesTag.containsKey("palette")) {
+                    ListTag<StringTag> paletteTag = biomesTag.getListTag("palette").asStringTagList();
                     this.biomePalette = new Biome[paletteTag.size()];
                     for (int i = 0; i < this.biomePalette.length; i++) {
                         biomePalette[i] = world.getBiomeRegistry().getOrDefault(paletteTag.get(i).getValue(), Biome.DEFAULT);
