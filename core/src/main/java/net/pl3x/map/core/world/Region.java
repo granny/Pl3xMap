@@ -25,6 +25,7 @@ package net.pl3x.map.core.world;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -86,7 +87,7 @@ public class Region {
         if (chunk == null) {
             try (RandomAccessFile raf = new RandomAccessFile(getRegionFile(), "r")) {
                 chunk = loadChunk(raf, index);
-            } catch (FileNotFoundException ignore) {
+            } catch (EOFException | FileNotFoundException ignore) {
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -106,6 +107,7 @@ public class Region {
                 Pl3xMap.api().getRegionProcessor().checkPaused();
                 loadChunk(raf, index);
             }
+        } catch (EOFException ignore) {
         }
     }
 
