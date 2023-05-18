@@ -84,7 +84,7 @@ public class BukkitWorld extends World {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public <@NotNull T> @NotNull T getLevel() {
+    public <T> @NotNull T getLevel() {
         return (@NotNull T) this.level;
     }
 

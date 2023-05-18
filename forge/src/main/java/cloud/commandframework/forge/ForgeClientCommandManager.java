@@ -36,6 +36,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ClientCommandSourceStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A command manager for registering client-side commands.
@@ -112,7 +113,7 @@ public final class ForgeClientCommandManager<C> extends ForgeCommandManager<C> {
      * @return whether the sender has the specified permission
      */
     @Override
-    public boolean hasPermission(final @NonNull C sender, final @NonNull String permission) {
+    public boolean hasPermission(final @NotNull C sender, final @NotNull String permission) {
         return true;
     }
 

@@ -39,6 +39,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
 import net.minecraftforge.server.permission.nodes.PermissionTypes;
+import org.jetbrains.annotations.NotNull;
 
 public final class ForgeServerCommandManager<C> extends ForgeCommandManager<C> {
 
@@ -88,7 +89,7 @@ public final class ForgeServerCommandManager<C> extends ForgeCommandManager<C> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean hasPermission(final C sender, final String permission) {
+    public boolean hasPermission(final @NotNull C sender, final @NotNull String permission) {
         final CommandSourceStack source = this.backwardsCommandSourceMapper().apply(sender);
         if (source.isPlayer()) {
             final PermissionNode<Boolean> node;

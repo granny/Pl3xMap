@@ -40,6 +40,7 @@ import java.util.function.Supplier;
 import net.minecraft.commands.CommandSourceStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jetbrains.annotations.NotNull;
 
 @DefaultQualifier(NonNull.class)
 public abstract class ForgeCommandManager<C>
@@ -83,7 +84,7 @@ public abstract class ForgeCommandManager<C>
     }
 
     @Override
-    public boolean hasPermission(final C sender, final String permission) {
+    public boolean hasPermission(final @NotNull C sender, final @NotNull String permission) {
         return false;
     }
 
