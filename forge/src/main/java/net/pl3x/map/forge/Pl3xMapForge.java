@@ -135,6 +135,9 @@ public class Pl3xMapForge extends Pl3xMap {
 
     @SubscribeEvent
     public void onWorldLoad(LevelEvent.Load event) {
+        if (!isEnabled()) {
+            return;
+        }
         if (!(event.getLevel() instanceof ServerLevel level)) {
             return;
         }

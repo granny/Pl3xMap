@@ -218,6 +218,8 @@ public abstract class Pl3xMap {
         Logger.debug("Registering renderers");
         getRendererRegistry().register();
 
+        this.enabled = true;
+
         new Pl3xMapEnabledEvent().callEvent();
 
         // load up already loaded worlds
@@ -250,8 +252,6 @@ public abstract class Pl3xMap {
         }
 
         Pl3xMap.api().getRegionProcessor().setPaused(false);
-
-        this.enabled = true;
     }
 
     public void disable() {
@@ -261,8 +261,6 @@ public abstract class Pl3xMap {
             this.metrics.shutdown();
             this.metrics = null;
         }
-
-        this.enabled = false;
 
         // stop tasks
         Logger.debug("Stopping tasks");
@@ -276,6 +274,8 @@ public abstract class Pl3xMap {
         // stop integrated server
         Logger.debug("Stopping internal server");
         getHttpdServer().stopServer();
+
+        this.enabled = false;
 
         new Pl3xMapDisabledEvent().callEvent();
 

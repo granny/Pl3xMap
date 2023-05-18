@@ -114,8 +114,10 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
         });
 
         ServerWorldEvents.LOAD.register((server, level) -> {
-            String name = level.dimension().location().toString();
-            Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
+            if (isEnabled()) {
+                String name = level.dimension().location().toString();
+                Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
+            }
         });
 
         ServerWorldEvents.UNLOAD.register((server, level) -> {
