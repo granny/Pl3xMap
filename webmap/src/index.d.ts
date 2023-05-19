@@ -7,9 +7,9 @@ import {Pl3xMap} from "./Pl3xMap";
 
 declare global {
     interface Window {
-        pl3xmap: Pl3xMap   
+        pl3xmap: Pl3xMap
     }
-    
+
     interface WindowEventMap {
         markeradded: CustomEvent<Marker>;
         markerremoved: CustomEvent<Marker>;

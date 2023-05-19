@@ -35,9 +35,9 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         super({}, {}, {
             hideSingleBase: true,
             sortLayers: true,
-            sortFunction: (layer1, layer2, name1, name2) => {
+            sortFunction: (layer1: L.Layer, layer2: L.Layer, name1: string, name2: string): number => {
                 if (layer1 instanceof MarkerLayer && layer2 instanceof MarkerLayer) {
-                    const diff = layer1.priority - layer2.priority;
+                    const diff: number = layer1.priority - layer2.priority;
                     if (diff !== 0) {
                         return diff;
                     }
@@ -64,8 +64,8 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         this.initEvents();
     }
 
-    private initEvents() {
-        window.addEventListener('overlayadded', (e) => {
+    private initEvents(): void {
+        window.addEventListener('overlayadded', (e: CustomEvent<MarkerLayer>): void => {
             if (e.detail.showControls) {
                 this.addOverlay(e.detail, e.detail.label);
             }
@@ -75,19 +75,19 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
             this._update();
         });
 
-        window.addEventListener('overlayremoved', (e) => {
+        window.addEventListener('overlayremoved', (e: CustomEvent<MarkerLayer>): void => {
             this.removeLayer(e.detail);
             this._update();
         });
 
-        window.addEventListener('worldselected', () => {
+        window.addEventListener('worldselected', (): void => {
             this._layers = [];
             this._update();
         });
     }
 
-    private _initLayout() {
-        const heading = L.DomUtil.create('h2', '', this._content);
+    private _initLayout(): void {
+        const heading: HTMLHeadingElement = L.DomUtil.create('h2', '', this._content);
         heading.innerText = this._pl3xmap.settings!.lang.layers.label;
         heading.id = 'layers-heading';
 
@@ -113,20 +113,20 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
 
         this._layerControlInputs = [];
 
-        for (const layer of this._layers) {
+        this._layers.forEach((layer: LayerListItem): void => {
             this._addItem(layer);
-        }
+        });
 
-        const hasLayers = this._layers.length > 0;
+        const hasLayers: boolean = this._layers.length > 0;
         this._container.hidden = !hasLayers;
         this._skeleton.hidden = hasLayers;
 
         return this;
     }
 
-    private _addItem(layer: LayerListItem) {
-        const label = L.DomUtil.create('label'),
-            input = L.DomUtil.create('input') as LayerControlInput;
+    private _addItem(layer: LayerListItem): HTMLLabelElement {
+        const label: HTMLLabelElement = L.DomUtil.create('label'),
+            input: LayerControlInput = L.DomUtil.create('input') as LayerControlInput;
 
         input.type = 'checkbox';
         input.name = 'overlays';
@@ -157,7 +157,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         return this;
     }
 
-    onActivate() {
+    onActivate(): void {
         if (!this._container.hidden) {
             (this._list.querySelector('input') as HTMLElement)!.focus();
         } else {

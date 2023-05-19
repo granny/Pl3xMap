@@ -4,6 +4,9 @@ import {Player} from "../player/Player";
 import {createSVGIcon, handleKeyboardEvent, isset} from "../util/Util";
 import BaseTab from "./BaseTab";
 import '../svg/players.svg';
+import {Lang} from "../settings/Lang";
+import {Settings} from "../settings/Settings";
+import {PlayerManager} from "../player/PlayerManager";
 
 interface PlayerListItem {
     input: HTMLInputElement;
@@ -19,7 +22,7 @@ export default class PlayersTab extends BaseTab {
     constructor(pl3xmap: Pl3xMap) {
         super(pl3xmap, 'players');
 
-        const lang = pl3xmap.settings!.lang;
+        const lang: Lang = pl3xmap.settings!.lang;
 
         this._button.appendChild(createSVGIcon('players'));
         this._button.setAttribute('aria-label', lang.worlds.label);
@@ -42,17 +45,17 @@ export default class PlayersTab extends BaseTab {
         this._update();
     }
 
-    private initEvents() {
-        addEventListener('playeradded', (e: CustomEvent<Player>) => {
+    private initEvents(): void {
+        addEventListener('playeradded', (e: CustomEvent<Player>): void => {
             this.createListItem(e.detail);
             this._update();
         });
-        addEventListener('playerremoved', (e: CustomEvent<Player>) => {
+        addEventListener('playerremoved', (e: CustomEvent<Player>): void => {
             this.removeListItem(e.detail);
             this._update();
         });
-        addEventListener('followplayer', (e: CustomEvent<Player>) => {
-            this._players.forEach((item: PlayerListItem, player: Player) => {
+        addEventListener('followplayer', (e: CustomEvent<Player>): void => {
+            this._players.forEach((item: PlayerListItem, player: Player): void => {
                 item.input.checked = player === e.detail;
             });
         });
@@ -62,12 +65,12 @@ export default class PlayersTab extends BaseTab {
     }
 
     private _update(): void {
-        const settings = this._pl3xmap.settings;
+        const settings: Settings | undefined = this._pl3xmap.settings;
 
-        const online = String(isset(settings?.players) ? Object.keys(settings!.players).length : '???');
-        const max = String(settings?.maxPlayers ?? '???');
+        const online: string = String(isset(settings?.players) ? Object.keys(settings!.players).length : '???');
+        const max: string = String(settings?.maxPlayers ?? '???');
 
-        const title = settings?.lang.players?.label
+        const title: any = settings?.lang.players?.label
                 .replace('<online>', online)
                 .replace('<max>', max)
             ?? 'Players';
@@ -76,9 +79,9 @@ export default class PlayersTab extends BaseTab {
         this._button.title = title;
     }
 
-    private createListItem(player: Player) {
-        const input = L.DomUtil.create('input', 'players'),
-            label = L.DomUtil.create('label', '');
+    private createListItem(player: Player): void {
+        const input: HTMLInputElement = L.DomUtil.create('input', 'players'),
+            label: HTMLLabelElement = L.DomUtil.create('label', '');
 
         label.style.backgroundImage = `url('images/skins/3D/${player.uuid}.png')`;
         label.innerText = player.displayName;
@@ -86,9 +89,9 @@ export default class PlayersTab extends BaseTab {
         input.type = 'radio';
         input.name = 'player';
         input.checked = false;
-        input.addEventListener('click', async () => {
-            const manager = this._pl3xmap.playerManager;
-            const player = manager.players.get(input.id);
+        input.addEventListener('click', async (): Promise<void> => {
+            const manager: PlayerManager = this._pl3xmap.playerManager;
+            const player: Player | undefined = manager.players.get(input.id);
             if (player === manager.follow) {
                 manager.follow = undefined;
             } else {
@@ -107,8 +110,8 @@ export default class PlayersTab extends BaseTab {
         this._list.appendChild(label);
     }
 
-    private removeListItem(player: Player) {
-        const listItem = this._players.get(player);
+    private removeListItem(player: Player): void {
+        const listItem: PlayerListItem | undefined = this._players.get(player);
 
         if (!listItem) {
             return;
@@ -123,7 +126,7 @@ export default class PlayersTab extends BaseTab {
         }
     }
 
-    onActivate() {
+    onActivate(): void {
         if (this._players.size) {
             (this._list.querySelector('input:checked') as HTMLElement)?.focus()
         } else {

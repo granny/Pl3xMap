@@ -1,4 +1,5 @@
 import * as L from "leaflet";
+import {TileEvent} from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Label} from "../settings/Lang";
 import {Renderer, World} from "../world/World";
@@ -30,13 +31,13 @@ export class ReversedZoomTileLayer extends L.TileLayer {
         this._renderer = renderer;
 
         // when tiles load we need to load extra block info
-        this.addEventListener("tileload", (event) => {
+        this.addEventListener("tileload", (event: TileEvent): void => {
             const zoom: number = world.settings.zoom.maxOut - event.coords.z;
             world.loadBlockInfo(zoom, event.coords.x, event.coords.y);
         });
 
         // when tiles unload we need to remove the extra block info from memory
-        this.addEventListener("tileunload", (event) => {
+        this.addEventListener("tileunload", (event: TileEvent): void => {
             const zoom: number = world.settings.zoom.maxOut - event.coords.z;
             world.unsetBlockInfo(zoom, event.coords.x, event.coords.y);
         });
@@ -54,9 +55,9 @@ export class ReversedZoomTileLayer extends L.TileLayer {
     }
 
     _getZoomForUrl(): number {
-        const zoom = this._tileZoom!,
-            maxZoom = this.options.maxZoom!,
-            offset = this.options.zoomOffset!;
+        const zoom: number = this._tileZoom!,
+            maxZoom: number = this.options.maxZoom!,
+            offset: number = this.options.zoomOffset!;
         return (maxZoom - zoom) + offset;
     }
 
@@ -64,10 +65,10 @@ export class ReversedZoomTileLayer extends L.TileLayer {
     // Called only internally, overrides GridLayer's [`createTile()`](#gridlayer-createtile)
     // to return an `<img>` HTML element with the appropriate image URL given `coords`. The `done`
     // callback is called when the tile has been loaded.
-    createTile(coords: L.Coords, done: L.DoneCallback) {
-        const tile = L.DomUtil.create('img');
+    createTile(coords: L.Coords, done: L.DoneCallback): HTMLImageElement {
+        const tile: HTMLImageElement = L.DomUtil.create('img');
 
-        L.DomEvent.on(tile, 'load', () => {
+        L.DomEvent.on(tile, 'load', (): void => {
             // Once image has loaded revoke the object URL as we don't need it anymore
             URL.revokeObjectURL(tile.src);
             this._tileOnLoad(done, tile)
@@ -85,18 +86,18 @@ export class ReversedZoomTileLayer extends L.TileLayer {
         // This works around the fact that browsers usually don't make a request for an image that was previously loaded,
         // without resorting to changing the URL (which would break caching).
         fetch(this.getTileUrl(coords))
-            .then(res => {
+            .then((res: Response): void => {
                 // Call leaflet's error handler if request fails for some reason
                 if (!res.ok) {
                     this._tileOnError(done, tile, new Error(res.statusText));
                     return;
                 }
 
-                // Get image data and convert into object URL so it can be used as a src
+                // Get image data and convert into object URL, so it can be used as a src
                 // Leaflet's onload listener will take it from here
-                res.blob().then(blob => {
+                res.blob().then((blob: Blob): void => {
                     // don't use URL.createObjectURL, it creates memory leak
-                    const reader = new FileReader();
+                    const reader: FileReader = new FileReader();
                     reader.readAsDataURL(blob);
                     reader.onload = () => tile.src = String(reader.result);
                 });

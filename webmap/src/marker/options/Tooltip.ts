@@ -19,7 +19,7 @@ export class Tooltip {
     constructor(data: TooltipOptions) {
         this._content = isset(data.content) ? data.content! : "";
 
-        let props = {};
+        let props: {} = {};
         if (isset(data.offset)) props = {...props, offset: [data.offset!.x, data.offset!.z]};
         if (isset(data.direction)) props = {...props, direction: Direction[data.direction!]};
         if (isset(data.permanent)) props = {...props, permanent: data.permanent};
@@ -27,7 +27,7 @@ export class Tooltip {
         if (isset(data.opacity)) props = {...props, opacity: data.opacity};
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane!);
+            const dom: HTMLElement = getOrCreatePane(data.pane!);
             props = {
                 ...props,
                 pane: dom.className.split(" ")[1].split("-")[1]
@@ -47,10 +47,10 @@ export class Tooltip {
 }
 
 export enum Direction {
-    right,
-    left,
-    top,
-    bottom,
-    center,
-    auto
+    right = 0,
+    left = 1,
+    top = 2,
+    bottom = 3,
+    center = 4,
+    auto = 5
 }

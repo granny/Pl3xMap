@@ -12,7 +12,7 @@ interface CircleOptions extends L.PolylineOptions {
 
 export class Circle extends Marker {
     constructor(type: Type) {
-        const data = type.data as unknown as CircleOptions;
+        const data: CircleOptions = type.data as unknown as CircleOptions;
 
         let options = {
             ...type.options?.properties,
@@ -23,7 +23,7 @@ export class Circle extends Marker {
         };
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane);
+            const dom: HTMLElement = getOrCreatePane(data.pane);
             options = {
                 ...options,
                 pane: dom.className.split("-")[1]
@@ -34,8 +34,8 @@ export class Circle extends Marker {
     }
 
     public update(raw: unknown[]): void {
-        const data = raw as unknown as CircleOptions;
-        const circle = this.marker as L.Circle;
+        const data: CircleOptions = raw as unknown as CircleOptions;
+        const circle: L.Circle = this.marker as L.Circle;
         circle.setLatLng(toCenteredLatLng(data.center));
         circle.setRadius(pixelsToMeters(data.radius));
     }

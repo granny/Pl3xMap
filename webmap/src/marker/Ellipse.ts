@@ -14,7 +14,7 @@ interface EllipseOptions extends L.PolylineOptions {
 
 export class Ellipse extends Marker {
     constructor(type: Type) {
-        const data = type.data as unknown as EllipseOptions;
+        const data: EllipseOptions = type.data as unknown as EllipseOptions;
 
         let options = {
             ...type.options?.properties,
@@ -24,7 +24,7 @@ export class Ellipse extends Marker {
         };
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane);
+            const dom: HTMLElement = getOrCreatePane(data.pane);
             options = {
                 ...options,
                 pane: dom.className.split("-")[1]
@@ -43,8 +43,8 @@ export class Ellipse extends Marker {
     }
 
     public update(raw: unknown[]): void {
-        const data = raw as unknown as EllipseOptions;
-        const ellipse = this.marker as L.Ellipse;
+        const data: EllipseOptions = raw as unknown as EllipseOptions;
+        const ellipse: L.Ellipse = this.marker as L.Ellipse;
         ellipse.setLatLng(toCenteredLatLng(data.center));
         ellipse.setRadius([
             pixelsToMeters(data.radius.x),

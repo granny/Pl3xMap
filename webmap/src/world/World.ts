@@ -23,7 +23,7 @@ export class World {
     private _biomePalette: Map<number, string> = new Map();
     private _blockInfo: Map<number, Map<string, BlockInfo>> = new Map();
 
-    private _loaded = false;
+    private _loaded: boolean = false;
 
     private _timer: NodeJS.Timeout | undefined;
 
@@ -56,9 +56,9 @@ export class World {
         });
 
         //TODO: Handle errors
-        return new Promise((resolve) => {
+        return new Promise((resolve): void => {
             getJSON(`tiles/${this.name}/settings.json`)
-                .then((settings: WorldSettings) => {
+                .then((settings: WorldSettings): void => {
                     this._loaded = true;
 
                     // copy settings values
@@ -68,9 +68,9 @@ export class World {
                     this.settings.ui = settings.ui;
 
                     // setup renderers
-                    for (const renderer of this.settings.renderers) {
+                    this.settings.renderers.forEach((renderer: Renderer): void => {
                         this._rendererLayers.set(renderer, new DoubleTileLayer(this._pl3xmap, this, renderer));
-                    }
+                    });
 
                     resolve(this);
                 });
@@ -80,7 +80,7 @@ export class World {
     public unload(): void {
         clearTimeout(this._timer);
         // unload and clear markers
-        this._markerLayers.forEach(layer => layer.unload())
+        this._markerLayers.forEach((layer: MarkerLayer) => layer.unload())
         this._markerLayers = [];
         // unload renderer layer
         this._currentRendererLayer?.remove();
@@ -88,23 +88,23 @@ export class World {
         this._currentRenderer = undefined;
     }
 
-    public loadMarkers() {
+    public loadMarkers(): void {
         getJSON(`tiles/${this.name}/markers.json`)
-            .then((json) => {
-                (json as MarkerLayer[]).forEach((layer) => {
-                    const markerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex, layer.pane, layer.css);
+            .then((json): void => {
+                (json as MarkerLayer[]).forEach((layer: MarkerLayer): void => {
+                    const markerLayer: MarkerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex, layer.pane, layer.css);
                     this._markerLayers.push(markerLayer);
                     markerLayer.update(this);
                 });
             });
     }
 
-    public loadBlockInfo(zoom: number, x: number, z: number) {
+    public loadBlockInfo(zoom: number, x: number, z: number): void {
         if (!this.settings.ui.blockinfo) {
             return;
         }
         getBytes(`tiles/${this.name}/${zoom}/blockinfo/${x}_${z}.pl3xmap.gz`)
-            .then((buffer?: ArrayBuffer) => {
+            .then((buffer?: ArrayBuffer): void => {
                 this.setBlockInfo(zoom, x, z, buffer);
             });
     }
@@ -113,14 +113,14 @@ export class World {
         return this.blockInfo.get(zoom < 0 ? 0 : zoom)?.get(`${x}_${z}`);
     }
 
-    public setBlockInfo(zoom: number, x: number, z: number, buffer?: ArrayBuffer) {
-        let infoMap = this.blockInfo.get(zoom < 0 ? 0 : zoom);
+    public setBlockInfo(zoom: number, x: number, z: number, buffer?: ArrayBuffer): void {
+        let infoMap: Map<string, BlockInfo> | undefined = this.blockInfo.get(zoom < 0 ? 0 : zoom);
         if (infoMap == undefined) {
             infoMap = new Map<string, BlockInfo>();
             this.blockInfo.set(zoom, infoMap);
         }
 
-        const blockInfo = buffer == undefined ? null : new BlockInfo(new Uint8Array(buffer));
+        const blockInfo: null | BlockInfo = buffer == undefined ? null : new BlockInfo(new Uint8Array(buffer));
 
         if (blockInfo == null) {
             infoMap.delete(`${x}_${z}`);
@@ -129,7 +129,7 @@ export class World {
         }
     }
 
-    public unsetBlockInfo(zoom: number, x: number, z: number) {
+    public unsetBlockInfo(zoom: number, x: number, z: number): void {
         this.blockInfo.get(zoom)?.delete(`${x}_${z}`);
     }
 
@@ -149,11 +149,11 @@ export class World {
         clearTimeout(this._timer);
 
         if (!(renderer instanceof Renderer)) {
-            for (const label of this.renderers) {
+            this.renderers.forEach((label: Renderer): void => {
                 if (label.label == renderer) {
                     renderer = label;
                 }
-            }
+            });
         }
 
         this._currentRendererLayer?.remove();

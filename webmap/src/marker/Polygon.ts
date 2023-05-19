@@ -2,6 +2,7 @@ import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
 import {Polyline} from "../util/Polyline";
 import {getOrCreatePane, isset, toCenteredLatLng} from "../util/Util";
+import {Point} from "../util/Point";
 
 interface PolygonOptions extends L.PolylineOptions {
     key: string;
@@ -11,7 +12,7 @@ interface PolygonOptions extends L.PolylineOptions {
 
 export class Polygon extends Marker {
     constructor(type: Type) {
-        const data = type.data as unknown as PolygonOptions;
+        const data: PolygonOptions = type.data as unknown as PolygonOptions;
 
         let options = {
             ...type.options?.properties,
@@ -23,7 +24,7 @@ export class Polygon extends Marker {
         };
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane);
+            const dom: HTMLElement = getOrCreatePane(data.pane);
             options = {
                 ...options,
                 pane: dom.className.split("-")[1]
@@ -34,20 +35,20 @@ export class Polygon extends Marker {
     }
 
     public update(raw: unknown[]): void {
-        const data = raw as unknown as PolygonOptions;
-        const polygon = this.marker as L.Polygon;
+        const data: PolygonOptions = raw as unknown as PolygonOptions;
+        const polygon: L.Polygon = this.marker as L.Polygon;
         polygon.setLatLngs(Polygon.createPoly(data));
     }
 
     private static createPoly(data: PolygonOptions): L.LatLng[][] {
-        const poly = [];
-        for (const polyline of data.polylines) {
-            const line = [];
-            for (const point of polyline.points) {
+        const poly: any[] = [];
+        data.polylines.forEach((polyline: Polyline): void => {
+            const line: any[] = [];
+            polyline.points.forEach((point: Point): void => {
                 line.push(toCenteredLatLng(point));
-            }
+            });
             poly.push(line);
-        }
+        });
         return poly;
     }
 }

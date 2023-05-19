@@ -4,6 +4,8 @@ import {Block} from "../palette/Block";
 import {ControlBox} from "./ControlBox";
 import {getJSON} from "../util/Util";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
+import {CoordsControl} from "./CoordsControl";
+import {BlockInfo} from "../palette/BlockInfo";
 
 export class BlockInfoControl extends ControlBox {
     private _dom: HTMLDivElement = L.DomUtil.create('div');
@@ -39,7 +41,7 @@ export class BlockInfoControl extends ControlBox {
     }
 
     public update(map: Pl3xMapLeafletMap): void {
-        const coords = this._pl3xmap.controlManager.coordsControl!;
+        const coords: CoordsControl = this._pl3xmap.controlManager.coordsControl!;
         const zoom: number = map.getCurrentZoom() < 0 ? 0 : map.getCurrentZoom();
         const x: number = coords.x;
         const z: number = coords.z;
@@ -55,7 +57,7 @@ export class BlockInfoControl extends ControlBox {
         let biomeName: string = 'unknown';
         let y: number | undefined;
 
-        const blockInfo = this._pl3xmap.worldManager.currentWorld?.getBlockInfo(zoom, fileX, fileZ);
+        const blockInfo: BlockInfo | undefined = this._pl3xmap.worldManager.currentWorld?.getBlockInfo(zoom, fileX, fileZ);
         if (blockInfo !== undefined) {
             const block: Block = blockInfo.getBlock(tileZ * 512 + tileX);
             if (block != null) {

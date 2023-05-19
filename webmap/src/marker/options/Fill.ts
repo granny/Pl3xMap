@@ -12,12 +12,12 @@ export class Fill {
     private readonly _properties: L.PathOptions;
 
     constructor(data: FillOptions) {
-        let props = {};
+        let props: {} = {};
 
         if (isset(data.enabled)) props = {...props, fill: data.enabled};
         if (isset(data.type)) props = {...props, fillRule: Type[data.type!]};
         if (isset(data.color)) {
-            const color = new Color(data.color!);
+            const color: Color = new Color(data.color!);
             props = {...props, fillColor: color.hex, fillOpacity: color.opacity};
         }
 
@@ -30,6 +30,6 @@ export class Fill {
 }
 
 export enum Type {
-    nonzero,
-    evenodd
+    nonzero = 0,
+    evenodd = 1
 }

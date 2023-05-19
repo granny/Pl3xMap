@@ -16,12 +16,12 @@ export class Stroke {
     private readonly _properties: L.PathOptions;
 
     constructor(data: StrokeOptions) {
-        let props = {};
+        let props: {} = {};
 
         if (isset(data.enabled)) props = {...props, stroke: data.enabled};
         if (isset(data.weight)) props = {...props, weight: data.weight};
         if (isset(data.color)) {
-            const color = new Color(data.color!);
+            const color: Color = new Color(data.color!);
             props = {...props, color: color.hex, opacity: color.opacity};
         }
         if (isset(data.lineCap)) props = {...props, lineCap: LineCap[data.lineCap!]};
@@ -38,13 +38,13 @@ export class Stroke {
 }
 
 export enum LineCap {
-    butt,
-    round,
-    square
+    butt = 0,
+    round = 1,
+    square = 2
 }
 
 export enum LineJoin {
-    miter,
-    round,
-    bevel
+    miter = 0,
+    round = 1,
+    bevel = 2
 }

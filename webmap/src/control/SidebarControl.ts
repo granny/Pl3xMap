@@ -47,7 +47,7 @@ export default class SidebarControl extends L.Control {
         //this.addTab(new MarkersTab(pl3xmap));
     }
 
-    onAdd(map: Pl3xMapLeafletMap) {
+    onAdd(map: Pl3xMapLeafletMap): HTMLDivElement {
         for (const tab of this._tabs) {
             if (tab.onAdd) {
                 tab.onAdd(map);
@@ -57,7 +57,7 @@ export default class SidebarControl extends L.Control {
         return this._container;
     }
 
-    toggle() {
+    toggle(): void {
         if (this._expanded) {
             this.collapse();
         } else {
@@ -65,13 +65,13 @@ export default class SidebarControl extends L.Control {
         }
     }
 
-    expand() {
+    expand(): void {
         this._expanded = true;
         this._container.classList.add('sidebar--expanded');
         this._content.setAttribute('aria-hidden', 'false');
     }
 
-    collapse() {
+    collapse(): void {
         if (this._currentTab) {
             this.deactivateTab(this._currentTab, true);
         }
@@ -81,7 +81,7 @@ export default class SidebarControl extends L.Control {
         this._content.setAttribute('aria-hidden', 'true');
     }
 
-    addTab(tab: SidebarTab) {
+    addTab(tab: SidebarTab): void {
         if (this._tabs.has(tab)) {
             return;
         }
@@ -91,7 +91,7 @@ export default class SidebarControl extends L.Control {
         tab.button.addEventListener('click', () => this.toggleTab(tab));
         this._buttons.appendChild(tab.button);
 
-        tab.content.addEventListener('keydown', (e: KeyboardEvent) => {
+        tab.content.addEventListener('keydown', (e: KeyboardEvent): void => {
             if (e.key === 'Escape') {
                 this.collapse();
             }
@@ -100,7 +100,7 @@ export default class SidebarControl extends L.Control {
         this._content.appendChild(tab.content);
     }
 
-    removeTab(tab: SidebarTab) {
+    removeTab(tab: SidebarTab): void {
         if (!this._tabs.has(tab)) {
             return;
         }
@@ -109,7 +109,7 @@ export default class SidebarControl extends L.Control {
         tab.button.remove();
     }
 
-    toggleTab(tab: SidebarTab) {
+    toggleTab(tab: SidebarTab): void {
         if (this._currentTab === tab) {
             this.collapse();
         } else {
@@ -117,7 +117,7 @@ export default class SidebarControl extends L.Control {
         }
     }
 
-    activateTab(tab: SidebarTab) {
+    activateTab(tab: SidebarTab): void {
         if (!this._expanded) {
             this.expand();
         }
@@ -136,7 +136,7 @@ export default class SidebarControl extends L.Control {
         }
     }
 
-    deactivateTab(tab: SidebarTab, moveFocus: boolean) {
+    deactivateTab(tab: SidebarTab, moveFocus: boolean): void {
         if (tab !== this._currentTab) {
             return;
         }

@@ -23,13 +23,13 @@ interface IconOptions extends L.MarkerOptions {
 
 export class Icon extends Marker {
     constructor(type: Type) {
-        function url(image: string) {
+        function url(image: string): string {
             return `images/icon/registered/${image}.png`;
         }
 
-        const data = type.data as unknown as IconOptions;
+        const data: IconOptions = type.data as unknown as IconOptions;
 
-        let props = {};
+        let props: {} = {};
         if (isset(data.image)) props = {...props, iconUrl: url(data.image)};
         if (isset(data.retina)) props = {...props, iconRetinaUrl: url(data.retina!)};
         if (isset(data.size)) props = {...props, iconSize: [data.size!.x, data.size!.z]};
@@ -39,13 +39,13 @@ export class Icon extends Marker {
         if (isset(data.shadowSize)) props = {...props, shadowSize: [data.shadowSize!.x, data.shadowSize!.z]};
         if (isset(data.shadowAnchor)) props = {...props, shadowAnchor: [data.shadowAnchor!.x, data.shadowAnchor!.z]};
 
-        const tooltipOffset = type.options?.tooltip?.properties?.offset;
-        const popupOffset = type.options?.popup?.properties?.offset;
+        const tooltipOffset: L.PointExpression | undefined = type.options?.tooltip?.properties?.offset;
+        const popupOffset: L.PointExpression | undefined = type.options?.popup?.properties?.offset;
 
         if (isset(tooltipOffset)) props = {...props, tooltipAnchor: tooltipOffset};
         if (isset(popupOffset)) props = {...props, popupAnchor: popupOffset};
 
-        let options = {
+        let options: IconOptions = {
             ...type.options?.properties,
             rotationAngle: data.rotationAngle,
             rotationOrigin: data.rotationOrigin,
@@ -56,7 +56,7 @@ export class Icon extends Marker {
         } as IconOptions;
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane);
+            const dom: HTMLElement = getOrCreatePane(data.pane);
             options = {
                 ...options,
                 pane: dom.className.split(" ")[1].split("-")[1]
@@ -67,10 +67,10 @@ export class Icon extends Marker {
     }
 
     public update(raw: unknown[], options?: MarkerOptions): void {
-        const data = raw as unknown as IconOptions;
-        const icon = this.marker as L.Marker;
+        const data: IconOptions = raw as unknown as IconOptions;
+        const icon: L.Marker = this.marker as L.Marker;
         icon.setLatLng(toCenteredLatLng(data.point));
-        const iconOptions = icon.options as IconOptions;
+        const iconOptions: IconOptions = icon.options as IconOptions;
         iconOptions.rotationAngle = data.rotationAngle;
         iconOptions.rotationOrigin = data.rotationOrigin;
         if (options?.tooltip?.content) {

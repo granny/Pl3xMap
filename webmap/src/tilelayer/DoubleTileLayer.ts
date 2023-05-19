@@ -18,7 +18,7 @@ export class DoubleTileLayer {
 
     private createTileLayer(pl3xmap: Pl3xMap, world: World, renderer: Renderer): ReversedZoomTileLayer {
         return new ReversedZoomTileLayer(pl3xmap, world, renderer)
-            .addEventListener("load", () => {
+            .addEventListener("load", (): void => {
                 // when all tiles in this layer are loaded, switch to this layer
                 this.switchTileLayer();
             });

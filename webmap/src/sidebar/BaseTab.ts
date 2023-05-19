@@ -33,9 +33,9 @@ export default class BaseTab implements SidebarTab {
         return this._id;
     }
 
-    onActivate() {
+    onActivate(): void {
         if (this._content.children.length) {
-            const focusTarget = (this._content.firstElementChild as HTMLElement);
+            const focusTarget: HTMLElement = (this._content.firstElementChild as HTMLElement);
             focusTarget.tabIndex = -1;
             focusTarget.focus();
         }

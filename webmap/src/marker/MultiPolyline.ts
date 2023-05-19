@@ -2,6 +2,7 @@ import * as L from "leaflet";
 import {Marker, Type} from "./Marker";
 import {Polyline} from "../util/Polyline";
 import {getOrCreatePane, isset, toCenteredLatLng} from "../util/Util";
+import {Point} from "../util/Point";
 
 interface MultiPolylineOptions extends L.PolylineOptions {
     key: string;
@@ -11,7 +12,7 @@ interface MultiPolylineOptions extends L.PolylineOptions {
 
 export class MultiPolyline extends Marker {
     constructor(type: Type) {
-        const data = type.data as unknown as MultiPolylineOptions;
+        const data: MultiPolylineOptions = type.data as unknown as MultiPolylineOptions;
 
         let options = {
             ...type.options?.properties,
@@ -23,7 +24,7 @@ export class MultiPolyline extends Marker {
         };
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane);
+            const dom: HTMLElement = getOrCreatePane(data.pane);
             options = {
                 ...options,
                 pane: dom.className.split("-")[1]
@@ -34,20 +35,20 @@ export class MultiPolyline extends Marker {
     }
 
     public update(raw: unknown[]): void {
-        const data = raw as unknown as MultiPolylineOptions;
-        const polyline = this.marker as L.Polyline;
+        const data: MultiPolylineOptions = raw as unknown as MultiPolylineOptions;
+        const polyline: L.Polyline = this.marker as L.Polyline;
         polyline.setLatLngs(MultiPolyline.createLines(data));
     }
 
     private static createLines(data: MultiPolylineOptions): L.LatLng[][] {
-        const lines = [];
-        for (const polylines of data.polylines) {
-            const line = [];
-            for (const point of polylines.points) {
+        const lines: any[] = [];
+        data.polylines.forEach((polylines: Polyline): void => {
+            const line: any[] = [];
+            polylines.points.forEach((point: Point): void => {
                 line.push(toCenteredLatLng(point))
-            }
+            });
             lines.push(line);
-        }
+        });
         return lines;
     }
 }

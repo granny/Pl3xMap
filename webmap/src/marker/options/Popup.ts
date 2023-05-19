@@ -52,7 +52,7 @@ export class Popup {
         if (isset(data.closeOnClick)) props = {...props, closeOnClick: data.closeOnClick};
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane!);
+            const dom: HTMLElement = getOrCreatePane(data.pane!);
             props = {
                 ...props,
                 pane: dom.className.split(" ")[1].split("-")[1]

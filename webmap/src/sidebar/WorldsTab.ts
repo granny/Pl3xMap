@@ -1,7 +1,7 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
-import {Label} from "../settings/Lang";
-import {World} from "../world/World";
+import {Label, Lang} from "../settings/Lang";
+import {Renderer, World} from "../world/World";
 import {createSVGIcon, handleKeyboardEvent} from "../util/Util";
 import BaseTab from "./BaseTab";
 import '../svg/maps.svg';
@@ -19,13 +19,13 @@ export default class WorldsTab extends BaseTab {
     constructor(pl3xmap: Pl3xMap) {
         super(pl3xmap, 'worlds');
 
-        const lang = pl3xmap.settings!.lang;
+        const lang: Lang = pl3xmap.settings!.lang;
 
         this._button.appendChild(createSVGIcon('maps'));
         this._button.setAttribute('aria-label', lang.worlds.label);
         this._button.title = lang.worlds.label;
 
-        const heading = L.DomUtil.create('h2', '', this._content);
+        const heading: HTMLHeadingElement = L.DomUtil.create('h2', '', this._content);
         heading.innerText = lang.worlds.label;
         heading.id = 'worlds-heading';
 
@@ -40,10 +40,10 @@ export default class WorldsTab extends BaseTab {
         this.initEvents();
     }
 
-    private initEvents() {
+    private initEvents(): void {
         addEventListener('worldadded', (e: CustomEvent<World>) => this.createListItem(e.detail));
         addEventListener('worldremoved', (e: CustomEvent<World>) => this.removeListItem(e.detail)); //TODO: Refreshless config updates?
-        addEventListener('rendererselected', (e: CustomEvent<World>) => {
+        addEventListener('rendererselected', (e: CustomEvent<World>): void => {
             this._worlds.get(e.detail)!.inputs.get(e.detail.currentRenderer!)!.checked = true;
         });
 
@@ -51,18 +51,18 @@ export default class WorldsTab extends BaseTab {
             handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
     }
 
-    private createListItem(world: World) {
-        const fieldset = L.DomUtil.create('fieldset'),
-            legend = L.DomUtil.create('legend');
+    private createListItem(world: World): void {
+        const fieldset: HTMLFieldSetElement = L.DomUtil.create('fieldset'),
+            legend: HTMLLegendElement = L.DomUtil.create('legend');
 
         legend.innerText = world.displayName;
         fieldset.appendChild(legend);
 
-        const inputs = new Map();
+        const inputs: Map<any, any> = new Map();
 
-        world.renderers.forEach(renderer => {
-            const input = L.DomUtil.create('input'),
-                label = L.DomUtil.create('label');
+        world.renderers.forEach((renderer: Renderer) => {
+            const input: HTMLInputElement = L.DomUtil.create('input'),
+                label: HTMLLabelElement = L.DomUtil.create('label');
 
             fieldset.appendChild(input);
             fieldset.appendChild(label);
@@ -75,7 +75,7 @@ export default class WorldsTab extends BaseTab {
             input.name = 'world';
             input.checked = false;
             input.classList.add("renderer");
-            input.addEventListener('click', async (e: MouseEvent) => {
+            input.addEventListener('click', async (e: MouseEvent): Promise<void> => {
                 this._pl3xmap.worldManager.setWorld(world, renderer, world !== this._pl3xmap.worldManager.currentWorld)
                     // Don't update radio button if switch fails
                     .catch(() => e.preventDefault());
@@ -93,8 +93,8 @@ export default class WorldsTab extends BaseTab {
         this._list.appendChild(fieldset);
     }
 
-    private removeListItem(world: World) {
-        const listItem = this._worlds.get(world);
+    private removeListItem(world: World): void {
+        const listItem: WorldListItem | undefined = this._worlds.get(world);
 
         if (!listItem) {
             return;
@@ -109,7 +109,7 @@ export default class WorldsTab extends BaseTab {
         }
     }
 
-    onActivate() {
+    onActivate(): void {
         if (this._worlds.size) {
             (this._list.querySelector('input:checked') as HTMLElement)!.focus()
         } else {

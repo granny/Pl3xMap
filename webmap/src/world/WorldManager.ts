@@ -5,6 +5,7 @@ import {LinkControl} from "../control/LinkControl";
 import {Settings} from "../settings/Settings";
 import {Renderer, World} from "./World";
 import {fireCustomEvent, getUrlParam} from "../util/Util";
+import {UI, WorldSettings} from "../settings/WorldSettings";
 
 /**
  * The world manager. Manages all loaded worlds.
@@ -19,16 +20,16 @@ export class WorldManager {
         this._pl3xmap = pl3xmap;
     }
 
-    public async init(settings: Settings) {
+    public async init(settings: Settings): Promise<void> {
         // build world objects
-        const worlds = [];
-        for (const worldSettings of settings.worldSettings) {
-            const world = new World(this._pl3xmap, this, worldSettings);
+        const worlds: any[] = [];
+        settings.worldSettings.forEach((worldSettings: WorldSettings): void => {
+            const world: World = new World(this._pl3xmap, this, worldSettings);
             worlds.push(world);
-        }
+        });
 
         // sort and store worlds
-        worlds.sort((w1, w2) => w1.settings.order - w2.settings.order).forEach(world => {
+        worlds.sort((w1: World, w2: World) => w1.settings.order - w2.settings.order).forEach((world: World): void => {
             this._worlds.set(world.name, world);
             fireCustomEvent('worldadded', world);
         });
@@ -37,7 +38,7 @@ export class WorldManager {
         const worldName: string = getUrlParam('world', this._worlds.keys().next().value);
 
         // load world
-        const world = this._worlds.get(worldName);
+        const world: World | undefined = this._worlds.get(worldName);
         if (world) {
             await this.setWorld(world, getUrlParam('renderer', undefined));
         }
@@ -52,7 +53,7 @@ export class WorldManager {
     }
 
     public async setWorld(world: World, renderer?: Renderer | string, resetCoords?: boolean): Promise<void> {
-        return world.load().then(() => {
+        return world.load().then((): void => {
             if (world === this._currentWorld && renderer === this._currentWorld.currentRenderer) {
                 return;
             }
@@ -73,12 +74,12 @@ export class WorldManager {
                 resetCoords ? world.zoom.default : getUrlParam('zoom', world.zoom.default)
             );
 
-            const ui = world.settings.ui;
+            const ui: UI = world.settings.ui;
             this._pl3xmap.controlManager.linkControl = ui.link ? new LinkControl(this._pl3xmap, ui.link) : undefined;
             this._pl3xmap.controlManager.coordsControl = ui.coords ? new CoordsControl(this._pl3xmap, ui.coords) : undefined;
             this._pl3xmap.controlManager.blockInfoControl = ui.blockinfo ? new BlockInfoControl(this._pl3xmap, ui.blockinfo) : undefined;
 
-            const attributeDom = this._pl3xmap.map.attributionControl.getContainer();
+            const attributeDom: HTMLElement | undefined = this._pl3xmap.map.attributionControl.getContainer();
             if (attributeDom) {
                 attributeDom.style.display = ui.attribution ? "inline-block" : "none";
             }

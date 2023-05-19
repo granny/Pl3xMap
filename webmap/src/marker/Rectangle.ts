@@ -12,7 +12,7 @@ interface RectangleOptions extends L.PolylineOptions {
 
 export class Rectangle extends Marker {
     constructor(type: Type) {
-        const data = type.data as unknown as RectangleOptions;
+        const data: RectangleOptions = type.data as unknown as RectangleOptions;
 
         let options = {
             ...type.options?.properties,
@@ -24,7 +24,7 @@ export class Rectangle extends Marker {
         };
 
         if (isset(data.pane)) {
-            const dom = getOrCreatePane(data.pane);
+            const dom: HTMLElement = getOrCreatePane(data.pane);
             options = {
                 ...options,
                 pane: dom.className.split("-")[1]
@@ -35,8 +35,8 @@ export class Rectangle extends Marker {
     }
 
     public update(raw: unknown[]): void {
-        const data = raw as unknown as RectangleOptions;
-        const rectangle = this.marker as L.Rectangle;
+        const data: RectangleOptions = raw as unknown as RectangleOptions;
+        const rectangle: L.Rectangle = this.marker as L.Rectangle;
         rectangle.setBounds(toLatLngBounds(data.point1, data.point2));
     }
 }

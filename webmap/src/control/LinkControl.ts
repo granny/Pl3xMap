@@ -9,7 +9,7 @@ import {World} from "../world/World";
 export class LinkControl extends ControlBox {
     private readonly _dom: HTMLAnchorElement;
 
-    private onEvent = () => {
+    private onEvent = (): void => {
         this.update();
     }
 
@@ -32,7 +32,7 @@ export class LinkControl extends ControlBox {
     }
 
     public update(): void {
-        const url = this.getUrlFromView(this._pl3xmap.worldManager.currentWorld);
+        const url: string = this.getUrlFromView(this._pl3xmap.worldManager.currentWorld);
         this._dom.href = url;
         this._dom.title = this._pl3xmap.settings?.lang.link.label ?? '';
         window.history.replaceState(null, this._pl3xmap.settings!.lang.title, url);
@@ -43,7 +43,7 @@ export class LinkControl extends ControlBox {
         const zoom: number = this._pl3xmap.map.getCurrentZoom();
         const x: number = Math.floor(center[0]);
         const z: number = Math.floor(center[1]);
-        let url = `?`;
+        let url: string = `?`;
         if (world !== undefined) {
             url += `world=${world.name}&renderer=${world.currentRenderer?.label ?? 'basic'}`;
         }

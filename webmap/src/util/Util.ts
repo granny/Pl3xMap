@@ -1,6 +1,7 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Point} from "./Point";
+import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 
 export function createSVGIcon(icon: string): DocumentFragment {
     const template = L.DomUtil.create('template');
@@ -8,24 +9,24 @@ export function createSVGIcon(icon: string): DocumentFragment {
     return template.content;
 }
 
-export function getJSON(url: string) {
+export function getJSON(url: string): Promise<any> {
     return fetch(url, {
         headers: {
             "Content-Disposition": "inline"
         }
-    }).then(async res => {
+    }).then(async (res: Response): Promise<any> => {
         if (res.ok) {
             return await res.json();
         }
     });
 }
 
-export function getBytes(url: string) {
+export function getBytes(url: string): Promise<ArrayBuffer | undefined> {
     return fetch(url, {
         headers: {
             "Content-Disposition": "inline"
         }
-    }).then(async res => {
+    }).then(async (res: Response): Promise<ArrayBuffer | undefined> => {
         if (res.ok) {
             return await res.arrayBuffer();
         }
@@ -66,8 +67,8 @@ export function metersToPixels(num: number): number {
     return num / getScale();
 }
 
-export function getScale() {
-    const map = Pl3xMap.instance.map;
+export function getScale(): number {
+    const map: Pl3xMapLeafletMap = Pl3xMap.instance.map;
     return 1 / Math.pow(2, map.getMaxZoomOut());
 }
 
@@ -76,8 +77,8 @@ export function isset(obj: unknown): boolean {
 }
 
 export function getOrCreatePane(name: string): HTMLElement {
-    const map = Pl3xMap.instance.map;
-    let pane = map.getPane(name);
+    const map: Pl3xMapLeafletMap = Pl3xMap.instance.map;
+    let pane: HTMLElement | undefined = map.getPane(name);
     if (pane == null) {
         pane = map.createPane(name);
     }
@@ -96,7 +97,7 @@ export function fireCustomEvent<T>(event: keyof (WindowEventMap), detail: T): vo
     window.dispatchEvent(new CustomEvent(event, {detail}));
 }
 
-const navigationKeys = new Set<string>([
+const navigationKeys: Set<string> = new Set<string>([
     'ArrowUp',
     'ArrowDown',
     'ArrowLeft',
@@ -118,19 +119,19 @@ const navigationKeys = new Set<string>([
  * @param {KeyboardEvent} e The event to handle
  * @param {HTMLElement[]} elements The elements to consider for focusing
  */
-export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]) => {
+export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]): void => {
     if (!e.target) {
         return;
     }
 
     if (navigationKeys.has(e.key)) {
-        const position = elements.indexOf(e.target as HTMLElement);
+        const position: number = elements.indexOf(e.target as HTMLElement);
 
         if (position < 0) {
             return;
         }
 
-        let newPosition = position;
+        let newPosition: number = position;
 
         switch (e.key) {
             case 'ArrowUp':
@@ -161,7 +162,7 @@ export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]) =
         (elements[newPosition] as HTMLElement).focus();
         e.preventDefault();
     } else if (e.key === 'Enter' && e.target) {
-        const mouseEvent = new MouseEvent('click', {
+        const mouseEvent: MouseEvent = new MouseEvent('click', {
             ctrlKey: e.ctrlKey,
             shiftKey: e.shiftKey,
             metaKey: e.metaKey,
