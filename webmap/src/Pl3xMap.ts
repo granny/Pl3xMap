@@ -7,7 +7,7 @@ import SidebarControl from "./control/SidebarControl";
 import Pl3xMapLeafletMap from "./map/Pl3xMapLeafletMap";
 import "./scss/styles.scss";
 
-window.onload = function () {
+window.onload = function (): void {
     window.pl3xmap = new Pl3xMap();
 };
 
@@ -49,7 +49,7 @@ export class Pl3xMap {
                 });
             });
             this.controlManager.sidebarControl = new SidebarControl(this);
-            const promise = this.worldManager.init(this._settings);
+            const promise: Promise<void> = this.worldManager.init(this._settings);
             this.update();
             return promise;
         });
@@ -60,7 +60,7 @@ export class Pl3xMap {
     }
 
     private update(): void {
-        getJSON('tiles/settings.json').then((json) => {
+        getJSON('tiles/settings.json').then((json): void => {
             this._settings = json as Settings;
             this.playerManager.update(this._settings);
 
