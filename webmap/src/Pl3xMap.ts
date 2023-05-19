@@ -40,9 +40,9 @@ export class Pl3xMap {
         getJSON('tiles/settings.json').then((json) => {
             this._settings = json as Settings;
             document.title = this._settings.lang.title;
-            this.map.options.zoomSnap = json.zoom.snap;
-            this.map.options.zoomDelta = json.zoom.delta;
-            this.map.options.wheelPxPerZoomLevel = json.zoom.wheel;
+            //this.map.options.zoomSnap = json.zoom.snap;
+            //this.map.options.zoomDelta = json.zoom.delta;
+            //this.map.options.wheelPxPerZoomLevel = json.zoom.wheel;
             getJSON('lang/' + this._settings.lang.langFile).then((json): void => {
                 Object.entries(json).forEach((data: [string, unknown]): void => {
                     this._langPalette.set(data[0], <string>data[1]);

@@ -22,9 +22,9 @@ export default class Pl3xMapLeafletMap extends L.Map {
             }),
             // always 0,0 center
             center: [0, 0],
-            zoomSnap: 0.25,
-            zoomDelta: 0.25,
-            wheelPxPerZoomLevel: 120,
+            //zoomSnap: 0.25,
+            //zoomDelta: 0.25,
+            //wheelPxPerZoomLevel: 120,
             // show the attribution footer
             attributionControl: true,
             // canvas is faster than default svg
