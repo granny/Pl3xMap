@@ -83,7 +83,17 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     public @NotNull String getPlatform() {
-        return Bukkit.getName().toLowerCase(Locale.ROOT);
+        String name = Bukkit.getName();
+        if ("CraftBukkit".equals(name)) {
+            // Spigot erroneously reports itself as CraftBukkit,
+            // so we have to check for it specifically :/
+            try {
+                Class.forName("org.spigotmc.SpigotConfig");
+                return "spigot";
+            } catch (Throwable ignore) {
+            }
+        }
+        return name.toLowerCase(Locale.ROOT);
     }
 
     @Override
