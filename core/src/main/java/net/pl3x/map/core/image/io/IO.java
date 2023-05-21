@@ -39,6 +39,7 @@ import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.registry.Registry;
+import net.pl3x.map.core.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -109,8 +110,9 @@ public abstract class IO {
         }
 
         public void write(@NotNull Path path, @NotNull BufferedImage buffer) {
+            Path tmp = FileUtil.tmp(path);
             ImageWriter writer = null;
-            try (ImageOutputStream out = ImageIO.createImageOutputStream(path.toFile())) {
+            try (ImageOutputStream out = ImageIO.createImageOutputStream(tmp.toFile())) {
                 writer = ImageIO.getImageWritersBySuffix(getKey()).next();
                 ImageWriteParam param = writer.getDefaultWriteParam();
                 if (param.canWriteCompressed()) {
@@ -124,12 +126,18 @@ public abstract class IO {
                 writer.write(null, new IIOImage(buffer, null, null), param);
                 out.flush();
             } catch (IOException e) {
-                Logger.warn("Could not write tile image: " + path);
+                Logger.warn("Could not write tile image: " + tmp);
                 e.printStackTrace();
             } finally {
                 if (writer != null) {
                     writer.dispose();
                 }
+            }
+            try {
+                FileUtil.atomicMove(tmp, path);
+            } catch (IOException e) {
+                Logger.warn("Could not write tile image: " + path);
+                e.printStackTrace();
             }
         }
     }

@@ -37,7 +37,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -60,8 +63,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FileUtil {
-    public @NotNull
-    static Path getTilesDir() {
+    public static @NotNull Path getTilesDir() {
         return getWebDir().resolve("tiles");
     }
 
@@ -136,9 +138,10 @@ public class FileUtil {
         }
     }
 
-    public static void write(@NotNull String str, @NotNull Path file) {
+    public static void writeJson(@NotNull String str, @NotNull Path file) {
+        Path tmp = tmp(file);
         try (
-                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                OutputStream fileOut = Files.newOutputStream(mkDirs(tmp));
                 Writer writer = new OutputStreamWriter(fileOut)
         ) {
             writer.write(str);
@@ -146,27 +149,36 @@ public class FileUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        try {
+            atomicMove(tmp, file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void saveGzip(@NotNull String json, @NotNull Path file) throws IOException {
+        Path tmp = tmp(file);
         try (
-                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                OutputStream fileOut = Files.newOutputStream(mkDirs(tmp));
                 GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
                 Writer writer = new OutputStreamWriter(gzipOut)
         ) {
             writer.write(json);
             writer.flush();
         }
+        atomicMove(tmp, file);
     }
 
     public static void saveGzip(byte[] bytes, @NotNull Path file) throws IOException {
+        Path tmp = tmp(file);
         try (
-                OutputStream fileOut = Files.newOutputStream(mkDirs(file));
+                OutputStream fileOut = Files.newOutputStream(mkDirs(tmp));
                 GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut)
         ) {
             gzipOut.write(bytes);
             gzipOut.flush();
         }
+        atomicMove(tmp, file);
     }
 
     public static void readGzip(@NotNull Path file, @NotNull ByteBuffer buffer) throws IOException {
@@ -193,6 +205,39 @@ public class FileUtil {
                 writer.write(buffer, 0, length);
             }
             return writer.toString();
+        }
+    }
+
+    public static Path tmp(Path file) {
+        return file.resolveSibling("." + file.getFileName().toString() + ".tmp");
+    }
+
+    public static void atomicMove(Path source, Path target) throws IOException {
+        try {
+            atomicMove(source, target, 0);
+        } catch (AccessDeniedException | NoSuchFileException ignore) {
+        }
+    }
+
+    private static void atomicMove(Path source, Path target, int attempt) throws IOException {
+        try {
+            com.google.common.io.Files.move(source.toFile(), target.toFile());
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AccessDeniedException e) {
+            if (attempt < 5) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException ignore) {
+                }
+                atomicMove(source, target, ++attempt);
+            } else if (source.getFileName().toString().endsWith(".tmp")) {
+                try {
+                    Files.delete(source);
+                } catch (Throwable ignore) {
+                }
+            }
         }
     }
 

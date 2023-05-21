@@ -81,7 +81,7 @@ public class UpdateMarkerData extends Task {
 
                 if (now - lastUpdate > layer.getUpdateInterval()) {
                     List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
-                    FileUtil.write(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
                     this.lastUpdated.put(key, now);
                 }
             } catch (Throwable t) {
@@ -89,7 +89,7 @@ public class UpdateMarkerData extends Task {
             }
         });
 
-        FileUtil.write(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+        FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
     }
 
     private static class Adapter implements JsonSerializer<@NotNull Marker<?>> {
