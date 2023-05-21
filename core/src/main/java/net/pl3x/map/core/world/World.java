@@ -56,7 +56,6 @@ import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.renderer.Renderer;
-import net.pl3x.map.core.renderer.task.RegionFileWatcher;
 import net.pl3x.map.core.renderer.task.UpdateMarkerData;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Mathf;
@@ -84,7 +83,7 @@ public abstract class World extends Keyed {
 
     private final LoadingCache<@NotNull Long, @NotNull Region> regionCache;
     private final RegionModifiedState regionModifiedState;
-    private final RegionFileWatcher regionFileWatcher;
+    //private final RegionFileWatcher regionFileWatcher;
     private final UpdateMarkerData markerTask;
     private final Map<@NotNull String, Renderer.@NotNull Builder> renderers = new LinkedHashMap<>();
 
@@ -119,7 +118,7 @@ public abstract class World extends Keyed {
                 .build(this::loadRegion);
 
         this.regionModifiedState = new RegionModifiedState(this);
-        this.regionFileWatcher = new RegionFileWatcher(this);
+        //this.regionFileWatcher = new RegionFileWatcher(this);
         this.markerTask = new UpdateMarkerData(this);
     }
 
@@ -130,7 +129,7 @@ public abstract class World extends Keyed {
 
         getBiomeRegistry().init(this);
 
-        this.regionFileWatcher.start();
+        //this.regionFileWatcher.start();
 
         getConfig().RENDER_RENDERERS.forEach((id, icon) -> {
             Renderer.Builder renderer = Pl3xMap.api().getRendererRegistry().get(id);
@@ -205,9 +204,9 @@ public abstract class World extends Keyed {
         return this.regionModifiedState;
     }
 
-    public @NotNull RegionFileWatcher getRegionFileWatcher() {
-        return this.regionFileWatcher;
-    }
+    //public @NotNull RegionFileWatcher getRegionFileWatcher() {
+    //    return this.regionFileWatcher;
+    //}
 
     public @NotNull UpdateMarkerData getMarkerTask() {
         return this.markerTask;

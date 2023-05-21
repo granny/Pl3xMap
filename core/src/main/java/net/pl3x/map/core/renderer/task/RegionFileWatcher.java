@@ -72,11 +72,11 @@ public class RegionFileWatcher implements Runnable {
         this.task = new TimerTask() {
             @Override
             public void run() {
-                RegionFileWatcher rfw = RegionFileWatcher.this;
-                rfw.thread = Thread.currentThread();
-                rfw.thread.setName(String.format("Pl3xMap-FileWatcher-%s", rfw.world.getName()));
-                rfw.stopped = false;
-                rfw.run();
+                //RegionFileWatcher rfw = RegionFileWatcher.this;
+                //rfw.thread = Thread.currentThread();
+                //rfw.thread.setName(String.format("Pl3xMap-FileWatcher-%s", rfw.world.getName()));
+                //rfw.stopped = false;
+                //rfw.run();
             }
         };
 
