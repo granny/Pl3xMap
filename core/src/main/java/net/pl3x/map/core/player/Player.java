@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
  * Represents a player.
  */
 public abstract class Player extends Keyed {
-    private final Object player;
+    private Object player;
 
     private Map<@NotNull BiFunction<@NotNull Player, @NotNull String, @NotNull String>, @NotNull Integer> nameDecorators = new LinkedHashMap<>();
     private boolean hidden;
@@ -53,6 +53,10 @@ public abstract class Player extends Keyed {
     @SuppressWarnings("unchecked")
     public <T> @NotNull T getPlayer() {
         return (T) this.player;
+    }
+
+    public void setPlayer(Object player) {
+        this.player = player;
     }
 
     /**

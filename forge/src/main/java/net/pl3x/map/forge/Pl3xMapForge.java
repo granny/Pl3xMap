@@ -185,6 +185,13 @@ public class Pl3xMapForge extends Pl3xMap {
         Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
     }
 
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer newPlayer) {
+            getPlayerRegistry().getOrDefault(newPlayer.getUUID(), () -> new ForgePlayer(newPlayer)).setPlayer(newPlayer);
+        }
+    }
+
     public @NotNull IModInfo getModInfo() {
         if (this.modInfo == null) {
             this.modInfo = ModList.get().getModContainerById("pl3xmap").orElseThrow().getModInfo();

@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -148,6 +149,10 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
                 this.adventure = null;
             }
         });
+
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) ->
+                getPlayerRegistry().getOrDefault(newPlayer.getUUID(), () -> new FabricPlayer(newPlayer)).setPlayer(newPlayer)
+        );
     }
 
     public @NotNull ModContainer getModContainer() {
