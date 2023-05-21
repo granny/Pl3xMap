@@ -36,7 +36,7 @@ public final class Lang extends AbstractConfig {
     @Key("prefix.command")
     public static String PREFIX_COMMAND = "<grey>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</grey> ";
     @Key("command.base")
-    public static String COMMAND_BASE = "View the map at '<grey><click:open_url:http://localhost:8080/>http://localhost:8080/</grey>'";
+    public static String COMMAND_BASE = "View the map at '<grey><click:open_url:'<web-address>'><web-address></click></grey>'";
 
     @Key("command.event.click-for-help")
     public static String CLICK_FOR_HELP = "Click for help";

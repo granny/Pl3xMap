@@ -44,6 +44,7 @@ import net.pl3x.map.core.command.commands.ShowCommand;
 import net.pl3x.map.core.command.commands.StatusCommand;
 import net.pl3x.map.core.command.commands.StitchCommand;
 import net.pl3x.map.core.command.commands.VersionCommand;
+import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import org.jetbrains.annotations.NotNull;
 
@@ -90,7 +91,12 @@ public interface CommandHandler {
         return getManager().commandBuilder("map", "pl3xmap")
                 .permission("pl3xmap.command.map")
                 .meta(CommandMeta.DESCRIPTION, "Pl3xMap command. '/map help'")
-                .handler(context -> context.getSender().sendMessage(Lang.COMMAND_BASE));
+                .handler(context -> {
+                    context.getSender().sendMessage(Lang.COMMAND_BASE
+                            // minimessage doesn't seem to handle placeholders inside
+                            // placeholders, so we have to replace this one manually
+                            .replace("<web-address>", Config.WEB_ADDRESS));
+                });
     }
 
     default void registerSubcommands() {
