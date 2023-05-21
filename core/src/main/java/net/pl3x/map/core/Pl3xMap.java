@@ -23,6 +23,7 @@
  */
 package net.pl3x.map.core;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -32,6 +33,8 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.pl3x.map.core.configuration.ColorsConfig;
@@ -71,7 +74,7 @@ public abstract class Pl3xMap {
 
     private final boolean isBukkit;
 
-    private final Attributes manifest;
+    private final Attributes manifestAttributes;
     private final HttpdServer httpdServer;
     private final RegionProcessor regionProcessor;
     private final RegionDoubleChecker regionDoubleChecker;
@@ -111,11 +114,17 @@ public abstract class Pl3xMap {
             throw new RuntimeException(e);
         }
 
-        try (InputStream in = Pl3xMap.class.getResourceAsStream("/META-INF/MANIFEST.MF")) {
-            this.manifest = in == null ? null : new Manifest(in).getMainAttributes();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        Manifest manifest;
+        try (JarFile jarFile = new JarFile(getJarPath().toFile())) {
+            JarEntry entry = jarFile.getJarEntry("META-INF/MANIFEST.MF");
+            try (InputStream in = new BufferedInputStream(jarFile.getInputStream(entry))) {
+                manifest = new Manifest(in);
+            }
+        } catch (Exception e) {
+            manifest = new Manifest();
+            e.printStackTrace();
         }
+        this.manifestAttributes = manifest.getMainAttributes();
 
         // setup internal server
         this.httpdServer = new HttpdServer();
@@ -321,10 +330,9 @@ public abstract class Pl3xMap {
 
     public @NotNull String getVersionCommit() {
         if (this.commit == null) {
-            if (this.manifest == null) {
+            this.commit = this.manifestAttributes.getValue("Git-Commit");
+            if (this.commit == null) {
                 this.commit = "unknown";
-            } else {
-                this.commit = this.manifest.getValue("Git-Commit");
             }
         }
         return this.commit;

@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VersionCommand extends Pl3xMapCommand {
     private static final String URL = "https://api.modrinth.com/v2/project/pl3xmap/version?featured=true&game_versions=[%%22%s%%22]&loaders=[%%22%s%%22]";
-    private static final String MODRINTH = "<click:open_url:https://modrinth.com/plugin/pl3xmap>https://modrinth.com/plugin/pl3xmap</click>";
+    private static final String MODRINTH = "<click:open_url:https://modrinth.com/mod/pl3xmap>https://modrinth.com/mod/pl3xmap</click>";
 
     private String version;
     private long lastChecked;
