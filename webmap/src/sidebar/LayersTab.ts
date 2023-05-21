@@ -76,6 +76,7 @@ export default class LayersTab extends L.Control.Layers implements SidebarTab {
         });
 
         window.addEventListener('overlayremoved', (e: CustomEvent<MarkerLayer>): void => {
+            e.detail.removeFrom(this._map);
             this.removeLayer(e.detail);
             this._update();
         });

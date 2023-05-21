@@ -115,13 +115,10 @@ export class MarkerLayer extends L.LayerGroup {
     }
 
     update(world: World): void {
-        //console.log("Update markers: " + this._name + " " + this._world.name);
-
         getJSON(`tiles/${world.name}/markers/${this._key}.json`)
             .then((json): void => {
-                //this.clearLayers();
+                //this.clearLayers(); // do not just clear markers, remove the ones that are missing
                 const toRemove: Set<string> = new Set(this._markers.keys());
-
 
                 for (const index in Object.keys(json)) {
                     const existing: Marker | undefined = this._markers.get(json[index].data.key);
@@ -144,12 +141,13 @@ export class MarkerLayer extends L.LayerGroup {
                     }
                 }
 
-                toRemove.forEach((key: string) => {
+                toRemove.forEach((key: string): void => {
                     // remove players not in updated settings file
                     const marker: Marker | undefined = this._markers.get(key);
                     if (marker) {
                         this._markers.delete(key);
                         marker.marker.remove();
+                        this.removeLayer(marker.marker);
                         fireCustomEvent('markerremoved', marker);
                     }
                 });
@@ -161,6 +159,7 @@ export class MarkerLayer extends L.LayerGroup {
     unload(): void {
         clearTimeout(this._timer);
         removeCss(this._key);
+        this._markers.clear();
         this.clearLayers();
         this.removeFrom(Pl3xMap.instance.map);
         fireCustomEvent("overlayremoved", this);
