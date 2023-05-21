@@ -78,7 +78,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     private FabricNetwork network;
 
     public Pl3xMapFabricServer() {
-        super();
+        super(false);
     }
 
     @Override

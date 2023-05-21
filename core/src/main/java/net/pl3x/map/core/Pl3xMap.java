@@ -69,6 +69,8 @@ public abstract class Pl3xMap {
         return Provider.api();
     }
 
+    private final boolean isBukkit;
+
     private final Attributes manifest;
     private final HttpdServer httpdServer;
     private final RegionProcessor regionProcessor;
@@ -89,7 +91,9 @@ public abstract class Pl3xMap {
     private Metrics metrics;
     private boolean enabled;
 
-    public Pl3xMap() {
+    public Pl3xMap(boolean isBukkit) {
+        this.isBukkit = isBukkit;
+
         try {
             // Due to these bugs(?) in spi
             // * relocated libraries cant find their services (xnio fails)
@@ -305,6 +309,10 @@ public abstract class Pl3xMap {
 
         // unregister blocks
         getBlockRegistry().unregister();
+    }
+
+    public boolean isBukkit() {
+        return this.isBukkit;
     }
 
     public abstract @NotNull String getPlatform();

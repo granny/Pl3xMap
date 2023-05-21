@@ -62,7 +62,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     private Path jarPath;
 
     public Pl3xMapImpl(@NotNull JavaPlugin plugin) {
-        super();
+        super(true);
         this.plugin = plugin;
     }
 

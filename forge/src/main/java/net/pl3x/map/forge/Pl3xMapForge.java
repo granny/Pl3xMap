@@ -88,7 +88,7 @@ public class Pl3xMapForge extends Pl3xMap {
 
     @SuppressWarnings("InstantiationOfUtilityClass")
     public Pl3xMapForge() {
-        super();
+        super(false);
 
         new CloudForgeEntrypoint();
 

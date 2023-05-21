@@ -26,6 +26,7 @@ package net.pl3x.map.core.configuration;
 import java.nio.file.Path;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
+import org.simpleyaml.configuration.file.YamlFile;
 
 @SuppressWarnings("CanBeFinal")
 public final class Config extends AbstractConfig {
@@ -137,5 +138,25 @@ public final class Config extends AbstractConfig {
         FileUtil.extractFile(Config.class, "config.yml", mainDir, false);
 
         CONFIG.reload(mainDir.resolve("config.yml"), Config.class);
+
+        if (!Pl3xMap.api().isBukkit()) {
+            tryRenamePath("world-settings.world", "world-settings.minecraft:overworld");
+            tryRenamePath("world-settings.world_nether", "world-settings.minecraft:the_nether");
+            tryRenamePath("world-settings.world_the_end", "world-settings.minecraft:the_end");
+        }
+    }
+
+    private static void tryRenamePath(String oldPath, String newPath) {
+        YamlFile config = CONFIG.getConfig();
+        Object oldValue = config.get(oldPath);
+        if (oldValue == null) {
+            return; // old default doesn't exist; do nothing
+        }
+        if (config.get(newPath) != null) {
+            return; // new default already set; do nothing
+        }
+        config.set(newPath, oldValue);
+        config.set(oldPath, null);
+        CONFIG.save();
     }
 }

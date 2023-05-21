@@ -81,6 +81,10 @@ public abstract class AbstractConfig {
             }
         });
 
+        save();
+    }
+
+    protected void save() {
         // save yaml to disk
         try {
             getConfig().save();
