@@ -50,7 +50,7 @@ public class ForgeWorld extends World {
         super(
                 name,
                 level.getSeed(),
-                Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getXSpawn()),
+                Point.of(level.getLevelData().getXSpawn(), level.getLevelData().getZSpawn()),
                 Type.get(level.dimension().location().toString()),
                 level.getChunkSource().getDataStorage().dataFolder.toPath().getParent().resolve("region")
         );
