@@ -34,7 +34,7 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.configuration.PlayerTracker;
+import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.scheduler.Task;
@@ -64,7 +64,7 @@ public class UpdateSettingsData extends Task {
     }
 
     private @NotNull List<@NotNull Object> parsePlayers() {
-        if (!PlayerTracker.ENABLED) {
+        if (!PlayersLayerConfig.ENABLED) {
             return Collections.emptyList();
         }
         List<Object> players = new ArrayList<>();
@@ -73,10 +73,10 @@ public class UpdateSettingsData extends Task {
             if (player.isHidden() || player.isNPC()) {
                 return;
             }
-            if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
+            if (PlayersLayerConfig.HIDE_SPECTATORS && player.isSpectator()) {
                 return;
             }
-            if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
+            if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
                 return;
             }
 

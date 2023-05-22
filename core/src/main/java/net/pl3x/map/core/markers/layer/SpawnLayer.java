@@ -30,6 +30,7 @@ import java.util.Collections;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
+import net.pl3x.map.core.configuration.SpawnLayerConfig;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.markers.option.Options;
@@ -42,9 +43,9 @@ import org.jetbrains.annotations.NotNull;
  * Manages world spawn marker.
  */
 public class SpawnLayer extends WorldLayer {
-    public static final String KEY = "spawn";
+    public static final String KEY = "pl3xmap_spawn";
 
-    private final Collection<@NotNull Marker<?>> markers;
+    private final String icon;
 
     /**
      * Create a new spawn layer.
@@ -54,30 +55,34 @@ public class SpawnLayer extends WorldLayer {
     public SpawnLayer(@NotNull World world) {
         super(KEY, world, () -> Lang.UI_LAYER_SPAWN);
 
-        Path icon = FileUtil.getWebDir().resolve("images/icon/" + KEY + ".png");
+        this.icon = SpawnLayerConfig.ICON;
+
+        Path icon = FileUtil.getWebDir().resolve("images/icon/" + this.icon + ".png");
         try {
-            IconImage image = new IconImage(KEY, ImageIO.read(icon.toFile()), "png");
+            IconImage image = new IconImage(this.icon, ImageIO.read(icon.toFile()), "png");
             Pl3xMap.api().getIconRegistry().register(image);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        setUpdateInterval(15);
-        setPriority(10);
-        setZIndex(600);
+        setUpdateInterval(30);
+        setShowControls(SpawnLayerConfig.SHOW_CONTROLS);
+        setDefaultHidden(SpawnLayerConfig.DEFAULT_HIDDEN);
+        setPriority(SpawnLayerConfig.PRIORITY);
+        setZIndex(SpawnLayerConfig.Z_INDEX);
 
-        this.markers = Collections.singletonList(
-                Marker.icon(KEY, getWorld().getSpawn(), KEY, 16)
-                        .setOptions(Options.builder()
-                                .tooltipContent(getLabel())
-                                .tooltipDirection(Tooltip.Direction.TOP)
-                                .build()
-                        )
-        );
+        String tooltip = getLabel();
+        if (!tooltip.isBlank()) {
+            setOptions(Options.builder()
+                    .tooltipContent(tooltip)
+                    .tooltipDirection(Tooltip.Direction.TOP)
+                    .build()
+            );
+        }
     }
 
     @Override
     public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
-        return this.markers;
+        return Collections.singletonList(Marker.icon(KEY, getWorld().getSpawn(), this.icon, 16).setOptions(getOptions()));
     }
 }

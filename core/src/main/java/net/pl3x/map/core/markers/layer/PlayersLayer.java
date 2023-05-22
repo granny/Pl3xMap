@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.configuration.PlayerTracker;
+import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.marker.Icon;
@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
  * Manages player markers.
  */
 public class PlayersLayer extends WorldLayer {
-    public static final String KEY = "players";
+    public static final String KEY = "pl3xmap_players";
 
     private final String icon;
 
@@ -60,10 +60,12 @@ public class PlayersLayer extends WorldLayer {
     public PlayersLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_PLAYERS);
         setUpdateInterval(0);
-        setPane(PlayerTracker.PANE);
-        setCss(PlayerTracker.CSS);
-        setPriority(20);
-        setZIndex(650);
+        setShowControls(PlayersLayerConfig.SHOW_CONTROLS);
+        setDefaultHidden(PlayersLayerConfig.DEFAULT_HIDDEN);
+        setPriority(PlayersLayerConfig.PRIORITY);
+        setZIndex(PlayersLayerConfig.Z_INDEX);
+        setPane(PlayersLayerConfig.PANE);
+        setCss(PlayersLayerConfig.CSS);
     }
 
     /**
@@ -76,11 +78,11 @@ public class PlayersLayer extends WorldLayer {
     public PlayersLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
         super(key, world, labelSupplier);
 
-        this.icon = PlayerTracker.ICON;
+        this.icon = PlayersLayerConfig.ICON;
 
         Path player = FileUtil.getWebDir().resolve("images/icon/" + this.icon + ".png");
         try {
-            IconImage playerImage = new IconImage(key, ImageIO.read(player.toFile()), "png");
+            IconImage playerImage = new IconImage(this.icon, ImageIO.read(player.toFile()), "png");
             Pl3xMap.api().getIconRegistry().register(playerImage);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -97,10 +99,10 @@ public class PlayersLayer extends WorldLayer {
             if (player.isNPC()) {
                 return;
             }
-            if (PlayerTracker.HIDE_INVISIBLE && player.isInvisible()) {
+            if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
                 return;
             }
-            if (PlayerTracker.HIDE_SPECTATORS && player.isSpectator()) {
+            if (PlayersLayerConfig.HIDE_SPECTATORS && player.isSpectator()) {
                 return;
             }
             icons.add(createIcon(player));
@@ -113,7 +115,7 @@ public class PlayersLayer extends WorldLayer {
                 .setRotationAngle((double) player.getYaw())
                 .setRotationOrigin("center")
                 .setPane("players");
-        String tooltip = PlayerTracker.TOOLTIP;
+        String tooltip = PlayersLayerConfig.TOOLTIP;
         if (tooltip == null || tooltip.isBlank()) {
             return icon;
         }
@@ -125,7 +127,7 @@ public class PlayersLayer extends WorldLayer {
                         .replace("<health>", Integer.toString(player.getHealth()))
                         .replace("<armor>", Integer.toString(player.getArmorPoints()))
                 )
-                .tooltipPane(PlayerTracker.PANE)
+                .tooltipPane(PlayersLayerConfig.PANE)
                 .tooltipDirection(Tooltip.Direction.RIGHT)
                 .tooltipPermanent(true)
                 .tooltipOffset(Point.of(5, 0))

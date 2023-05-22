@@ -26,24 +26,11 @@ package net.pl3x.map.core.configuration;
 import net.pl3x.map.core.Pl3xMap;
 
 @SuppressWarnings("CanBeFinal")
-public final class PlayerTracker extends AbstractConfig {
+public final class PlayersLayerConfig extends AbstractConfig {
     @Key("settings.enabled")
     @Comment("""
             Show online players on the map and sidebar.""")
     public static boolean ENABLED = true;
-
-    @Key("settings.pane")
-    @Comment("""
-            The custom pane layer for the player tracker.
-            This is used to make custom css styled tooltips.
-            (see css setting below)""")
-    public static String PANE = "nameplates";
-
-    @Key("settings.icon")
-    @Comment("""
-            The player icon.
-            Icon must be in the web/images/icon/ directory.""")
-    public static String ICON = "players";
 
     @Key("settings.hide.invisible")
     @Comment("""
@@ -54,6 +41,31 @@ public final class PlayerTracker extends AbstractConfig {
     @Comment("""
             Should spectators be hidden from the map.""")
     public static boolean HIDE_SPECTATORS = true;
+
+    @Key("settings.layer.show-controls")
+    @Comment("""
+            Whether the players layer control shows up in the layers list or not.""")
+    public static boolean SHOW_CONTROLS = true;
+    @Key("settings.layer.default-hidden")
+    @Comment("""
+            Whether the players layer should be hidden (toggled off) by default.""")
+    public static boolean DEFAULT_HIDDEN = false;
+    @Key("settings.layer.priority")
+    @Comment("""
+            Priority order players layer shows up in the layers list.
+            (lower values = higher in the list)""")
+    public static int PRIORITY = 20;
+    @Key("settings.layer.z-index")
+    @Comment("""
+            Z-Index order players layer shows up in the map.
+            (higher values are drawn on top of lower values)""")
+    public static int Z_INDEX = 999;
+
+    @Key("settings.icon")
+    @Comment("""
+            The player icon.
+            Icon must be in the web/images/icon/ directory.""")
+    public static String ICON = "players";
 
     @Key("settings.tooltip")
     @Comment("""
@@ -68,6 +80,13 @@ public final class PlayerTracker extends AbstractConfig {
                 <img src='images/clear.png' class='armor' style='background-position:0 calc(-<armor>px * 9);' alt='Armor <armor>' />
               </li>
             </ul>""";
+
+    @Key("settings.pane")
+    @Comment("""
+            The custom pane layer for the player tracker.
+            This is used to make custom css styled tooltips.
+            (see css setting below)""")
+    public static String PANE = "nameplates";
 
     @Key("settings.css")
     @Comment("""
@@ -122,9 +141,9 @@ public final class PlayerTracker extends AbstractConfig {
               transition: all 0.25s;
             }""";
 
-    private static final PlayerTracker CONFIG = new PlayerTracker();
+    private static final PlayersLayerConfig CONFIG = new PlayersLayerConfig();
 
     public static void reload() {
-        CONFIG.reload(Pl3xMap.api().getMainDir().resolve("player-tracker.yml"), PlayerTracker.class);
+        CONFIG.reload(Pl3xMap.api().getMainDir().resolve("layers/players.yml"), PlayersLayerConfig.class);
     }
 }

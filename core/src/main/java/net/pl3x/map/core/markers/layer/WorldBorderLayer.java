@@ -27,11 +27,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Supplier;
 import net.pl3x.map.core.configuration.Lang;
+import net.pl3x.map.core.configuration.WorldBorderLayerConfig;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.markers.marker.Polyline;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
+import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
  * Manages world border marker.
  */
 public class WorldBorderLayer extends WorldLayer {
-    public static final String KEY = "worldborder";
+    public static final String KEY = "pl3xmap_worldborder";
 
     private final Polyline polyline;
 
@@ -50,13 +52,18 @@ public class WorldBorderLayer extends WorldLayer {
      */
     public WorldBorderLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_WORLDBORDER);
-        setUpdateInterval(15);
-        setShowControls(true);
-        setDefaultHidden(false);
-        setPriority(30);
-        setZIndex(500);
+        setUpdateInterval(30);
+        setShowControls(WorldBorderLayerConfig.SHOW_CONTROLS);
+        setDefaultHidden(WorldBorderLayerConfig.DEFAULT_HIDDEN);
+        setPriority(WorldBorderLayerConfig.PRIORITY);
+        setZIndex(WorldBorderLayerConfig.Z_INDEX);
         setOptions(Options.builder()
-                .strokeColor(0xFFFF0000)
+                .strokeColor(Colors.fromHex(WorldBorderLayerConfig.STROKE_COLOR))
+                .strokeWeight(WorldBorderLayerConfig.STROKE_WEIGHT)
+                .strokeDashOffset(WorldBorderLayerConfig.STROKE_DASH_OFFSET)
+                .strokeDashPattern(WorldBorderLayerConfig.STROKE_DASH_PATTERN)
+                .strokeLineCapShape(WorldBorderLayerConfig.STROKE_LINE_CAP_SHAPE)
+                .strokeLineJoinShape(WorldBorderLayerConfig.STROKE_LINE_JOIN_SHAPE)
                 .tooltipContent(getLabel())
                 .tooltipSticky(true)
                 .tooltipDirection(Tooltip.Direction.TOP)
@@ -83,6 +90,6 @@ public class WorldBorderLayer extends WorldLayer {
                 Point.of(getWorld().getBorderMaxX(), getWorld().getBorderMaxZ()),
                 Point.of(getWorld().getBorderMinX(), getWorld().getBorderMaxZ()),
                 Point.of(getWorld().getBorderMinX(), getWorld().getBorderMinZ())
-        ));
+        ).setOptions(getOptions()));
     }
 }

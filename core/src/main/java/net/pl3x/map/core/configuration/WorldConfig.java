@@ -145,15 +145,6 @@ public final class WorldConfig extends AbstractConfig {
             the extra cost of rendering more tiles.""")
     public int ZOOM_MAX_IN = 2;
 
-    @Key("markers.spawn.enabled")
-    @Comment("""
-            Show the world spawn icon on the map.""")
-    public boolean MARKERS_SPAWN_ENABLED = true;
-    @Key("markers.worldborder.enabled")
-    @Comment("""
-            Show the world border outline on the map.""")
-    public boolean MARKERS_WORLDBORDER_ENABLED = true;
-
     @Key("render.visible-areas")
     @Comment("""
             Visible areas of the world.""")

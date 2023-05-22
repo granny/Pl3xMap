@@ -41,7 +41,9 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.configuration.PlayerTracker;
+import net.pl3x.map.core.configuration.PlayersLayerConfig;
+import net.pl3x.map.core.configuration.SpawnLayerConfig;
+import net.pl3x.map.core.configuration.WorldBorderLayerConfig;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.log.Logger;
@@ -147,17 +149,17 @@ public abstract class World extends Keyed {
             this.renderers.put(renderer.getKey(), renderer);
         });
 
-        if (getConfig().MARKERS_WORLDBORDER_ENABLED) {
+        if (WorldBorderLayerConfig.ENABLED) {
             Logger.debug("Registering world border layer");
             getLayerRegistry().register(WorldBorderLayer.KEY, new WorldBorderLayer(this));
         }
 
-        if (getConfig().MARKERS_SPAWN_ENABLED) {
+        if (SpawnLayerConfig.ENABLED) {
             Logger.debug("Registering spawn layer");
             getLayerRegistry().register(SpawnLayer.KEY, new SpawnLayer(this));
         }
 
-        if (PlayerTracker.ENABLED) {
+        if (PlayersLayerConfig.ENABLED) {
             Logger.debug("Registering player tracker layer");
             getLayerRegistry().register(PlayersLayer.KEY, new PlayersLayer(this));
         }
