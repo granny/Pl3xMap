@@ -25,13 +25,11 @@ package net.pl3x.map.core.registry;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnusedReturnValue")
 public class IconRegistry extends Registry<@NotNull IconImage> {
@@ -80,29 +78,6 @@ public class IconRegistry extends Registry<@NotNull IconImage> {
             throw new IllegalStateException(String.format("Failed to save image '%s'", id), e);
         }
         this.entries.put(id, image);
-        return image;
-    }
-
-    /**
-     * Unregister the image for the provided key.
-     * <p>
-     * Will return null if no image registered with provided key.
-     *
-     * @param id key
-     * @return unregistered image or null
-     * @throws IllegalStateException if image failed to delete from disk
-     */
-    @Override
-    public @Nullable IconImage unregister(@NotNull String id) {
-        IconImage image = super.unregister(id);
-        if (image != null) {
-            try {
-                Files.delete(getDir().resolve(id + ".png"));
-            } catch (NoSuchFileException ignore) {
-            } catch (Throwable e) {
-                throw new IllegalStateException(String.format("Failed to delete image for key '%s'", id), e);
-            }
-        }
         return image;
     }
 }
