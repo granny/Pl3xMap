@@ -21,10 +21,12 @@ jobs:
         shell: bash
         run: cat gradle.properties >> $GITHUB_ENV
       - name: Build
-        run: ./gradlew build javadoc modrinth --stacktrace
+        run: ./gradlew build modrinth --stacktrace
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
+      - name: Generate Javadoc
+        run: ./gradlew javadoc
       - name: Deploy Javadoc
         uses: JamesIves/github-pages-deploy-action@v4
         with:
