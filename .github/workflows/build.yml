@@ -10,7 +10,6 @@ jobs:
     if: "!contains(github.event.commits[0].message, '[ci-skip]')"
     steps:
       - uses: actions/checkout@v2
-      - uses: gradle/wrapper-validation-action@v1
       - uses: actions/setup-java@v2
         with:
           distribution: temurin
@@ -18,21 +17,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Cache npm dependencies
-        uses: actions/cache@v2
-        with:
-          path: '~/.npm'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
       - name: Import gradle properties
         shell: bash
         run: cat gradle.properties >> $GITHUB_ENV
-      - name: Shut ForgeGradle Up
-        run: ./gradlew hideOfficialWarningUntilChanged
       - name: Build
-        run: ./gradlew build --stacktrace
-      - name: Generate Javadoc
-        run: ./gradlew javadoc
+        run: ./gradlew build javadoc modrinth --stacktrace
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
       - name: Deploy Javadoc
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -41,11 +33,6 @@ jobs:
           clean: true
           folder: core/build/docs/javadoc
           target-folder: ./
-      - name: Publish to Modrinth
-        run: ./gradlew modrinth_nobuild --stacktrace
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          COMMIT_MESSAGE: ${{ join(github.event.commits.*.message, '<br>') }}
       - name: Notify Discord
         uses: BillyGalbreath/actions-status-discord@main
         if: success()

@@ -187,16 +187,3 @@ modrinth {
         optional.project 'deathspots'
     }
 }
-
-class ModrinthNoBuildPlugin implements Plugin<Project> {
-    void apply(Project project) {
-        project.tasks.register('modrinth_nobuild', TaskModrinthUpload.class, task -> {
-            task.setGroup('publishing')
-            task.setDescription('Upload project to Modrinth')
-            //task.dependsOn(tasks.named('assemble'))
-            //task.mustRunAfter(tasks.named('build'))
-        })
-    }
-}
-
-apply plugin: ModrinthNoBuildPlugin
