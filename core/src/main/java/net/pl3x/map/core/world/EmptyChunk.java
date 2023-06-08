@@ -64,4 +64,14 @@ public class EmptyChunk extends Chunk {
     public @NotNull Chunk populate() {
         return this;
     }
+
+    @Override
+    public @NotNull String toString() {
+        return "EmptyChunk{"
+                + "world=" + getWorld()
+                + ",xPos=" + getX()
+                + ",yPos=" + getY()
+                + ",zPos=" + getZ()
+                + "}";
+    }
 }

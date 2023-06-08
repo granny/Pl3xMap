@@ -27,7 +27,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import java.awt.image.BufferedImage;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
@@ -185,7 +185,7 @@ public abstract class MapInstanceMixin implements MapInstance {
                 pl3xColor = this.image.getRGB(x, z);
                 if (pl3xColor == 0) {
                     // pl3xmap color is missing; fallback to vanilla color
-                    pixels.setPixelRGBA(x, z, MaterialColor.getColorFromPackedId(color));
+                    pixels.setPixelRGBA(x, z, MapColor.getColorFromPackedId(color));
                 } else {
                     // draw pl3xmap tile pixel
                     pixels.setPixelRGBA(x, z, pl3xColor);

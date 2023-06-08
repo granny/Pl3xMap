@@ -48,7 +48,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -168,7 +168,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     protected void loadBlocks() {
         for (Map.Entry<ResourceKey<Block>, Block> entry : MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
-            int color = entry.getValue().defaultMaterialColor().col;
+            int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);
         }
         getBlockRegistry().saveToDisk();

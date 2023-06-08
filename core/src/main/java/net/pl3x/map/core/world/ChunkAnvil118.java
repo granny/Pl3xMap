@@ -50,7 +50,7 @@ public class ChunkAnvil118 extends Chunk {
     protected ChunkAnvil118(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
         super(world, region, chunkTag, index);
 
-        this.full = chunkTag.getString("Status").equals("full");
+        this.full = chunkTag.getString("Status").endsWith("full"); // 1.20 uses minecraft namespace here
         if (!this.full) {
             return;
         }

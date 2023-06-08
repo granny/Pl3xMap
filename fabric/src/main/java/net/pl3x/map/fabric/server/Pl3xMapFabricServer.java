@@ -231,7 +231,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     protected void loadBlocks() {
         for (Map.Entry<ResourceKey<Block>, Block> entry : this.server.registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
             String id = entry.getKey().location().toString();
-            int color = entry.getValue().defaultMaterialColor().col;
+            int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);
         }
         getBlockRegistry().saveToDisk();
