@@ -41,18 +41,27 @@ public class Colors {
     private static final int[] mapFoliage;
 
     static {
-        Path imagesDir = FileUtil.getWebDir().resolve("images");
-        BufferedImage imgGrass, imgFoliage;
-
+        int[] grass, foliage;
         try {
-            imgGrass = ImageIO.read(imagesDir.resolve("grass.png").toFile());
-            imgFoliage = ImageIO.read(imagesDir.resolve("foliage.png").toFile());
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read color images", e);
+            Path imagesDir = FileUtil.getWebDir().resolve("images");
+            BufferedImage imgGrass, imgFoliage;
+
+            try {
+                imgGrass = ImageIO.read(imagesDir.resolve("grass.png").toFile());
+                imgFoliage = ImageIO.read(imagesDir.resolve("foliage.png").toFile());
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to read color images", e);
+            }
+
+            grass = getColorsFromImage(imgGrass);
+            foliage = getColorsFromImage(imgFoliage);
+        } catch (Throwable ignore) {
+            grass = new int[0];
+            foliage = new int[0];
         }
 
-        mapGrass = getColorsFromImage(imgGrass);
-        mapFoliage = getColorsFromImage(imgFoliage);
+        mapGrass = grass;
+        mapFoliage = foliage;
     }
 
     private static int[] getColorsFromImage(@NotNull BufferedImage image) {
