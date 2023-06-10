@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.MCAMath;
+import net.pl3x.map.core.util.PackedIntArrayAccess;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
@@ -114,12 +115,16 @@ public class ChunkAnvil118 extends Chunk {
         if (noHeightmap()) {
             return getWorld().getMinBuildHeight();
         }
-        return (int) MCAMath.getValueFromLongArray(this.worldSurfaceHeights, ((z & 0xF) << 4) + (x & 0xF), 9) + getWorld().getMinBuildHeight();
+        return heightmap(getWorld().getMaxBuildHeight(), this.worldSurfaceHeights).get((z & 0xF) << 4) + (x & 0xF);
     }
 
     private @Nullable Section getSection(int y) {
         y -= this.sectionMin;
         return y < 0 || y >= this.sections.length ? null : this.sections[y];
+    }
+
+    private static PackedIntArrayAccess heightmap(int worldHeight, long[] data) {
+        return new PackedIntArrayAccess(MCAMath.ceilLog2(worldHeight + 1), data);
     }
 
     protected static class Section {
@@ -178,7 +183,7 @@ public class ChunkAnvil118 extends Chunk {
                 this.blockLight = Arrays.copyOf(this.blockLight, 2048);
             }
             this.bitsPerBlock = this.blocks.length >> 6;
-            this.bitsPerBiome = Integer.SIZE - Integer.numberOfLeadingZeros(this.biomePalette.length - 1);
+            this.bitsPerBiome = MCAMath.ceilLog2(this.biomePalette.length);
         }
 
         public @NotNull BlockState getBlockState(int x, int y, int z) {
