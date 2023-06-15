@@ -111,6 +111,12 @@ public final class Config extends AbstractConfig {
             The port the built-in web server listens to.
             Make sure the port is allocated if using Pterodactyl.""")
     public static int HTTPD_PORT = 8080;
+    @Key("settings.internal-webserver.follow-symlinks")
+    @Comment("""
+            Allows the built-in web server to follow symlinks.
+            It is generally advised against enabling this,
+            for security reasons. But you do you, boo boo.""")
+    public static boolean HTTPD_FOLLOW_SYMLINKS = false;
 
     @Key("settings.performance.render-threads")
     @Comment("""

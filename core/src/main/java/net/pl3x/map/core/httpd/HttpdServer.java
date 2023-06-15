@@ -53,6 +53,7 @@ public class HttpdServer {
         try {
             ResourceManager resourceManager = PathResourceManager.builder()
                     .setBase(Paths.get(FileUtil.getWebDir().toFile().getAbsolutePath()))
+                    .setFollowLinks(Config.HTTPD_FOLLOW_SYMLINKS)
                     .setETagFunction((path) -> {
                         try {
                             BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
