@@ -170,6 +170,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:cactus", 0x58822D);
         put("minecraft:cake", 0xF7DBD4);
         put("minecraft:calcite", 0xE0E1DD);
+        put("minecraft:calibrated_sculk_sensor", 0xC297F3);
         put("minecraft:campfire", 0xDCA03C);
         put("minecraft:candle", 0xE9CB9B);
         put("minecraft:candle_cake", 0xF7DBD4);
@@ -638,6 +639,8 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:pink_wool", 0xEE8DAC);
         put("minecraft:piston", 0x6E6961);
         put("minecraft:piston_head", 0x987E52);
+        put("minecraft:pitcher_crop", 0xC9AA6A);
+        put("minecraft:pitcher_plant", 0x8075D1);
         put("minecraft:player_head", 0x2A1C0C);
         put("minecraft:player_wall_head", 0x2A1C0C);
         put("minecraft:podzol", 0x5C3F18);
@@ -812,6 +815,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:smooth_sandstone_stairs", 0xE0D6AA);
         put("minecraft:smooth_stone", 0xA1A1A1);
         put("minecraft:smooth_stone_slab", 0xA1A1A1);
+        put("minecraft:sniffer_egg", 0xBC4E3A);
         put("minecraft:snow", 0xF9FEFE);
         put("minecraft:snow_block", 0xF9FEFE);
         put("minecraft:soul_campfire", 0x53CED2);
@@ -871,6 +875,8 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:structure_block", 0x5F5060);
         put("minecraft:structure_void", 0x000000);
         put("minecraft:sugar_cane", 0x95C165);
+        put("minecraft:suspicious_gravel", 0x837F7E);
+        put("minecraft:suspicious_sand", 0xD9CDA1);
         put("minecraft:sunflower", 0xF6C436);
         put("minecraft:sweet_berry_bush", 0x305E3A);
         put("minecraft:tall_grass", 0x000000);

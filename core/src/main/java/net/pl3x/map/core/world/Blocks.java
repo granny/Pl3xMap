@@ -1030,6 +1030,11 @@ public class Blocks {
     public static final Block YELLOW_WOOL = register(new Block(995, "minecraft:yellow_wool", 0xE5E533));
     public static final Block ZOMBIE_HEAD = register(new Block(996, "minecraft:zombie_head", 0x000000));
     public static final Block ZOMBIE_WALL_HEAD = register(new Block(997, "minecraft:zombie_wall_head", 0x000000));
+    public static final Block CALIBRATED_SCULK_SENSOR = register(new Block(998, "minecraft:calibrated_sculk_sensor", 0xC297F3));
+    public static final Block PITCHER_CROP = register(new Block(999, "minecraft:pitcher_crop", 0xC9AA6A));
+    public static final Block PITCHER_PLANT = register(new Block(1000, "minecraft:pitcher_plant", 0x8075D1));
+    public static final Block SNIFFER_EGG = register(new Block(1001, "minecraft:sniffer_egg", 0xBC4E3A));
+    public static final Block SUSPICIOUS_GRAVEL = register(new Block(1002, "minecraft:suspicious_gravel", 0x837F7E));
 
     private static @NotNull Block register(@NotNull Block block) {
         blocks.put(block.getKey(), block);
