@@ -125,6 +125,10 @@ public class VanillaRenderer extends Renderer {
                     getTileImage().setPixel(pixelX, pixelZ, Colors.blend(brightness << 24, Colors.setAlpha(0xFF, color)));
                 }
 
+                if (blockstate.getBlock().isFlat()) {
+                    blockY--;
+                }
+
                 lastBlockY = blockY;
             }
         }

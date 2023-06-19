@@ -175,6 +175,10 @@ public abstract class Chunk {
                 // instead, biome will be lazy loaded on first get
                 //data.blockBiome = getWorld().getBiome(blockX, data.blockY, blockZ);
 
+                if (data.blockstate.getBlock().isFlat()) {
+                    data.blockY--;
+                }
+
                 // save data
                 this.data[((blockZ & 0xF) << 4) + (blockX & 0xF)] = data;
             }

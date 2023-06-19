@@ -1163,6 +1163,60 @@ public class ColorsConfig extends AbstractConfig {
         add("minecraft:tall_seagrass");
     }};
 
+    @Key("blocks.flat")
+    @Comment("""
+            List of blocks that are considered "flat" when it comes
+            to heightmaps. Blocks listed here will use the Y coordinate
+            below them when rendering.""")
+    public static List<@NotNull String> BLOCKS_FLAT = new ArrayList<>() {{
+        add("minecraft:acacia_pressure_plate");
+        add("minecraft:acacia_trapdoor");
+        add("minecraft:bamboo_pressure_plate");
+        add("minecraft:bamboo_trapdoor");
+        add("minecraft:birch_pressure_plate");
+        add("minecraft:birch_trapdoor");
+        add("minecraft:black_carpet");
+        add("minecraft:blue_carpet");
+        add("minecraft:brown_carpet");
+        add("minecraft:cherry_pressure_plate");
+        add("minecraft:cherry_trapdoor");
+        add("minecraft:crimson_pressure_plate");
+        add("minecraft:crimson_trapdoor");
+        add("minecraft:cyan_carpet");
+        add("minecraft:dark_oak_pressure_plate");
+        add("minecraft:dark_oak_trapdoor");
+        add("minecraft:green_carpet");
+        add("minecraft:gray_carpet");
+        add("minecraft:heavy_weighted_pressure_plate");
+        add("minecraft:iron_trapdoor");
+        add("minecraft:jungle_pressure_plate");
+        add("minecraft:jungle_trapdoor");
+        add("minecraft:light_blue_carpet");
+        add("minecraft:light_gray_carpet");
+        add("minecraft:light_weighted_pressure_plate");
+        add("minecraft:lime_carpet");
+        add("minecraft:magenta_carpet");
+        add("minecraft:mangrove_pressure_plate");
+        add("minecraft:mangrove_trapdoor");
+        add("minecraft:moss_carpet");
+        add("minecraft:oak_pressure_plate");
+        add("minecraft:oak_trapdoor");
+        add("minecraft:orange_carpet");
+        add("minecraft:pink_carpet");
+        add("minecraft:polished_blackstone_pressure_plate");
+        add("minecraft:purple_carpet");
+        add("minecraft:red_carpet");
+        add("minecraft:redstone_wire");
+        add("minecraft:snow");
+        add("minecraft:spruce_pressure_plate");
+        add("minecraft:spruce_trapdoor");
+        add("minecraft:stone_pressure_plate");
+        add("minecraft:warped_pressure_plate");
+        add("minecraft:warped_trapdoor");
+        add("minecraft:white_carpet");
+        add("minecraft:yellow_carpet");
+    }};
+
     @Key("biomes.color-overrides.foliage")
     @Comment("""
             Override foliage colors per biome.""")
