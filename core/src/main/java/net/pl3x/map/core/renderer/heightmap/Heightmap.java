@@ -41,13 +41,21 @@ public abstract class Heightmap extends Keyed {
 
     public abstract int getColor(@NotNull Region region, int blockX, int blockZ);
 
+    public int getMin() {
+        return 0x00;
+    }
+
+    public int getMax() {
+        return 0x44;
+    }
+
     public int getColor(int y1, int y2, int heightColor, int step) {
         if (y1 > y2) {
             heightColor -= step;
         } else if (y1 < y2) {
             heightColor += step;
         }
-        return Mathf.clamp(0x00, 0x44, heightColor);
+        return Mathf.clamp(getMin(), getMax(), heightColor);
     }
 
     @Override
