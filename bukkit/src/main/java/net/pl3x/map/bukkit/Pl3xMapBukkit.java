@@ -23,11 +23,11 @@
  */
 package net.pl3x.map.bukkit;
 
+import io.papermc.paper.chunk.system.scheduling.ChunkFullTask;
 import java.util.UUID;
 import net.pl3x.map.bukkit.command.BukkitCommandManager;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.server.ServerLoadedEvent;
-import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.network.Network;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
@@ -59,12 +59,13 @@ public class Pl3xMapBukkit extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         try {
-            Class.forName("io.papermc.paper.threadedregions.scheduler.FoliaGlobalRegionScheduler");
-            Logger.severe("Pl3xMap does not support Folia");
-            Logger.severe("Pl3xMap will now disable itself");
+            ChunkFullTask.class.getDeclaredField("chunkLoads");
+            ChunkFullTask.class.getDeclaredField("chunkGenerates");
+            getLogger().severe("Pl3xMap does not support Folia");
+            getLogger().severe("Pl3xMap will now disable itself");
             getServer().getPluginManager().disablePlugin(this);
             return;
-        } catch (ClassNotFoundException ignore) {
+        } catch (NoSuchFieldException ignore) {
         }
 
         this.pl3xmap.enable();
