@@ -84,7 +84,7 @@ public class Pl3xMapForge extends Pl3xMap {
 
     private int tick;
 
-    private ForgeNetwork network;
+    private final ForgeNetwork network;
 
     @SuppressWarnings("InstantiationOfUtilityClass")
     public Pl3xMapForge() {
@@ -100,6 +100,8 @@ public class Pl3xMapForge extends Pl3xMap {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        this.network = new ForgeNetwork(this);
     }
 
     @SubscribeEvent
@@ -161,16 +163,12 @@ public class Pl3xMapForge extends Pl3xMap {
 
         enable();
 
-        this.network = new ForgeNetwork(this);
         this.network.register();
     }
 
     @SubscribeEvent
     public void onServerStopping(@NotNull ServerStoppingEvent event) {
-        if (this.network != null) {
-            this.network.unregister();
-            this.network = null;
-        }
+        this.network.unregister();
 
         disable();
 
