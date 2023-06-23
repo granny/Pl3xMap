@@ -109,6 +109,7 @@ public class RegionProcessor {
     }
 
     public void stop() {
+        this.progress.stop();
         if (this.future != null) {
             boolean result = this.future.cancel(true);
             Logger.debug("Stopped region processor: " + result);

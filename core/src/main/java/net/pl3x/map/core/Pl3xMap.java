@@ -321,7 +321,10 @@ public abstract class Pl3xMap {
         IO.unregister();
 
         // unregister blocks
+        Logger.debug("Unregistering blocks");
         getBlockRegistry().unregister();
+
+        System.gc();
     }
 
     public boolean isBukkit() {

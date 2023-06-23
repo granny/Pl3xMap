@@ -23,11 +23,13 @@
  */
 package net.pl3x.map.core.renderer.progress;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
+import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +39,9 @@ public class Progress implements Runnable {
 
     private final AtomicLong processedChunks = new AtomicLong(0);
     private final AtomicLong processedRegions = new AtomicLong(0);
+
+    private final Executor executor;
+    private CompletableFuture<@NotNull Void> future;
 
     private World world;
 
@@ -48,8 +53,30 @@ public class Progress implements Runnable {
     private String eta = Lang.PROGRESS_ETA_UNKNOWN;
 
     public Progress() {
-        // this should run forever and ever
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this, 1L, 1L, TimeUnit.SECONDS);
+        this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Progress");
+        start(1000L);
+    }
+
+    public void start(long delay) {
+        this.future = CompletableFuture.runAsync(() -> {
+            // wait...
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException ignore) {
+            }
+
+            run();
+
+            // rinse and repeat
+            start(1000L);
+        }, this.executor);
+    }
+
+    public void stop() {
+        if (this.future != null) {
+            boolean result = this.future.cancel(true);
+            Logger.debug("Stopped progress tracker: " + result);
+        }
     }
 
     public void finish() {
