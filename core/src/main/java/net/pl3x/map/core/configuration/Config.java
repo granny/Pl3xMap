@@ -63,7 +63,7 @@ public final class Config extends AbstractConfig {
     @Key("settings.web-directory.tile-format")
     @Comment("""
             The image format for tile images.
-            Built in types: bmp, gif, jpeg, png""")
+            Built in types: bmp, gif, jpg, jpeg, png""")
     public static String WEB_TILE_FORMAT = "png";
     @Key("settings.web-directory.tile-quality")
     @Comment("""

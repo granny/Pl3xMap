@@ -36,6 +36,7 @@ import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.configuration.WorldConfig;
+import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
@@ -168,7 +169,7 @@ public class UpdateSettingsData extends Task {
         zoom.put("wheel", Config.MAP_ZOOM_WHEEL);
 
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("format", Config.WEB_TILE_FORMAT);
+        map.put("format", IO.get(Config.WEB_TILE_FORMAT).getKey());
         map.put("maxPlayers", Pl3xMap.api().getMaxPlayers());
         map.put("lang", lang);
         map.put("zoom", zoom);
