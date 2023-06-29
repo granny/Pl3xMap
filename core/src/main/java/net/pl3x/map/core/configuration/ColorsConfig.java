@@ -1116,6 +1116,7 @@ public class ColorsConfig extends AbstractConfig {
         add("minecraft:red_stained_glass_pane");
         add("minecraft:white_stained_glass_pane");
         add("minecraft:yellow_stained_glass_pane");
+        add("minecraft:tinted_glass");
     }};
 
     @Key("blocks.grass")
