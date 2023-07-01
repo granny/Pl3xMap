@@ -91,10 +91,12 @@ public final class WorldConfig extends AbstractConfig {
             LOW_CONTRAST same as MODERN, but lighter.
             MODERN is a clearer, more detailed view.
             OLD_SCHOOL is the old type from v1.
+            VANILLA matches the in-game vanilla maps.
             EVEN_ODD_HIGH_CONTRAST mix of EVEN_ODD and HIGH_CONTRAST.
             EVEN_ODD_LOW_CONTRAST mix of EVEN_ODD and LOW_CONTRAST.
             EVEN_ODD_MODERN mix of EVEN_ODD and MODERN.
-            EVEN_ODD_OLD_SCHOOL mix of EVEN_ODD and OLD_SCHOOL.""")
+            EVEN_ODD_OLD_SCHOOL mix of EVEN_ODD and OLD_SCHOOL.
+            EVEN_ODD_VANILLA mix of EVEN_ODD and VANILLA.""")
     public String RENDER_HEIGHTMAP_TYPE = "MODERN";
 
     @Key("ui.display-name")

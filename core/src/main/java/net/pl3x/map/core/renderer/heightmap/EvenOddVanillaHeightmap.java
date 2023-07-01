@@ -23,22 +23,30 @@
  */
 package net.pl3x.map.core.renderer.heightmap;
 
-import net.pl3x.map.core.registry.Registry;
+import net.pl3x.map.core.world.Chunk;
+import net.pl3x.map.core.world.Region;
 import org.jetbrains.annotations.NotNull;
 
-public class HeightmapRegistry extends Registry<@NotNull Heightmap> {
-    public void register() {
-        register(new EvenOddHeightmap());
-        register(new EvenOddHighContrastHeightmap());
-        register(new EvenOddLowContrastHeightmap());
-        register(new EvenOddModernHeightmap());
-        register(new EvenOddOldSchoolHeightmap());
-        register(new EvenOddVanillaHeightmap());
-        register(new HighContrastHeightmap());
-        register(new LowContrastHeightmap());
-        register(new ModernHeightmap());
-        register(new NoneHeightmap());
-        register(new OldSchoolHeightmap());
-        register(new VanillaHeightmap());
+public class EvenOddVanillaHeightmap extends Heightmap {
+    public EvenOddVanillaHeightmap() {
+        super("even_odd_vanilla");
+    }
+
+    @Override
+    @SuppressWarnings("DuplicatedCode")
+    public int getColor(@NotNull Region region, int blockX, int blockZ) {
+        Chunk.BlockData origin = region.getWorld().getChunk(region, blockX >> 4, blockZ >> 4).getData(blockX, blockZ);
+        Chunk.BlockData north = region.getWorld().getChunk(region, (blockX - 1) >> 4, blockZ >> 4).getData(blockX - 1, blockZ);
+        int heightColor = 0x22;
+        if (origin != null) {
+            int y = origin.getBlockY();
+            if (north != null) {
+                heightColor = getColor(y, north.getBlockY(), heightColor, 0x22);
+            }
+            if (y % 2 == 1) {
+                heightColor += 0x11;
+            }
+        }
+        return heightColor << 24;
     }
 }
