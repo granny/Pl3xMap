@@ -43,11 +43,8 @@ import org.jetbrains.annotations.NotNull;
  * </pre>
  */
 public class SpiralIterator implements Iterator<Point> {
-    protected final long totalSteps;
-
     protected int currentX;
     protected int currentZ;
-    protected long currentStep;
 
     protected long totalStepsInLeg;
     protected long currentStepInLeg;
@@ -60,17 +57,15 @@ public class SpiralIterator implements Iterator<Point> {
      *
      * @param centerX center x point
      * @param centerZ center z point
-     * @param radius  radius around center
      */
-    public SpiralIterator(int centerX, int centerZ, int radius) {
+    public SpiralIterator(int centerX, int centerZ) {
         this.currentX = centerX;
         this.currentZ = centerZ;
-        this.totalSteps = (radius * 2L + 1) * (radius * 2L + 1);
     }
 
     @Override
     public boolean hasNext() {
-        return this.currentStep < this.totalSteps;
+        return true;
     }
 
     @Override
@@ -91,7 +86,6 @@ public class SpiralIterator implements Iterator<Point> {
         }
 
         // calculate where we are in the spiral
-        ++this.currentStep;
         ++this.currentStepInLeg;
         if (this.currentStepInLeg > this.totalStepsInLeg) {
             this.direction = this.direction.next();
