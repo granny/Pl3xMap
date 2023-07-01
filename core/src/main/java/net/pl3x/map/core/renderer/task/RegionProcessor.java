@@ -174,9 +174,10 @@ public class RegionProcessor {
         List<Point> orderedRegionsToScan = new ArrayList<>();
 
         // iterate the spiral
+        int totalRegions = regionPositions.size();
         int numberOfFoundRegions = 0;
         int numberOfSkippedRegions = 0;
-        while (numberOfFoundRegions < regionPositions.size()) {
+        while (numberOfFoundRegions < totalRegions) {
             // let us not get stuck in an endless loop
             if (numberOfSkippedRegions > 1000000) {
                 Logger.debug("Failsafe triggered.");
