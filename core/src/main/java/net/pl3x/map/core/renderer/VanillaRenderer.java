@@ -57,6 +57,10 @@ public class VanillaRenderer extends Renderer {
             for (int pixelZ = -1; pixelZ < 512; pixelZ++) {
                 int blockZ = startZ + pixelZ;
 
+                if (!getWorld().visibleBlock(blockX, blockZ)) {
+                    continue;
+                }
+
                 Pl3xMap.api().getRegionProcessor().checkPaused();
 
                 Chunk chunk = region.getWorld().getChunk(region, blockX >> 4, blockZ >> 4);

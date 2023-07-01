@@ -117,6 +117,7 @@ buildNumber.properties
 
 # Common working directory
 run/
+bin
 build
 .gradle
 /*.jar
