@@ -28,7 +28,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +37,10 @@ import javax.imageio.ImageIO;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.jetbrains.annotations.NotNull;
 
 public class TileManager {
@@ -118,14 +122,16 @@ public class TileManager {
                     Mathf.longToZ(region)
             );
 
-            try {
-                BufferedImage image = ImageIO.read(new URL(url));
-                if (image != null) {
-                    return image;
+            BufferedImage image = null;
+            try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+                try (CloseableHttpResponse response = httpclient.execute(new HttpGet(url));
+                     InputStream stream = response.getEntity().getContent()) {
+                    image = ImageIO.read(stream);
                 }
             } catch (IOException ignore) {
             }
-            return EMPTY_IMAGE;
+
+            return image == null ? EMPTY_IMAGE : image;
         }
     }
 }
