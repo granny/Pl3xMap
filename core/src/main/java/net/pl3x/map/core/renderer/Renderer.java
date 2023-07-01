@@ -124,16 +124,12 @@ public abstract class Renderer extends Keyed {
     public abstract void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ);
 
     public int basicPixelColor(@NotNull Region region, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
-        // fluid stuff
-        boolean isFluid = data.getFluidState() != null;
-        boolean flatFluid = isFluid && !region.getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS;
-
         // get biome once
         Biome biome = data.getBiome(region, blockX, blockZ);
 
         // fix true block color
         int pixelColor = 0;
-        if (!flatFluid) {
+        if (data.getFluidState() == null || region.getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS) {
             // not flat fluids, we need to draw land
             pixelColor = Colors.fixBlockColor(region, biome, data.getBlockState(), blockX, blockZ);
             if (pixelColor != 0) {
@@ -145,21 +141,28 @@ public abstract class Renderer extends Keyed {
         }
 
         // fix up water color
-        if (isFluid) {
-            if (flatFluid) {
-                pixelColor = Colors.getWaterColor(region, biome, blockX, blockZ);
-            } else {
-                // fancy fluids, yum
-                int fluidColor = fancyFluids(region, biome, data.getFluidState(), blockX, blockZ, (data.getFluidY() - data.getBlockY()) * 0.025F);
-                pixelColor = Colors.blend(fluidColor, pixelColor);
-            }
-        }
+        pixelColor = processFluids(region.getWorld().getConfig().RENDER_TRANSLUCENT_FLUIDS, region, biome, data, blockX, blockZ, pixelColor);
 
         // if there was translucent glass, mix it in here
         for (int color : data.getGlassColors()) {
             pixelColor = Colors.blend(color, pixelColor);
         }
 
+        return pixelColor;
+    }
+
+    public int processFluids(boolean translucentFluid, @NotNull Region region, @NotNull Biome biome, Chunk.@NotNull BlockData data, int blockX, int blockZ, int pixelColor) {
+        if (data.getFluidState() != null) {
+            int fluidDepth = data.getFluidY() - data.getBlockY();
+            if (translucentFluid) {
+                // fancy fluids, yum
+                int fluidColor = fancyFluids(region, biome, data.getFluidState(), blockX, blockZ, fluidDepth * 0.025F);
+                return Colors.blend(fluidColor, pixelColor);
+            }
+            double diffY = fluidDepth * 0.1D + (blockX + blockZ & 1) * 0.2D;
+            int colorOffset = diffY < 0.5D ? 255 : (diffY > 0.9D ? 180 : 220);
+            return Colors.shade(Colors.getWaterColor(region, biome, blockX, blockZ), colorOffset);
+        }
         return pixelColor;
     }
 

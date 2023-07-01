@@ -216,6 +216,14 @@ public class Colors {
         return rgb(r >> 1, g >> 1, b >> 2);
     }
 
+    public static int shade(int color, int shade) {
+        float ratio = shade / 255F;
+        int r = (int) ((color >> 16 & 0xFF) * ratio);
+        int g = (int) ((color >> 8 & 0xFF) * ratio);
+        int b = (int) ((color & 0xFF) * ratio);
+        return (0xFF << 24) | (r << 16) | (g << 8) | b;
+    }
+
     public static int getFoliageColor(@NotNull Region region, @NotNull Biome biome, int color, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> mix(biome2.foliage(), color));
     }
