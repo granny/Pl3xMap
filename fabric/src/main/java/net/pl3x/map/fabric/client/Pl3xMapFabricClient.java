@@ -55,6 +55,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
     private boolean isEnabled;
     private boolean isOnServer;
     private String serverUrl;
+    private int tick;
 
     public Pl3xMapFabricClient() {
         instance = this;
@@ -102,7 +103,10 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
                 MutableComponent component = Component.translatable("pl3xmap.toggled.response", onOff);
                 Minecraft.getInstance().player.displayClientMessage(component, true);
             }
-            getScheduler().tick();
+            if (this.tick++ >= 20) {
+                this.tick = 0;
+                getScheduler().tick();
+            }
         });
     }
 

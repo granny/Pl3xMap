@@ -43,7 +43,7 @@ public abstract class Task implements Runnable {
      * Creates a new schedulable task.
      *
      * @param delay  Delay (in seconds) before task starts
-     * @param repeat Delay (in seconds) before task repeats
+     * @param repeat Whether this task should repeat
      */
     public Task(int delay, boolean repeat) {
         this.delay = delay;

@@ -104,7 +104,7 @@ public class NetworkManager {
     private void sendPacket(@NotNull ByteArrayDataOutput packet) {
         if (Minecraft.getInstance().getConnection() == null) {
             // not in game yet; reschedule
-            this.mod.getScheduler().addTask(20, () -> sendPacket(packet));
+            this.mod.getScheduler().addTask(0, () -> sendPacket(packet));
             return;
         }
         ClientPlayNetworking.send(this.channel, new FriendlyByteBuf(Unpooled.wrappedBuffer(packet.toByteArray())));

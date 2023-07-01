@@ -57,9 +57,9 @@ public class TileManager {
             this.task.cancel();
         }
         // update once next tick
-        this.mod.getScheduler().addTask(1, this::update);
+        this.mod.getScheduler().addTask(0, this::update);
         // setup repeating task to update every 5 seconds
-        this.task = new Task(100, true) {
+        this.task = new Task(5, true) {
             @Override
             public void run() {
                 update();
