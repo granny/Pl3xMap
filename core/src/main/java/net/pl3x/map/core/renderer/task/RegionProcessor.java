@@ -166,22 +166,18 @@ public class RegionProcessor {
     private void process(@NotNull World world, @NotNull Collection<@NotNull Point> regionPositions) {
         Logger.debug(world.getName() + " Region processor started processing at " + System.currentTimeMillis());
 
-        // find max radius for spiral iterator
-        int maxRadius = 0;
-        for (Point pos : regionPositions) {
-            maxRadius = Math.max(Math.max(maxRadius, Math.abs(pos.x())), Math.abs(pos.z()));
-        }
-
         // create spiral iterator to order region scanning
         Point spawn = world.getSpawn();
-        SpiralIterator spiralIterator = new SpiralIterator(spawn.x() >> 9, spawn.z() >> 9, maxRadius);
+        SpiralIterator spiralIterator = new SpiralIterator(spawn.x() >> 9, spawn.z() >> 9);
 
         // order preserved map of regions with boolean to signify if it was already scanned
         List<Point> orderedRegionsToScan = new ArrayList<>();
 
         // iterate the spiral
+        int totalRegions = regionPositions.size();
+        int numberOfFoundRegions = 0;
         int numberOfSkippedRegions = 0;
-        while (spiralIterator.hasNext()) {
+        while (numberOfFoundRegions < totalRegions) {
             // let us not get stuck in an endless loop
             if (numberOfSkippedRegions > 1000000) {
                 Logger.debug("Failsafe triggered.");
@@ -196,6 +192,7 @@ public class RegionProcessor {
             if (regionPositions.remove(regionPos)) {
                 // file exists, add region to scan
                 orderedRegionsToScan.add(regionPos);
+                numberOfFoundRegions++;
                 numberOfSkippedRegions = 0;
             } else {
                 numberOfSkippedRegions++;
