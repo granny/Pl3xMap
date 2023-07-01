@@ -24,6 +24,7 @@
 package net.pl3x.map.fabric.client.mixin;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.awt.image.BufferedImage;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -130,6 +131,11 @@ public abstract class MapInstanceMixin implements MapInstance {
 
     @Override
     public void updateImage() {
+        if (RenderSystem.isOnRenderThread()) {
+            this.mod.getExecutor().submit(this::updateImage);
+            return;
+        }
+
         if (!this.isReady) {
             // we're not ready yet
             return;

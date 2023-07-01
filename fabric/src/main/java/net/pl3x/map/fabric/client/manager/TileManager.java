@@ -26,6 +26,7 @@ package net.pl3x.map.fabric.client.manager;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,6 +88,10 @@ public class TileManager {
     }
 
     public void update() {
+        if (RenderSystem.isOnRenderThread()) {
+            this.mod.getExecutor().submit(this::update);
+            return;
+        }
         for (Map.Entry<String, LoadingCache<Long, BufferedImage>> entry : this.tiles.entrySet()) {
             LoadingCache<Long, BufferedImage> cache = entry.getValue();
             Collections.unmodifiableCollection(cache.asMap().keySet()).forEach(cache::refresh);
