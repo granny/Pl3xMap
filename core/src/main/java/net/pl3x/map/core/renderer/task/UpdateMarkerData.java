@@ -58,21 +58,27 @@ public class UpdateMarkerData extends Task {
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;
+    private boolean running;
 
     public UpdateMarkerData(@NotNull World world) {
-        super(20, true);
+        super(1, true);
         this.world = world;
         this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Markers");
     }
 
     @Override
     public void run() {
+        if (this.running) {
+            return;
+        }
+        this.running = true;
         this.future = CompletableFuture.runAsync(() -> {
             try {
                 parseLayers();
             } catch (Throwable t) {
                 t.printStackTrace();
             }
+            this.running = false;
         }, this.executor);
     }
 
