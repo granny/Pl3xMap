@@ -213,7 +213,7 @@ public class Colors {
         int r = red(color0) + red(color1);
         int g = green(color0) + green(color1);
         int b = blue(color0) + blue(color1);
-        return rgb(r >> 1, g >> 1, b >> 2);
+        return rgb(r >> 1, g >> 1, b >> 1);
     }
 
     public static int shade(int color, int shade) {
