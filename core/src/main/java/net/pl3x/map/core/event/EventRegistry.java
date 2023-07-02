@@ -64,9 +64,12 @@ public class EventRegistry {
                 List<RegisteredHandler> list = (List<RegisteredHandler>) handlers.get(event);
 
                 RegisteredHandler handler = new RegisteredHandler(listener, method);
-                list.add(handler);
-
-                Logger.debug("Registered Event " + handler);
+                if (!list.contains(handler)) {
+                    list.add(handler);
+                    Logger.debug("Registered event " + handler);
+                } else {
+                    Logger.debug("Skipped already registered event " + handler);
+                }
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

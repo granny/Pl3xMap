@@ -25,6 +25,7 @@ package net.pl3x.map.core.event;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
 public class RegisteredHandler {
@@ -52,10 +53,26 @@ public class RegisteredHandler {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        RegisteredHandler other = (RegisteredHandler) o;
+        return Objects.equals(getListener(), other.getListener())
+                && Objects.equals(getMethod(), other.getMethod());
+    }
+
+    @Override
     @NotNull
     public String toString() {
         return "Handler{" +
-                ",listener=" + getListener().getClass().getName() +
+                "listener=" + getListener().getClass().getName() +
                 ",method=" + getMethod().getName() + "}";
     }
 }
