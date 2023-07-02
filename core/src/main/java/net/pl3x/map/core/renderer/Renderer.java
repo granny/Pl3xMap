@@ -35,6 +35,7 @@ import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.BlockState;
+import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
@@ -160,8 +161,12 @@ public abstract class Renderer extends Keyed {
                 return Colors.blend(fluidColor, pixelColor);
             }
             double diffY = fluidDepth * 0.1D + (blockX + blockZ & 1) * 0.2D;
-            int colorOffset = diffY < 0.5D ? 255 : (diffY > 0.9D ? 180 : 220);
-            return Colors.shade(Colors.getWaterColor(region, biome, blockX, blockZ), colorOffset);
+            return Colors.shade(
+                    data.getFluidState().getBlock().isWater() ?
+                            Colors.getWaterColor(region, biome, blockX, blockZ) :
+                            Blocks.LAVA.color(),
+                    diffY < 0.5D ? 0xFF : (diffY > 0.9D ? 0xB4 : 0xDC)
+            );
         }
         return pixelColor;
     }
