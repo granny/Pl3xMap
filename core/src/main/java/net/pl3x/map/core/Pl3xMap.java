@@ -393,7 +393,7 @@ public abstract class Pl3xMap {
         }
 
         public static @NotNull ExecutorService createService(@NotNull String name, int threads) {
-            int max = Runtime.getRuntime().availableProcessors() / 2;
+            int max = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
             int parallelism = Mathf.clamp(1, max, threads < 1 ? max : threads);
             return createService(new ThreadFactory(name, parallelism));
         }
