@@ -108,6 +108,15 @@ export default class PlayersTab extends BaseTab {
         this._skeleton.hidden = true;
         this._list.appendChild(input);
         this._list.appendChild(label);
+
+        Array.from(this._players.values()).sort((a: PlayerListItem, b: PlayerListItem): 1 | -1 | 0 => {
+            return a.label.innerText < b.label.innerText ? -1 : (a.label.innerText > b.label.innerText ? 1 : 0);
+        }).forEach((item: PlayerListItem): void => {
+            item.input.remove();
+            item.label.remove();
+            this._list.appendChild(item.input);
+            this._list.appendChild(item.label);
+        });
     }
 
     private removeListItem(player: Player): void {
