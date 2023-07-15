@@ -1,4 +1,3 @@
-import com.modrinth.minotaur.TaskModrinthUpload
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
@@ -179,6 +178,7 @@ modrinth {
     loaders.addAll(['bukkit', 'fabric', 'forge', 'paper', 'purpur', 'quilt', 'spigot'])
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
+        required.project 'fabric-api'
         optional.project 'pl3xmap-banners'
         optional.project 'pl3xmap-claims'
         optional.project 'pl3xmap-mobs'
