@@ -42,8 +42,8 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,7 +108,7 @@ public class BukkitPlayer extends Player {
             if (property == null) {
                 return null;
             }
-            String json = new String(Base64.getDecoder().decode(property.getValue()), StandardCharsets.UTF_8);
+            String json = new String(Base64.getDecoder().decode(property.value()), StandardCharsets.UTF_8);
             JsonElement jsonElement = JsonParser.parseString(json);
             if (!jsonElement.isJsonObject()) {
                 return null;

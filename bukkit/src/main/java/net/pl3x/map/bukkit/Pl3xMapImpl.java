@@ -48,7 +48,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -28,7 +28,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -38,6 +39,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.core.network.Network;
+import net.pl3x.map.fabric.client.manager.NetworkManager;
+import org.jetbrains.annotations.NotNull;
 
 public class FabricNetwork extends Network {
     private final Pl3xMapFabricServer mod;
@@ -51,7 +54,7 @@ public class FabricNetwork extends Network {
     @Override
     public void register() {
         ServerPlayNetworking.registerGlobalReceiver(this.channel, (server, player, listener, byteBuf, sender) -> {
-            ByteArrayDataInput in = in(byteBuf.accessByteBufWithCorrectSize());
+            ByteArrayDataInput in = in(NetworkManager.accessByteBufWithCorrectSize(byteBuf));
             int action = in.readInt();
             switch (action) {
                 case Constants.SERVER_DATA -> sendServerData(player);
@@ -105,6 +108,16 @@ public class FabricNetwork extends Network {
     @Override
     protected <T> void send(T player, ByteArrayDataOutput out) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.wrappedBuffer(out.toByteArray()));
-        ((ServerPlayer) player).connection.send(new ClientboundCustomPayloadPacket(this.channel, byteBuf));
+        ((ServerPlayer) player).connection.send(new ClientboundCustomPayloadPacket(new CustomPacketPayload() {
+            @Override
+            public void write(@NotNull FriendlyByteBuf buf) {
+                buf.writeBytes(byteBuf);
+            }
+
+            @Override
+            public @NotNull ResourceLocation id() {
+                return channel;
+            }
+        }));
     }
 }

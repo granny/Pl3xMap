@@ -102,7 +102,7 @@ public class FabricPlayer extends Player {
             if (property == null) {
                 return null;
             }
-            String json = new String(Base64.getDecoder().decode(property.getValue()), StandardCharsets.UTF_8);
+            String json = new String(Base64.getDecoder().decode(property.value()), StandardCharsets.UTF_8);
             JsonElement jsonElement = JsonParser.parseString(json);
             if (!jsonElement.isJsonObject()) {
                 return null;
