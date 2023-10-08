@@ -5,20 +5,13 @@ world-settings:
     enabled: true
     render:
       renderers:
-        basic: overworld_basic
-        night: overworld_night
-        biomes: overworld_biomes
-        inhabited: inhabited
+        vintage_story: overworld_basic
       skylight: 15
   world:
     enabled: true
     render:
       renderers:
-        basic: overworld_basic
-        night: overworld_night
-        biomes: overworld_biomes
-        inhabited: inhabited
-        flowermap: flowermap
+        vintage_story: overworld_basic
     ui:
       display-name: Overworld
       order: 0
@@ -26,9 +19,6 @@ world-settings:
     render:
       renderers:
         basic: nether_basic
-        night: nether_night
-        biomes: nether_biomes
-        inhabited: inhabited
       skylight: 0
     ui:
       display-name: The Nether
@@ -37,9 +27,6 @@ world-settings:
     render:
       renderers:
         basic: the_end_basic
-        night: the_end_night
-        biomes: the_end_biomes
-        inhabited: inhabited
       skylight: 0
     ui:
       display-name: The End

@@ -46,12 +46,9 @@ public final class WorldConfig extends AbstractConfig {
     @Comment("""
             Renderers to use. Each renderer will render a different
             type of map. The built-in renderers include:
-            basic, biomes, flowermap, inhabited, night, and vanilla""")
+            vintage_story, basic, biomes, flowermap, inhabited, night, and vanilla""")
     public Map<@NotNull String, @NotNull String> RENDER_RENDERERS = new LinkedHashMap<>() {{
-        put("basic", "overworld_basic");
-        put("night", "overworld_night");
-        put("biomes", "overworld_biomes");
-        put("inhabited", "inhabited");
+        put("vintage_story", "overworld_basic");
     }};
 
     @Key("render.biome-blend")
