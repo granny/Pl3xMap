@@ -305,6 +305,13 @@ public class Colors {
         return blockstate.getBlock().color();
     }
 
+    public static int mul(int color, float multiplier) {
+        return (color & (0xFF << 24)) |
+                ((int) Mathf.clamp(0, 0xFF, (color >> 16 & 0xFF) * multiplier) << 16) |
+                ((int) Mathf.clamp(0, 0xFF, (color >> 8 & 0xFF) * multiplier) << 8) |
+                ((int) Mathf.clamp(0, 0xFF, (color & 0xFF) * multiplier));
+    }
+
     public static int rgb(int red, int green, int blue) {
         return red << 16 | green << 8 | blue;
     }
