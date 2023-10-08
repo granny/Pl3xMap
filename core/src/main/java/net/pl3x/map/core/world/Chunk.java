@@ -198,7 +198,7 @@ public abstract class Chunk {
     }
 
     public static @NotNull Chunk create(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag, int index) {
-        // https://minecraft.fandom.com/wiki/Data_version#List_of_data_versions
+        // https://minecraft.wiki/w/Data_version#List_of_data_versions
         int version = tag.getInt("DataVersion");
         Chunk chunk;
         if (version < 1519) chunk = new EmptyChunk(world, region); // wtf, older than 1.13
