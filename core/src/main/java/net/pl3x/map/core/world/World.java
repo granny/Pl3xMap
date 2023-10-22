@@ -168,7 +168,7 @@ public abstract class World extends Keyed {
         Pl3xMap.api().getRegionProcessor().addRegions(this, listRegions(false));
 
         Logger.debug("Starting marker task");
-        Pl3xMap.api().getScheduler().addTask(1, true, this.markerTask);
+        Pl3xMap.api().getScheduler().addTask(this.markerTask);
 
         // load up custom markers
         Logger.debug("Loading custom markers for " + getName());
