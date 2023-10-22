@@ -115,7 +115,7 @@ export class MarkerLayer extends L.LayerGroup {
     }
 
     update(world: World): void {
-        if (Pl3xMap.instance.eventSource.readyState !== EventSource.CLOSED) {
+        if (Pl3xMap.instance.eventSource !== undefined && Pl3xMap.instance.eventSource.readyState !== EventSource.CLOSED) {
             return;
         }
 

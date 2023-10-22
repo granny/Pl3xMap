@@ -24,7 +24,7 @@ export class Pl3xMap {
     private readonly _playerManager: PlayerManager;
     private readonly _worldManager: WorldManager;
 
-    private _eventSource: EventSource;
+    private _eventSource?: EventSource;
 
     private _langPalette: Map<string, string> = new Map();
     private _settings?: Settings;
@@ -35,11 +35,9 @@ export class Pl3xMap {
         Pl3xMap._instance = this;
 
         this._map = new Pl3xMapLeafletMap(this);
-
-        this._eventSource = this.initSSE();
-
+        
         window.addEventListener('beforeunload', function () {
-            if (Pl3xMap.instance.eventSource != null) {
+            if (Pl3xMap.instance.eventSource != undefined) {
                 Pl3xMap.instance.eventSource.close();
             }
         });
@@ -61,6 +59,7 @@ export class Pl3xMap {
             });
             this.controlManager.sidebarControl = new SidebarControl(this);
             const promise: Promise<void> = this.worldManager.init(this._settings);
+            this._eventSource = this.initSSE();
             this.update();
             return promise;
         });
@@ -71,14 +70,14 @@ export class Pl3xMap {
     }
 
     private update(): void {
-        getJSON('tiles/settings.json').then((json): void => {
+        getJSON('tiles/settings.json').then( (json): void => {
             this._settings = json as Settings;
 
             if (!this._settings.useSSE) {
-                Pl3xMap.instance.eventSource.close();
+                this.eventSource?.close();
             }
 
-            if (Pl3xMap.instance.eventSource.readyState === EventSource.CLOSED) {
+            if (this.eventSource === undefined || this.eventSource.readyState === EventSource.CLOSED) {
                 this.playerManager.update(this._settings.players);
             }
 
@@ -131,7 +130,7 @@ export class Pl3xMap {
         return this._worldManager;
     }
 
-    get eventSource(): EventSource {
+    get eventSource(): EventSource | undefined {
         return this._eventSource;
     }
 
