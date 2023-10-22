@@ -74,6 +74,10 @@ export class Pl3xMap {
         getJSON('tiles/settings.json').then((json): void => {
             this._settings = json as Settings;
 
+            if (!this._settings.useSSE) {
+                Pl3xMap.instance.eventSource.close();
+            }
+
             if (Pl3xMap.instance.eventSource.readyState === EventSource.CLOSED) {
                 this.playerManager.update(this._settings.players);
             }

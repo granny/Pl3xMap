@@ -16,6 +16,10 @@ public class UpdateSSEEvents extends AbstractDataTask {
 
     @Override
     public void parse() {
+        if (!Config.SSE_EVENTS) {
+            return;
+        }
+
         List<Object> layers = new ArrayList<>();
 
         this.world.getLayerRegistry().entrySet().forEach(entry -> {

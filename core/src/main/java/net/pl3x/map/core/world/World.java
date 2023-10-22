@@ -174,8 +174,10 @@ public abstract class World extends Keyed {
         Logger.debug("Starting marker task");
         Pl3xMap.api().getScheduler().addTask(this.markerTask);
 
-        Logger.debug("Starting SSE events task");
-        Pl3xMap.api().getScheduler().addTask(this.sseTask);
+        if (Config.SSE_EVENTS) {
+            Logger.debug("Starting SSE events task");
+            Pl3xMap.api().getScheduler().addTask(this.sseTask);
+        }
 
         // load up custom markers
         Logger.debug("Loading custom markers for " + getName());

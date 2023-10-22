@@ -10,14 +10,16 @@ export class Settings {
     private readonly _maxPlayers: number;
     private readonly _lang: Lang;
     private readonly _zoom: Zoom;
+    private readonly _useSSE: boolean;
     private readonly _players: Player[];
     private readonly _worldSettings: WorldSettings[];
 
-    constructor(format: string, maxPlayers: number, lang: Lang, zoom: Zoom, players: Player[], worldSettings: WorldSettings[]) {
+    constructor(format: string, maxPlayers: number, lang: Lang, zoom: Zoom, useSSE: boolean, players: Player[], worldSettings: WorldSettings[]) {
         this._format = format;
         this._maxPlayers = maxPlayers;
         this._lang = lang;
         this._zoom = zoom;
+        this._useSSE = useSSE;
         this._players = players;
         this._worldSettings = worldSettings;
     }
@@ -36,6 +38,10 @@ export class Settings {
 
     get zoom(): Zoom {
         return this._zoom;
+    }
+
+    get useSSE(): boolean {
+        return this._useSSE;
     }
 
     get players(): Player[] {
