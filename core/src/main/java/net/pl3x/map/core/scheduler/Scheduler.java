@@ -34,7 +34,7 @@ public class Scheduler {
     private boolean ticking;
 
     /**
-     * Tick this scheduler once every second.
+     * Tick this scheduler once every tick.
      */
     public void tick() {
         if (this.ticking) {
@@ -88,7 +88,7 @@ public class Scheduler {
     /**
      * Add task to the scheduler.
      *
-     * @param delay    Delay (in seconds) before task starts
+     * @param delay    Delay (in ticks) before task starts
      * @param runnable Task to add
      */
     public void addTask(int delay, @NotNull Runnable runnable) {
@@ -98,8 +98,8 @@ public class Scheduler {
     /**
      * Add task to the scheduler.
      *
-     * @param delay    Delay (in seconds) before task starts
-     * @param repeat   Delay (in seconds) before task repeats
+     * @param delay    Delay (in ticks) before task starts
+     * @param repeat   Delay (in ticks) before task repeats
      * @param runnable Task to add
      */
     public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {

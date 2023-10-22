@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnusedReturnValue")
 public abstract class Layer extends Keyed implements JsonSerializable {
     private Supplier<@NotNull String> labelSupplier;
-    private int updateInterval = 15;
+    private int updateInterval = 15 * 20;
     private boolean showControls = true;
     private boolean defaultHidden = false;
     private int priority = 99;
@@ -93,7 +93,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
     }
 
     /**
-     * Get this layer's update interval (in seconds).
+     * Get this layer's update interval (in ticks).
      *
      * @return update interval
      */
@@ -102,7 +102,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
     }
 
     /**
-     * Set this layer's update interval (in seconds).
+     * Set this layer's update interval (in ticks).
      *
      * @param updateInterval new update interval
      * @return this layer

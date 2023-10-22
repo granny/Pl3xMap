@@ -61,7 +61,7 @@ public class UpdateMarkerData extends Task {
     private boolean running;
 
     public UpdateMarkerData(@NotNull World world) {
-        super(1, true);
+        super(1 * 20, true);
         this.world = world;
         this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Markers");
     }
