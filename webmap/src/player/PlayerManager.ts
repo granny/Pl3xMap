@@ -17,10 +17,10 @@ export class PlayerManager {
         this._pl3xmap = pl3xmap;
     }
 
-    public update(settings: Settings): void {
+    public update(players: Player[]): void {
         const toRemove: Set<string> = new Set(this._players.keys());
 
-        settings.players.forEach((data: Player): void => {
+        players.forEach((data: Player): void => {
             const existing: Player | undefined = this._players.get(data.uuid);
             if (existing) {
                 // update existing
