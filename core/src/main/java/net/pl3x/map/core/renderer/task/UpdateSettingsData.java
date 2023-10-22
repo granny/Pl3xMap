@@ -64,36 +64,6 @@ public class UpdateSettingsData extends Task {
         }
     }
 
-    private @NotNull List<@NotNull Object> parsePlayers() {
-        if (!PlayersLayerConfig.ENABLED) {
-            return Collections.emptyList();
-        }
-        List<Object> players = new ArrayList<>();
-        Pl3xMap.api().getPlayerRegistry().forEach(player -> {
-            // do not expose hidden players in the json
-            if (player.isHidden() || player.isNPC()) {
-                return;
-            }
-            if (PlayersLayerConfig.HIDE_SPECTATORS && player.isSpectator()) {
-                return;
-            }
-            if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
-                return;
-            }
-
-            Map<String, Object> playerEntry = new LinkedHashMap<>();
-
-            playerEntry.put("name", player.getDecoratedName());
-            playerEntry.put("uuid", player.getUUID().toString());
-            playerEntry.put("displayName", player.getDecoratedName());
-            playerEntry.put("world", player.getWorld().getName());
-            playerEntry.put("position", player.getPosition());
-
-            players.add(playerEntry);
-        });
-        return players;
-    }
-
     private @NotNull List<@NotNull Map<@NotNull String, @NotNull Object>> parseWorlds() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
         Pl3xMap.api().getWorldRegistry().entrySet().forEach(entry -> {
@@ -175,7 +145,7 @@ public class UpdateSettingsData extends Task {
         map.put("zoom", zoom);
 
         try {
-            map.put("players", parsePlayers());
+            map.put("players", Pl3xMap.api().getPlayerRegistry().parsePlayers());
             map.put("worldSettings", parseWorlds());
         } catch (Throwable t) {
             t.printStackTrace();
