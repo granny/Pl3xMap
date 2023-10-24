@@ -179,11 +179,11 @@ modrinth {
     changelog = System.getenv('COMMIT_MESSAGE')
     dependencies {
         required.project 'fabric-api'
-        optional.project 'pl3xmap-banners'
-        optional.project 'pl3xmap-claims'
-        optional.project 'pl3xmap-mobs'
-        optional.project 'pl3xmap-signs'
-        optional.project 'pl3xmap-warps'
-        optional.project 'deathspots'
+        // optional.project 'pl3xmap-banners'
+        // optional.project 'pl3xmap-claims'
+        // optional.project 'pl3xmap-mobs'
+        // optional.project 'pl3xmap-signs'
+        // optional.project 'pl3xmap-warps'
+        // optional.project 'deathspots'
     }
 }
