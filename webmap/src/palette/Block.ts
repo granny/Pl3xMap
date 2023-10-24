@@ -6,8 +6,8 @@ export class Block {
 
     constructor(packed: number, minY: number) {
         this._block = packed >>> 22;
-        this._biome = (packed << 10) >> 22;
-        this._yPos = ((packed << 20) >> 20);
+        this._biome = (packed & 0b0000000000_1111111111_000000000000) >>> 12;
+        this._yPos = packed & 0b0000000000_0000000000_111111111111;
         this._minY = minY;
     }
 
