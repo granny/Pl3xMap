@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -46,6 +47,9 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.registry.BiomeRegistry;
+import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
@@ -166,7 +170,13 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     protected void loadBlocks() {
-        for (Map.Entry<ResourceKey<Block>, Block> entry : MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
+        Set<Map.Entry<ResourceKey<Block>, Block>> entries = MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet();
+        for (Map.Entry<ResourceKey<Block>, Block> entry : entries) {
+            if (getBlockRegistry().size() > BlockRegistry.MAX_INDEX) {
+                Logger.debug(String.format("Cannot register any more biomes. Registered: %d Unregistered: %d", getBlockRegistry().size(), entries.size() - getBlockRegistry().size()));
+                break;
+            }
+
             String id = entry.getKey().location().toString();
             int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);

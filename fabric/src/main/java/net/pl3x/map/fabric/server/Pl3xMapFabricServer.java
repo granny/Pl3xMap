@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -56,8 +57,10 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.server.ServerLoadedEvent;
+import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
+import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.fabric.server.command.FabricCommandManager;
 import org.jetbrains.annotations.NotNull;
@@ -229,7 +232,13 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
 
     @Override
     protected void loadBlocks() {
-        for (Map.Entry<ResourceKey<Block>, Block> entry : this.server.registryAccess().registryOrThrow(Registries.BLOCK).entrySet()) {
+        Set<Map.Entry<ResourceKey<Block>, Block>> entries = this.server.registryAccess().registryOrThrow(Registries.BLOCK).entrySet();
+        for (Map.Entry<ResourceKey<Block>, Block> entry : entries) {
+            if (getBlockRegistry().size() > BlockRegistry.MAX_INDEX) {
+                Logger.debug(String.format("Cannot register any more biomes. Registered: %d Unregistered: %d", getBlockRegistry().size(), entries.size() - getBlockRegistry().size()));
+                break;
+            }
+
             String id = entry.getKey().location().toString();
             int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);

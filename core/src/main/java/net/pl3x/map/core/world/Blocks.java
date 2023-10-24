@@ -1042,6 +1042,9 @@ public class Blocks {
     }
 
     public static void registerDefaults() {
-        blocks.forEach((id, block) -> Pl3xMap.api().getBlockRegistry().register(id, block));
+        blocks.forEach((id, block) -> {
+            Pl3xMap.api().getBlockRegistry().register(id, block);
+            Pl3xMap.api().getBlockRegistry().getIndexMap().put(id, block.getIndex());
+        });
     }
 }

@@ -40,8 +40,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class BiomeRegistry extends Registry<@NotNull Biome> {
     private static final Gson GSON = new GsonBuilder().create();
+    public static final int MAX_INDEX = 1023;
 
     private final Map<String, Integer> indexMap;
+    private int lastIndex = 0;
 
     public BiomeRegistry() {
         this.indexMap = new HashMap<>();
@@ -67,13 +69,13 @@ public class BiomeRegistry extends Registry<@NotNull Biome> {
         if (index > -1) {
             return index;
         }
-        int i = 0;
+
         while (true) {
-            if (!this.indexMap.containsValue(i)) {
-                this.indexMap.put(id, i);
-                return i;
+            if (!this.indexMap.containsValue(this.lastIndex)) {
+                this.indexMap.put(id, this.lastIndex);
+                return this.lastIndex;
             }
-            i++;
+            this.lastIndex++;
         }
     }
 
@@ -81,6 +83,7 @@ public class BiomeRegistry extends Registry<@NotNull Biome> {
         if (has(id)) {
             throw new KeyAlreadyExistsException("Biome already registered: " + id);
         }
+
         return register(id, new Biome(getNextIndex(id), id, color, foliage, grass, water, grassModifier));
     }
 
