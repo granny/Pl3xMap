@@ -36,7 +36,7 @@ jobs:
           folder: core/build/docs/javadoc
           target-folder: ./
       - name: Notify Discord
-        uses: sarisia/actions-status-discord@v1.13.0
+        uses: granny/actions-status-discord@v1.14.0.pre-0
         if: success()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
@@ -46,7 +46,7 @@ jobs:
             Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
             Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
       - name: Notify Discord
-        uses: sarisia/actions-status-discord@v1.13.0
+        uses: granny/actions-status-discord@v1.14.0.pre-0
         if: ${{ failure() }}
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
