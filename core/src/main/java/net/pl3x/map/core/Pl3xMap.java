@@ -61,7 +61,7 @@ import net.pl3x.map.core.renderer.task.RegionProcessor;
 import net.pl3x.map.core.renderer.task.UpdateSettingsData;
 import net.pl3x.map.core.scheduler.Scheduler;
 import net.pl3x.map.core.util.Mathf;
-import net.pl3x.map.core.util.SpiFix;
+
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
@@ -99,14 +99,14 @@ public abstract class Pl3xMap {
     public Pl3xMap(boolean isBukkit) {
         this.isBukkit = isBukkit;
 
-        try {
+        /*try {
             // Due to these bugs(?) in spi
             // * relocated libraries cant find their services (xnio fails)
             // * imageio fails to find twelvemonkeys spis at all
             // I am forced to load them all myself instead of relying on the META-INF
             SpiFix.forceRegisterSpis();
         } catch (Throwable ignore) {
-        }
+        }*/
 
         try {
             Field api = Provider.class.getDeclaredField("api");

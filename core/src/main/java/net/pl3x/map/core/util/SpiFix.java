@@ -133,7 +133,7 @@ import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import io.undertow.server.handlers.proxy.ProxyHandlerBuilder;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import javax.imageio.spi.IIORegistry;
-import org.xnio.nio.NioXnioProvider;
+
 
 @SuppressWarnings("deprecation")
 public class SpiFix {
@@ -264,6 +264,6 @@ public class SpiFix {
         registry.registerServiceProvider(new SetErrorHandler.Builder());
 
         // org.xnio.XnioProvider
-        registry.registerServiceProvider(new NioXnioProvider());
+        //registry.registerServiceProvider(new NioXnioProvider());
     }
 }

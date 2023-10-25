@@ -134,7 +134,7 @@ allprojects {
         }
 
         implementation "io.undertow:undertow-core:$undertowVersion"
-        implementation "org.jboss.xnio:xnio-nio:$xnioVersion"
+        //implementation "org.jboss.xnio:xnio-nio:$xnioVersion"
 
         // provided by mojang
         compileOnly "com.google.code.gson:gson:$gsonVersion"

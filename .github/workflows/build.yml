@@ -35,24 +35,24 @@ jobs:
           clean: true
           folder: core/build/docs/javadoc
           target-folder: ./
-      # - name: Notify Discord
-      #   uses: BillyGalbreath/actions-status-discord@main
-      #   if: success()
-      #   with:
-      #     webhook: ${{ secrets.DISCORD_WEBHOOK }}
-      #     noprefix: true
-      #     title: New build of Pl3xMap is ready!
-      #     description: |
-      #       Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
-      #       Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
-      # - name: Notify Discord
-      #   uses: BillyGalbreath/actions-status-discord@main
-      #   if: ${{ failure() }}
-      #   with:
-      #     webhook: ${{ secrets.DISCORD_WEBHOOK }}
-      #     noprefix: true
-      #     title: Build Failure!
-      #     color: 0xff0000
-      #     description: |
-      #       Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
-      #       Click [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) to view the run!
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1.13.0
+        if: success()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          noprefix: true
+          title: New build of Pl3xMap is ready!
+          description: |
+            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
+            Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1.13.0
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          noprefix: true
+          title: Build Failure!
+          color: 0xff0000
+          description: |
+            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
+            Click [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) to view the run!
