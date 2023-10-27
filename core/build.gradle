@@ -15,6 +15,10 @@ java {
     withSourcesJar()
 }
 
+clean {
+    delete("$projectDir/src/main/resources/web")
+}
+
 assemble {
     dependsOn(shadowJar)
     doLast {

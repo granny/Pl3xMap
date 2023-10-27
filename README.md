@@ -109,8 +109,6 @@ dependencies {
 
 ## Building from source
 
-To build this project ensure `npm` is installed and on your PATH.
-
 Then just run the following command:
 
 ```
