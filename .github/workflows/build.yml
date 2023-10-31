@@ -1,4 +1,7 @@
 name: Build
+env:
+  NEXT_BUILD_NUMBER: ${{ vars.NEXT_BUILD_NUMBER }}
+  BUILD_INITIAL_VALUE: 1
 on:
   push:
     branches:
@@ -20,6 +23,39 @@ jobs:
       - name: Import gradle properties
         shell: bash
         run: cat gradle.properties >> $GITHUB_ENV
+      - uses: actions/github-script@v6
+        name: Prepare build number if it doesn't exist
+        with:
+          debug: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            if (process.env.NEXT_BUILD_NUMBER === undefined || process.env.NEXT_BUILD_NUMBER === "") {
+              core.info(`Could not find a NEXT_BUILD_NUMBER env variable. Creating a new one with value ${process.env.BUILD_INITIAL_VALUE}.`);
+
+              const { status, data } = await github.request('POST /repos/{owner}/{repo}/actions/variables', {
+                owner: owner,
+                repo: repo,
+                name: "NEXT_BUILD_NUMBER",
+                value: process.env.BUILD_INITIAL_VALUE,
+                headers: {
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              }).catch(err => err.response);
+              //const { status, data } = await github.rest.actions.createRepoVariable(owner, repo, "NEXT_BUILD_NUMBER", process.env.BUILD_INITIAL_VALUE);
+              core.debug(JSON.stringify(data, null, 2));
+
+              if (data?.message != undefined) {
+                return core.setFailed(`Failed to update configuration variable NEXT_BUILD_NUMBER with new value of '${process.env.BUILD_INITIAL_VALUE}' for reason ${data.message}`);
+              }
+              
+              return core.exportVariable("NEXT_BUILD_NUMBER", process.env.BUILD_INITIAL_VALUE);
+            } else if (process.env.NEXT_BUILD_NUMBER.split('.').length > 1 || Number.isNaN(Number.parseInt(process.env.NEXT_BUILD_NUMBER))) {
+              return core.setFailed(`NEXT_BUILD_NUMBER variable has invalid value "${process.env.NEXT_BUILD_NUMBER}", failing build.`);
+            }
+
+            return core.exportVariable("NEXT_BUILD_NUMBER", process.env.NEXT_BUILD_NUMBER);
       - name: Build
         run: ./gradlew build modrinth --stacktrace
         env:
@@ -43,8 +79,8 @@ jobs:
           noprefix: true
           title: New build of Pl3xMap is ready!
           description: |
-            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
-            Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ github.run_number }}) to download!
+            Version ${{ env.minecraftVersion }} build ${{ env.NEXT_BUILD_NUMBER }}
+            Click [here](https://modrinth.com/mod/pl3xmap/version/${{ env.minecraftVersion }}-${{ env.NEXT_BUILD_NUMBER }}) to download!
       - name: Notify Discord
         uses: granny/actions-status-discord@v1.14.0.pre-0
         if: ${{ failure() }}
@@ -54,5 +90,32 @@ jobs:
           title: Build Failure!
           color: 0xff0000
           description: |
-            Version ${{ env.minecraftVersion }} build ${{ github.run_number }}
+            Version ${{ env.minecraftVersion }} build ${{ env.NEXT_BUILD_NUMBER }}
             Click [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) to view the run!
+      - uses: actions/github-script@v6
+        name: Increment Build Number
+        if: success()
+        with:
+          debug: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const value = ${{ env.NEXT_BUILD_NUMBER }} + 1;
+
+            core.info(`attempting to update variable 'NEXT_BUILD_NUMBER' to '${value}'.`);
+            const { status, data } = await github.request('PATCH /repos/{owner}/{repo}/actions/variables/{name}', {
+              owner: owner,
+              repo: repo,
+              name: "NEXT_BUILD_NUMBER",
+              value: value,
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            }).catch(err => err.response);
+
+            //const { data } = await github.rest.actions.updateRepoVariable(owner, repo, "NEXT_BUILD_NUMBER", value)
+            core.debug(JSON.stringify(data, null, 2));
+
+            if (data?.message != undefined) {
+              return core.setFailed(`Failed to update configuration variable NEXT_BUILD_NUMBER with new value of '${value}'`);
+            }

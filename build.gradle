@@ -6,7 +6,7 @@ plugins {
 
 defaultTasks 'build'
 
-def buildNum = System.getenv('GITHUB_RUN_NUMBER') ?: 'SNAPSHOT'
+def buildNum = System.getenv('NEXT_BUILD_NUMBER') ?: 'SNAPSHOT'
 project.group = 'net.pl3x.map'
 project.version = "$minecraftVersion-$buildNum"
 
