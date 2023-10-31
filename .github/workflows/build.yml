@@ -27,7 +27,7 @@ jobs:
         name: Prepare build number if it doesn't exist
         with:
           debug: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
 
@@ -97,7 +97,7 @@ jobs:
         if: success()
         with:
           debug: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
             const value = ${{ env.NEXT_BUILD_NUMBER }} + 1;
