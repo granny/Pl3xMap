@@ -100,7 +100,7 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            const value = ${{ env.NEXT_BUILD_NUMBER }} + 1;
+            const value = '' + (${{ env.NEXT_BUILD_NUMBER }} + 1);
 
             core.info(`attempting to update variable 'NEXT_BUILD_NUMBER' to '${value}'.`);
             const { status, data } = await github.request('PATCH /repos/{owner}/{repo}/actions/variables/{name}', {
