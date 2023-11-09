@@ -59,7 +59,7 @@ public class PlayersLayer extends WorldLayer {
      */
     public PlayersLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_PLAYERS);
-        setUpdateInterval(0);
+        setUpdateInterval(PlayersLayerConfig.UPDATE_INTERVAL);
         setShowControls(PlayersLayerConfig.SHOW_CONTROLS);
         setDefaultHidden(PlayersLayerConfig.DEFAULT_HIDDEN);
         setPriority(PlayersLayerConfig.PRIORITY);

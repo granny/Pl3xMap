@@ -65,7 +65,7 @@ public class SpawnLayer extends WorldLayer {
             throw new RuntimeException(e);
         }
 
-        setUpdateInterval(30);
+        setUpdateInterval(SpawnLayerConfig.UPDATE_INTERVAL);
         setShowControls(SpawnLayerConfig.SHOW_CONTROLS);
         setDefaultHidden(SpawnLayerConfig.DEFAULT_HIDDEN);
         setPriority(SpawnLayerConfig.PRIORITY);

@@ -42,6 +42,11 @@ public final class PlayersLayerConfig extends AbstractConfig {
             Should spectators be hidden from the map.""")
     public static boolean HIDE_SPECTATORS = true;
 
+    @Key("settings.layer.update-interval")
+    @Comment("""
+            How often (in seconds) to update the marker.
+            Setting to 0 is the same as setting it to 1.""")
+    public static int UPDATE_INTERVAL = 0;
     @Key("settings.layer.show-controls")
     @Comment("""
             Whether the players layer control shows up in the layers list or not.""")
