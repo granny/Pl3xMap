@@ -63,8 +63,6 @@ granny on:
 * [GitHub Sponsors](https://github.com/sponsors/granny)
 
 BillyGalbreath on:
-* [GitHub Sponsors](https://github.com/sponsors/BillyGalbreath)
-* [Patreon](https://www.patreon.com/billygalbreath)
 * [Ko-Fi](https://ko-fi.com/billygalbreath)
 
 JLyne on:

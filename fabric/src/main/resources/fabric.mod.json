@@ -5,6 +5,7 @@
   "name": "${name}",
   "description": "${description}",
   "authors": [
+    "granny",
     "BillyGalbreath",
     "JLyne"
   ],
@@ -47,7 +48,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/kHWFx7bFZh",
+        "modmenu.discord": "https://granny.dev/discord",
         "modrinth.download.link": "https://modrinth.com/mod/pl3xmap/"
       }
     }
