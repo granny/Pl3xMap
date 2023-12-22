@@ -377,6 +377,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:granite_stairs", 0x956756);
         put("minecraft:granite_wall", 0x956756);
         put("minecraft:grass", 0x000000);
+        put("minecraft:short_grass", 0x000000);
         put("minecraft:grass_block", 0x7EA44D);
         put("minecraft:gravel", 0x84807F);
         put("minecraft:gray_banner", 0x000000);
@@ -1048,6 +1049,26 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:windswept_hills", 0x597D72);
         put("minecraft:windswept_savanna", 0xE5DA87);
         put("minecraft:wooded_badlands", 0xB09765);
+        put("minecraft:oxidized_copper_grate", 0x52A385);
+        put("minecraft:weathered_copper_door", 0x6E966D);
+        put("minecraft:chiseled_tuff_bricks", 0x6E726A);
+        put("minecraft:polished_tuff", 0x626864);
+        put("minecraft:oxidized_copper_bulb", 0x45836C);
+        put("minecraft:waxed_copper_bulb", 0x9A5638);
+        put("minecraft:waxed_weathered_copper_door", 0x6E966D);
+        put("minecraft:waxed_weathered_chiseled_copper", 0x69966E);
+        put("minecraft:waxed_copper_door", 0xC06D52);
+        put("minecraft:waxed_exposed_copper_trapdoor", 0xA17D69);
+        put("minecraft:copper_door", 0xC06D52);
+        put("minecraft:tuff_brick_slab", 0x6E726A);
+        put("minecraft:waxed_exposed_copper_door", 0x876B62);
+        put("minecraft:exposed_copper_grate", 0xA27E68);
+        put("minecraft:copper_bulb", 0x9A5638);
+        put("minecraft:weathered_chiseled_copper", 0x69966E);
+        put("minecraft:trial_spawner", 0x385162);
+        put("minecraft:waxed_oxidized_copper_trapdoor", 0x52A385);
+        put("minecraft:waxed_weathered_copper_grate", 0x69966E);
+        put("minecraft:exposed_copper_trapdoor", 0xA17D69);
     }};
 
     @Key("blocks.air")
@@ -1127,6 +1148,7 @@ public class ColorsConfig extends AbstractConfig {
     public static List<@NotNull String> BLOCKS_GRASS = new ArrayList<>() {{
         add("minecraft:fern");
         add("minecraft:grass");
+        add("minecraft:short_grass");
         add("minecraft:grass_block");
         add("minecraft:large_fern");
         add("minecraft:potted_fern");

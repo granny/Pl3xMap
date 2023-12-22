@@ -1035,6 +1035,27 @@ public class Blocks {
     public static final Block PITCHER_PLANT = register(new Block(1000, "minecraft:pitcher_plant", 0x8075D1));
     public static final Block SNIFFER_EGG = register(new Block(1001, "minecraft:sniffer_egg", 0xBC4E3A));
     public static final Block SUSPICIOUS_GRAVEL = register(new Block(1002, "minecraft:suspicious_gravel", 0x837F7E));
+    public static final Block OXIDIZED_COPPER_GRATE = register(new Block(1003, "minecraft:oxidized_copper_grate", 0x52A385));
+    public static final Block WEATHERED_COPPER_DOOR = register(new Block(1004, "minecraft:weathered_copper_door", 0x6E966D));
+    public static final Block CHISELED_TUFF_BRICKS = register(new Block(1005, "minecraft:chiseled_tuff_bricks", 0x6E726A));
+    public static final Block POLISHED_TUFF = register(new Block(1006, "minecraft:polished_tuff", 0x626864));
+    public static final Block OXIDIZED_COPPER_BULB = register(new Block(1007, "minecraft:oxidized_copper_bulb", 0x45836C));
+    public static final Block WAXED_COPPER_BULB = register(new Block(1008, "minecraft:waxed_copper_bulb", 0x9A5638));
+    public static final Block WAXED_WEATHERED_COPPER_DOOR = register(new Block(1009, "minecraft:waxed_weathered_copper_door", 0x6E966D));
+    public static final Block WAXED_WEATHERED_CHISELED_COPPER = register(new Block(1010, "minecraft:waxed_weathered_chiseled_copper", 0x69966E));
+    public static final Block WAXED_COPPER_DOOR = register(new Block(1011, "minecraft:waxed_copper_door", 0xC06D52));
+    public static final Block WAXED_EXPOSED_COPPER_TRAPDOOR = register(new Block(1012, "minecraft:waxed_exposed_copper_trapdoor", 0xA17D69));
+    public static final Block COPPER_DOOR = register(new Block(1013, "minecraft:copper_door", 0xC06D52));
+    public static final Block TUFF_BRICK_SLAB = register(new Block(1014, "minecraft:tuff_brick_slab", 0x6E726A));
+    public static final Block WAXED_EXPOSED_COPPER_DOOR = register(new Block(1015, "minecraft:waxed_exposed_copper_door", 0x876B62));
+    public static final Block EXPOSED_COPPER_GRATE = register(new Block(1016, "minecraft:exposed_copper_grate", 0xA27E68));
+    public static final Block COPPER_BULB = register(new Block(1017, "minecraft:copper_bulb", 0x9A5638));
+    public static final Block WEATHERED_CHISELED_COPPER = register(new Block(1018, "minecraft:weathered_chiseled_copper", 0x69966E));
+    public static final Block TRIAL_SPAWNER = register(new Block(1019, "minecraft:trial_spawner", 0x385162));
+    public static final Block WAXED_OXIDIZED_COPPER_TRAPDOOR = register(new Block(1020, "minecraft:waxed_oxidized_copper_trapdoor", 0x52A385));
+    public static final Block WAXED_WEATHERED_COPPER_GRATE = register(new Block(1021, "minecraft:waxed_weathered_copper_grate", 0x69966E));
+    public static final Block EXPOSED_COPPER_TRAPDOOR = register(new Block(1022, "minecraft:exposed_copper_trapdoor", 0xA17D69));
+    public static final Block SHORT_GRASS = register(new Block(1023, "minecraft:short_grass", 0x007C00));
 
     private static @NotNull Block register(@NotNull Block block) {
         blocks.put(block.getKey(), block);
