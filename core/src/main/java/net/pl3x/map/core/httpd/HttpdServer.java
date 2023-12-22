@@ -58,6 +58,12 @@ public class HttpdServer {
         sendSSE(null, data);
     }
 
+    public static void closeSSEConnections() {
+        for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
+            connection.shutdown();
+        }
+    }
+
     public void startServer() {
         if (!Config.HTTPD_ENABLED) {
             Logger.info(Lang.HTTPD_DISABLED);
@@ -134,6 +140,7 @@ public class HttpdServer {
         }
 
         LogFilter.HIDE_UNDERTOW_LOGS = true;
+        this.closeSSEConnections();
         this.server.stop();
         LogFilter.HIDE_UNDERTOW_LOGS = false;
 
