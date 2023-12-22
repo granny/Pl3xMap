@@ -29,7 +29,7 @@ import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.core.network.Network;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R2.map.CraftMapRenderer;
+import org.bukkit.craftbukkit.v1_20_R3.map.CraftMapRenderer;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
