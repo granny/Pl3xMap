@@ -70,12 +70,14 @@ export class Pl3xMap {
     }
 
     private update(): void {
+        if (this.eventSource !== undefined && this.eventSource.readyState !== EventSource.CLOSED) {
+            this._timer = setTimeout(() => this.update(), 1000);
+            return;
+        }
         getJSON('tiles/settings.json').then( (json): void => {
             this._settings = json as Settings;
 
-            if (this.eventSource === undefined || this.eventSource.readyState === EventSource.CLOSED) {
-                this.playerManager.update(this._settings.players);
-            }
+            this.playerManager.update(this._settings.players);
 
             this._timer = setTimeout(() => this.update(), 1000);
         });
