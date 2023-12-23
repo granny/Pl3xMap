@@ -95,7 +95,7 @@ export class Pl3xMap {
 
             if (world === undefined) return;
 
-            if (json.length === 0) return;
+            if (messageEvent.data.length === 0) return;
 
             world.markerLayers.forEach(layer => {
                 if (layer.key !== key) return;
