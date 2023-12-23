@@ -1,6 +1,5 @@
 import {Pl3xMap} from "../Pl3xMap";
 import {Player} from "./Player";
-import {Settings} from "../settings/Settings";
 import {fireCustomEvent, toCenteredLatLng} from "../util/Util";
 import {WorldManager} from "../world/WorldManager";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";

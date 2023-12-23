@@ -46,7 +46,7 @@ import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateMarkerData extends Task {
-    protected final Gson gson = new GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
@@ -54,9 +54,9 @@ public class UpdateMarkerData extends Task {
             .registerTypeHierarchyAdapter(Marker.class, new Adapter())
             .create();
 
-    protected final World world;
-    protected final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
-    protected final Map<@NotNull String, @NotNull Long> lastUpdatedSSE = new HashMap<>();
+    private final World world;
+    private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
+    private final Map<@NotNull String, @NotNull Long> lastUpdatedSSE = new HashMap<>();
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;

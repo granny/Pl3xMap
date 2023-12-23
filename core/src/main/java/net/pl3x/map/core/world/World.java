@@ -41,7 +41,6 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.configuration.SpawnLayerConfig;
 import net.pl3x.map.core.configuration.WorldBorderLayerConfig;
