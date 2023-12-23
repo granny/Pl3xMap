@@ -40,6 +40,7 @@ import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,7 +53,7 @@ public class UpdateSettingsData extends Task {
             .create();
 
     public UpdateSettingsData() {
-        super(1 * 20, true);
+        super(TickUtil.toTicks(1), true);
     }
 
     @Override
@@ -152,6 +153,7 @@ public class UpdateSettingsData extends Task {
             t.printStackTrace();
         }
 
+        Pl3xMap.api().getHttpdServer().sendSSE("settings", this.gson.toJson(map));
         FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
     }
 }

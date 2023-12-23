@@ -34,6 +34,7 @@ import net.pl3x.map.core.markers.marker.Polyline;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.util.Colors;
+import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,7 +53,7 @@ public class WorldBorderLayer extends WorldLayer {
      */
     public WorldBorderLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_WORLDBORDER);
-        setUpdateInterval(WorldBorderLayerConfig.UPDATE_INTERVAL * 20);
+        setUpdateInterval(TickUtil.toTicks(WorldBorderLayerConfig.UPDATE_INTERVAL));
         setShowControls(WorldBorderLayerConfig.SHOW_CONTROLS);
         setDefaultHidden(WorldBorderLayerConfig.DEFAULT_HIDDEN);
         setPriority(WorldBorderLayerConfig.PRIORITY);

@@ -26,6 +26,7 @@ package net.pl3x.map.core.scheduler;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import net.pl3x.map.core.util.TickUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class Scheduler {
@@ -88,7 +89,7 @@ public class Scheduler {
     /**
      * Add task to the scheduler.
      *
-     * @param delay    Delay (in ticks) before task starts
+     * @param delay    Delay (in seconds) before task starts
      * @param runnable Task to add
      */
     public void addTask(int delay, @NotNull Runnable runnable) {
@@ -98,12 +99,12 @@ public class Scheduler {
     /**
      * Add task to the scheduler.
      *
-     * @param delay    Delay (in ticks) before task starts
-     * @param repeat   Delay (in ticks) before task repeats
+     * @param delay    Delay (in seconds) before task starts
+     * @param repeat   Delay (in seconds) before task repeats
      * @param runnable Task to add
      */
     public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {
-        addTask(new Task(delay, repeat) {
+        addTask(new Task(TickUtil.toTicks(delay), repeat) {
             @Override
             public void run() {
                 runnable.run();

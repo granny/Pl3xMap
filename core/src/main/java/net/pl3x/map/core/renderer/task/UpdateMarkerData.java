@@ -28,12 +28,13 @@ import java.util.List;
 import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateMarkerData extends AbstractDataTask {
     public UpdateMarkerData(@NotNull World world) {
-        super(1 * 20, true, world, "Pl3xMap-Markers");
+        super(TickUtil.toTicks(1), true, world, "Pl3xMap-Markers");
     }
 
     @Override

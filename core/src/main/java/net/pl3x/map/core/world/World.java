@@ -60,7 +60,6 @@ import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.task.UpdateMarkerData;
-import net.pl3x.map.core.renderer.task.UpdateSSEEvents;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Mathf;
 import org.jetbrains.annotations.NotNull;
