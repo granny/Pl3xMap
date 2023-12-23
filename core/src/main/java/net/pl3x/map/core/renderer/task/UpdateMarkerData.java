@@ -61,9 +61,10 @@ public class UpdateMarkerData extends Task {
 
     private CompletableFuture<Void> future;
     private boolean running;
+    private int tempTick;
 
     public UpdateMarkerData(@NotNull World world) {
-        super(TickUtil.toTicks(1), true);
+        super(1, true);
         this.world = world;
         this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Markers");
     }
@@ -76,6 +77,7 @@ public class UpdateMarkerData extends Task {
         this.running = true;
         this.future = CompletableFuture.runAsync(() -> {
             try {
+                tempTick++;
                 parseLayers();
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -121,7 +123,10 @@ public class UpdateMarkerData extends Task {
             }
         });
 
-        FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+        if (tempTick >= 20) {
+            FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+            tempTick = 0;
+        }
     }
 
     private static class Adapter implements JsonSerializer<@NotNull Marker<?>> {

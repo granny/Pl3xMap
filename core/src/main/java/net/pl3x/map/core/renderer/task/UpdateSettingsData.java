@@ -26,7 +26,6 @@ package net.pl3x.map.core.renderer.task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,17 +33,16 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
-import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateSettingsData extends Task {
+    private int tempTick;
     private final Gson gson = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
@@ -53,12 +51,13 @@ public class UpdateSettingsData extends Task {
             .create();
 
     public UpdateSettingsData() {
-        super(TickUtil.toTicks(1), true);
+        super(1, true);
     }
 
     @Override
     public void run() {
         try {
+            tempTick++;
             parseSettings();
         } catch (Throwable t) {
             t.printStackTrace();
@@ -153,6 +152,10 @@ public class UpdateSettingsData extends Task {
         }
 
         Pl3xMap.api().getHttpdServer().sendSSE("settings", this.gson.toJson(map));
-        FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
+
+        if (tempTick >= 20) {
+            FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
+            tempTick = 0;
+        }
     }
 }
