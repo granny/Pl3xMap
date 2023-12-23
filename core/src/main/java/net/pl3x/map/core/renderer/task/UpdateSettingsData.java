@@ -57,7 +57,6 @@ public class UpdateSettingsData extends Task {
     @Override
     public void run() {
         try {
-            tempTick++;
             parseSettings();
         } catch (Throwable t) {
             t.printStackTrace();
@@ -153,9 +152,9 @@ public class UpdateSettingsData extends Task {
 
         Pl3xMap.api().getHttpdServer().sendSSE("settings", this.gson.toJson(map));
 
-        if (tempTick >= 20) {
-            FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
+        if (tempTick++ >= 20) {
             tempTick = 0;
+            FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
         }
     }
 }

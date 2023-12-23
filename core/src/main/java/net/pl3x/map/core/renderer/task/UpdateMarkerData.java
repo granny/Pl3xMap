@@ -77,7 +77,6 @@ public class UpdateMarkerData extends Task {
         this.running = true;
         this.future = CompletableFuture.runAsync(() -> {
             try {
-                tempTick++;
                 parseLayers();
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -123,9 +122,9 @@ public class UpdateMarkerData extends Task {
             }
         });
 
-        if (tempTick >= 20) {
-            FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+        if (tempTick++ >= 20) {
             tempTick = 0;
+            FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
         }
     }
 
