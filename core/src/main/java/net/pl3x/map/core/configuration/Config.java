@@ -35,11 +35,6 @@ public final class Config extends AbstractConfig {
             Extra logger/console output. (can be spammy)""")
     public static boolean DEBUG_MODE = false;
 
-    @Key("settings.use-sse-events")
-    @Comment("""
-            Enable the use of SSE events to make markers update in real time.""")
-    public static boolean SSE_EVENTS = true;
-
     @Key("settings.language-file")
     @Comment("""
             The language file to use from the locale folder.""")

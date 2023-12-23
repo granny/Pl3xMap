@@ -144,7 +144,6 @@ public class UpdateSettingsData extends Task {
         map.put("maxPlayers", Pl3xMap.api().getMaxPlayers());
         map.put("lang", lang);
         map.put("zoom", zoom);
-        map.put("useSSE", Config.SSE_EVENTS);
 
         try {
             map.put("players", Pl3xMap.api().getPlayerRegistry().parsePlayers());

@@ -73,10 +73,6 @@ export class Pl3xMap {
         getJSON('tiles/settings.json').then( (json): void => {
             this._settings = json as Settings;
 
-            if (!this._settings.useSSE) {
-                this.eventSource?.close();
-            }
-
             if (this.eventSource === undefined || this.eventSource.readyState === EventSource.CLOSED) {
                 this.playerManager.update(this._settings.players);
             }
@@ -105,10 +101,11 @@ export class Pl3xMap {
             });
         });
 
-        eventSource.addEventListener("players", (ev: Event) => {
+        eventSource.addEventListener("settings", (ev: Event) => {
             const messageEvent = (ev as MessageEvent);
-            const json: Player[] = JSON.parse(messageEvent.data);
-            this.playerManager.update(json);
+            const json: any = JSON.parse(messageEvent.data);
+            this._settings = json as Settings;
+            this.playerManager.update(this._settings.players);
         });
 
         return eventSource;

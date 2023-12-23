@@ -88,7 +88,6 @@ public abstract class World extends Keyed {
     private final RegionModifiedState regionModifiedState;
     //private final RegionFileWatcher regionFileWatcher;
     private final UpdateMarkerData markerTask;
-    private final UpdateSSEEvents sseTask;
     private final Map<@NotNull String, Renderer.@NotNull Builder> renderers = new LinkedHashMap<>();
 
     public World(@NotNull String name, long seed, @NotNull Point spawn, @NotNull Type type, @NotNull Path regionDirectory) {
@@ -124,7 +123,6 @@ public abstract class World extends Keyed {
         this.regionModifiedState = new RegionModifiedState(this);
         //this.regionFileWatcher = new RegionFileWatcher(this);
         this.markerTask = new UpdateMarkerData(this);
-        this.sseTask = new UpdateSSEEvents(this);
     }
 
     protected void init() {
@@ -173,11 +171,6 @@ public abstract class World extends Keyed {
         Logger.debug("Starting marker task");
         Pl3xMap.api().getScheduler().addTask(this.markerTask);
 
-        if (Config.SSE_EVENTS) {
-            Logger.debug("Starting SSE events task");
-            Pl3xMap.api().getScheduler().addTask(this.sseTask);
-        }
-
         // load up custom markers
         Logger.debug("Loading custom markers for " + getName());
         for (Path file : getCustomMarkerFiles()) {
@@ -220,10 +213,6 @@ public abstract class World extends Keyed {
 
     public @NotNull UpdateMarkerData getMarkerTask() {
         return this.markerTask;
-    }
-
-    public @NotNull UpdateSSEEvents getSSETask() {
-        return this.sseTask;
     }
 
     public @NotNull Map<@NotNull String, Renderer.@NotNull Builder> getRenderers() {
