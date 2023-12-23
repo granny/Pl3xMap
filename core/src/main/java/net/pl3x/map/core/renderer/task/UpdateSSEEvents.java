@@ -26,9 +26,9 @@ public class UpdateSSEEvents extends AbstractDataTask {
             String key = entry.getKey();
             Layer layer = entry.getValue();
             List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
-            HttpdServer.sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
+            Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
         });
 
-        HttpdServer.sendSSE("players", this.gson.toJson(Pl3xMap.api().getPlayerRegistry().parsePlayers()));
+        Pl3xMap.api().getHttpdServer().sendSSE("players", this.gson.toJson(Pl3xMap.api().getPlayerRegistry().parsePlayers()));
     }
 }

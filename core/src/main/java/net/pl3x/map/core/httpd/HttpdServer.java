@@ -46,19 +46,19 @@ import net.pl3x.map.core.util.FileUtil;
 
 public class HttpdServer {
     private Undertow server;
-    private static ServerSentEventHandler serverSentEventHandler = Handlers.serverSentEvents();
+    private ServerSentEventHandler serverSentEventHandler = Handlers.serverSentEvents();
 
-    public static void sendSSE(String event, String data) {
+    public void sendSSE(String event, String data) {
         for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
             connection.send(data, event, null, null);
         }
     }
 
-    public static void sendSSE(String data) {
+    public void sendSSE(String data) {
         sendSSE(null, data);
     }
 
-    public static void closeSSEConnections() {
+    public void closeSSEConnections() {
         for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
             connection.shutdown();
         }
