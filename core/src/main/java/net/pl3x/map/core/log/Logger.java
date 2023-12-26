@@ -62,7 +62,7 @@ public class Logger {
 
     public static void warn(@NotNull String message, @Nullable Throwable throwable) {
         log("<gray>[<yellow>WARN</yellow>]</gray> <yellow>" + message);
-        if (throwable != null) {
+        if (throwable != null && Config.DEBUG_MODE) {
             throwable.printStackTrace();
         }
     }
