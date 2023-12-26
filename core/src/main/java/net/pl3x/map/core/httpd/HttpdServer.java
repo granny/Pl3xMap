@@ -101,8 +101,7 @@ public class HttpdServer {
             );
         } catch (Exception e) {
             this.server = null;
-            Logger.severe(Lang.HTTPD_START_ERROR);
-            e.printStackTrace();
+            Logger.severe(Lang.HTTPD_START_ERROR, e);
         }
     }
 

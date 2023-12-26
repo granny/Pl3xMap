@@ -143,8 +143,7 @@ public abstract class World extends Keyed {
                 IconImage image = new IconImage(icon, ImageIO.read(path.toFile()), "png");
                 Pl3xMap.api().getIconRegistry().register(image);
             } catch (IOException e) {
-                Logger.severe("Cannot load world renderer icon " + path);
-                e.printStackTrace();
+                Logger.severe("Cannot load world renderer icon " + path, e);
             }
             this.renderers.put(renderer.getKey(), renderer);
         });
