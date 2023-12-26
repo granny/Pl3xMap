@@ -28,11 +28,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import javax.imageio.ImageIO;
+import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -72,8 +74,17 @@ public class PlayerTexture extends Thread {
         if (this.url == null) {
             return;
         }
+
+        InputStream inputStream = null;
         try {
-            BufferedImage textureSource = ImageIO.read(this.url);
+            inputStream = this.url.openStream();
+        } catch (IOException e) {
+            Logger.warn("Failed to get texture of %s from %s: %s".formatted(this.uuid, this.url, e.getCause()), e);
+            return;
+        }
+
+        try {
+            BufferedImage textureSource = ImageIO.read(inputStream);
 
             BufferedImage head2D = get2DHead(textureSource);
             ImageIO.write(head2D, "png", SKINS_2D_DIR.resolve(this.uuid + ".png").toFile());
@@ -88,7 +99,7 @@ public class PlayerTexture extends Thread {
             }
             ImageIO.write(head3D, "png", SKINS_3D_DIR.resolve(this.uuid + ".png").toFile());
         } catch (Throwable t) {
-            t.printStackTrace();
+            Logger.warn("Failed to process player texture with uuid of %s".formatted(this.uuid), t);
         }
     }
 
