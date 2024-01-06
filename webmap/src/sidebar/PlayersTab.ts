@@ -67,7 +67,7 @@ export default class PlayersTab extends BaseTab {
     private _update(): void {
         const settings: Settings | undefined = this._pl3xmap.settings;
 
-        const online: string = String(isset(settings?.players) ? Object.keys(settings!.players).length : '???');
+        const online: string = String(this._pl3xmap.playerManager.players.size);
         const max: string = String(settings?.maxPlayers ?? '???');
 
         const title: any = settings?.lang.players?.label

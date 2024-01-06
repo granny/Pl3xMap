@@ -41,6 +41,7 @@ import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,10 +56,12 @@ public class UpdateMarkerData extends Task {
 
     private final World world;
     private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
+    private final Map<@NotNull String, @NotNull Long> lastUpdatedSSE = new HashMap<>();
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;
     private boolean running;
+    private int tempTick;
 
     public UpdateMarkerData(@NotNull World world) {
         super(1, true);
@@ -101,9 +104,16 @@ public class UpdateMarkerData extends Task {
 
                 long now = System.currentTimeMillis() / 1000;
                 long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
+                long lastUpdateSSE = this.lastUpdatedSSE.getOrDefault(key, 0L);
 
+                List<Marker<?>> list = null;
+                if (now - lastUpdateSSE >= TickUtil.toSeconds(layer.getSseUpdateInterval())) { // TODO: this is bad
+                    list = list == null ? new ArrayList<>(layer.getMarkers()) : list;
+                    Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
+                    this.lastUpdatedSSE.put(key, now);
+                }
                 if (now - lastUpdate > layer.getUpdateInterval()) {
-                    List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
+                    list = list == null ? new ArrayList<>(layer.getMarkers()) : list;
                     FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
                     this.lastUpdated.put(key, now);
                 }
@@ -112,7 +122,10 @@ public class UpdateMarkerData extends Task {
             }
         });
 
-        FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+        if (tempTick++ >= 20) {
+            tempTick = 0;
+            FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+        }
     }
 
     private static class Adapter implements JsonSerializer<@NotNull Marker<?>> {

@@ -32,6 +32,7 @@ import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.JsonSerializable;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.util.Preconditions;
+import net.pl3x.map.core.util.TickUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnusedReturnValue")
 public abstract class Layer extends Keyed implements JsonSerializable {
     private Supplier<@NotNull String> labelSupplier;
-    private int updateInterval = 15;
+    private int updateInterval = TickUtil.toTicks(15);
+    private int sseUpdateInterval = 0;
     private boolean showControls = true;
     private boolean defaultHidden = false;
     private int priority = 99;
@@ -98,7 +100,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @return update interval
      */
     public int getUpdateInterval() {
-        return this.updateInterval;
+        return TickUtil.toSeconds(this.updateInterval);
     }
 
     /**
@@ -108,7 +110,28 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @return this layer
      */
     public @NotNull Layer setUpdateInterval(int updateInterval) {
-        this.updateInterval = updateInterval;
+        this.updateInterval = TickUtil.toTicks(updateInterval);
+        return this;
+    }
+
+
+    /**
+     * Get this layer's update interval (in ticks).
+     *
+     * @return update interval
+     */
+    public int getSseUpdateInterval() {
+        return this.sseUpdateInterval;
+    }
+
+    /**
+     * Set this layer's update interval (in ticks).
+     *
+     * @param sseUpdateInterval new update interval
+     * @return this layer
+     */
+    public @NotNull Layer setSseUpdateInterval(int sseUpdateInterval) {
+        this.sseUpdateInterval = sseUpdateInterval;
         return this;
     }
 

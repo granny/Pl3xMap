@@ -26,7 +26,6 @@ package net.pl3x.map.core.renderer.task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,7 +33,6 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
-import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.configuration.WorldConfig;
 import net.pl3x.map.core.image.io.IO;
 import net.pl3x.map.core.markers.Point;
@@ -44,6 +42,7 @@ import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateSettingsData extends Task {
+    private int tempTick;
     private final Gson gson = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
@@ -62,36 +61,6 @@ public class UpdateSettingsData extends Task {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-    }
-
-    private @NotNull List<@NotNull Object> parsePlayers() {
-        if (!PlayersLayerConfig.ENABLED) {
-            return Collections.emptyList();
-        }
-        List<Object> players = new ArrayList<>();
-        Pl3xMap.api().getPlayerRegistry().forEach(player -> {
-            // do not expose hidden players in the json
-            if (player.isHidden() || player.isNPC()) {
-                return;
-            }
-            if (PlayersLayerConfig.HIDE_SPECTATORS && player.isSpectator()) {
-                return;
-            }
-            if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
-                return;
-            }
-
-            Map<String, Object> playerEntry = new LinkedHashMap<>();
-
-            playerEntry.put("name", player.getDecoratedName());
-            playerEntry.put("uuid", player.getUUID().toString());
-            playerEntry.put("displayName", player.getDecoratedName());
-            playerEntry.put("world", player.getWorld().getName());
-            playerEntry.put("position", player.getPosition());
-
-            players.add(playerEntry);
-        });
-        return players;
     }
 
     private @NotNull List<@NotNull Map<@NotNull String, @NotNull Object>> parseWorlds() {
@@ -175,12 +144,17 @@ public class UpdateSettingsData extends Task {
         map.put("zoom", zoom);
 
         try {
-            map.put("players", parsePlayers());
+            map.put("players", Pl3xMap.api().getPlayerRegistry().parsePlayers());
             map.put("worldSettings", parseWorlds());
         } catch (Throwable t) {
             t.printStackTrace();
         }
 
-        FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
+        Pl3xMap.api().getHttpdServer().sendSSE("settings", this.gson.toJson(map));
+
+        if (tempTick++ >= 20) {
+            tempTick = 0;
+            FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
+        }
     }
 }

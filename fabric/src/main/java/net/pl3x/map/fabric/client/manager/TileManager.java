@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.Mathf;
+import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -64,7 +65,7 @@ public class TileManager {
         // update once next tick
         this.mod.getScheduler().addTask(0, this::update);
         // setup repeating task to update every 5 seconds
-        this.task = new Task(5, true) {
+        this.task = new Task(TickUtil.toTicks(5), true) {
             @Override
             public void run() {
                 update();

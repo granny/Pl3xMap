@@ -26,6 +26,7 @@ package net.pl3x.map.core.scheduler;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import net.pl3x.map.core.util.TickUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class Scheduler {
@@ -34,7 +35,7 @@ public class Scheduler {
     private boolean ticking;
 
     /**
-     * Tick this scheduler once every second.
+     * Tick this scheduler once every tick.
      */
     public void tick() {
         if (this.ticking) {
@@ -103,7 +104,7 @@ public class Scheduler {
      * @param runnable Task to add
      */
     public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {
-        addTask(new Task(delay, repeat) {
+        addTask(new Task(TickUtil.toTicks(delay), repeat) {
             @Override
             public void run() {
                 runnable.run();

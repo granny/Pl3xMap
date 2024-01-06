@@ -23,10 +23,17 @@
  */
 package net.pl3x.map.core.player;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
+import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.util.Preconditions;
 import org.jetbrains.annotations.NotNull;
@@ -88,5 +95,35 @@ public class PlayerRegistry extends Registry<@NotNull Player> {
     public @NotNull Optional<Player> optional(@NotNull UUID uuid) {
         Player player = get(uuid);
         return player == null ? Optional.empty() : Optional.of(player);
+    }
+
+    public @NotNull List<@NotNull Object> parsePlayers() {
+        if (!PlayersLayerConfig.ENABLED) {
+            return Collections.emptyList();
+        }
+        List<Object> players = new ArrayList<>();
+        Pl3xMap.api().getPlayerRegistry().forEach(player -> {
+            // do not expose hidden players in the json
+            if (player.isHidden() || player.isNPC()) {
+                return;
+            }
+            if (PlayersLayerConfig.HIDE_SPECTATORS && player.isSpectator()) {
+                return;
+            }
+            if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
+                return;
+            }
+
+            Map<String, Object> playerEntry = new LinkedHashMap<>();
+
+            playerEntry.put("name", player.getDecoratedName());
+            playerEntry.put("uuid", player.getUUID().toString());
+            playerEntry.put("displayName", player.getDecoratedName());
+            playerEntry.put("world", player.getWorld().getName());
+            playerEntry.put("position", player.getPosition());
+
+            players.add(playerEntry);
+        });
+        return players;
     }
 }

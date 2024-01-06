@@ -23,12 +23,15 @@
  */
 package net.pl3x.map.core.httpd;
 
+import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.UndertowLogger;
 import io.undertow.UndertowOptions;
 import io.undertow.server.handlers.resource.PathResourceManager;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.handlers.resource.ResourceManager;
+import io.undertow.server.handlers.sse.ServerSentEventConnection;
+import io.undertow.server.handlers.sse.ServerSentEventHandler;
 import io.undertow.util.ETag;
 import io.undertow.util.Headers;
 import java.io.IOException;
@@ -43,6 +46,23 @@ import net.pl3x.map.core.util.FileUtil;
 
 public class HttpdServer {
     private Undertow server;
+    private ServerSentEventHandler serverSentEventHandler = Handlers.serverSentEvents();
+
+    public void sendSSE(String event, String data) {
+        for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
+            connection.send(data, event, null, null);
+        }
+    }
+
+    public void sendSSE(String data) {
+        sendSSE(null, data);
+    }
+
+    public void closeSSEConnections() {
+        for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
+            connection.shutdown();
+        }
+    }
 
     public void startServer() {
         if (!Config.HTTPD_ENABLED) {
@@ -81,16 +101,19 @@ public class HttpdServer {
             this.server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
-                    .setHandler(exchange -> {
-                        if (exchange.getRelativePath().startsWith("/tiles")) {
-                            exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
-                        }
-                        if (exchange.getRelativePath().endsWith(".gz")) {
-                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                            exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
-                        }
-                        resourceHandler.handleRequest(exchange);
-                    })
+                    .setHandler(Handlers.path()
+                            .addPrefixPath("/", exchange -> {
+                                if (exchange.getRelativePath().startsWith("/tiles")) {
+                                    exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
+                                }
+                                if (exchange.getRelativePath().endsWith(".gz")) {
+                                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+                                    exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
+                                }
+                                resourceHandler.handleRequest(exchange);
+                            })
+                            .addExactPath("/sse", serverSentEventHandler)
+                    )
                     .build();
             this.server.start();
             LogFilter.HIDE_UNDERTOW_LOGS = false;
@@ -116,6 +139,7 @@ public class HttpdServer {
         }
 
         LogFilter.HIDE_UNDERTOW_LOGS = true;
+        this.closeSSEConnections();
         this.server.stop();
         LogFilter.HIDE_UNDERTOW_LOGS = false;
 

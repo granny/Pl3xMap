@@ -6,6 +6,7 @@ import {getJSON} from "./util/Util";
 import SidebarControl from "./control/SidebarControl";
 import Pl3xMapLeafletMap from "./map/Pl3xMapLeafletMap";
 import "./scss/styles.scss";
+import {Player} from "./player/Player";
 
 window.onload = function (): void {
     window.pl3xmap = new Pl3xMap();
@@ -23,6 +24,8 @@ export class Pl3xMap {
     private readonly _playerManager: PlayerManager;
     private readonly _worldManager: WorldManager;
 
+    private _eventSource?: EventSource;
+
     private _langPalette: Map<string, string> = new Map();
     private _settings?: Settings;
 
@@ -32,6 +35,12 @@ export class Pl3xMap {
         Pl3xMap._instance = this;
 
         this._map = new Pl3xMapLeafletMap(this);
+        
+        window.addEventListener('beforeunload', function () {
+            if (Pl3xMap.instance.eventSource != undefined) {
+                Pl3xMap.instance.eventSource.close();
+            }
+        });
 
         this._controlManager = new ControlManager(this);
         this._playerManager = new PlayerManager(this);
@@ -50,6 +59,7 @@ export class Pl3xMap {
             });
             this.controlManager.sidebarControl = new SidebarControl(this);
             const promise: Promise<void> = this.worldManager.init(this._settings);
+            this._eventSource = this.initSSE();
             this.update();
             return promise;
         });
@@ -60,12 +70,47 @@ export class Pl3xMap {
     }
 
     private update(): void {
-        getJSON('tiles/settings.json').then((json): void => {
+        if (this.eventSource !== undefined && this.eventSource.readyState !== EventSource.CLOSED) {
+            this._timer = setTimeout(() => this.update(), 1000);
+            return;
+        }
+        getJSON('tiles/settings.json').then( (json): void => {
             this._settings = json as Settings;
-            this.playerManager.update(this._settings);
+
+            this.playerManager.update(this._settings.players);
 
             this._timer = setTimeout(() => this.update(), 1000);
         });
+    }
+
+    private initSSE(): EventSource {
+        const eventSource = new EventSource("sse");
+
+        eventSource.addEventListener("markers", (ev: Event) => {
+            const messageEvent = (ev as MessageEvent);
+            const json: any = JSON.parse(messageEvent.data);
+            const world = this._worldManager.getWorld(json.world);
+            const key: string = json.key;
+            const markers: any[] = json.markers;
+
+            if (world === undefined) return;
+
+            if (messageEvent.data.length === 0) return;
+
+            world.markerLayers.forEach(layer => {
+                if (layer.key !== key) return;
+                layer.updateMarkers(markers, world);
+            });
+        });
+
+        eventSource.addEventListener("settings", (ev: Event) => {
+            const messageEvent = (ev as MessageEvent);
+            const json: any = JSON.parse(messageEvent.data);
+            this._settings = json as Settings;
+            this.playerManager.update(this._settings.players);
+        });
+
+        return eventSource;
     }
 
     get map(): Pl3xMapLeafletMap {
@@ -82,6 +127,10 @@ export class Pl3xMap {
 
     get worldManager(): WorldManager {
         return this._worldManager;
+    }
+
+    get eventSource(): EventSource | undefined {
+        return this._eventSource;
     }
 
     get langPalette(): Map<string, string> {
