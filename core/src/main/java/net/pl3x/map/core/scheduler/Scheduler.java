@@ -100,8 +100,8 @@ public class Scheduler {
      * Add task to the scheduler.
      *
      * @param delay    Delay (in seconds or ticks) before task starts
-     * @param ticks    Set to true to pass the delay as ticks instead of seconds
      * @param runnable Task to add
+     * @param ticks    Set to true to pass the delay as ticks instead of seconds
      */
     public void addTask(int delay, @NotNull Runnable runnable, boolean ticks) {
         addTask(delay, false, runnable, ticks);
@@ -111,7 +111,7 @@ public class Scheduler {
      * Add task to the scheduler.
      *
      * @param delay    Delay (in seconds) before task starts
-     * @param repeat   Delay (in seconds) before task repeats
+     * @param repeat   Whether this task should repeat
      * @param runnable Task to add
      */
     public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {
@@ -122,7 +122,7 @@ public class Scheduler {
      * Add task to the scheduler.
      *
      * @param delay    Delay (in seconds or ticks) before task starts
-     * @param repeat   Delay (in seconds or ticks) before task repeats
+     * @param repeat   Whether this task should repeat
      * @param runnable Task to add
      * @param ticks    Set to true to pass the delay as ticks instead of seconds
      */
