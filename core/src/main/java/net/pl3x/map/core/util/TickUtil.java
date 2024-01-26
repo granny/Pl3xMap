@@ -24,8 +24,8 @@
 package net.pl3x.map.core.util;
 
 public class TickUtil {
-    public static int toSeconds(int ticks) {
-        return (int) (0.05 * ticks);
+    public static double toSeconds(int ticks) {
+        return ticks * (1.0 / 20);
     }
 
     public static int toTicks(int seconds) {

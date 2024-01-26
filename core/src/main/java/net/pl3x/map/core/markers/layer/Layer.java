@@ -100,7 +100,17 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @return update interval
      */
     public int getUpdateInterval() {
-        return TickUtil.toSeconds(this.updateInterval);
+        return this.getUpdateInterval(false);
+    }
+
+    /**
+     * Get this layer's update interval (in seconds or in ticks).
+     *
+     * @param ticks set to true to get update interval as ticks instead of seconds
+     * @return update interval
+     */
+    public int getUpdateInterval(boolean ticks) {
+        return ticks ? this.updateInterval : (int) TickUtil.toSeconds(this.updateInterval);
     }
 
     /**
@@ -110,10 +120,21 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @return this layer
      */
     public @NotNull Layer setUpdateInterval(int updateInterval) {
-        this.updateInterval = TickUtil.toTicks(updateInterval);
+        this.setUpdateInterval(updateInterval, false);
         return this;
     }
 
+    /**
+     * Set this layer's update interval (in seconds or in ticks).
+     *
+     * @param updateInterval new update interval
+     * @param ticks set to true to treat the interval value as ticks instead of seconds
+     * @return this layer
+     */
+    public @NotNull Layer setUpdateInterval(int updateInterval, boolean ticks) {
+        this.updateInterval = ticks ? updateInterval : TickUtil.toTicks(updateInterval);
+        return this;
+    }
 
     /**
      * Get this layer's update interval (in ticks).
