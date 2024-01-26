@@ -56,7 +56,6 @@ public class UpdateMarkerData extends Task {
 
     private final World world;
     private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
-    private final Map<@NotNull String, @NotNull Long> lastUpdatedSSE = new HashMap<>();
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;
@@ -104,7 +103,6 @@ public class UpdateMarkerData extends Task {
 
                 long now = System.currentTimeMillis();
                 long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
-                long lastUpdateSSE = this.lastUpdatedSSE.getOrDefault(key, 0L);
 
                 if (now - lastUpdate > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 50)) {
                     List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
