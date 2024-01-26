@@ -33,9 +33,13 @@ public final class WorldBorderLayerConfig extends AbstractConfig {
             Shows vanilla world border on the map.""")
     public static boolean ENABLED = true;
 
+    @Key("settings.layer.update-interval-in-ticks")
+    @Comment("""
+            Treat the update-interval option as ticks instead of seconds.""")
+    public static boolean UPDATE_INTERVAL_IN_TICKS = false;
     @Key("settings.layer.update-interval")
     @Comment("""
-            How often (in seconds) to update the marker.
+            How often to update the marker.
             Setting to 0 is the same as setting it to 1.""")
     public static int UPDATE_INTERVAL = 30;
     @Key("settings.layer.show-controls")

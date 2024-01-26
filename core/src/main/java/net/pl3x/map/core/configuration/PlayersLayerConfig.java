@@ -24,6 +24,8 @@
 package net.pl3x.map.core.configuration;
 
 import net.pl3x.map.core.Pl3xMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("CanBeFinal")
 public final class PlayersLayerConfig extends AbstractConfig {
@@ -42,9 +44,13 @@ public final class PlayersLayerConfig extends AbstractConfig {
             Should spectators be hidden from the map.""")
     public static boolean HIDE_SPECTATORS = true;
 
+    @Key("settings.layer.update-interval-in-ticks")
+    @Comment("""
+            Treat the update-interval option's value as ticks instead of seconds.""")
+    public static boolean UPDATE_INTERVAL_IN_TICKS = true;
     @Key("settings.layer.update-interval")
     @Comment("""
-            How often (in seconds) to update the marker.
+            How often to update the marker.
             Setting to 0 is the same as setting it to 1.""")
     public static int UPDATE_INTERVAL = 0;
     @Key("settings.layer.show-controls")
@@ -150,5 +156,17 @@ public final class PlayersLayerConfig extends AbstractConfig {
 
     public static void reload() {
         CONFIG.reload(Pl3xMap.api().getMainDir().resolve("layers/players.yml"), PlayersLayerConfig.class);
+    }
+
+    @Override
+    protected @Nullable Object getValue(@NotNull String path, @Nullable Object def) {
+        // assume that if the ticks option doesn't exist but the interval option does,
+        // then it's safe to set ticks option to false to keep backwards compatibility
+        if (path.contains("update-interval-in-ticks")
+                && getConfig().get(path) == null
+                && getConfig().get("settings.layer.update-interval") != null) {
+            return super.getValue(path, false);
+        }
+        return super.getValue(path, def);
     }
 }
