@@ -61,7 +61,7 @@ public class UpdateMarkerData extends Task {
 
     private CompletableFuture<Void> future;
     private boolean running;
-    private int tempTick;
+    private int fileTick;
 
     public UpdateMarkerData(@NotNull World world) {
         super(1, true);
@@ -102,19 +102,14 @@ public class UpdateMarkerData extends Task {
             try {
                 layers.add(layer.toJson());
 
-                long now = System.currentTimeMillis() / 1000;
+                long now = System.currentTimeMillis();
                 long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
                 long lastUpdateSSE = this.lastUpdatedSSE.getOrDefault(key, 0L);
 
-                List<Marker<?>> list = null;
-                if (now - lastUpdateSSE >= TickUtil.toSeconds(layer.getSseUpdateInterval())) { // TODO: this is bad
-                    list = list == null ? new ArrayList<>(layer.getMarkers()) : list;
-                    Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
-                    this.lastUpdatedSSE.put(key, now);
-                }
-                if (now - lastUpdate > layer.getUpdateInterval()) {
-                    list = list == null ? new ArrayList<>(layer.getMarkers()) : list;
+                if (now - lastUpdate > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 50)) {
+                    List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
                     FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
                     this.lastUpdated.put(key, now);
                 }
             } catch (Throwable t) {
@@ -122,8 +117,8 @@ public class UpdateMarkerData extends Task {
             }
         });
 
-        if (tempTick++ >= 20) {
-            tempTick = 0;
+        if (fileTick++ >= 20) {
+            fileTick = 0;
             FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
         }
     }

@@ -31,4 +31,8 @@ public class TickUtil {
     public static int toTicks(int seconds) {
         return seconds * 20;
     }
+
+    public static int toMilliseconds(int ticks) {
+        return ticks * 50;
+    }
 }
