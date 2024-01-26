@@ -8,7 +8,11 @@ version = rootProject.version
 
 repositories {
     maven { url = 'https://maven.fabricmc.net/' }
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven {
+        url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+        mavenContent { snapshotsOnly() }
+    }
 }
 
 dependencies {

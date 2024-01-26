@@ -54,8 +54,7 @@ public abstract class AbstractConfig {
         try {
             getConfig().createOrLoadWithComments();
         } catch (InvalidConfigurationException e) {
-            Logger.severe("Could not load " + path.getFileName() + ", please correct your syntax errors");
-            e.printStackTrace();
+            Logger.severe("Could not load " + path.getFileName() + ", please correct your syntax errors", e);
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
