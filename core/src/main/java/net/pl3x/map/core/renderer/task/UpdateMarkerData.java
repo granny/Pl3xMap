@@ -56,6 +56,7 @@ public class UpdateMarkerData extends Task {
 
     private final World world;
     private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
+    private final Map<@NotNull String, @NotNull Long> fileLastUpdated = new HashMap<>();
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;
@@ -103,12 +104,16 @@ public class UpdateMarkerData extends Task {
 
                 long now = System.currentTimeMillis();
                 long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
+                long fileLastUpdated = this.fileLastUpdated.getOrDefault(key, 0L);
 
+                List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
                 if (now - lastUpdate > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 50)) {
-                    List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
-                    FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
                     Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
                     this.lastUpdated.put(key, now);
+                }
+                if (now - fileLastUpdated > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 1000)) {
+                    FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    this.fileLastUpdated.put(key, now);
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
