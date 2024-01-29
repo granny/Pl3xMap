@@ -48,6 +48,7 @@ export class MarkerLayer extends L.LayerGroup {
     private readonly _markers: Map<string, Marker> = new Map();
 
     private _timer: NodeJS.Timeout | undefined;
+    private _initialized = false;
 
     constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number, pane: string, css: string) {
         super(undefined, {
@@ -115,7 +116,7 @@ export class MarkerLayer extends L.LayerGroup {
     }
 
     update(world: World): void {
-        if (Pl3xMap.instance.eventSource !== undefined && Pl3xMap.instance.eventSource.readyState !== EventSource.CLOSED) {
+        if (this._initialized && Pl3xMap.instance.eventSource !== undefined && Pl3xMap.instance.eventSource.readyState !== EventSource.CLOSED && (new Date()).getTime() - Pl3xMap.instance.timestamp < 1000) {
             return;
         }
 
@@ -159,6 +160,9 @@ export class MarkerLayer extends L.LayerGroup {
             }
         });
 
+        if (!this._initialized) {
+            this._initialized = true;
+        }
         this._timer = setTimeout(() => this.update(world), this._updateInterval);
     }
 

@@ -29,6 +29,7 @@ export class Pl3xMap {
     private _langPalette: Map<string, string> = new Map();
     private _settings?: Settings;
 
+    private _timestamp: number = (new Date()).getTime();
     private _timer: NodeJS.Timeout | undefined;
 
     constructor() {
@@ -70,7 +71,7 @@ export class Pl3xMap {
     }
 
     private update(): void {
-        if (this.eventSource !== undefined && this.eventSource.readyState !== EventSource.CLOSED) {
+        if (this.eventSource !== undefined && this.eventSource.readyState !== EventSource.CLOSED && (new Date()).getTime() - this._timestamp < 1000) {
             this._timer = setTimeout(() => this.update(), 1000);
             return;
         }
@@ -87,6 +88,7 @@ export class Pl3xMap {
         const eventSource = new EventSource("sse");
 
         eventSource.addEventListener("markers", (ev: Event) => {
+            this._timestamp = (new Date()).getTime();
             const messageEvent = (ev as MessageEvent);
             const json: any = JSON.parse(messageEvent.data);
             const world = this._worldManager.getWorld(json.world);
@@ -104,6 +106,7 @@ export class Pl3xMap {
         });
 
         eventSource.addEventListener("settings", (ev: Event) => {
+            this._timestamp = (new Date()).getTime();
             const messageEvent = (ev as MessageEvent);
             const json: any = JSON.parse(messageEvent.data);
             this._settings = json as Settings;
@@ -139,5 +142,9 @@ export class Pl3xMap {
 
     get settings(): Settings | undefined {
         return this._settings;
+    }
+
+    get timestamp(): number {
+        return this._timestamp;
     }
 }
