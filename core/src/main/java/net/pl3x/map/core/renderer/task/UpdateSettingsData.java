@@ -42,13 +42,14 @@ import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateSettingsData extends Task {
-    private int tempTick;
+    private int fileTick;
     private final Gson gson = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
             .setLenient()
             .create();
+    private String cachedJsonData = "";
 
     public UpdateSettingsData() {
         super(1, true);
@@ -150,11 +151,16 @@ public class UpdateSettingsData extends Task {
             t.printStackTrace();
         }
 
-        Pl3xMap.api().getHttpdServer().sendSSE("settings", this.gson.toJson(map));
+        String json = this.gson.toJson(map);
 
-        if (tempTick++ >= 20) {
-            tempTick = 0;
-            FileUtil.writeJson(this.gson.toJson(map), FileUtil.getTilesDir().resolve("settings.json"));
+        if (!cachedJsonData.equals(json)) {
+            Pl3xMap.api().getHttpdServer().sendSSE("settings", json);
+            cachedJsonData = json;
+        }
+
+        if (fileTick++ >= 20) {
+            fileTick = 0;
+            FileUtil.writeJson(json, FileUtil.getTilesDir().resolve("settings.json"));
         }
     }
 }

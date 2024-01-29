@@ -23,6 +23,8 @@
  */
 package net.pl3x.map.core.renderer.task;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.layer.Layer;
@@ -56,7 +59,10 @@ public class UpdateMarkerData extends Task {
 
     private final World world;
     private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
-    private final Map<@NotNull String, @NotNull Long> fileLastUpdated = new HashMap<>();
+    private final Cache<@NotNull String, String> markerCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .build();
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;
@@ -103,17 +109,19 @@ public class UpdateMarkerData extends Task {
                 layers.add(layer.toJson());
 
                 long now = System.currentTimeMillis();
-                long lastUpdate = this.lastUpdated.getOrDefault(key, 0L);
-                long fileLastUpdated = this.fileLastUpdated.getOrDefault(key, 0L);
+                long lastUpdated = this.lastUpdated.getOrDefault(key, 0L);
 
                 List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
-                if (now - lastUpdate > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 50)) {
-                    Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, this.gson.toJson(list)));
-                    this.lastUpdated.put(key, now);
+                String json = this.gson.toJson(list);
+                String markerCacheIfPresent = markerCache.getIfPresent(key);
+                if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(json)) {
+                    Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, json));
+                    markerCache.put(key, json);
                 }
-                if (now - fileLastUpdated > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 1000)) {
-                    FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
-                    this.fileLastUpdated.put(key, now);
+
+                if (now - lastUpdated > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 1000)) {
+                    FileUtil.writeJson(json, this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    this.lastUpdated.put(key, now);
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
