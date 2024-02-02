@@ -39,6 +39,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.marker.Marker;
@@ -113,10 +114,10 @@ public class UpdateMarkerData extends Task {
 
                 List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
                 String json = this.gson.toJson(list);
-                String markerCacheIfPresent = markerCache.getIfPresent(key);
+                String markerCacheIfPresent = markerCache.getIfPresent(this.world.getKey() + "|" + key);
                 if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(json)) {
                     Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, json));
-                    markerCache.put(key, json);
+                    markerCache.put(this.world.getKey() + "|" + key, json);
                 }
 
                 if (now - lastUpdated > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 1000)) {
