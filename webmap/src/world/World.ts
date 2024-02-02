@@ -94,7 +94,7 @@ export class World {
                 (json as MarkerLayer[]).forEach((layer: MarkerLayer): void => {
                     const markerLayer: MarkerLayer = new MarkerLayer(layer.key, layer.label, layer.updateInterval, layer.showControls, layer.defaultHidden, layer.priority, layer.zIndex, layer.pane, layer.css);
                     this._markerLayers.push(markerLayer);
-                    markerLayer.update(this);
+                    markerLayer.update(this, true);
                 });
             });
     }
