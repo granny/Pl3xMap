@@ -141,6 +141,8 @@ public class RegionProcessor {
         try {
             while (!this.ticketsToScan.isEmpty()) {
                 Ticket ticket = this.ticketsToScan.poll();
+                if (ticket == null) break;
+
                 Collection<Point> set = this.regionsToScan.getOrDefault(ticket.world, new HashSet<>());
                 set.add(ticket.region);
                 this.regionsToScan.put(ticket.world, set);
