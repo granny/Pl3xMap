@@ -29,6 +29,7 @@ import net.pl3x.map.core.renderer.BiomeRenderer;
 import net.pl3x.map.core.renderer.BlockInfoRenderer;
 import net.pl3x.map.core.renderer.FlowerMapRenderer;
 import net.pl3x.map.core.renderer.InhabitedRenderer;
+import net.pl3x.map.core.renderer.NetherRoofRenderer;
 import net.pl3x.map.core.renderer.NightRenderer;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.VanillaRenderer;
@@ -45,6 +46,7 @@ public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
     public static final String NIGHT = "night";
     public static final String VANILLA = "vanilla";
     public static final String VINTAGE_STORY = "vintage_story";
+    public static final String NETHER_ROOF = "nether_roof";
 
     public void register() {
         register(BASIC, new Renderer.Builder(BASIC, "Basic", BasicRenderer.class));
@@ -55,6 +57,7 @@ public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
         register(NIGHT, new Renderer.Builder(NIGHT, "Night", NightRenderer.class));
         register(VANILLA, new Renderer.Builder(VANILLA, "Vanilla", VanillaRenderer.class));
         register(VINTAGE_STORY, new Renderer.Builder(VINTAGE_STORY, "VintageStory", VintageStoryRenderer.class));
+        register(NETHER_ROOF, new Renderer.Builder(NETHER_ROOF, "NetherRoof", NetherRoofRenderer.class));
     }
 
     public @NotNull Renderer createRenderer(@NotNull RegionScanTask task, Renderer.@NotNull Builder builder) {
