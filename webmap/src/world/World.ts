@@ -5,7 +5,7 @@ import {Label} from "../settings/Lang";
 import {Center, Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
 import {DoubleTileLayer} from "../tilelayer/DoubleTileLayer";
 import {WorldManager} from "./WorldManager";
-import {fireCustomEvent, getBytes, getJSON} from "../util/Util";
+import {fireCustomEvent, getBytes, getJSON, getLangName} from "../util/Util";
 
 /**
  * Represents a loaded world.
@@ -40,17 +40,7 @@ export class World {
         getJSON(`tiles/${this.name}/biomes.gz`).then((json): void => {
             Object.entries(json).forEach((data: [string, unknown]): void => {
                 let name: string = <string>data[1];
-                if (name.startsWith('minecraft:')) {
-                    name = this._pl3xmap.langPalette.get('biome.minecraft.' + name.split('minecraft:')[1]) ?? name;
-                    if (name.indexOf(':') !== -1) {
-                        name = name.split(':')[1]             // split out the namespace
-                            .split(".").pop()!                // everything after the last period
-                            .replace(/_+/g, ' ')              // replace underscores with spaces
-                            .replace(/\w\S*/g, (w: string) => // capitalize first letter of every word
-                                w.charAt(0).toUpperCase() + w.substring(1)
-                            )
-                    }
-                }
+                name = getLangName("biome", name);
                 this._biomePalette.set(Number(data[0]), name);
             });
         });
