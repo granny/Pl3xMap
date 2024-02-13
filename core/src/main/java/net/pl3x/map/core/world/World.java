@@ -238,6 +238,10 @@ public abstract class World extends Keyed {
         return this.spawn;
     }
 
+    public @NotNull Point getCenter() {
+        return Point.of(getConfig().CENTER_X, getConfig().CENTER_Z);
+    }
+
     public int getSkylight() {
         return getConfig().RENDER_SKYLIGHT;
     }

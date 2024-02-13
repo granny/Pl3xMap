@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.area.Area;
 import net.pl3x.map.core.markers.area.Border;
 import net.pl3x.map.core.util.Mathf;
@@ -151,6 +152,15 @@ public final class WorldConfig extends AbstractConfig {
             Visible areas of the world.""")
     public List<Area> VISIBLE_AREAS = new ArrayList<>(); // defaults added in ctor
 
+    @Key("render.center.x")
+    @Comment("""
+        Center of the world. Defaults to spawn if -0.0""")
+    public double CENTER_X = -0.0;
+
+    @Key("render.center.z")
+    public double CENTER_Z = -0.0;
+
+
     private final World world;
 
     public WorldConfig(@NotNull World world) {
@@ -164,6 +174,11 @@ public final class WorldConfig extends AbstractConfig {
 
     public void reload() {
         reload(Pl3xMap.api().getMainDir().resolve("config.yml"), WorldConfig.class);
+
+        if (CENTER_X == -0.0 && CENTER_Z == -0.0) {
+                CENTER_X = world.getSpawn().x();
+                CENTER_Z = world.getSpawn().z();
+        }
 
         RENDER_BIOME_BLEND = Mathf.clamp(0, 7, RENDER_BIOME_BLEND);
         RENDER_SKYLIGHT = Mathf.clamp(0, 15, RENDER_SKYLIGHT);

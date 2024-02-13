@@ -169,7 +169,7 @@ public class RegionProcessor {
         Logger.debug(world.getName() + " Region processor started processing at " + System.currentTimeMillis());
 
         // create spiral iterator to order region scanning
-        Point spawn = world.getSpawn();
+        Point spawn = world.getCenter();
         SpiralIterator spiralIterator = new SpiralIterator(spawn.x() >> 9, spawn.z() >> 9);
 
         // order preserved map of regions with boolean to signify if it was already scanned

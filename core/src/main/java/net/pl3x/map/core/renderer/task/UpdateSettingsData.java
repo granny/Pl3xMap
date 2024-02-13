@@ -105,7 +105,7 @@ public class UpdateSettingsData extends Task {
             WorldConfig config = world.getConfig();
 
             Map<String, Object> spawn = new LinkedHashMap<>();
-            Point point = world.getSpawn();
+            Point point = world.getCenter();
             spawn.put("x", point.x());
             spawn.put("z", point.z());
 
