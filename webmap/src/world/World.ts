@@ -2,7 +2,7 @@ import {Pl3xMap} from "../Pl3xMap";
 import {MarkerLayer} from "../layergroup/MarkerLayer";
 import {BlockInfo} from "../palette/BlockInfo";
 import {Label} from "../settings/Lang";
-import {Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
+import {Center, Spawn, WorldSettings, Zoom} from "../settings/WorldSettings";
 import {DoubleTileLayer} from "../tilelayer/DoubleTileLayer";
 import {WorldManager} from "./WorldManager";
 import {fireCustomEvent, getBytes, getJSON} from "../util/Util";
@@ -63,6 +63,7 @@ export class World {
 
                     // copy settings values
                     this.settings.spawn = settings.spawn;
+                    this.settings.center = settings.center;
                     this.settings.zoom = settings.zoom;
                     this.settings.tileUpdateInterval = settings.tileUpdateInterval;
                     this.settings.ui = settings.ui;
@@ -196,6 +197,10 @@ export class World {
 
     get spawn(): Spawn {
         return this.settings.spawn;
+    }
+
+    get center(): Center {
+        return this.settings.center;
     }
 
     get zoom(): Zoom {
