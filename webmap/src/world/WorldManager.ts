@@ -69,9 +69,11 @@ export class WorldManager {
 
             world.resetRenderer(renderer);
 
+            const xCoord = world.center.x === -1 ? world.spawn.x : world.center.x;
+            const zCoord = world.center.z === -1 ? world.spawn.z : world.center.z;
             this._pl3xmap.map.centerOn(
-                resetCoords ? world.spawn.x : getUrlParam('x', world.spawn.x),
-                resetCoords ? world.spawn.z : getUrlParam('z', world.spawn.z),
+                resetCoords ? xCoord : getUrlParam('x', xCoord),
+                resetCoords ? zCoord : getUrlParam('z', zCoord),
                 resetCoords ? world.zoom.default : getUrlParam('zoom', world.zoom.default)
             );
 

@@ -12,6 +12,7 @@ export class WorldSettings {
 
     private _tileUpdateInterval: number = 5;
     private _spawn: Spawn = new Spawn(0, 0);
+    private _center: Center = new Center(-1, -1);
     private _zoom: Zoom = new Zoom(0, 3, 2);
     private _ui: UI = new UI()
 
@@ -59,6 +60,14 @@ export class WorldSettings {
         this._spawn = spawn;
     }
 
+    get center(): Center {
+        return this._center;
+    }
+
+    set center(center: Center) {
+        this._center = center;
+    }
+
     get zoom(): Zoom {
         return this._zoom;
     }
@@ -80,6 +89,27 @@ export class WorldSettings {
  * Represents a world's spawn settings.
  */
 export class Spawn {
+    private readonly _x: number;
+    private readonly _z: number;
+
+    constructor(x: number, z: number) {
+        this._x = x;
+        this._z = z;
+    }
+
+    get x(): number {
+        return this._x;
+    }
+
+    get z(): number {
+        return this._z;
+    }
+}
+
+/**
+ * Represents a world's center.
+ */
+export class Center {
     private readonly _x: number;
     private readonly _z: number;
 

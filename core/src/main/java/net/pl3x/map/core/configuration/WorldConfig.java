@@ -127,6 +127,19 @@ public final class WorldConfig extends AbstractConfig {
             The display position for the link box""")
     public String UI_LINK = "bottomright";
 
+    @Key("center.x")
+    @Comment("""
+            The x coordinate for the map to load at.
+            A value of -1 will default to world spawn.""")
+    public int CENTER_X = -1;
+
+    @Key("center.z")
+    @Comment("""
+            The z coordinate for the map to load at.
+            A value of -1 will default to world spawn.""")
+    public int CENTER_Z = -1;
+
+
     @Key("zoom.default")
     @Comment("""
             The default zoom when loading the map in browser.

@@ -109,6 +109,10 @@ public class UpdateSettingsData extends Task {
             spawn.put("x", point.x());
             spawn.put("z", point.z());
 
+            Map<String, Object> center = new LinkedHashMap<>();
+            center.put("x", config.CENTER_X);
+            center.put("z", config.CENTER_Z);
+
             Map<String, Object> zoom = new LinkedHashMap<>();
             zoom.put("default", config.ZOOM_DEFAULT);
             zoom.put("maxOut", config.ZOOM_MAX_OUT);
@@ -124,6 +128,7 @@ public class UpdateSettingsData extends Task {
             settings.put("name", world.getName().replace(":", "-"));
             settings.put("tileUpdateInterval", 10);
             settings.put("spawn", spawn);
+            settings.put("center", center);
             settings.put("zoom", zoom);
             settings.put("ui", ui);
 
