@@ -280,7 +280,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("label", getLabel());
-        wrapper.addProperty("updateInterval", getUpdateInterval(true));
+        wrapper.addProperty("updateInterval", getUpdateInterval());
         wrapper.addProperty("showControls", shouldShowControls());
         wrapper.addProperty("defaultHidden", isDefaultHidden());
         wrapper.addProperty("priority", getPriority());
