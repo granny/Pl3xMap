@@ -174,3 +174,23 @@ export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]): 
         e.preventDefault();
     }
 }
+
+export function getLangName(prefix: string, name: string) : string {
+    if (name.indexOf(':') !== -1) {
+        const split = name.split(":");
+        const a = prefix + '.' + split[0] + '.' + name.split(split[0] + ":")[1];
+        const result = Pl3xMap.instance.langPalette.get(a);
+        if (result != null) {
+            return result
+        }
+    }
+    if (name.indexOf(':') !== -1) {
+        name = name.split(':')[1]             // split out the namespace
+            .split(".").pop()!                // everything after the last period
+            .replace(/_+/g, ' ')              // replace underscores with spaces
+            .replace(/\w\S*/g, (w: string) => // capitalize first letter of every word
+                w.charAt(0).toUpperCase() + w.substring(1)
+            )
+    }
+    return name;
+}

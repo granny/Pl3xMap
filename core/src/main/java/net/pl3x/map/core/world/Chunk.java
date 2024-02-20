@@ -269,8 +269,13 @@ public abstract class Chunk {
 
         public @NotNull Biome getBiome(@NotNull Region region, int x, int z) {
             if (this.biome == null) {
+                int y = this.blockY;
+                // use fluid block level if fluid
+                if (this.fluidstate != null) {
+                    y = this.fluidY;
+                }
                 // calculate real biome
-                this.biome = region.getWorld().getBiomeManager().getBiome(region, x, this.blockY, z);
+                this.biome = region.getWorld().getBiomeManager().getBiome(region, x, y, z);
             }
             return this.biome;
         }

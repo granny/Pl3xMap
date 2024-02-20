@@ -2,7 +2,7 @@ import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Block} from "../palette/Block";
 import {ControlBox} from "./ControlBox";
-import {getJSON} from "../util/Util";
+import {getJSON, getLangName} from "../util/Util";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 import {CoordsControl} from "./CoordsControl";
 import {BlockInfo} from "../palette/BlockInfo";
@@ -18,16 +18,7 @@ export class BlockInfoControl extends ControlBox {
         getJSON('tiles/blocks.gz').then((json): void => {
             Object.entries(json).forEach((data: [string, unknown]): void => {
                 let name: string = <string>data[1];
-                if (name.startsWith('minecraft:')) {
-                    name = this._pl3xmap.langPalette.get('block.minecraft.' + name.split('minecraft:')[1]) ?? name;
-                    if (name.indexOf(':') !== -1) {
-                        name = name.split(':')[1]                // split out the namespace
-                            .replace(/_+/g, ' ')                 // replace underscores with spaces
-                            .replace(/\w\S*/g, (word: string) => // capitalize first letter of every word
-                                word.charAt(0).toUpperCase() + word.substring(1)
-                            );
-                    }
-                }
+                name = getLangName("block", name);
                 this._blockPalette.set(Number(data[0]), name);
             });
         });
