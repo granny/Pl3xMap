@@ -25,11 +25,32 @@ export class World {
 
     private _loaded: boolean = false;
 
+    private _eventSource?: EventSource;
+
     private _timer: NodeJS.Timeout | undefined;
 
     constructor(pl3xmap: Pl3xMap, worldManager: WorldManager, settings: WorldSettings) {
         this._pl3xmap = pl3xmap;
         this._settings = settings;
+    }
+
+    private initSSE() {
+        this._eventSource = new EventSource("sse/" + this.settings.name);
+
+        this._eventSource.addEventListener("markers", (ev: Event) => {
+            const messageEvent = (ev as MessageEvent);
+            const json: any = JSON.parse(messageEvent.data);
+            const key: string = json.key;
+            const markers: any[] = json.markers;
+
+            if (messageEvent.data.length === 0) return;
+
+            this._markerLayers.forEach(layer => {
+                if (layer.key !== key) return;
+                layer.timestamp = (new Date()).getTime();
+                layer.updateMarkers(markers, this);
+            });
+        });
     }
 
     public load(): Promise<World> {
@@ -71,6 +92,7 @@ export class World {
     public unload(): void {
         clearTimeout(this._timer);
         // unload and clear markers
+        this._eventSource?.close();
         this._markerLayers.forEach((layer: MarkerLayer) => layer.unload())
         this._markerLayers = [];
         // unload renderer layer
@@ -80,6 +102,7 @@ export class World {
     }
 
     public loadMarkers(): void {
+        this.initSSE();
         getJSON(`tiles/${this.name}/markers.json`)
             .then((json): void => {
                 (json as MarkerLayer[]).forEach((layer: MarkerLayer): void => {
@@ -207,6 +230,10 @@ export class World {
 
     get biomePalette(): Map<number, string> {
         return this._biomePalette;
+    }
+
+    get eventSource(): EventSource | undefined {
+        return this._eventSource;
     }
 
     get background(): string {

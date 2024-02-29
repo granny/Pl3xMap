@@ -47,6 +47,7 @@ export class MarkerLayer extends L.LayerGroup {
 
     private readonly _markers: Map<string, Marker> = new Map();
 
+    private _timestamp: number = (new Date()).getTime();
     private _timer: NodeJS.Timeout | undefined;
 
     constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number, pane: string, css: string) {
@@ -114,9 +115,24 @@ export class MarkerLayer extends L.LayerGroup {
         return this._css;
     }
 
+    get timestamp(): number {
+        return this._timestamp;
+    }
+
+    set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
+    }
+
     update(world: World, updateOverride?: boolean): void {
-        if (!updateOverride && Pl3xMap.instance.eventSource !== undefined && Pl3xMap.instance.eventSource.readyState !== EventSource.CLOSED && (new Date()).getTime() - Pl3xMap.instance.timestamp < 1000) {
-            return;
+        if (updateOverride === undefined) {
+            let time = (new Date()).getTime() - this._timestamp;
+            // console.log(world.eventSource?.readyState);
+            // console.log(`${this._key}: world.eventSource?.readyState === EventSource.OPEN is ${world.eventSource?.readyState === EventSource.OPEN}`);
+            // console.log(`${this._key}: time (${time}) < 1000 is ${time < 1000}`);
+            if (world.eventSource?.readyState === EventSource.OPEN && time < 1000) {
+                // console.log(this._key + ": source is open and timestamp is " + time + " which is less than 1000");
+                return;
+            }
         }
 
         getJSON(`tiles/${world.name}/markers/${this._key}.json`)
@@ -124,6 +140,7 @@ export class MarkerLayer extends L.LayerGroup {
     }
 
     updateMarkers(json: any, world: World): void {
+        // console.log(`updating ${this._key} with update interval of ${this._updateInterval}`);
         //this.clearLayers(); // do not just clear markers, remove the ones that are missing
         const toRemove: Set<string> = new Set(this._markers.keys());
 

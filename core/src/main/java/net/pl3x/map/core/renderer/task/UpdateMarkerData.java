@@ -116,7 +116,7 @@ public class UpdateMarkerData extends Task {
                 String json = this.gson.toJson(list);
                 String markerCacheIfPresent = markerCache.getIfPresent(this.world.getKey() + "|" + key);
                 if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(json)) {
-                    Pl3xMap.api().getHttpdServer().sendSSE("markers", String.format("{ \"world\": \"%s\", \"key\": \"%s\", \"markers\": %s}", this.world.getName(), key, json));
+                    Pl3xMap.api().getHttpdServer().sendSSE(world.getServerSentEventHandler(), "markers", String.format("{\"key\": \"%s\", \"markers\": %s}", key, json));
                     markerCache.put(this.world.getKey() + "|" + key, json);
                 }
 

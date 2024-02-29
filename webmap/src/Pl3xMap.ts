@@ -71,7 +71,7 @@ export class Pl3xMap {
     }
 
     private update(): void {
-        if (this.eventSource !== undefined && this.eventSource.readyState !== EventSource.CLOSED && (new Date()).getTime() - this._timestamp < 1000) {
+        if (this._eventSource?.readyState === EventSource.OPEN && (new Date()).getTime() - this._timestamp < 1000) {
             this._timer = setTimeout(() => this.update(), 1000);
             return;
         }
@@ -86,24 +86,6 @@ export class Pl3xMap {
 
     private initSSE(): EventSource {
         const eventSource = new EventSource("sse");
-
-        eventSource.addEventListener("markers", (ev: Event) => {
-            this._timestamp = (new Date()).getTime();
-            const messageEvent = (ev as MessageEvent);
-            const json: any = JSON.parse(messageEvent.data);
-            const world = this._worldManager.getWorld(json.world);
-            const key: string = json.key;
-            const markers: any[] = json.markers;
-
-            if (world === undefined) return;
-
-            if (messageEvent.data.length === 0) return;
-
-            world.markerLayers.forEach(layer => {
-                if (layer.key !== key) return;
-                layer.updateMarkers(markers, world);
-            });
-        });
 
         eventSource.addEventListener("settings", (ev: Event) => {
             this._timestamp = (new Date()).getTime();

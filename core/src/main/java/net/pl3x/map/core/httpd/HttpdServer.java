@@ -27,6 +27,7 @@ import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.UndertowLogger;
 import io.undertow.UndertowOptions;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.resource.PathResourceManager;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.handlers.resource.ResourceManager;
@@ -34,31 +35,44 @@ import io.undertow.server.handlers.sse.ServerSentEventConnection;
 import io.undertow.server.handlers.sse.ServerSentEventHandler;
 import io.undertow.util.ETag;
 import io.undertow.util.Headers;
+import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.stream.Collectors;
+import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.log.LogFilter;
 import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.registry.WorldRegistry;
 import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.world.World;
 
 public class HttpdServer {
     private Undertow server;
     private ServerSentEventHandler serverSentEventHandler = Handlers.serverSentEvents();
 
-    public void sendSSE(String event, String data) {
+    public void sendSSE(ServerSentEventHandler serverSentEventHandler, String event, String data) {
         for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
             connection.send(data, event, null, null);
         }
     }
 
-    public void sendSSE(String data) {
-        sendSSE(null, data);
+    public void sendSSE(ServerSentEventHandler serverSentEventHandler, String data) {
+        sendSSE(serverSentEventHandler, null, data);
     }
 
-    public void closeSSEConnections() {
+    public void sendSSE(String event, String data) {
+        sendSSE(this.serverSentEventHandler, event, data);
+    }
+
+    public void sendSSE(String data) {
+        sendSSE(this.serverSentEventHandler, null, data);
+    }
+
+    public void closeSSEConnections(ServerSentEventHandler serverSentEventHandler) {
         for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
             connection.shutdown();
         }
@@ -101,8 +115,38 @@ public class HttpdServer {
             this.server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
-                    .setHandler(Handlers.path()
-                            .addPrefixPath("/", exchange -> {
+                    .setHandler(
+                            Handlers.path(exchange -> {
+                                // TODO: clean up before merging into main
+                                if (exchange.getRelativePath().startsWith("/sse")) {
+                                    String[] split = exchange.getRelativePath().split("/");
+                                    if (split.length <= 2) {
+                                        serverSentEventHandler.handleRequest(exchange);
+                                        return;
+                                    }
+                                    String worldName = split[2];
+
+                                    WorldRegistry worldRegistry = Pl3xMap.api().getWorldRegistry();
+                                    World world = worldRegistry.get(worldName);
+                                    if (world == null || split.length > 3) {
+                                        handleError(exchange,
+                                                "Could not find world named '%s'.\n Available worlds: %s"
+                                                        .formatted(
+                                                                split.length > 3 ? exchange.getRelativePath().split("/sse/")[1] : worldName,
+                                                                worldRegistry.values().stream().map(World::getName).collect(Collectors.joining(", "))
+                                                        )
+                                        );
+                                        return;
+                                    }
+
+                                    if (exchange.isInIoThread()) {
+                                        exchange.dispatch(world.getServerSentEventHandler());
+                                    } else {
+                                        world.getServerSentEventHandler().handleRequest(exchange);
+                                    }
+                                    return;
+                                }
+
                                 if (exchange.getRelativePath().startsWith("/tiles")) {
                                     exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
                                 }
@@ -112,7 +156,6 @@ public class HttpdServer {
                                 }
                                 resourceHandler.handleRequest(exchange);
                             })
-                            .addExactPath("/sse", serverSentEventHandler)
                     )
                     .build();
             this.server.start();
@@ -128,6 +171,12 @@ public class HttpdServer {
         }
     }
 
+    private void handleError(HttpServerExchange exchange, String errorMessage) {
+        exchange.setStatusCode(StatusCodes.NOT_FOUND);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseSender().send("{\"error\": \"" + errorMessage + "\"}");
+    }
+
     public void stopServer() {
         if (!Config.HTTPD_ENABLED) {
             return;
@@ -139,7 +188,10 @@ public class HttpdServer {
         }
 
         LogFilter.HIDE_UNDERTOW_LOGS = true;
-        this.closeSSEConnections();
+        this.closeSSEConnections(this.serverSentEventHandler);
+        Pl3xMap.api().getWorldRegistry().forEach(world -> {
+            this.closeSSEConnections(world.getServerSentEventHandler());
+        });
         this.server.stop();
         LogFilter.HIDE_UNDERTOW_LOGS = false;
 
