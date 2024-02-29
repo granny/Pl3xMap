@@ -130,7 +130,7 @@ public class HttpdServer {
                                     World world = worldRegistry.get(worldName);
                                     if (world == null || world.isEnabled() || split.length > 3) {
                                         handleError(exchange,
-                                                "Could not find world named '%s'.\n Available worlds: %s"
+                                                "Could not find world named '%s'. Available worlds: %s"
                                                         .formatted(
                                                                 split.length > 3 ? exchange.getRelativePath().split("/sse/")[1] : worldName,
                                                                 worldRegistry.values().stream()
