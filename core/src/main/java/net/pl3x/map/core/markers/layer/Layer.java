@@ -49,6 +49,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
     private Integer zIndex = 99;
     private String pane;
     private String css;
+    private boolean liveUpdate = false;
 
     /**
      * Create a layer.
@@ -266,6 +267,26 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      */
     public @NotNull Layer setCss(@Nullable String css) {
         this.css = css;
+        return this;
+    }
+
+    /**
+     * Get if this layer gets pushed through sse.
+     *
+     * @return true if being sent through sse
+     */
+    public @Nullable boolean isLiveUpdate() {
+        return this.liveUpdate;
+    }
+
+    /**
+     * Set whether to push this layer through sse.
+     *
+     * @param liveUpdate true to push this layer through sse.
+     * @return this layer
+     */
+    public @NotNull Layer setLiveUpdate(@Nullable boolean liveUpdate) {
+        this.liveUpdate = liveUpdate;
         return this;
     }
 

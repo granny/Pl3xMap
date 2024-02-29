@@ -36,7 +36,6 @@ import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.util.FileUtil;
-import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,6 +70,7 @@ public class SpawnLayer extends WorldLayer {
         setDefaultHidden(SpawnLayerConfig.DEFAULT_HIDDEN);
         setPriority(SpawnLayerConfig.PRIORITY);
         setZIndex(SpawnLayerConfig.Z_INDEX);
+        setLiveUpdate(true);
 
         String tooltip = getLabel();
         if (!tooltip.isBlank()) {

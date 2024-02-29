@@ -66,6 +66,7 @@ public class PlayersLayer extends WorldLayer {
         setZIndex(PlayersLayerConfig.Z_INDEX);
         setPane(PlayersLayerConfig.PANE);
         setCss(PlayersLayerConfig.CSS);
+        setLiveUpdate(true);
     }
 
     /**

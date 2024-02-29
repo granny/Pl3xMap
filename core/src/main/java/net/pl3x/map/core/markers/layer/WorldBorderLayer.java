@@ -34,7 +34,6 @@ import net.pl3x.map.core.markers.marker.Polyline;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.util.Colors;
-import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,6 +57,7 @@ public class WorldBorderLayer extends WorldLayer {
         setDefaultHidden(WorldBorderLayerConfig.DEFAULT_HIDDEN);
         setPriority(WorldBorderLayerConfig.PRIORITY);
         setZIndex(WorldBorderLayerConfig.Z_INDEX);
+        setLiveUpdate(true);
         setOptions(Options.builder()
                 .strokeColor(Colors.fromHex(WorldBorderLayerConfig.STROKE_COLOR))
                 .strokeWeight(WorldBorderLayerConfig.STROKE_WEIGHT)
