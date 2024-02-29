@@ -128,12 +128,14 @@ public class HttpdServer {
 
                                     WorldRegistry worldRegistry = Pl3xMap.api().getWorldRegistry();
                                     World world = worldRegistry.get(worldName);
-                                    if (world == null || split.length > 3) {
+                                    if (world == null || world.isEnabled() || split.length > 3) {
                                         handleError(exchange,
                                                 "Could not find world named '%s'.\n Available worlds: %s"
                                                         .formatted(
                                                                 split.length > 3 ? exchange.getRelativePath().split("/sse/")[1] : worldName,
-                                                                worldRegistry.values().stream().map(World::getName).collect(Collectors.joining(", "))
+                                                                worldRegistry.values().stream()
+                                                                        .filter(World::isEnabled)
+                                                                        .map(World::getName).collect(Collectors.joining(", "))
                                                         )
                                         );
                                         return;
