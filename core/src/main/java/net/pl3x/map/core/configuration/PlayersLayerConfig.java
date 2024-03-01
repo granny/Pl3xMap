@@ -53,6 +53,10 @@ public final class PlayersLayerConfig extends AbstractConfig {
             How often to update the marker.
             Setting to 0 is the same as setting it to 1.""")
     public static int UPDATE_INTERVAL = 0;
+    @Key("settings.layer.live-update")
+    @Comment("""
+            Whether to push this layer through SSE or not.""")
+    public static boolean LIVE_UPDATE = true;
     @Key("settings.layer.show-controls")
     @Comment("""
             Whether the players layer control shows up in the layers list or not.""")
