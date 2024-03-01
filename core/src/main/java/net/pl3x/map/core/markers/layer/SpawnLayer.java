@@ -71,7 +71,6 @@ public class SpawnLayer extends WorldLayer {
         setDefaultHidden(SpawnLayerConfig.DEFAULT_HIDDEN);
         setPriority(SpawnLayerConfig.PRIORITY);
         setZIndex(SpawnLayerConfig.Z_INDEX);
-        setLiveUpdate(true);
 
         String tooltip = getLabel();
         if (!tooltip.isBlank()) {

@@ -58,7 +58,6 @@ public class WorldBorderLayer extends WorldLayer {
         setDefaultHidden(WorldBorderLayerConfig.DEFAULT_HIDDEN);
         setPriority(WorldBorderLayerConfig.PRIORITY);
         setZIndex(WorldBorderLayerConfig.Z_INDEX);
-        setLiveUpdate(true);
         setOptions(Options.builder()
                 .strokeColor(Colors.fromHex(WorldBorderLayerConfig.STROKE_COLOR))
                 .strokeWeight(WorldBorderLayerConfig.STROKE_WEIGHT)
