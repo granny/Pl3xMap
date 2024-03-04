@@ -60,6 +60,7 @@ import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.renderer.Renderer;
+import net.pl3x.map.core.renderer.task.UpdateLiveData;
 import net.pl3x.map.core.renderer.task.UpdateMarkerData;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.Mathf;
@@ -90,6 +91,7 @@ public abstract class World extends Keyed {
     private final RegionModifiedState regionModifiedState;
     //private final RegionFileWatcher regionFileWatcher;
     private final UpdateMarkerData markerTask;
+    private final UpdateLiveData liveDataTask;
     private final Map<@NotNull String, Renderer.@NotNull Builder> renderers = new LinkedHashMap<>();
 
     public World(@NotNull String name, long seed, @NotNull Point spawn, @NotNull Type type, @NotNull Path regionDirectory) {
@@ -126,6 +128,7 @@ public abstract class World extends Keyed {
         this.regionModifiedState = new RegionModifiedState(this);
         //this.regionFileWatcher = new RegionFileWatcher(this);
         this.markerTask = new UpdateMarkerData(this);
+        this.liveDataTask = new UpdateLiveData(this);
     }
 
     protected void init() {
@@ -173,6 +176,9 @@ public abstract class World extends Keyed {
         Logger.debug("Starting marker task");
         Pl3xMap.api().getScheduler().addTask(this.markerTask);
 
+        Logger.debug("Starting live data task");
+        Pl3xMap.api().getScheduler().addTask(this.liveDataTask);
+
         // load up custom markers
         Logger.debug("Loading custom markers for " + getName());
         for (Path file : getCustomMarkerFiles()) {
@@ -215,6 +221,10 @@ public abstract class World extends Keyed {
 
     public @NotNull UpdateMarkerData getMarkerTask() {
         return this.markerTask;
+    }
+
+    public @NotNull UpdateLiveData getLiveDataTask() {
+        return this.liveDataTask;
     }
 
     public @NotNull Map<@NotNull String, Renderer.@NotNull Builder> getRenderers() {

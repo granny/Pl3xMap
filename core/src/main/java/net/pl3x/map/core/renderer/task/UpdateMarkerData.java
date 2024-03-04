@@ -49,58 +49,13 @@ import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class UpdateMarkerData extends Task {
-    private final Gson gson = new GsonBuilder()
-            //.setPrettyPrinting()
-            .disableHtmlEscaping()
-            .serializeNulls()
-            .setLenient()
-            .registerTypeHierarchyAdapter(Marker.class, new Adapter())
-            .create();
-
-    private final World world;
-    private final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
-    private final Cache<@NotNull String, String> markerCache = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .expireAfterWrite(1, TimeUnit.MINUTES)
-            .build();
-    private final ExecutorService executor;
-
-    private CompletableFuture<Void> future;
-    private boolean running;
-    private int fileTick;
-
+public class UpdateMarkerData extends AbstractDataTask {
     public UpdateMarkerData(@NotNull World world) {
-        super(1, true);
-        this.world = world;
-        this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Markers");
+        super(TickUtil.toTicks(1), true, world, "Pl3xMap-Markers");
     }
 
     @Override
-    public void run() {
-        if (this.running) {
-            return;
-        }
-        this.running = true;
-        this.future = CompletableFuture.runAsync(() -> {
-            try {
-                parseLayers();
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-            this.running = false;
-        }, this.executor);
-    }
-
-    @Override
-    public void cancel() {
-        super.cancel();
-        if (this.future != null) {
-            this.future.cancel(true);
-        }
-    }
-
-    private void parseLayers() {
+    public void parse() {
         List<Object> layers = new ArrayList<>();
 
         this.world.getLayerRegistry().entrySet().forEach(entry -> {
@@ -112,21 +67,9 @@ public class UpdateMarkerData extends Task {
                 long now = System.currentTimeMillis();
                 long lastUpdated = this.lastUpdated.getOrDefault(key, 0L);
 
-                List<Marker<?>> list = null;
-                if (layer.isLiveUpdate()) {
-                    list = new ArrayList<>(layer.getMarkers());
-                    String json = this.gson.toJson(list);
-                    String markerCacheIfPresent = markerCache.getIfPresent(this.world.getKey() + "|" + key);
-                    if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(json)) {
-                        Pl3xMap.api().getHttpdServer().sendSSE(world.getServerSentEventHandler(), "markers", String.format("{\"key\": \"%s\", \"markers\": %s}", key, json));
-                        markerCache.put(this.world.getKey() + "|" + key, json);
-                    }
-                }
-
                 if (now - lastUpdated > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 1000)) {
-                    list = list == null ? new ArrayList<>(layer.getMarkers()) : list;
-                    String json = this.gson.toJson(list);
-                    FileUtil.writeJson(json, this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
+                    FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
                     this.lastUpdated.put(key, now);
                 }
             } catch (Throwable t) {
@@ -134,20 +77,6 @@ public class UpdateMarkerData extends Task {
             }
         });
 
-        if (fileTick++ >= 20) {
-            fileTick = 0;
-            FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
-        }
-    }
-
-    private static class Adapter implements JsonSerializer<@NotNull Marker<?>> {
-        @Override
-        public @NotNull JsonElement serialize(@NotNull Marker<?> marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
-            JsonObjectWrapper wrapper = new JsonObjectWrapper();
-            wrapper.addProperty("type", marker.getType());
-            wrapper.addProperty("data", marker);
-            wrapper.addProperty("options", marker.getOptions());
-            return wrapper.getJsonObject();
-        }
+        FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
     }
 }
