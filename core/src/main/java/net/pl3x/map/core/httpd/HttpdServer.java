@@ -128,7 +128,7 @@ public class HttpdServer {
 
                                     WorldRegistry worldRegistry = Pl3xMap.api().getWorldRegistry();
                                     World world = worldRegistry.get(worldName);
-                                    if (world == null || world.isEnabled() || split.length > 3) {
+                                    if (world == null || !world.isEnabled() || split.length > 3) {
                                         handleError(exchange,
                                                 "Could not find world named '%s'. Available worlds: %s"
                                                         .formatted(
