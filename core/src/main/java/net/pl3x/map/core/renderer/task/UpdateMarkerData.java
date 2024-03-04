@@ -23,27 +23,10 @@
  */
 package net.pl3x.map.core.renderer.task;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.log.Logger;
-import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.marker.Marker;
-import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
