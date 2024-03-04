@@ -76,7 +76,7 @@ public class UpdateLiveData extends AbstractDataTask {
                     String json = this.gson.toJson(new ArrayList<Marker<?>>(layer.getMarkers()));
                     String markerCacheIfPresent = markerCache.getIfPresent(key);
                     if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(json)) {
-                        Logger.debug("[%s/%s] sending through sse".formatted(this.world.getName(), key));
+                        //Logger.debug("[%s/%s] sending through sse".formatted(this.world.getName(), key));
                         Pl3xMap.api().getHttpdServer().sendSSE(world.getServerSentEventHandler(), "markers", String.format("{\"key\": \"%s\", \"markers\": %s}", key, json));
                         markerCache.put(key, json);
                     }
