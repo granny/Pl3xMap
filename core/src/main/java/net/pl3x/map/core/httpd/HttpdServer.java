@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Deque;
+import java.util.Map;
 import java.util.stream.Collectors;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
@@ -116,28 +118,33 @@ public class HttpdServer {
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
                     .setHandler(
-                            Handlers.path(exchange -> {
-                                // TODO: clean up before merging into main
-                                if (exchange.getRelativePath().startsWith("/sse")) {
-                                    String[] split = exchange.getRelativePath().split("/");
-                                    if (split.length <= 2) {
+                        Handlers.path(exchange -> {
+                            if (exchange.getRelativePath().startsWith("/tiles")) {
+                                exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
+                            }
+                            if (exchange.getRelativePath().endsWith(".gz")) {
+                                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+                                exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
+                            }
+                            resourceHandler.handleRequest(exchange);
+                        })
+                        .addPrefixPath("/sse",
+                            Handlers.pathTemplate()
+                                .add("{world}", exchange -> {
+                                    String worldName = exchange.getQueryParameters().get("world").peek();
+                                    if (worldName == null || worldName.isEmpty()) {
                                         serverSentEventHandler.handleRequest(exchange);
                                         return;
                                     }
-                                    String worldName = split[2];
 
                                     WorldRegistry worldRegistry = Pl3xMap.api().getWorldRegistry();
                                     World world = worldRegistry.get(worldName);
-                                    if (world == null || !world.isEnabled() || split.length > 3) {
-                                        handleError(exchange,
-                                                "Could not find world named '%s'. Available worlds: %s"
-                                                        .formatted(
-                                                                split.length > 3 ? exchange.getRelativePath().split("/sse/")[1] : worldName,
-                                                                worldRegistry.values().stream()
-                                                                        .filter(World::isEnabled)
-                                                                        .map(World::getName).collect(Collectors.joining(", "))
-                                                        )
-                                        );
+                                    if (world == null || !world.isEnabled()) {
+                                        String listOfValidWorlds = worldRegistry.values().stream()
+                                                .filter(World::isEnabled)
+                                                .map(World::getName).collect(Collectors.joining(", "));
+                                        handleError(exchange, "Could not find world named '%s'. Available worlds: %s"
+                                                .formatted(worldName, listOfValidWorlds));
                                         return;
                                     }
 
@@ -146,18 +153,8 @@ public class HttpdServer {
                                     } else {
                                         world.getServerSentEventHandler().handleRequest(exchange);
                                     }
-                                    return;
-                                }
-
-                                if (exchange.getRelativePath().startsWith("/tiles")) {
-                                    exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
-                                }
-                                if (exchange.getRelativePath().endsWith(".gz")) {
-                                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                                    exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
-                                }
-                                resourceHandler.handleRequest(exchange);
-                            })
+                                })
+                        )
                     )
                     .build();
             this.server.start();
