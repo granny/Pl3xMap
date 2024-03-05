@@ -26,7 +26,9 @@ package net.pl3x.map.core.renderer.task;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,7 @@ import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateLiveData extends AbstractDataTask {
-    private final Cache<@NotNull String, String> markerCache = CacheBuilder.newBuilder()
+    private final Cache<@NotNull String, Integer> markerCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
@@ -73,12 +75,13 @@ public class UpdateLiveData extends AbstractDataTask {
 
             this.liveUpdateFutures.put(key, CompletableFuture.runAsync(() -> {
                 try {
-                    String json = this.gson.toJson(new ArrayList<Marker<?>>(layer.getMarkers()));
-                    String markerCacheIfPresent = markerCache.getIfPresent(key);
-                    if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(json)) {
+                    List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
+                    Integer markerCacheIfPresent = markerCache.getIfPresent(key);
+                    int markerHashCode = list.hashCode();
+                    if (markerCacheIfPresent == null || !markerCacheIfPresent.equals(markerHashCode)) {
                         //Logger.debug("[%s/%s] sending through sse".formatted(this.world.getName(), key));
-                        Pl3xMap.api().getHttpdServer().sendSSE(world.getServerSentEventHandler(), "markers", String.format("{\"key\": \"%s\", \"markers\": %s}", key, json));
-                        markerCache.put(key, json);
+                        Pl3xMap.api().getHttpdServer().sendSSE(world.getServerSentEventHandler(), "markers", String.format("{\"key\": \"%s\", \"markers\": %s}", key, this.gson.toJson(list)));
+                        markerCache.put(key, markerHashCode);
                     }
                 } catch (Throwable t) {
                     Logger.debug("[%s/%s] failed".formatted(this.world.getName(), key));
