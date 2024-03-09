@@ -35,6 +35,7 @@ import io.undertow.server.handlers.sse.ServerSentEventConnection;
 import io.undertow.server.handlers.sse.ServerSentEventHandler;
 import io.undertow.util.ETag;
 import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,6 +52,7 @@ import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 
 public class HttpdServer {
+    private HttpString X_ACCEL_BUFFERING = new HttpString("X-Accel-Buffering");
     private Undertow server;
     private ServerSentEventHandler serverSentEventHandler = Handlers.serverSentEvents();
 
@@ -131,6 +133,7 @@ public class HttpdServer {
                                 .add("{world}", exchange -> {
                                     String worldName = exchange.getQueryParameters().get("world").peek();
                                     if (worldName == null || worldName.isEmpty()) {
+                                        exchange.getResponseHeaders().put(X_ACCEL_BUFFERING, "no");
                                         serverSentEventHandler.handleRequest(exchange);
                                         return;
                                     }
@@ -149,6 +152,7 @@ public class HttpdServer {
                                     if (exchange.isInIoThread()) {
                                         exchange.dispatch(world.getServerSentEventHandler());
                                     } else {
+                                        exchange.getResponseHeaders().put(X_ACCEL_BUFFERING, "no");
                                         world.getServerSentEventHandler().handleRequest(exchange);
                                     }
                                 })
