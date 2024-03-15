@@ -1,7 +1,7 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Player} from "../player/Player";
-import {createSVGIcon, handleKeyboardEvent, isset} from "../util/Util";
+import {createSVGIcon, handleKeyboardEvent} from "../util/Util";
 import BaseTab from "./BaseTab";
 import '../svg/players.svg';
 import {Lang} from "../settings/Lang";

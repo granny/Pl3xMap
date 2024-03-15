@@ -125,7 +125,7 @@ export class MarkerLayer extends L.LayerGroup {
 
     update(world: World, updateOverride?: boolean): void {
         if (updateOverride === undefined) {
-            let time = (new Date()).getTime() - this._timestamp;
+            const time = (new Date()).getTime() - this._timestamp;
             // console.log(world.eventSource?.readyState);
             // console.log(`${this._key}: world.eventSource?.readyState === EventSource.OPEN is ${world.eventSource?.readyState === EventSource.OPEN}`);
             // console.log(`${this._key}: time (${time}) < 1000 is ${time < 1000}`);
