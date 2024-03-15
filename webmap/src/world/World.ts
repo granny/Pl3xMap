@@ -36,12 +36,14 @@ export class World {
 
     private initSSE() {
         this._eventSource = new EventSource("sse/" + this.settings.name);
+        console.debug("initializing " + this.settings.name + " sse");
 
         this._eventSource.addEventListener("markers", (ev: Event) => {
             const messageEvent = (ev as MessageEvent);
             const json: any = JSON.parse(messageEvent.data);
             const key: string = json.key;
             const markers: any[] = json.markers;
+            console.debug(json);
 
             if (messageEvent.data.length === 0) return;
 
@@ -93,6 +95,7 @@ export class World {
         clearTimeout(this._timer);
         // unload and clear markers
         this._eventSource?.close();
+        console.debug("closing " + this.settings.name + " sse");
         this._markerLayers.forEach((layer: MarkerLayer) => layer.unload())
         this._markerLayers = [];
         // unload renderer layer
