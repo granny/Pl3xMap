@@ -24,8 +24,6 @@
 package net.pl3x.map.core.configuration;
 
 import net.pl3x.map.core.Pl3xMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("CanBeFinal")
 public final class PlayersLayerConfig extends AbstractConfig {
