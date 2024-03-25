@@ -33,8 +33,6 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.exception.PlayerParseException;
 import net.pl3x.map.core.player.Player;
 import org.jetbrains.annotations.NotNull;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
 /**
  * Parser that parses strings into {@link Player}s.
@@ -46,16 +44,16 @@ public class PlayerParser<C> implements ArgumentParser<@NotNull C, @NotNull Play
     public @NotNull ArgumentParseResult<@NotNull Player> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
-            return failure(new PlayerParseException(null, PlayerParseException.MUST_SPECIFY_PLAYER));
+            return ArgumentParseResult.failure(new PlayerParseException(null, PlayerParseException.MUST_SPECIFY_PLAYER));
         }
 
         Player player = Pl3xMap.api().getPlayerRegistry().get(input);
         if (player == null) {
-            return failure(new PlayerParseException(input, PlayerParseException.NO_SUCH_PLAYER));
+            return ArgumentParseResult.failure(new PlayerParseException(input, PlayerParseException.NO_SUCH_PLAYER));
         }
 
         queue.remove();
-        return success(player);
+        return ArgumentParseResult.success(player);
     }
 
     @Override

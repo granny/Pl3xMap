@@ -50,8 +50,6 @@ import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static net.pl3x.map.core.world.World.PNG_MATCHER;
-
 public class StitchCommand extends Pl3xMapCommand {
     public StitchCommand(@NotNull CommandHandler handler) {
         super(handler);
@@ -126,7 +124,7 @@ public class StitchCommand extends Pl3xMapCommand {
     private static Map<Point, Path> getTiles(Path dir, Sender sender) {
         Map<Point, Path> pngFiles = new HashMap<>();
         try (Stream<Path> stream = Files.list(dir)) {
-            stream.filter(PNG_MATCHER::matches).forEach(path -> {
+            stream.filter(World.PNG_MATCHER::matches).forEach(path -> {
                 String[] split = path.getFileName().toString().split(".png")[0].split("_");
                 if (split.length != 2) {
                     return;

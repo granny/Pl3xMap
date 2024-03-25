@@ -33,8 +33,6 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.exception.WorldParseException;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
 /**
  * Parser that parses strings into {@link World}s.
@@ -46,7 +44,7 @@ public class WorldParser<C> implements ArgumentParser<@NotNull C, @NotNull World
     public @NotNull ArgumentParseResult<@NotNull World> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
-            return failure(new WorldParseException(null, WorldParseException.MUST_SPECIFY_WORLD));
+            return ArgumentParseResult.failure(new WorldParseException(null, WorldParseException.MUST_SPECIFY_WORLD));
         }
 
         World world = null;
@@ -56,15 +54,15 @@ public class WorldParser<C> implements ArgumentParser<@NotNull C, @NotNull World
         }
 
         if (world == null) {
-            return failure(new WorldParseException(input, WorldParseException.NO_SUCH_WORLD));
+            return ArgumentParseResult.failure(new WorldParseException(input, WorldParseException.NO_SUCH_WORLD));
         }
 
         if (!world.isEnabled()) {
-            return failure(new WorldParseException(input, WorldParseException.MAP_NOT_ENABLED));
+            return ArgumentParseResult.failure(new WorldParseException(input, WorldParseException.MAP_NOT_ENABLED));
         }
 
         queue.remove();
-        return success(world);
+        return ArgumentParseResult.success(world);
     }
 
     @Override

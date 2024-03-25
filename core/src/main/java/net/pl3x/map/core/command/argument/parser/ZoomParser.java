@@ -37,8 +37,6 @@ import java.util.TreeSet;
 import net.pl3x.map.core.command.exception.ZoomParseException;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
 /**
  * Parser that parses strings into {@link Integer}s for zoom levels.
@@ -50,17 +48,17 @@ public class ZoomParser<C> implements ArgumentParser<C, Integer> {
     public @NotNull ArgumentParseResult<Integer> parse(@NotNull CommandContext<C> context, @NotNull Queue<@NotNull String> inputQueue) {
         String input = inputQueue.peek();
         if (input == null) {
-            return failure(new NoInputProvidedException(IntegerArgument.IntegerParser.class, context));
+            return ArgumentParseResult.failure(new NoInputProvidedException(IntegerArgument.IntegerParser.class, context));
         }
         try {
             int zoom = Integer.parseInt(input);
             if (zoom < 0 || zoom > getMax(context)) {
-                return failure(new ZoomParseException(input, ZoomParseException.NOT_VALID_ZOOM_LEVEL));
+                return ArgumentParseResult.failure(new ZoomParseException(input, ZoomParseException.NOT_VALID_ZOOM_LEVEL));
             }
             inputQueue.remove();
-            return success(zoom);
+            return ArgumentParseResult.success(zoom);
         } catch (Exception e) {
-            return failure(new ZoomParseException(input, ZoomParseException.NOT_VALID_ZOOM_LEVEL));
+            return ArgumentParseResult.failure(new ZoomParseException(input, ZoomParseException.NOT_VALID_ZOOM_LEVEL));
         }
     }
 

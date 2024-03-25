@@ -26,6 +26,7 @@ package net.pl3x.map.core.renderer.task;
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
@@ -39,9 +40,6 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 public class RegionFileWatcher implements Runnable {
     private final World world;
@@ -109,7 +107,7 @@ public class RegionFileWatcher implements Runnable {
 
         try (WatchService watcher = dir.getFileSystem().newWatchService()) {
 
-            dir.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
+            dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
             Logger.debug("Region file watcher started for " + dir);
 
             WatchKey key;
@@ -119,7 +117,7 @@ public class RegionFileWatcher implements Runnable {
                 Logger.debug("Region file watcher got a key!");
                 for (WatchEvent<?> event : key.pollEvents()) {
                     Logger.debug("Region file watcher detected event: " + event.kind().name());
-                    if (event.kind() != OVERFLOW) {
+                    if (event.kind() != StandardWatchEventKinds.OVERFLOW) {
                         Path file = (Path) event.context();
                         Logger.debug("Detected file change: " + file.getFileName());
                         modifiedFiles.add(dir.resolve(file));
