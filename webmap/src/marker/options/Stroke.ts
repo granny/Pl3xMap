@@ -16,7 +16,7 @@ export class Stroke {
     private readonly _properties: L.PathOptions;
 
     constructor(data: StrokeOptions) {
-        let props: {} = {};
+        let props: object = {};
 
         if (isset(data.enabled)) props = {...props, stroke: data.enabled};
         if (isset(data.weight)) props = {...props, weight: data.weight};
