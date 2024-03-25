@@ -136,7 +136,7 @@ public class VanillaRenderer extends Renderer {
         }
     }
 
-    private int getBlockBelowCeiling(int blockY, Chunk chunk, int blockX, int blockZ) {
+    protected int getBlockBelowCeiling(int blockY, Chunk chunk, int blockX, int blockZ) {
         BlockState blockstate;
         if (getWorld().hasCeiling()) {
             blockY = getWorld().getLogicalHeight();
