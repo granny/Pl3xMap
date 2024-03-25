@@ -29,9 +29,28 @@ export class Popup {
 
         let props: L.PopupOptions = {};
         if (isset(data.offset)) props = {...props, offset: [data.offset!.x, data.offset!.z]};
+
+        this.constructSize(data, props);
+        this.constructPanning(data, props);
+        this.constructClosing(data, props);
+
+        if (isset(data.pane)) {
+            const dom: HTMLElement = getOrCreatePane(data.pane!);
+            props = {
+                ...props,
+                pane: dom.className.split(" ")[1].split("-")[1]
+            };
+        }
+
+        this._properties = props;
+    }
+
+    constructSize(data: PopupOptions, props: L.PopupOptions): void {
         if (isset(data.maxWidth)) props = {...props, maxWidth: data.maxWidth};
         if (isset(data.minWidth)) props = {...props, minWidth: data.minWidth};
         if (isset(data.maxHeight)) props = {...props, maxHeight: data.maxHeight};
+    }
+    constructPanning(data: PopupOptions, props: L.PopupOptions): void {
         if (isset(data.autoPan)) props = {...props, autoPan: data.autoPan};
         if (isset(data.autoPanPaddingTopLeft)) props = {
             ...props,
@@ -46,20 +65,12 @@ export class Popup {
             autoPanPadding: [data.autoPanPadding!.x, data.autoPanPadding!.z]
         };
         if (isset(data.keepInView)) props = {...props, keepInView: data.keepInView};
+    }
+    constructClosing(data: PopupOptions, props: L.PopupOptions): void {
         if (isset(data.closeButton)) props = {...props, closeButton: data.closeButton};
         if (isset(data.autoClose)) props = {...props, autoClose: data.autoClose};
         if (isset(data.closeOnEscapeKey)) props = {...props, closeOnEscapeKey: data.closeOnEscapeKey};
         if (isset(data.closeOnClick)) props = {...props, closeOnClick: data.closeOnClick};
-
-        if (isset(data.pane)) {
-            const dom: HTMLElement = getOrCreatePane(data.pane!);
-            props = {
-                ...props,
-                pane: dom.className.split(" ")[1].split("-")[1]
-            };
-        }
-
-        this._properties = props;
     }
 
     get content(): string {

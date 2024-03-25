@@ -452,21 +452,33 @@ public class Popup extends Option<@NotNull Popup> {
 
     @Override
     public boolean isDefault() {
-        return getContent() == null &&
-                (getPane() == null || getPane().equals("popupPane")) &&
-                (getOffset() == null || getOffset().equals(DEFAULT_OFFSET)) &&
-                (getMaxWidth() == null || getMaxWidth() == 300) &&
-                (getMinWidth() == null || getMinWidth() == 50) &&
-                getMaxHeight() == null &&
-                (shouldAutoPan() == null || Boolean.TRUE.equals(shouldAutoPan())) &&
-                getAutoPanPaddingTopLeft() == null &&
-                getAutoPanPaddingBottomRight() == null &&
-                (getAutoPanPadding() == null || getAutoPanPadding().equals(DEFAULT_AUTO_PAN_PADDING)) &&
-                (shouldKeepInView() == null || Boolean.FALSE.equals(shouldKeepInView())) &&
-                (hasCloseButton() == null || Boolean.TRUE.equals(hasCloseButton())) &&
-                (shouldAutoClose() == null || Boolean.TRUE.equals(shouldAutoClose())) &&
-                (shouldCloseOnEscapeKey() == null || Boolean.TRUE.equals(shouldCloseOnEscapeKey())) &&
-                (shouldCloseOnClick() == null || Boolean.TRUE.equals(shouldCloseOnClick()));
+        return getContent() == null
+                && (getPane() == null || getPane().equals("popupPane"))
+                && (getOffset() == null || getOffset().equals(DEFAULT_OFFSET))
+                && isSizeDefault()
+                && isPanningDefault()
+                && isClosingDefault();
+    }
+
+    private boolean isSizeDefault() {
+        return (getMaxWidth() == null || getMaxWidth() == 300)
+                && (getMinWidth() == null || getMinWidth() == 50)
+                && getMaxHeight() == null;
+    }
+
+    private boolean isPanningDefault() {
+        return (shouldAutoPan() == null || Boolean.TRUE.equals(shouldAutoPan()))
+                && getAutoPanPaddingTopLeft() == null
+                && getAutoPanPaddingBottomRight() == null
+                && (getAutoPanPadding() == null || getAutoPanPadding().equals(DEFAULT_AUTO_PAN_PADDING))
+                && (shouldKeepInView() == null || Boolean.FALSE.equals(shouldKeepInView()));
+    }
+
+    private boolean isClosingDefault() {
+        return (hasCloseButton() == null || Boolean.TRUE.equals(hasCloseButton()))
+                && (shouldAutoClose() == null || Boolean.TRUE.equals(shouldAutoClose()))
+                && (shouldCloseOnEscapeKey() == null || Boolean.TRUE.equals(shouldCloseOnEscapeKey()))
+                && (shouldCloseOnClick() == null || Boolean.TRUE.equals(shouldCloseOnClick()));
     }
 
     @Override
@@ -496,19 +508,34 @@ public class Popup extends Option<@NotNull Popup> {
         if ((el = obj.get("content")) != null && !(el instanceof JsonNull)) popup.setContent(el.getAsString());
         if ((el = obj.get("pane")) != null && !(el instanceof JsonNull)) popup.setPane(el.getAsString());
         if ((el = obj.get("offset")) != null && !(el instanceof JsonNull)) popup.setOffset(Point.fromJson((JsonObject) el));
+        fromJsonSize(obj, popup);
+        fromJsonPanning(obj, popup);
+        fromJsonClosing(obj, popup);
+        return popup;
+    }
+
+    private static void fromJsonSize(@NotNull JsonObject obj, Popup popup) {
+        JsonElement el;
         if ((el = obj.get("maxWidth")) != null && !(el instanceof JsonNull)) popup.setMaxWidth(el.getAsInt());
         if ((el = obj.get("minWidth")) != null && !(el instanceof JsonNull)) popup.setMinWidth(el.getAsInt());
         if ((el = obj.get("maxHeight")) != null && !(el instanceof JsonNull)) popup.setMaxHeight(el.getAsInt());
+    }
+
+    private static void fromJsonPanning(@NotNull JsonObject obj, Popup popup) {
+        JsonElement el;
         if ((el = obj.get("autoPan")) != null && !(el instanceof JsonNull)) popup.setShouldAutoPan(el.getAsBoolean());
         if ((el = obj.get("autoPanPaddingTopLeft")) != null && !(el instanceof JsonNull)) popup.setAutoPanPaddingTopLeft(Point.fromJson((JsonObject) el));
         if ((el = obj.get("autoPanPaddingBottomRight")) != null && !(el instanceof JsonNull)) popup.setAutoPanPaddingBottomRight(Point.fromJson((JsonObject) el));
         if ((el = obj.get("autoPanPadding")) != null && !(el instanceof JsonNull)) popup.setAutoPanPadding(Point.fromJson((JsonObject) el));
         if ((el = obj.get("keepInView")) != null && !(el instanceof JsonNull)) popup.setShouldKeepInView(el.getAsBoolean());
+    }
+
+    private static void fromJsonClosing(@NotNull JsonObject obj, Popup popup) {
+        JsonElement el;
         if ((el = obj.get("closeButton")) != null && !(el instanceof JsonNull)) popup.setCloseButton(el.getAsBoolean());
         if ((el = obj.get("autoClose")) != null && !(el instanceof JsonNull)) popup.setShouldAutoClose(el.getAsBoolean());
         if ((el = obj.get("closeOnEscapeKey")) != null && !(el instanceof JsonNull)) popup.setShouldCloseOnEscapeKey(el.getAsBoolean());
         if ((el = obj.get("closeOnClick")) != null && !(el instanceof JsonNull)) popup.setShouldCloseOnClick(el.getAsBoolean());
-        return popup;
     }
 
     @Override

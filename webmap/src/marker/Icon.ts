@@ -29,7 +29,7 @@ export class Icon extends Marker {
 
         const data: IconOptions = type.data as unknown as IconOptions;
 
-        let props: {} = {};
+        let props: object = {};
         if (isset(data.image)) props = {...props, iconUrl: url(data.image)};
         if (isset(data.retina)) props = {...props, iconRetinaUrl: url(data.retina!)};
         if (isset(data.size)) props = {...props, iconSize: [data.size!.x, data.size!.z]};

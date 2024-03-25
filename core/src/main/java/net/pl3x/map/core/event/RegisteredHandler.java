@@ -69,6 +69,11 @@ public class RegisteredHandler {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(getListener(), getMethod());
+    }
+
+    @Override
     @NotNull
     public String toString() {
         return "Handler{" +
