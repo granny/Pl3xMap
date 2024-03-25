@@ -1,0 +1,129 @@
+prefix:
+  command: '<grey>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</grey> '
+command:
+  base: Zobacz mapę na '<grey><click:open_url:'<web-address>'><web-address></click></grey>'
+  event:
+    click-for-help: Kliknij, aby uzyskać pomoc
+    click-to-confirm: Kliknij, aby potwierdzić
+    argument:
+      optional-player: Domyślnie dla wykonującego gracza, jeśli nieokreślony (konsola musi
+        określić gracza)
+      optional-center: Domyślnie dla (<white>0<gray>,</gray> 0</white>), jeśli nieokreślony
+      optional-zoom: Poziom przybliżenia mapy
+      required-renderer: Wymagany jest renderer
+      required-world: Wymagany jest świat
+    confirm:
+      description: Potwierdź oczekujące polecenie
+      not-rendering: <red>Wymagane potwierdzenie. Potwierdź za pomocą <grey>/map confirm
+      success: <red>Nie masz żadnych oczekujących potwierdzeń
+    fullrender:
+      description: W pełni renderuj świat
+      starting: <green>Rozpoczęcie pełnego renderowania. Sprawdź <grey>/map status</grey> dla
+        więcej informacji
+    help:
+      description: Uzyskaj pomoc dotyczącą poleceń Pl3xmap
+      argument:
+        query: Zapytanie o pomoc
+    hide:
+      description: Ukryj gracza na mapie
+      already-hidden: <grey><player> <red>jest już ukryty na mapie
+      success: <grey><player> <green>jest teraz ukryty na mapie
+    pause:
+      description: Przełącz stan wstrzymania renderowania
+      paused: <green>Renderery są teraz wstrzymane
+      unpaused: <green>Renderery są teraz wznawiane
+    radiusrender:
+      description: Renderuj sekcję świata
+      starting: <green>Rozpoczęcie renderowania promienia. Sprawdź <grey>/map status</grey>
+        dla więcej informacji
+    reload:
+      description: Przeładuj wtyczkę
+      success: <green>Pl3xMap <grey>v<version></grey> został przeładowany
+    resetmap:
+      description: Anuluj aktywne renderowanie świata
+      begin: <green>Rozpoczęto resetowanie mapy dla <grey><world></grey>
+      success: <green>Pomyślnie zresetowano mapę dla <grey><world>
+      failed: <red>Nie można zresetować mapy dla <grey><world>
+    show:
+      description: Pokaż gracza na mapie
+      not-hidden: <grey><player> <red>nie jest ukryty na mapie
+      success: <grey><player> <green>nie jest już ukryty na mapie
+    status:
+      description: Wyświetl status renderowania
+    stitch:
+      description: Połącz kafelki w jedno zdjęcie
+      missing-directory: <red>Nie można znaleźć katalogu z kafelkami.
+      error-reading-directory: <red>Wystąpił problem podczas odczytu katalogu z kafelkami.
+      empty-directory: <red>Brak kafelków do połączenia.
+      starting: |-
+        <green>Rozpoczęcie łączenia <count> kafelków..
+        <green><italic>(min: <min-x>,<min-z> max: <max-x>,<max-z> rozmiar: <size-x>,<size-z>)
+      finished: |-
+        <green>Zakończono łączenie <count> kafelków!
+        <green>Znajdziesz je tutaj: <grey>/tiles/<world>/stitched/<filename>
+    version:
+      description: Uzyskaj informacje o wersji
+      please-wait: <italic>Sprawdzanie wersji, proszę czekać...
+      still-checking: <italic>Wersja wciąż jest sprawdzana...
+      error:
+        not-array: '<red>Błąd: odpowiedź nie jest tablicą'
+        corrupt-json: '<red>Błąd: odpowiedź to uszkodzony JSON'
+        unknown-version: '<red>Błąd: odpowiedź zawiera nieznany numer wersji'
+        unable-to-determine: '<red>Błąd: Nie można określić najnowszej kompilacji'
+      success: Pl3xMap v3 <version> (<italic><platform></italic>) git-<commit>
+      snapshot: <yellow><italic>Uruchamiasz wersję testową
+      latest-build-is: <yellow><italic>Najnowsza kompilacja to <build>
+      running-latest-build: <green><italic>Uruchamiasz najnowszą kompilację.
+      builds-behind: <yellow><italic>Jesteś <number> kompilacji za aktualną wersją.
+      download: '<yellow><italic>Pobierz nową kompilację tutaj: <gold><link>'
+      time-traveler: <yellow><italic>Jesteś podróżnikiem w czasie?
+httpd:
+  started:
+    success: <green>Wewnętrzny serwer WWW działa na <yellow><bind></yellow>:<yellow><port></yellow>
+    error: <red>Wewnętrzny serwer WWW nie mógł wystartować
+  stopped:
+    success: <green>Wewnętrzny serwer WWW zatrzymany
+    error: <red>Wystąpił błąd z wewnętrznym serwerem WWW
+  disabled: <green>Wewnętrzny serwer WWW jest wyłączony
+progress:
+  eta:
+    unknown: Nieznane
+error:
+  must-specify-player: <red>Musisz określić gracza
+  no-such-player: <red>Gracz <grey><player> <red> nie istnieje
+  must-specify-renderer: <red>Musisz określić renderer
+  no-such-renderer: <red>Renderer <grey><renderer> <red>nie istnieje
+  must-specify-world: <red>Musisz określić świat
+  no-such-world: <red>Świat <grey><world> <red>nie istnieje
+  world-disabled: <red>Pl3xMap jest wyłączony dla świata <grey><world>
+  not-valid-zoom-level: <red>Nieprawidłowy poziom przybliżenia
+  point-invalid-format: '''<point>'' nie jest prawidłową lokalizacją. Wymagany format to ''<x>
+    <z>'''
+ui:
+  layer:
+    players: Gracze
+    spawn: Spawn
+    worldborder: Granica świata
+  title: Pl3xMap
+  block-and-biome-lang-file: en_us.json # IDK?
+  blockinfo:
+    label: Informacje o bloku # Or keep it BlockInfo?
+    value: <block><br /><biome>
+  coords:
+    label: Współrzędne
+    value: <x>, <y>, <z>
+  link:
+    label: Udostępnialny link
+    value: ''
+  markers:
+    label: Znaczniki
+    value: Nie skonfigurowano żadnych znaczników
+  players:
+    label: Gracze (<online>/<max>)
+    value: Obecnie nie ma żadnych graczy online
+  worlds:
+    label: Światy
+    value: Nie skonfigurowano żadnych światów
+  layers:
+    label: Warstwy
+    value: Nie skonfigurowano żadnych warstw
