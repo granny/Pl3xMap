@@ -47,6 +47,7 @@ export class MarkerLayer extends L.LayerGroup {
 
     private readonly _markers: Map<string, Marker> = new Map();
 
+    private _timestamp: number = (new Date()).getTime();
     private _timer: NodeJS.Timeout | undefined;
 
     constructor(key: string, label: string, interval: number, showControls: boolean, defaultHidden: boolean, priority: number, zIndex: number, pane: string, css: string) {
@@ -114,46 +115,68 @@ export class MarkerLayer extends L.LayerGroup {
         return this._css;
     }
 
-    update(world: World): void {
+    get timestamp(): number {
+        return this._timestamp;
+    }
+
+    set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
+    }
+
+    update(world: World, updateOverride?: boolean): void {
+        if (updateOverride === undefined) {
+            const time = (new Date()).getTime() - this._timestamp;
+            // console.log(world.eventSource?.readyState);
+            // console.log(`${this._key}: world.eventSource?.readyState === EventSource.OPEN is ${world.eventSource?.readyState === EventSource.OPEN}`);
+            // console.log(`${this._key}: time (${time}) < 1000 is ${time < 1000}`);
+            if (world.eventSource?.readyState === EventSource.OPEN && time < 1000) {
+                // console.log(this._key + ": source is open and timestamp is " + time + " which is less than 1000");
+                return;
+            }
+        }
+
         getJSON(`tiles/${world.name}/markers/${this._key}.json`)
-            .then((json): void => {
-                //this.clearLayers(); // do not just clear markers, remove the ones that are missing
-                const toRemove: Set<string> = new Set(this._markers.keys());
+            .then((json): void => this.updateMarkers(json, world));
+    }
 
-                for (const index in Object.keys(json)) {
-                    const existing: Marker | undefined = this._markers.get(json[index].data.key);
-                    if (existing) {
-                        // update
-                        const data = json[index];
-                        const options: MarkerOptions | undefined = isset(data.options) ? new MarkerOptions(data.options) : undefined;
-                        existing.update(data.data, options);
-                        // do not remove this marker
-                        toRemove.delete(existing.key);
-                    } else {
-                        // new marker
-                        const marker: Marker | undefined = this.parseMarker(json[index]);
-                        if (marker) {
-                            this._markers.set(marker.key, marker);
-                            marker.marker.addTo(this);
-                            // inform the events
-                            fireCustomEvent('markeradded', marker);
-                        }
-                    }
+    updateMarkers(json: any, world: World): void {
+        // console.log(`updating ${this._key} with update interval of ${this._updateInterval}`);
+        //this.clearLayers(); // do not just clear markers, remove the ones that are missing
+        const toRemove: Set<string> = new Set(this._markers.keys());
+
+        for (const index in Object.keys(json)) {
+            const existing: Marker | undefined = this._markers.get(json[index].data.key);
+            if (existing) {
+                // update
+                const data = json[index];
+                const options: MarkerOptions | undefined = isset(data.options) ? new MarkerOptions(data.options) : undefined;
+                existing.update(data.data, options);
+                // do not remove this marker
+                toRemove.delete(existing.key);
+            } else {
+                // new marker
+                const marker: Marker | undefined = this.parseMarker(json[index]);
+                if (marker) {
+                    this._markers.set(marker.key, marker);
+                    marker.marker.addTo(this);
+                    // inform the events
+                    fireCustomEvent('markeradded', marker);
                 }
+            }
+        }
 
-                toRemove.forEach((key: string): void => {
-                    // remove players not in updated settings file
-                    const marker: Marker | undefined = this._markers.get(key);
-                    if (marker) {
-                        this._markers.delete(key);
-                        marker.marker.remove();
-                        this.removeLayer(marker.marker);
-                        fireCustomEvent('markerremoved', marker);
-                    }
-                });
+        toRemove.forEach((key: string): void => {
+            // remove players not in updated settings file
+            const marker: Marker | undefined = this._markers.get(key);
+            if (marker) {
+                this._markers.delete(key);
+                marker.marker.remove();
+                this.removeLayer(marker.marker);
+                fireCustomEvent('markerremoved', marker);
+            }
+        });
 
-                this._timer = setTimeout(() => this.update(world), this._updateInterval);
-            });
+        this._timer = setTimeout(() => this.update(world), this._updateInterval);
     }
 
     unload(): void {

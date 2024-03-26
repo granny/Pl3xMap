@@ -26,6 +26,7 @@ package net.pl3x.map.core.scheduler;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import net.pl3x.map.core.util.TickUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class Scheduler {
@@ -34,7 +35,7 @@ public class Scheduler {
     private boolean ticking;
 
     /**
-     * Tick this scheduler once every second.
+     * Tick this scheduler once every tick.
      */
     public void tick() {
         if (this.ticking) {
@@ -98,12 +99,35 @@ public class Scheduler {
     /**
      * Add task to the scheduler.
      *
+     * @param delay    Delay (in seconds or ticks) before task starts
+     * @param runnable Task to add
+     * @param ticks    Set to true to pass the delay as ticks instead of seconds
+     */
+    public void addTask(int delay, @NotNull Runnable runnable, boolean ticks) {
+        addTask(delay, false, runnable, ticks);
+    }
+
+    /**
+     * Add task to the scheduler.
+     *
      * @param delay    Delay (in seconds) before task starts
-     * @param repeat   Delay (in seconds) before task repeats
+     * @param repeat   Whether this task should repeat
      * @param runnable Task to add
      */
     public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {
-        addTask(new Task(delay, repeat) {
+        addTask(delay, repeat, runnable, false);
+    }
+
+    /**
+     * Add task to the scheduler.
+     *
+     * @param delay    Delay (in seconds or ticks) before task starts
+     * @param repeat   Whether this task should repeat
+     * @param runnable Task to add
+     * @param ticks    Set to true to pass the delay as ticks instead of seconds
+     */
+    public void addTask(int delay, boolean repeat, @NotNull Runnable runnable, boolean ticks) {
+        addTask(new Task(ticks ? delay : TickUtil.toTicks(delay), repeat) {
             @Override
             public void run() {
                 runnable.run();

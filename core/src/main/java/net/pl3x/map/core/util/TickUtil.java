@@ -21,35 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.core.registry;
+package net.pl3x.map.core.util;
 
-import java.util.function.Supplier;
-import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.event.world.WorldUnloadedEvent;
-import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public class WorldRegistry extends Registry<@NotNull World> {
-    public @NotNull World getOrDefault(@NotNull String id, @NotNull Supplier<@NotNull World> supplier) {
-        World world = get(id);
-        if (world == null) {
-            world = supplier.get();
-            register(world.getName(), world);
-        }
-        return world;
+public class TickUtil {
+    public static double toSeconds(int ticks) {
+        return ticks * (1.0 / 20);
     }
 
-    @Override
-    public @Nullable World unregister(@NotNull String id) {
-        World world = this.entries.remove(id);
-        if (world != null) {
-            Pl3xMap.api().getEventRegistry().callEvent(new WorldUnloadedEvent(world));
-            world.getMarkerTask().cancel();
-            world.getLiveDataTask().cancel();
-            //world.getRegionFileWatcher().stop();
-            world.cleanup();
-        }
-        return world;
+    public static int toTicks(int seconds) {
+        return seconds * 20;
+    }
+
+    public static int toMilliseconds(int ticks) {
+        return ticks * 50;
     }
 }

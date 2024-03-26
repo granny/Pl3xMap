@@ -23,26 +23,62 @@
  */
 package net.pl3x.map.core.httpd;
 
+import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.UndertowLogger;
 import io.undertow.UndertowOptions;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.resource.PathResourceManager;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.handlers.resource.ResourceManager;
+import io.undertow.server.handlers.sse.ServerSentEventConnection;
+import io.undertow.server.handlers.sse.ServerSentEventHandler;
 import io.undertow.util.ETag;
 import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
+import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.stream.Collectors;
+import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.log.LogFilter;
 import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.registry.WorldRegistry;
 import net.pl3x.map.core.util.FileUtil;
+import net.pl3x.map.core.world.World;
 
 public class HttpdServer {
+    private HttpString X_ACCEL_BUFFERING = new HttpString("X-Accel-Buffering");
     private Undertow server;
+    private ServerSentEventHandler serverSentEventHandler = Handlers.serverSentEvents();
+
+    public void sendSSE(ServerSentEventHandler serverSentEventHandler, String event, String data) {
+        for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
+            connection.send(data, event, null, null);
+        }
+    }
+
+    public void sendSSE(ServerSentEventHandler serverSentEventHandler, String data) {
+        sendSSE(serverSentEventHandler, null, data);
+    }
+
+    public void sendSSE(String event, String data) {
+        sendSSE(this.serverSentEventHandler, event, data);
+    }
+
+    public void sendSSE(String data) {
+        sendSSE(this.serverSentEventHandler, null, data);
+    }
+
+    public void closeSSEConnections(ServerSentEventHandler serverSentEventHandler) {
+        for (ServerSentEventConnection connection : serverSentEventHandler.getConnections()) {
+            connection.shutdown();
+        }
+    }
 
     public void startServer() {
         if (!Config.HTTPD_ENABLED) {
@@ -81,16 +117,47 @@ public class HttpdServer {
             this.server = Undertow.builder()
                     .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                     .addHttpListener(Config.HTTPD_PORT, Config.HTTPD_BIND)
-                    .setHandler(exchange -> {
-                        if (exchange.getRelativePath().startsWith("/tiles")) {
-                            exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
-                        }
-                        if (exchange.getRelativePath().endsWith(".gz")) {
-                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                            exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
-                        }
-                        resourceHandler.handleRequest(exchange);
-                    })
+                    .setHandler(
+                        Handlers.path(exchange -> {
+                            if (exchange.getRelativePath().startsWith("/tiles")) {
+                                exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, "max-age=0, must-revalidate, no-cache");
+                            }
+                            if (exchange.getRelativePath().endsWith(".gz")) {
+                                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+                                exchange.getResponseHeaders().put(Headers.CONTENT_ENCODING, "gzip");
+                            }
+                            resourceHandler.handleRequest(exchange);
+                        })
+                        .addPrefixPath("/sse",
+                            Handlers.pathTemplate()
+                                .add("{world}", exchange -> {
+                                    String worldName = exchange.getQueryParameters().get("world").peek();
+                                    if (worldName == null || worldName.isEmpty()) {
+                                        exchange.getResponseHeaders().put(X_ACCEL_BUFFERING, "no");
+                                        serverSentEventHandler.handleRequest(exchange);
+                                        return;
+                                    }
+
+                                    WorldRegistry worldRegistry = Pl3xMap.api().getWorldRegistry();
+                                    World world = worldRegistry.get(worldName);
+                                    if (world == null || !world.isEnabled()) {
+                                        String listOfValidWorlds = worldRegistry.values().stream()
+                                                .filter(World::isEnabled)
+                                                .map(World::getName).collect(Collectors.joining(", "));
+                                        handleError(exchange, "Could not find world named '%s'. Available worlds: %s"
+                                                .formatted(worldName, listOfValidWorlds));
+                                        return;
+                                    }
+
+                                    if (exchange.isInIoThread()) {
+                                        exchange.dispatch(world.getServerSentEventHandler());
+                                    } else {
+                                        exchange.getResponseHeaders().put(X_ACCEL_BUFFERING, "no");
+                                        world.getServerSentEventHandler().handleRequest(exchange);
+                                    }
+                                })
+                        )
+                    )
                     .build();
             this.server.start();
             LogFilter.HIDE_UNDERTOW_LOGS = false;
@@ -105,6 +172,12 @@ public class HttpdServer {
         }
     }
 
+    private void handleError(HttpServerExchange exchange, String errorMessage) {
+        exchange.setStatusCode(StatusCodes.NOT_FOUND);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseSender().send("{\"error\": \"" + errorMessage + "\"}");
+    }
+
     public void stopServer() {
         if (!Config.HTTPD_ENABLED) {
             return;
@@ -116,6 +189,10 @@ public class HttpdServer {
         }
 
         LogFilter.HIDE_UNDERTOW_LOGS = true;
+        this.closeSSEConnections(this.serverSentEventHandler);
+        Pl3xMap.api().getWorldRegistry().forEach(world -> {
+            this.closeSSEConnections(world.getServerSentEventHandler());
+        });
         this.server.stop();
         LogFilter.HIDE_UNDERTOW_LOGS = false;
 

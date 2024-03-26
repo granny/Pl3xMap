@@ -53,6 +53,7 @@ public class WorldBorderLayer extends WorldLayer {
     public WorldBorderLayer(@NotNull World world) {
         this(KEY, world, () -> Lang.UI_LAYER_WORLDBORDER);
         setUpdateInterval(WorldBorderLayerConfig.UPDATE_INTERVAL);
+        setLiveUpdate(WorldBorderLayerConfig.LIVE_UPDATE);
         setShowControls(WorldBorderLayerConfig.SHOW_CONTROLS);
         setDefaultHidden(WorldBorderLayerConfig.DEFAULT_HIDDEN);
         setPriority(WorldBorderLayerConfig.PRIORITY);

@@ -5,11 +5,16 @@ import {createSVGIcon, toPoint} from "../util/Util";
 import Pl3xMapLeafletMap from "../map/Pl3xMapLeafletMap";
 import '../svg/link.svg';
 import {World} from "../world/World";
+import {Player} from "../player/Player";
 
 export class LinkControl extends ControlBox {
     private readonly _dom: HTMLAnchorElement;
+    private _disabled: boolean;
 
     private onEvent = (): void => {
+        if (this._disabled) {
+            return;
+        }
         this.update();
     }
 
@@ -17,6 +22,10 @@ export class LinkControl extends ControlBox {
         super(pl3xmap, position);
         this._dom = L.DomUtil.create('a', 'leaflet-control leaflet-control-button leaflet-control-link');
         this._dom.appendChild(createSVGIcon('link'));
+        this._disabled = false;
+        addEventListener('followplayer', (e: CustomEvent<Player>): void => {
+            this._disabled = !(e.detail == undefined); // e.detail returns "null" even though it's being set to "undefined"
+        });
     }
 
     onAdd(map: Pl3xMapLeafletMap): HTMLAnchorElement {

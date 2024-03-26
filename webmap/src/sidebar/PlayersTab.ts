@@ -1,7 +1,7 @@
 import * as L from "leaflet";
 import {Pl3xMap} from "../Pl3xMap";
 import {Player} from "../player/Player";
-import {createSVGIcon, handleKeyboardEvent, isset} from "../util/Util";
+import {createSVGIcon, handleKeyboardEvent} from "../util/Util";
 import BaseTab from "./BaseTab";
 import '../svg/players.svg';
 import {Lang} from "../settings/Lang";
@@ -67,7 +67,7 @@ export default class PlayersTab extends BaseTab {
     private _update(): void {
         const settings: Settings | undefined = this._pl3xmap.settings;
 
-        const online: string = String(isset(settings?.players) ? Object.keys(settings!.players).length : '???');
+        const online: string = String(this._pl3xmap.playerManager.players.size);
         const max: string = String(settings?.maxPlayers ?? '???');
 
         const title: any = settings?.lang.players?.label
