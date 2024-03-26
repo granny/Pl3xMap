@@ -74,13 +74,7 @@ public class VanillaRenderer extends Renderer {
                 BlockState fluidstate = null;
 
                 // if world has ceiling iterate down until we find air
-                if (getWorld().hasCeiling()) {
-                    blockY = getWorld().getLogicalHeight();
-                    do {
-                        blockY -= 1;
-                        blockstate = chunk.getBlockState(blockX, blockY, blockZ);
-                    } while (blockY > getWorld().getMinBuildHeight() && !blockstate.getBlock().isAir());
-                }
+                blockY = getBlockBelowCeiling(blockY, chunk, blockX, blockZ);
 
                 // iterate down until we find a renderable block
                 do {
@@ -101,33 +95,7 @@ public class VanillaRenderer extends Renderer {
                     }
                 } while (blockY > getWorld().getMinBuildHeight());
 
-                if (pixelZ >= 0) {
-                    int color;
-                    int brightness;
-                    if (fluidstate != null) {
-                        color = fluidstate.getBlock().vanilla();
-                        double heightDiff = (double) (fluidY - blockY) * 0.1D + (double) (pixelX + pixelZ & 1) * 0.2D;
-                        if (heightDiff < 0.5D) {
-                            brightness = 0x00;
-                        } else if (heightDiff > 0.9D) {
-                            brightness = 0x44;
-                        } else {
-                            brightness = 0x22;
-                        }
-                    } else {
-                        color = blockstate.getBlock().vanilla();
-                        double heightDiff = (blockY - lastBlockY) * 4.0D / (double) (1 + 4) + ((double) (pixelX + pixelZ & 1) - 0.5D) * 0.4D;
-                        if (heightDiff > 0.6D) {
-                            brightness = 0x00;
-                        } else if (heightDiff < -0.6D) {
-                            brightness = 0x44;
-                        } else {
-                            brightness = 0x22;
-                        }
-                    }
-
-                    getTileImage().setPixel(pixelX, pixelZ, Colors.blend(brightness << 24, Colors.setAlpha(0xFF, color)));
-                }
+                setPixel(pixelZ, fluidstate, fluidY, blockY, pixelX, blockstate, lastBlockY);
 
                 if (blockstate.getBlock().isFlat()) {
                     blockY--;
@@ -136,6 +104,48 @@ public class VanillaRenderer extends Renderer {
                 lastBlockY = blockY;
             }
         }
+    }
+
+    private void setPixel(int pixelZ, BlockState fluidstate, int fluidY, int blockY, int pixelX, BlockState blockstate, double lastBlockY) {
+        if (pixelZ >= 0) {
+            int color;
+            int brightness;
+            if (fluidstate != null) {
+                color = fluidstate.getBlock().vanilla();
+                double heightDiff = (double) (fluidY - blockY) * 0.1D + (double) (pixelX + pixelZ & 1) * 0.2D;
+                if (heightDiff < 0.5D) {
+                    brightness = 0x00;
+                } else if (heightDiff > 0.9D) {
+                    brightness = 0x44;
+                } else {
+                    brightness = 0x22;
+                }
+            } else {
+                color = blockstate.getBlock().vanilla();
+                double heightDiff = (blockY - lastBlockY) * 4.0D / (double) (1 + 4) + ((double) (pixelX + pixelZ & 1) - 0.5D) * 0.4D;
+                if (heightDiff > 0.6D) {
+                    brightness = 0x00;
+                } else if (heightDiff < -0.6D) {
+                    brightness = 0x44;
+                } else {
+                    brightness = 0x22;
+                }
+            }
+
+            getTileImage().setPixel(pixelX, pixelZ, Colors.blend(brightness << 24, Colors.setAlpha(0xFF, color)));
+        }
+    }
+
+    protected int getBlockBelowCeiling(int blockY, Chunk chunk, int blockX, int blockZ) {
+        BlockState blockstate;
+        if (getWorld().hasCeiling()) {
+            blockY = getWorld().getLogicalHeight();
+            do {
+                blockY -= 1;
+                blockstate = chunk.getBlockState(blockX, blockY, blockZ);
+            } while (blockY > getWorld().getMinBuildHeight() && !blockstate.getBlock().isAir());
+        }
+        return blockY;
     }
 
     @Override

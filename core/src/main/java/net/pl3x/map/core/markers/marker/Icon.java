@@ -627,18 +627,30 @@ public class Icon extends Marker<@NotNull Icon> {
         Icon other = (Icon) o;
         return getKey().equals(other.getKey())
                 && getPoint().equals(other.getPoint())
-                && getImage().equals(other.getImage())
-                && Objects.equals(getRetina(), other.getRetina())
-                && Objects.equals(getSize(), other.getSize())
-                && Objects.equals(getAnchor(), other.getAnchor())
-                && Objects.equals(getRotationAngle(), other.getRotationAngle())
-                && Objects.equals(getRotationOrigin(), other.getRotationOrigin())
-                && Objects.equals(getShadow(), other.getShadow())
-                && Objects.equals(getShadowRetina(), other.getShadowRetina())
-                && Objects.equals(getShadowSize(), other.getShadowSize())
-                && Objects.equals(getShadowAnchor(), other.getShadowAnchor())
+                && isImageEquals(other)
+                && isPositionEquals(other)
+                && isShadowEquals(other)
                 && Objects.equals(getPane(), other.getPane())
                 && Objects.equals(getOptions(), other.getOptions());
+    }
+
+    private boolean isImageEquals(@Nullable Icon other) {
+        return getImage().equals(other.getImage())
+                && Objects.equals(getRetina(), other.getRetina())
+                && Objects.equals(getSize(), other.getSize());
+    }
+
+    private boolean isPositionEquals(@Nullable Icon other) {
+        return Objects.equals(getAnchor(), other.getAnchor())
+                && Objects.equals(getRotationAngle(), other.getRotationAngle())
+                && Objects.equals(getRotationOrigin(), other.getRotationOrigin());
+    }
+
+    private boolean isShadowEquals(@Nullable Icon other) {
+        return Objects.equals(getShadow(), other.getShadow())
+                && Objects.equals(getShadowRetina(), other.getShadowRetina())
+                && Objects.equals(getShadowSize(), other.getShadowSize())
+                && Objects.equals(getShadowAnchor(), other.getShadowAnchor());
     }
 
     @Override

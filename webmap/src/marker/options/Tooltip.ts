@@ -19,7 +19,7 @@ export class Tooltip {
     constructor(data: TooltipOptions) {
         this._content = isset(data.content) ? data.content! : "";
 
-        let props: {} = {};
+        let props: object = {};
         if (isset(data.offset)) props = {...props, offset: [data.offset!.x, data.offset!.z]};
         if (isset(data.direction)) props = {...props, direction: Direction[data.direction!]};
         if (isset(data.permanent)) props = {...props, permanent: data.permanent};

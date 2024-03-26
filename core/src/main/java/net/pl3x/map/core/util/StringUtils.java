@@ -19,6 +19,7 @@ package net.pl3x.map.core.util;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 // from apache commons StringEscapeUtils
@@ -73,21 +74,7 @@ public class StringUtils {
             if (hadSlash) {
                 // handle an escaped value
                 hadSlash = false;
-                switch (ch) {
-                    case '\\' -> out.write('\\');
-                    case '\'' -> out.write('\'');
-                    case '\"' -> out.write('"');
-                    case 'r' -> out.write('\r');
-                    case 'f' -> out.write('\f');
-                    case 't' -> out.write('\t');
-                    case 'n' -> out.write('\n');
-                    case 'b' -> out.write('\b');
-                    case 'u' -> {
-                        // uh-oh, we're in unicode country....
-                        inUnicode = true;
-                    }
-                    default -> out.write(ch);
-                }
+                inUnicode = handleSlash(out, ch, inUnicode);
                 continue;
             } else if (ch == '\\') {
                 hadSlash = true;
@@ -100,5 +87,24 @@ public class StringUtils {
             // string, let's output it anyway.
             out.write('\\');
         }
+    }
+
+    private static boolean handleSlash(@NotNull Writer out, char ch, boolean inUnicode) throws IOException {
+        switch (ch) {
+            case '\\' -> out.write('\\');
+            case '\'' -> out.write('\'');
+            case '\"' -> out.write('"');
+            case 'r' -> out.write('\r');
+            case 'f' -> out.write('\f');
+            case 't' -> out.write('\t');
+            case 'n' -> out.write('\n');
+            case 'b' -> out.write('\b');
+            case 'u' -> {
+                // uh-oh, we're in unicode country....
+                inUnicode = true;
+            }
+            default -> out.write(ch);
+        }
+        return inUnicode;
     }
 }

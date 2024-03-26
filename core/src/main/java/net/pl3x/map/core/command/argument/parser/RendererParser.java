@@ -34,8 +34,6 @@ import net.pl3x.map.core.command.exception.RendererParseException;
 import net.pl3x.map.core.registry.RendererRegistry;
 import net.pl3x.map.core.renderer.Renderer;
 import org.jetbrains.annotations.NotNull;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.failure;
-import static cloud.commandframework.arguments.parser.ArgumentParseResult.success;
 
 /**
  * Parser that parses strings into {@link Renderer.Builder}s.
@@ -47,16 +45,16 @@ public class RendererParser<C> implements ArgumentParser<@NotNull C, Renderer.@N
     public @NotNull ArgumentParseResult<Renderer.@NotNull Builder> parse(@NotNull CommandContext<@NotNull C> context, @NotNull Queue<@NotNull String> queue) {
         String input = queue.peek();
         if (input == null) {
-            return failure(new RendererParseException(null, RendererParseException.MUST_SPECIFY_RENDERER));
+            return ArgumentParseResult.failure(new RendererParseException(null, RendererParseException.MUST_SPECIFY_RENDERER));
         }
 
         Renderer.Builder builder = Pl3xMap.api().getRendererRegistry().get(input);
         if (builder == null) {
-            return failure(new RendererParseException(input, RendererParseException.NO_SUCH_RENDERER));
+            return ArgumentParseResult.failure(new RendererParseException(input, RendererParseException.NO_SUCH_RENDERER));
         }
 
         queue.remove();
-        return success(builder);
+        return ArgumentParseResult.success(builder);
     }
 
     @Override

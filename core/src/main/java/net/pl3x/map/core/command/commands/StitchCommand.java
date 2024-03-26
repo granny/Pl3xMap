@@ -48,7 +48,7 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.World;
 import org.jetbrains.annotations.NotNull;
-import static net.pl3x.map.core.world.World.PNG_MATCHER;
+import org.jetbrains.annotations.Nullable;
 
 public class StitchCommand extends Pl3xMapCommand {
     public StitchCommand(@NotNull CommandHandler handler) {
@@ -82,32 +82,8 @@ public class StitchCommand extends Pl3xMapCommand {
             return;
         }
 
-        Map<Point, Path> pngFiles = new HashMap<>();
-        try (Stream<Path> stream = Files.list(dir)) {
-            stream.filter(PNG_MATCHER::matches).forEach(path -> {
-                String[] split = path.getFileName().toString().split(".png")[0].split("_");
-                if (split.length != 2) {
-                    return;
-                }
-                int x, z;
-                try {
-                    x = Integer.parseInt(split[0]);
-                    z = Integer.parseInt(split[1]);
-                } catch (NumberFormatException e) {
-                    return;
-                }
-                pngFiles.put(Point.of(x, z), path);
-            });
-        } catch (IOException e) {
-            sender.sendMessage(Lang.COMMAND_STITCH_ERROR_READING_DIRECTORY);
-            e.printStackTrace();
-            return;
-        }
-
-        if (pngFiles.isEmpty()) {
-            sender.sendMessage(Lang.COMMAND_STITCH_EMPTY_DIRECTORY);
-            return;
-        }
+        Map<Point, Path> pngFiles = getTiles(dir, sender);
+        if (pngFiles == null) return;
 
         int minX = Integer.MAX_VALUE;
         int minZ = Integer.MAX_VALUE;
@@ -134,6 +110,50 @@ public class StitchCommand extends Pl3xMapCommand {
                 Placeholder.unparsed("size-z", String.valueOf(sizeZ))
         );
 
+        String filename = stitchImage(sizeX, sizeZ, pngFiles, minX, minZ, world, renderer, zoom);
+
+        sender.sendMessage(Lang.COMMAND_STITCH_FINISHED,
+                Placeholder.unparsed("count", String.valueOf(pngFiles.size())),
+                Placeholder.unparsed("world", world.getName()),
+                Placeholder.unparsed("renderer", renderer.getKey()),
+                Placeholder.unparsed("filename", filename)
+        );
+    }
+
+    @Nullable
+    private static Map<Point, Path> getTiles(Path dir, Sender sender) {
+        Map<Point, Path> pngFiles = new HashMap<>();
+        try (Stream<Path> stream = Files.list(dir)) {
+            stream.filter(World.PNG_MATCHER::matches).forEach(path -> {
+                String[] split = path.getFileName().toString().split(".png")[0].split("_");
+                if (split.length != 2) {
+                    return;
+                }
+                int x, z;
+                try {
+                    x = Integer.parseInt(split[0]);
+                    z = Integer.parseInt(split[1]);
+                } catch (NumberFormatException e) {
+                    return;
+                }
+                pngFiles.put(Point.of(x, z), path);
+            });
+        } catch (IOException e) {
+            sender.sendMessage(Lang.COMMAND_STITCH_ERROR_READING_DIRECTORY);
+            e.printStackTrace();
+            return null;
+        }
+
+        if (pngFiles.isEmpty()) {
+            sender.sendMessage(Lang.COMMAND_STITCH_EMPTY_DIRECTORY);
+            return null;
+        }
+        return pngFiles;
+    }
+
+    @NotNull
+    private static String stitchImage(int sizeX, int sizeZ, Map<Point, Path> pngFiles, int minX, int minZ, World world, Renderer.Builder renderer, int zoom) {
+        Path dir;
         IO.Type io = IO.get(Config.WEB_TILE_FORMAT);
 
         BufferedImage stitched = new BufferedImage((sizeX + 1) << 9, (sizeZ + 1) << 9, BufferedImage.TYPE_INT_ARGB);
@@ -163,12 +183,6 @@ public class StitchCommand extends Pl3xMapCommand {
         }
         String filename = renderer.getKey() + "_" + zoom + "." + io.getKey();
         io.write(dir.resolve(filename), stitched);
-
-        sender.sendMessage(Lang.COMMAND_STITCH_FINISHED,
-                Placeholder.unparsed("count", String.valueOf(pngFiles.size())),
-                Placeholder.unparsed("world", world.getName()),
-                Placeholder.unparsed("renderer", renderer.getKey()),
-                Placeholder.unparsed("filename", filename)
-        );
+        return filename;
     }
 }

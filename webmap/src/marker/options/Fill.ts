@@ -12,7 +12,7 @@ export class Fill {
     private readonly _properties: L.PathOptions;
 
     constructor(data: FillOptions) {
-        let props: {} = {};
+        let props: object = {};
 
         if (isset(data.enabled)) props = {...props, fill: data.enabled};
         if (isset(data.type)) props = {...props, fillRule: Type[data.type!]};
