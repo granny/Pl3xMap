@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.core.util;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class TickUtil {
     public static double toSeconds(int ticks) {
         return ticks * (1.0 / 20);

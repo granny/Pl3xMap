@@ -24,9 +24,10 @@
 package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.registry.Registry;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-public class HeightmapRegistry extends Registry<@NotNull Heightmap> {
+@NullMarked
+public class HeightmapRegistry extends Registry<Heightmap> {
     public void register() {
         register(new EvenOddHeightmap());
         register(new EvenOddHighContrastHeightmap());

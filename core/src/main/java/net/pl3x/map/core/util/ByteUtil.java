@@ -24,8 +24,9 @@
 package net.pl3x.map.core.util;
 
 import java.nio.ByteBuffer;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ByteUtil {
     private ByteUtil() {
     }
@@ -38,7 +39,7 @@ public class ByteUtil {
         return bytes;
     }
 
-    public static int getInt(@NotNull ByteBuffer buffer, int index) {
+    public static int getInt(ByteBuffer buffer, int index) {
         int value = 0;
         for (int i = 0; i < Integer.BYTES; i++) {
             value |= (buffer.get(index + i) & 0xFF) << (Byte.SIZE * (Integer.BYTES - 1 - i));

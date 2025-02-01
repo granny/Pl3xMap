@@ -35,11 +35,12 @@ import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Manages world border marker.
  */
+@NullMarked
 public class WorldBorderLayer extends WorldLayer {
     public static final String KEY = "pl3xmap_worldborder";
 
@@ -50,7 +51,7 @@ public class WorldBorderLayer extends WorldLayer {
      *
      * @param world world
      */
-    public WorldBorderLayer(@NotNull World world) {
+    public WorldBorderLayer(World world) {
         this(KEY, world, () -> Lang.UI_LAYER_WORLDBORDER);
         setUpdateInterval(WorldBorderLayerConfig.UPDATE_INTERVAL);
         setLiveUpdate(WorldBorderLayerConfig.LIVE_UPDATE);
@@ -78,13 +79,13 @@ public class WorldBorderLayer extends WorldLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public WorldBorderLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
+    public WorldBorderLayer(String key, World world, Supplier<String> labelSupplier) {
         super(key, world, labelSupplier);
         this.polyline = Marker.polyline(KEY).setOptions(getOptions());
     }
 
     @Override
-    public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
+    public Collection<Marker<?>> getMarkers() {
         return Collections.singletonList(this.polyline.clearPoints().addPoint(
                 Point.of(getWorld().getBorderMinX(), getWorld().getBorderMinZ()),
                 Point.of(getWorld().getBorderMaxX(), getWorld().getBorderMinZ()),

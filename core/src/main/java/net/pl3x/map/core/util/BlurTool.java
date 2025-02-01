@@ -1,5 +1,8 @@
 package net.pl3x.map.core.util;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class BlurTool {
     public static void Blur(byte[] data, int sizeX, int sizeZ, int range) {
         BlurTool.BoxBlurHorizontal(data, range, 0, 0, sizeX, sizeZ);

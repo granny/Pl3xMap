@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.core.image.io;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class Gif extends IO.Type {
     public Gif() {
         super("gif");

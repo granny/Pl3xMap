@@ -36,9 +36,11 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-public class BiomeRegistry extends Registry<@NotNull Biome> {
+@NullMarked
+public class BiomeRegistry extends Registry<Biome> {
     private static final Gson GSON = new GsonBuilder().create();
     public static final int MAX_INDEX = 511;
 
@@ -49,7 +51,7 @@ public class BiomeRegistry extends Registry<@NotNull Biome> {
         this.indexMap = new HashMap<>();
     }
 
-    public void init(@NotNull World world) {
+    public void init(World world) {
         Path file = world.getTilesDirectory().resolve("biomes.gz");
         if (!Files.exists(file)) {
             return;
@@ -83,7 +85,7 @@ public class BiomeRegistry extends Registry<@NotNull Biome> {
         }
     }
 
-    public @NotNull Biome register(@NotNull String id, int color, int foliage, int grass, int water, Biome.@NotNull GrassModifier grassModifier) {
+    public Biome register(String id, int color, int foliage, int grass, int water, Biome.GrassModifier grassModifier) {
         if (has(id)) {
             throw new KeyAlreadyExistsException("Biome already registered: " + id);
         }
@@ -92,11 +94,12 @@ public class BiomeRegistry extends Registry<@NotNull Biome> {
     }
 
     @Override
-    public @NotNull Biome get(@NotNull String id) {
+    @Nullable
+    public Biome get(String id) {
         return getOrDefault(id, Biome.DEFAULT);
     }
 
-    public void saveToDisk(@NotNull World world) {
+    public void saveToDisk(World world) {
         Map<Integer, String> map = new HashMap<>();
         values().forEach(biome -> map.put(biome.index(), biome.getKey()));
         try {

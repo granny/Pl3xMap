@@ -32,23 +32,24 @@ import net.pl3x.map.core.world.BlockState;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.EmptyChunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class NetherRoofRenderer extends Renderer {
     private final Heightmap heightmap;
 
-    public NetherRoofRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
+    public NetherRoofRenderer(RegionScanTask task, Builder builder) {
         super(task, builder);
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get("none");
     }
 
     @Override
-    public @NotNull Heightmap getHeightmap() {
+    public Heightmap getHeightmap() {
         return this.heightmap;
     }
 
     @Override
-    public void scanData(@NotNull Region region) {
+    public void scanData(Region region) {
         int startX = region.getX() << 9;
         int startZ = region.getZ() << 9;
 
@@ -118,6 +119,6 @@ public class NetherRoofRenderer extends Renderer {
     }
 
     @Override
-    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
     }
 }

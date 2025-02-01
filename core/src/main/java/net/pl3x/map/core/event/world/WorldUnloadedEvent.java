@@ -27,16 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 import net.pl3x.map.core.event.RegisteredHandler;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class WorldUnloadedEvent extends WorldEvent {
-    private static final List<@NotNull RegisteredHandler> handlers = new ArrayList<>();
+    private static final List<RegisteredHandler> handlers = new ArrayList<>();
 
-    public WorldUnloadedEvent(@NotNull World world) {
+    public WorldUnloadedEvent(World world) {
         super(world);
     }
 
-    public @NotNull List<@NotNull RegisteredHandler> getHandlers() {
+    public List<RegisteredHandler> getHandlers() {
         return handlers;
     }
 }

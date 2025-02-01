@@ -29,26 +29,27 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import net.pl3x.map.core.markers.marker.Marker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a simple layer of markers and other metadata.
  */
+@NullMarked
 public class SimpleLayer extends Layer {
-    private final Map<@NotNull String, @NotNull Marker<?>> markers = new ConcurrentHashMap<>();
+    private final Map<String, Marker<?>> markers = new ConcurrentHashMap<>();
 
     /**
      * Create a new simple layer.
      *
      * @param key key for layer
      */
-    public SimpleLayer(@NotNull String key, @NotNull Supplier<@NotNull String> labelSupplier) {
+    public SimpleLayer(String key, Supplier<String> labelSupplier) {
         super(key, labelSupplier);
     }
 
     @Override
-    public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
+    public Collection<Marker<?>> getMarkers() {
         return this.markers.values();
     }
 
@@ -58,7 +59,7 @@ public class SimpleLayer extends Layer {
      * @param marker marker
      * @return this layer
      */
-    public @NotNull SimpleLayer addMarker(@NotNull Marker<?> marker) {
+    public SimpleLayer addMarker(Marker<?> marker) {
         this.markers.put(marker.getKey(), marker);
         return this;
     }
@@ -70,14 +71,14 @@ public class SimpleLayer extends Layer {
      * @param key key
      * @return the existing marker or {@code null}
      */
-    public @Nullable Marker<?> removeMarker(@NotNull String key) {
+    public @Nullable Marker<?> removeMarker(String key) {
         return this.markers.remove(key);
     }
 
     /**
      * Remove all registered markers
      */
-    public @NotNull SimpleLayer clearMarkers() {
+    public SimpleLayer clearMarkers() {
         this.markers.clear();
         return this;
     }
@@ -87,7 +88,7 @@ public class SimpleLayer extends Layer {
      *
      * @return registered markers
      */
-    public @NotNull Map<@NotNull String, @NotNull Marker<?>> registeredMarkers() {
+    public Map<String, Marker<?>> registeredMarkers() {
         return Collections.unmodifiableMap(this.markers);
     }
 
@@ -97,7 +98,7 @@ public class SimpleLayer extends Layer {
      * @param key key
      * @return true if marker is registered
      */
-    public boolean hasMarker(@NotNull String key) {
+    public boolean hasMarker(String key) {
         return this.markers.containsKey(key);
     }
 }

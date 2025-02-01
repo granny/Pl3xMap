@@ -25,12 +25,13 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.renderer.Renderer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown to indicate that a method has been passed an illegal or inappropriate {@link Renderer.Builder} argument.
  */
+@NullMarked
 public class RendererParseException extends ArgumentParseException {
     public static final Reason MUST_SPECIFY_RENDERER = new Reason(() -> Lang.ERROR_MUST_SPECIFY_RENDERER);
     public static final Reason NO_SUCH_RENDERER = new Reason(() -> Lang.ERROR_NO_SUCH_RENDERER);
@@ -41,7 +42,7 @@ public class RendererParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public RendererParseException(@Nullable String input, @NotNull Reason reason) {
+    public RendererParseException(@Nullable String input, Reason reason) {
         super(input, "<renderer>", reason);
     }
 }

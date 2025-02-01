@@ -39,8 +39,9 @@ import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class AbstractDataTask extends Task {
     protected final Gson gson = new GsonBuilder()
             //.setPrettyPrinting()
@@ -51,7 +52,7 @@ public abstract class AbstractDataTask extends Task {
             .create();
 
     protected final World world;
-    protected final Map<@NotNull String, @NotNull Long> lastUpdated = new HashMap<>();
+    protected final Map<String, Long> lastUpdated = new HashMap<>();
     protected final ExecutorService executor;
     protected final String executorName;
 
@@ -101,9 +102,9 @@ public abstract class AbstractDataTask extends Task {
 
     public abstract void parse();
 
-    protected static class Adapter implements JsonSerializer<@NotNull Marker<?>> {
+    protected static class Adapter implements JsonSerializer<Marker<?>> {
         @Override
-        public @NotNull JsonElement serialize(@NotNull Marker<?> marker, @NotNull Type type, @NotNull JsonSerializationContext context) {
+        public JsonElement serialize(Marker<?> marker, Type type, JsonSerializationContext context) {
             JsonObjectWrapper wrapper = new JsonObjectWrapper();
             wrapper.addProperty("type", marker.getType());
             wrapper.addProperty("data", marker);

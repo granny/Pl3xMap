@@ -52,7 +52,7 @@ minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft
 
 log4j = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 
-jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
+jspecifyAnnotations = { group = "org.jspecify", name = "jspecify", version = "1.0.0" }
 
 undertow = { group = "io.undertow", name = "undertow-core", version.ref = "undertow" }
 

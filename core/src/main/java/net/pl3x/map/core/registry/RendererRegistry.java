@@ -35,9 +35,10 @@ import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.renderer.VanillaRenderer;
 import net.pl3x.map.core.renderer.VintageStoryRenderer;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
+@NullMarked
+public class RendererRegistry extends Registry<Renderer.Builder> {
     public static final String BASIC = "basic";
     public static final String BIOMES = "biomes";
     public static final String BLOCKINFO = "blockinfo";
@@ -60,7 +61,7 @@ public class RendererRegistry extends Registry<Renderer.@NotNull Builder> {
         register(NETHER_ROOF, new Renderer.Builder(NETHER_ROOF, "NetherRoof", NetherRoofRenderer.class));
     }
 
-    public @NotNull Renderer createRenderer(@NotNull RegionScanTask task, Renderer.@NotNull Builder builder) {
+    public Renderer createRenderer(RegionScanTask task, Renderer.Builder builder) {
         try {
             return builder.getClazz().getConstructor(RegionScanTask.class, Renderer.Builder.class).newInstance(task, builder);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {

@@ -24,20 +24,21 @@
 package net.pl3x.map.core.world;
 
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BlockState {
     private final Block block;
     private final byte age;
     private final byte moisture;
     private final byte power;
 
-    public BlockState(@NotNull Block block) {
+    public BlockState(Block block) {
         this.block = block;
         this.age = this.moisture = this.power = -1;
     }
 
-    public BlockState(@NotNull Block block, @NotNull Map<@NotNull String, @NotNull String> properties) {
+    public BlockState(Block block, Map<String, String> properties) {
         this.block = block;
 
         byte age = -1;
@@ -62,7 +63,7 @@ public class BlockState {
         this.power = power;
     }
 
-    public @NotNull Block getBlock() {
+    public Block getBlock() {
         return this.block;
     }
 

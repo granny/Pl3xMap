@@ -25,12 +25,13 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.command.Sender.Player;
 import net.pl3x.map.core.configuration.Lang;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown to indicate that a method has been passed an illegal or inappropriate {@link Player} argument.
  */
+@NullMarked
 public class PlayerParseException extends ArgumentParseException {
     public static final Reason MUST_SPECIFY_PLAYER = new Reason(() -> Lang.ERROR_MUST_SPECIFY_PLAYER);
     public static final Reason NO_SUCH_PLAYER = new Reason(() -> Lang.ERROR_NO_SUCH_PLAYER);
@@ -41,7 +42,7 @@ public class PlayerParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public PlayerParseException(@Nullable String input, @NotNull Reason reason) {
+    public PlayerParseException(@Nullable String input, Reason reason) {
         super(input, "<player>", reason);
     }
 }

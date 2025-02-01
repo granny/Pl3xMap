@@ -26,11 +26,12 @@ package net.pl3x.map.core.world;
 import java.util.HashMap;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("unused")
+@NullMarked
 public class Blocks {
-    private static final Map<@NotNull String, @NotNull Block> blocks = new HashMap<>();
+    private static final Map<String, Block> blocks = new HashMap<>();
 
     public static final Block ACACIA_BUTTON = register(new Block(0, "minecraft:acacia_button", 0x000000));
     public static final Block ACACIA_DOOR = register(new Block(1, "minecraft:acacia_door", 0xD87F33));
@@ -1129,7 +1130,7 @@ public class Blocks {
     public static final Block WEATHERED_COPPER_GRATE = register(new Block(1094, "minecraft:weathered_copper_grate", 0x6A9A6F));
     public static final Block WEATHERED_COPPER_TRAPDOOR = register(new Block(1095, "minecraft:weathered_copper_trapdoor", 0x6D9A6E));
 
-    private static @NotNull Block register(@NotNull Block block) {
+    private static Block register(Block block) {
         blocks.put(block.getKey(), block);
         return block;
     }

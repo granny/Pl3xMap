@@ -33,13 +33,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class NetworkManager {
     private final ResourceLocation channel = ResourceLocation.fromNamespaceAndPath(Constants.MODID, Constants.MODID);
     private final Pl3xMapFabricClient mod;
 
-    public NetworkManager(@NotNull Pl3xMapFabricClient mod) {
+    public NetworkManager(Pl3xMapFabricClient mod) {
         this.mod = mod;
     }
 }

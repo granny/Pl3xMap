@@ -26,7 +26,7 @@ package net.pl3x.map.core.util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import net.pl3x.map.core.markers.Point;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * An iterator that spirals around a center point in a clockwise pattern
@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
  *   48 47 46 45 44 43 42
  * </pre>
  */
+@NullMarked
 public class SpiralIterator implements Iterator<Point> {
     protected int currentX;
     protected int currentZ;
@@ -69,7 +70,7 @@ public class SpiralIterator implements Iterator<Point> {
     }
 
     @Override
-    public @NotNull Point next() throws NoSuchElementException {
+    public Point next() throws NoSuchElementException {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
@@ -113,7 +114,7 @@ public class SpiralIterator implements Iterator<Point> {
          *
          * @return next direction
          */
-        public @NotNull Direction next() {
+        public Direction next() {
             return VALUES[(ordinal() + 1) & 3];
         }
     }

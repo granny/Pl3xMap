@@ -25,12 +25,13 @@ package net.pl3x.map.core.event;
 
 import java.util.List;
 import net.pl3x.map.core.Pl3xMap;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class Event {
     public void callEvent() {
         Pl3xMap.api().getEventRegistry().callEvent(this);
     }
 
-    public abstract @NotNull List<@NotNull RegisteredHandler> getHandlers();
+    public abstract List<RegisteredHandler> getHandlers();
 }

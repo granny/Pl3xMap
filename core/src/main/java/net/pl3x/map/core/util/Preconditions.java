@@ -13,9 +13,10 @@
  */
 package net.pl3x.map.core.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Preconditions {
     public static void checkArgument(boolean condition, @Nullable Object error) {
         if (!condition) {
@@ -23,7 +24,7 @@ public class Preconditions {
         }
     }
 
-    public static <T> @NotNull T checkNotNull(@Nullable T value, @Nullable Object error) {
+    public static <T> T checkNotNull(@Nullable T value, @Nullable Object error) {
         if (value == null) {
             throw new NullPointerException(String.valueOf(error));
         }

@@ -25,8 +25,9 @@ package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class HighContrastHeightmap extends Heightmap {
     public HighContrastHeightmap() {
         super("high_contrast");
@@ -38,7 +39,7 @@ public class HighContrastHeightmap extends Heightmap {
 
     @Override
     @SuppressWarnings("DuplicatedCode")
-    public int getColor(@NotNull Region region, int blockX, int blockZ) {
+    public int getColor(Region region, int blockX, int blockZ) {
         Chunk.BlockData origin = region.getWorld().getChunk(region, blockX >> 4, blockZ >> 4).getData(blockX, blockZ);
         Chunk.BlockData west = region.getWorld().getChunk(region, (blockX - 1) >> 4, blockZ >> 4).getData(blockX - 1, blockZ);
         Chunk.BlockData north = region.getWorld().getChunk(region, blockX >> 4, (blockZ - 1) >> 4).getData(blockX, blockZ - 1);

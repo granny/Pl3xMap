@@ -33,12 +33,13 @@ import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class FlowerMapRenderer extends Renderer {
-    private final Map<@NotNull Block, @NotNull Integer> colorMap = new HashMap<>();
+    private final Map<Block, Integer> colorMap = new HashMap<>();
 
-    public FlowerMapRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
+    public FlowerMapRenderer(RegionScanTask task, Builder builder) {
         super(task, builder);
         this.colorMap.put(Blocks.DANDELION, 0xFFFF00);
         this.colorMap.put(Blocks.POPPY, 0xFF0000);
@@ -55,7 +56,7 @@ public class FlowerMapRenderer extends Renderer {
     }
 
     @Override
-    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
         int pixelColor = 0x7F7F7F;
 
         Biome biome = data.getBiome(region, blockX, blockZ);

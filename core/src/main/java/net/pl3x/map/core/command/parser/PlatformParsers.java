@@ -5,7 +5,10 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.parser.ParserDescriptor;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public interface PlatformParsers {
     ParserDescriptor<Sender, ?> columnPosParser();
 
@@ -13,5 +16,5 @@ public interface PlatformParsers {
 
     ParserDescriptor<Sender, ?> playerSelectorParser();
 
-    Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context);
+    @Nullable Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context);
 }

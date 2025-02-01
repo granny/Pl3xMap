@@ -13,7 +13,10 @@ import org.incendo.cloud.bukkit.parser.location.Location2DParser;
 import org.incendo.cloud.bukkit.parser.selector.SinglePlayerSelectorParser;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.parser.ParserDescriptor;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class BukkitParsers implements PlatformParsers {
     @Override
     public ParserDescriptor<Sender, ?> columnPosParser() {
@@ -35,7 +38,7 @@ public class BukkitParsers implements PlatformParsers {
     }
 
     @Override
-    public Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context) {
+    public @Nullable Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context) {
         Sender sender = context.sender();
         SinglePlayerSelector playerSelector = context.getOrDefault(name, null);
         if (playerSelector == null) {

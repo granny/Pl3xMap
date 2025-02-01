@@ -37,9 +37,10 @@ import net.querz.nbt.tag.IntArrayTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
 import net.querz.nbt.tag.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class ChunkAnvil116 extends Chunk {
     private int sectionMin = Integer.MAX_VALUE;
 
@@ -51,7 +52,7 @@ public class ChunkAnvil116 extends Chunk {
 
     private final boolean full;
 
-    protected ChunkAnvil116(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
+    protected ChunkAnvil116(World world, Region region, CompoundTag chunkTag, int index) {
         super(world, region, chunkTag, index);
 
         CompoundTag levelData = chunkTag.getCompoundTag("Level");
@@ -107,7 +108,7 @@ public class ChunkAnvil116 extends Chunk {
     }
 
     @Override
-    public @NotNull BlockState getBlockState(int x, int y, int z) {
+    public BlockState getBlockState(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
         return section == null ? Blocks.AIR.getDefaultState() : section.getBlockState(x, y, z);
@@ -124,7 +125,7 @@ public class ChunkAnvil116 extends Chunk {
     }
 
     @Override
-    public @NotNull Biome getBiome(int x, int y, int z) {
+    public Biome getBiome(int x, int y, int z) {
         if (this.biomes.length < 16) {
             return Biome.DEFAULT;
         }
@@ -164,7 +165,7 @@ public class ChunkAnvil116 extends Chunk {
         private BlockState[] palette = new BlockState[0];
         private final int bitsPerBlock;
 
-        public Section(@NotNull CompoundTag sectionData) {
+        public Section(CompoundTag sectionData) {
             this.sectionY = sectionData.getNumber("Y").intValue();
             this.blockLight = sectionData.getByteArray("BlockLight");
             this.blocks = sectionData.getLongArray("BlockStates");
@@ -197,7 +198,7 @@ public class ChunkAnvil116 extends Chunk {
             this.bitsPerBlock = this.blocks.length >> 6;
         }
 
-        public @NotNull BlockState getBlockState(int x, int y, int z) {
+        public BlockState getBlockState(int x, int y, int z) {
             if (this.palette.length == 1) {
                 return this.palette[0];
             }

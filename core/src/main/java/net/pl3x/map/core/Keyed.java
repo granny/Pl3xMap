@@ -25,12 +25,13 @@ package net.pl3x.map.core;
 
 import java.util.Objects;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a key identified object.
  */
+@NullMarked
 public abstract class Keyed {
     private final String key;
 
@@ -39,7 +40,7 @@ public abstract class Keyed {
      *
      * @param key key for object
      */
-    public Keyed(@NotNull String key) {
+    public Keyed(String key) {
         this.key = Preconditions.checkNotNull(key, "Key is null");
     }
 
@@ -48,7 +49,7 @@ public abstract class Keyed {
      *
      * @return the key
      */
-    public @NotNull String getKey() {
+    public String getKey() {
         return this.key;
     }
 
@@ -73,7 +74,7 @@ public abstract class Keyed {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return this.key;
     }
 }

@@ -43,12 +43,13 @@ import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BukkitWorld extends World {
     private final ServerLevel level;
 
-    public BukkitWorld(@NotNull ServerLevel level, @NotNull String name) {
+    public BukkitWorld(ServerLevel level, String name) {
         super(
                 name,
                 level.getSeed(),
@@ -88,8 +89,8 @@ public class BukkitWorld extends World {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public <T> @NotNull T getLevel() {
-        return (@NotNull T) this.level;
+    public <T> T getLevel() {
+        return (T) this.level;
     }
 
     @Override
@@ -138,7 +139,7 @@ public class BukkitWorld extends World {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Player> getPlayers() {
+    public Collection<Player> getPlayers() {
         return this.<ServerLevel>getLevel().players().stream()
                 .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
                 .filter(Objects::nonNull)
@@ -146,7 +147,7 @@ public class BukkitWorld extends World {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "BukkitWorld{"
                 + "name=" + getName()
                 + ",seed=" + getSeed()

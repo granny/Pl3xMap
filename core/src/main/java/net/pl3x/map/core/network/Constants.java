@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.core.network;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class Constants {
     public static final String MODID = "pl3xmap";
 

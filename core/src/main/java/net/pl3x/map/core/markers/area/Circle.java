@@ -27,9 +27,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import net.pl3x.map.core.util.Mathf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Circle implements Area {
     private final int centerX;
     private final int centerZ;
@@ -84,7 +85,7 @@ public class Circle implements Area {
         return map;
     }
 
-    public static @NotNull Circle deserialize(Map<String, Object> map) {
+    public static Circle deserialize(Map<String, Object> map) {
         return new Circle(
                 (int) map.get("center-x"),
                 (int) map.get("center-z"),
@@ -115,7 +116,7 @@ public class Circle implements Area {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Circle{"
                 + "centerX=" + getCenterX()
                 + ",centerZ=" + getCenterZ()

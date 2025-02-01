@@ -29,10 +29,11 @@ import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.util.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("UnusedReturnValue")
-public class IconRegistry extends Registry<@NotNull IconImage> {
+@NullMarked
+public class IconRegistry extends Registry<IconImage> {
     private Path registeredDir;
 
     /**
@@ -55,7 +56,7 @@ public class IconRegistry extends Registry<@NotNull IconImage> {
      *
      * @return icons directory
      */
-    public @NotNull Path getDir() {
+    public Path getDir() {
         return this.registeredDir;
     }
 
@@ -69,7 +70,7 @@ public class IconRegistry extends Registry<@NotNull IconImage> {
      * @throws IllegalStateException if image failed to save to disk
      */
     @Override
-    public @NotNull IconImage register(@NotNull String id, @NotNull IconImage image) {
+    public IconImage register(String id, IconImage image) {
         try {
             String filename = id + "." + image.getType();
             File file = getDir().resolve(filename).toFile();

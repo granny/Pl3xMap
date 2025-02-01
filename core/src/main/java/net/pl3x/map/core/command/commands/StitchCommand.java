@@ -48,11 +48,12 @@ import net.pl3x.map.core.renderer.Renderer;
 import net.pl3x.map.core.world.World;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class StitchCommand extends Pl3xMapCommand {
-    public StitchCommand(@NotNull CommandHandler handler) {
+    public StitchCommand(CommandHandler handler) {
         super(handler);
     }
 
@@ -67,11 +68,11 @@ public class StitchCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
+    private void execute(CommandContext<Sender> context) {
         CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
-    private void executeAsync(@NotNull CommandContext<@NotNull Sender> context) {
+    private void executeAsync(CommandContext<Sender> context) {
         Sender sender = context.sender();
         World world = context.get("world");
         Renderer.Builder renderer = context.get("renderer");
@@ -121,8 +122,7 @@ public class StitchCommand extends Pl3xMapCommand {
         );
     }
 
-    @Nullable
-    private static Map<Point, Path> getTiles(Path dir, Sender sender) {
+    private static @Nullable Map<Point, Path> getTiles(Path dir, Sender sender) {
         Map<Point, Path> pngFiles = new HashMap<>();
         try (Stream<Path> stream = Files.list(dir)) {
             stream.filter(World.PNG_MATCHER::matches).forEach(path -> {
@@ -152,7 +152,6 @@ public class StitchCommand extends Pl3xMapCommand {
         return pngFiles;
     }
 
-    @NotNull
     private static String stitchImage(int sizeX, int sizeZ, Map<Point, Path> pngFiles, int minX, int minZ, World world, Renderer.Builder renderer, int zoom) {
         Path dir;
         IO.Type io = IO.get(Config.WEB_TILE_FORMAT);

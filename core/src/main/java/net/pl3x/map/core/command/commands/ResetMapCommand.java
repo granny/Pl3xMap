@@ -38,10 +38,11 @@ import net.pl3x.map.core.world.World;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.minecraft.extras.RichDescription;
 import org.incendo.cloud.processors.confirmation.ConfirmationManager;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ResetMapCommand extends Pl3xMapCommand {
-    public ResetMapCommand(@NotNull CommandHandler handler) {
+    public ResetMapCommand(CommandHandler handler) {
         super(handler);
     }
 
@@ -55,11 +56,11 @@ public class ResetMapCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
+    private void execute(CommandContext<Sender> context) {
         CompletableFuture.runAsync(() -> executeAsync(context));
     }
 
-    private void executeAsync(@NotNull CommandContext<@NotNull Sender> context) {
+    private void executeAsync(CommandContext<Sender> context) {
         Sender sender = context.sender();
         World world = context.get("world");
 

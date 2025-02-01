@@ -24,8 +24,9 @@
 package net.pl3x.map.core.util;
 
 import net.pl3x.map.core.markers.Point;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class Mathf {
     public static float lerp(float a, float b, float t) {
         return a + t * (b - a);
@@ -59,7 +60,7 @@ public class Mathf {
         return 1 << value;
     }
 
-    public static long asLong(@NotNull Point pos) {
+    public static long asLong(Point pos) {
         return asLong(pos.x(), pos.z());
     }
 

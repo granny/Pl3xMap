@@ -36,12 +36,13 @@ import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.incendo.cloud.minecraft.extras.RichDescription;
 import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.SuggestionProvider;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class HelpCommand extends Pl3xMapCommand {
-    private final MinecraftHelp<@NotNull Sender> minecraftHelp;
+    private final MinecraftHelp<Sender> minecraftHelp;
 
-    public HelpCommand(@NotNull CommandHandler handler) {
+    public HelpCommand(CommandHandler handler) {
         super(handler);
         this.minecraftHelp = MinecraftHelp.<Sender>builder()
                 .commandManager(handler.getManager())

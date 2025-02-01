@@ -27,7 +27,9 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.pl3x.map.core.configuration.Config;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class Network {
     public static final String CHANNEL = Constants.MODID + ":" + Constants.MODID;
 

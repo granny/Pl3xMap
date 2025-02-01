@@ -30,18 +30,19 @@ import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a circle marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Circle extends Marker<@NotNull Circle> {
+@NullMarked
+public class Circle extends Marker<Circle> {
     private Point center;
     private double radius;
 
-    private Circle(@NotNull String key) {
+    private Circle(String key) {
         super("circ", key);
     }
 
@@ -53,7 +54,7 @@ public class Circle extends Marker<@NotNull Circle> {
      * @param centerZ center z location
      * @param radius  circle radius
      */
-    public Circle(@NotNull String key, double centerX, double centerZ, double radius) {
+    public Circle(String key, double centerX, double centerZ, double radius) {
         this(key);
         setCenter(Point.of(centerX, centerZ));
         setRadius(radius);
@@ -66,7 +67,7 @@ public class Circle extends Marker<@NotNull Circle> {
      * @param center center location
      * @param radius circle radius
      */
-    public Circle(@NotNull String key, @NotNull Point center, double radius) {
+    public Circle(String key, Point center, double radius) {
         this(key);
         setCenter(center);
         setRadius(radius);
@@ -81,7 +82,7 @@ public class Circle extends Marker<@NotNull Circle> {
      * @param radius  circle radius
      * @return a new circle
      */
-    public static @NotNull Circle of(@NotNull String key, double centerX, double centerZ, double radius) {
+    public static Circle of(String key, double centerX, double centerZ, double radius) {
         return new Circle(key, centerX, centerZ, radius);
     }
 
@@ -93,7 +94,7 @@ public class Circle extends Marker<@NotNull Circle> {
      * @param radius circle radius
      * @return a new circle
      */
-    public static @NotNull Circle of(@NotNull String key, @NotNull Point center, double radius) {
+    public static Circle of(String key, Point center, double radius) {
         return new Circle(key, center, radius);
     }
 
@@ -102,7 +103,7 @@ public class Circle extends Marker<@NotNull Circle> {
      *
      * @return center point
      */
-    public @NotNull Point getCenter() {
+    public Point getCenter() {
         return this.center;
     }
 
@@ -112,7 +113,7 @@ public class Circle extends Marker<@NotNull Circle> {
      * @param center new center
      * @return this circle
      */
-    public @NotNull Circle setCenter(@NotNull Point center) {
+    public Circle setCenter(Point center) {
         this.center = Preconditions.checkNotNull(center, "Circle center is null");
         return this;
     }
@@ -132,13 +133,13 @@ public class Circle extends Marker<@NotNull Circle> {
      * @param radius new radius
      * @return this circle
      */
-    public @NotNull Circle setRadius(double radius) {
+    public Circle setRadius(double radius) {
         this.radius = radius;
         return this;
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("center", getCenter());
@@ -147,7 +148,7 @@ public class Circle extends Marker<@NotNull Circle> {
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull Circle fromJson(@NotNull JsonObject obj) {
+    public static Circle fromJson(JsonObject obj) {
         JsonElement el;
         Circle circle = Circle.of(
                 obj.get("key").getAsString(),
@@ -183,7 +184,7 @@ public class Circle extends Marker<@NotNull Circle> {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Circle{"
                 + "key=" + getKey()
                 + ",center=" + getCenter()

@@ -33,15 +33,16 @@ import net.pl3x.map.core.markers.JsonSerializable;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.util.Preconditions;
 import net.pl3x.map.core.util.TickUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a layer of markers and other metadata.
  */
 @SuppressWarnings("UnusedReturnValue")
+@NullMarked
 public abstract class Layer extends Keyed implements JsonSerializable {
-    private Supplier<@NotNull String> labelSupplier;
+    private Supplier<String> labelSupplier;
     private int updateInterval = TickUtil.toTicks(15);
     private boolean showControls = true;
     private boolean defaultHidden = false;
@@ -56,7 +57,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      *
      * @param key key for layer
      */
-    public Layer(@NotNull String key, @NotNull Supplier<@NotNull String> labelSupplier) {
+    public Layer(String key, Supplier<String> labelSupplier) {
         super(key);
         this.labelSupplier = labelSupplier;
     }
@@ -66,7 +67,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      *
      * @return layer label
      */
-    public @NotNull String getLabel() {
+    public String getLabel() {
         return this.labelSupplier.get();
     }
 
@@ -76,7 +77,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param label new label
      * @return this layer
      */
-    public @NotNull Layer setLabel(@NotNull String label) {
+    public Layer setLabel(String label) {
         Preconditions.checkNotNull(label, "Layer label is null");
         this.labelSupplier = () -> label;
         return this;
@@ -88,7 +89,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param labelSupplier new label supplier
      * @return this layer
      */
-    public @NotNull Layer setLabel(@NotNull Supplier<@NotNull String> labelSupplier) {
+    public Layer setLabel(Supplier<String> labelSupplier) {
         Preconditions.checkNotNull(labelSupplier, "Layer label supplier is null");
         this.labelSupplier = labelSupplier;
         return this;
@@ -119,7 +120,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param updateInterval new update interval
      * @return this layer
      */
-    public @NotNull Layer setUpdateInterval(int updateInterval) {
+    public Layer setUpdateInterval(int updateInterval) {
         this.setUpdateInterval(updateInterval, false);
         return this;
     }
@@ -131,7 +132,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param ticks set to true to treat the interval value as ticks instead of seconds
      * @return this layer
      */
-    public @NotNull Layer setUpdateInterval(int updateInterval, boolean ticks) {
+    public Layer setUpdateInterval(int updateInterval, boolean ticks) {
         this.updateInterval = ticks ? updateInterval : TickUtil.toTicks(updateInterval);
         return this;
     }
@@ -151,7 +152,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param showControls true to show
      * @return this layer
      */
-    public @NotNull Layer setShowControls(boolean showControls) {
+    public Layer setShowControls(boolean showControls) {
         this.showControls = showControls;
         return this;
     }
@@ -171,7 +172,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param defaultHidden true to hide by default
      * @return this layer
      */
-    public @NotNull Layer setDefaultHidden(boolean defaultHidden) {
+    public Layer setDefaultHidden(boolean defaultHidden) {
         this.defaultHidden = defaultHidden;
         return this;
     }
@@ -195,7 +196,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param priority new priority
      * @return this layer
      */
-    public @NotNull Layer setPriority(int priority) {
+    public Layer setPriority(int priority) {
         this.priority = priority;
         return this;
     }
@@ -223,7 +224,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param zIndex new z-index
      * @return this layer
      */
-    public @NotNull Layer setZIndex(@Nullable Integer zIndex) {
+    public Layer setZIndex(@Nullable Integer zIndex) {
         this.zIndex = zIndex;
         return this;
     }
@@ -245,7 +246,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param pane new map pane
      * @return this layer
      */
-    public @NotNull Layer setPane(@Nullable String pane) {
+    public Layer setPane(@Nullable String pane) {
         this.pane = pane;
         return this;
     }
@@ -265,7 +266,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param css new custom CSS
      * @return this layer
      */
-    public @NotNull Layer setCss(@Nullable String css) {
+    public Layer setCss(@Nullable String css) {
         this.css = css;
         return this;
     }
@@ -285,7 +286,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      * @param liveUpdate true to push this layer through sse.
      * @return this layer
      */
-    public @NotNull Layer setLiveUpdate(@Nullable boolean liveUpdate) {
+    public Layer setLiveUpdate(@Nullable boolean liveUpdate) {
         this.liveUpdate = liveUpdate;
         return this;
     }
@@ -295,9 +296,9 @@ public abstract class Layer extends Keyed implements JsonSerializable {
      *
      * @return markers to display
      */
-    public abstract @NotNull Collection<@NotNull Marker<?>> getMarkers();
+    public abstract Collection<Marker<?>> getMarkers();
 
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("label", getLabel());
@@ -340,7 +341,7 @@ public abstract class Layer extends Keyed implements JsonSerializable {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Layer{"
                 + "key=" + getKey()
                 + ",label=" + getLabel()

@@ -23,8 +23,11 @@
  */
 package net.pl3x.map.fabric.server.duck;
 
-public interface AccessServerPlayer {
-    boolean isHidden();
+import org.jspecify.annotations.NullMarked;
 
-    void setHidden(boolean hidden);
+@NullMarked
+public interface AccessServerPlayer {
+    boolean pl3xMap$isHidden();
+
+    void pl3xMap$setHidden(boolean hidden);
 }

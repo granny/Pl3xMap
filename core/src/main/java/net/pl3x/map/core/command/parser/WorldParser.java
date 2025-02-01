@@ -28,27 +28,27 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.command.exception.WorldParseException;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.parser.ParserDescriptor;
 import org.incendo.cloud.suggestion.BlockingSuggestionProvider;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Parser that parses strings into {@link World}s.
  *
  * @param <C> command sender type
  */
-public class WorldParser<C> implements ArgumentParser<@NotNull C, @NotNull World>, BlockingSuggestionProvider.Strings<C> {
+@NullMarked
+public class WorldParser<C> implements ArgumentParser<C, World>, BlockingSuggestionProvider.Strings<C> {
     public static <C> ParserDescriptor<C, World> parser() {
         return ParserDescriptor.of(new WorldParser<>(), World.class);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull @NotNull World> parse(@NonNull CommandContext<@NonNull @NotNull C> commandContext, @NonNull CommandInput commandInput) {
+    public ArgumentParseResult<World> parse(CommandContext<C> commandContext, CommandInput commandInput) {
         String input = commandInput.peekString();
         if (input.startsWith("\"")) {
             commandInput.moveCursor(1);
@@ -77,7 +77,7 @@ public class WorldParser<C> implements ArgumentParser<@NotNull C, @NotNull World
         return ArgumentParseResult.success(world);
     }
 
-    public static @NotNull World resolveWorld(@NotNull CommandContext<@NotNull Sender> context, @NotNull String name) {
+    public static World resolveWorld(CommandContext<Sender> context, String name) {
         Sender sender = context.sender();
         World world = context.getOrDefault(name, null);
         if (world != null) {
@@ -98,7 +98,7 @@ public class WorldParser<C> implements ArgumentParser<@NotNull C, @NotNull World
     }
 
     @Override
-    public @NonNull Iterable<@NonNull String> stringSuggestions(@NonNull CommandContext<C> commandContext, @NonNull CommandInput input) {
+    public Iterable<String> stringSuggestions(CommandContext<C> commandContext, CommandInput input) {
         return Pl3xMap.api().getWorldRegistry()
                 .values().stream()
                 .filter(World::isEnabled)

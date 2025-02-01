@@ -42,19 +42,20 @@ import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BlockInfoRenderer extends Renderer {
-    private static final Map<@NotNull Path, @NotNull ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+    private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     private ByteBuffer byteBuffer;
 
-    public BlockInfoRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
+    public BlockInfoRenderer(RegionScanTask task, Builder builder) {
         super(task, builder);
     }
 
     @Override
-    public void allocateData(@NotNull Point region) {
+    public void allocateData(Point region) {
         this.byteBuffer = ByteBuffer.allocate(512 * 512 * 4 + 12);
         Path path = getWorld().getTilesDirectory()
                 .resolve(String.format(TileImage.DIR_PATH, 0, getKey()))
@@ -69,7 +70,7 @@ public class BlockInfoRenderer extends Renderer {
     }
 
     @Override
-    public void saveData(@NotNull Point region) {
+    public void saveData(Point region) {
         Path tilesDir = getWorld().getTilesDirectory();
         for (int zoom = 0; zoom <= getWorld().getConfig().ZOOM_MAX_OUT; zoom++) {
             Path dirPath = tilesDir.resolve(String.format(TileImage.DIR_PATH, zoom, getKey()));
@@ -144,7 +145,7 @@ public class BlockInfoRenderer extends Renderer {
     }
 
     @Override
-    public void scanData(@NotNull Region region) {
+    public void scanData(Region region) {
         this.byteBuffer.clear();
 
         this.byteBuffer.put(0, ByteUtil.toBytes(0x706C3378)); // pl3x
@@ -155,7 +156,7 @@ public class BlockInfoRenderer extends Renderer {
     }
 
     @Override
-    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
         boolean fluid = data.getFluidState() != null;
 
         int y = (fluid ? data.getFluidY() : data.getBlockY()) - getWorld().getMinBuildHeight();

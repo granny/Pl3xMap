@@ -40,7 +40,9 @@ import net.pl3x.map.fabric.common.network.ClientboundMapPayload;
 import net.pl3x.map.fabric.common.network.ClientboundServerPayload;
 import net.pl3x.map.fabric.common.network.ServerboundMapPayload;
 import net.pl3x.map.fabric.common.network.ServerboundServerPayload;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class FabricNetwork extends Network {
     private final Pl3xMapFabricServer mod;
 

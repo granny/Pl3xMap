@@ -37,9 +37,10 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.Block;
 import net.pl3x.map.core.world.Blocks;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-public class BlockRegistry extends Registry<@NotNull Block> {
+@NullMarked
+public class BlockRegistry extends Registry<Block> {
     private static final Gson GSON = new GsonBuilder().create();
     public static final int MAX_INDEX = 2047;
 
@@ -89,7 +90,7 @@ public class BlockRegistry extends Registry<@NotNull Block> {
         }
     }
 
-    public @NotNull Block register(@NotNull String id, int color) {
+    public Block register(String id, int color) {
         Block block = super.get(id);
         if (block != null) {
             return block; // block already registered
@@ -101,7 +102,7 @@ public class BlockRegistry extends Registry<@NotNull Block> {
     }
 
     @Override
-    public @NotNull Block get(@NotNull String id) {
+    public Block get(String id) {
         return getOrDefault(id, Blocks.AIR);
     }
 

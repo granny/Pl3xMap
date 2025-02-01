@@ -24,15 +24,16 @@
 package net.pl3x.map.core.image.io;
 
 import java.awt.image.BufferedImage;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class Bmp extends IO.Type {
     public Bmp() {
         super("bmp");
     }
 
     @Override
-    public @NotNull BufferedImage createBuffer() {
+    public BufferedImage createBuffer() {
         return new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
     }
 

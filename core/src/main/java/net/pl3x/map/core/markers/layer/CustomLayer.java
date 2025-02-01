@@ -34,18 +34,19 @@ import java.util.function.Supplier;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents a custom layer of markers and other metadata.
  */
+@NullMarked
 public class CustomLayer extends WorldLayer {
     /**
      * Create a new custom layer.
      *
      * @param key key for layer
      */
-    public CustomLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
+    public CustomLayer(String key, World world, Supplier<String> labelSupplier) {
         super(key, world, labelSupplier);
     }
 
@@ -64,7 +65,7 @@ public class CustomLayer extends WorldLayer {
         world.getLayerRegistry().register(layer.getKey(), layer);
     }
 
-    public static @NotNull CustomLayer fromJson(@NotNull World world, @NotNull JsonObject obj) {
+    public static CustomLayer fromJson(World world, JsonObject obj) {
         JsonElement el;
         CustomLayer layer = new CustomLayer(obj.get("key").getAsString(), world, () -> obj.get("label").getAsString());
         if ((el = obj.get("updateInterval")) != null && !(el instanceof JsonNull)) layer.setUpdateInterval(el.getAsInt());

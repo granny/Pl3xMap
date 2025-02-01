@@ -47,6 +47,8 @@ dependencies {
 
     implementation(project(path = ":core", configuration = "shadow"))
 
+    implementation(libs.jspecifyAnnotations)
+
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
 

@@ -42,8 +42,9 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class UpdateSettingsData extends Task {
     private int fileTick;
     private final Gson gson = new GsonBuilder()
@@ -87,7 +88,7 @@ public class UpdateSettingsData extends Task {
         }, this.executor);
     }
 
-    private @NotNull List<@NotNull Map<@NotNull String, @NotNull Object>> parseWorlds() {
+    private List<Map<String, Object>> parseWorlds() {
         List<Map<String, Object>> worldSettings = new ArrayList<>();
         Pl3xMap.api().getWorldRegistry().entrySet().forEach(entry -> {
             World world = entry.getValue();

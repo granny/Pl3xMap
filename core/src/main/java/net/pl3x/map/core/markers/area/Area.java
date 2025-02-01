@@ -25,7 +25,9 @@ package net.pl3x.map.core.markers.area;
 
 import java.util.Map;
 import net.pl3x.map.core.world.World;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public interface Area {
     boolean containsBlock(int blockX, int blockZ);
 

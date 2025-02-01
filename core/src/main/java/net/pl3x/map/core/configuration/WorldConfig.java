@@ -32,10 +32,11 @@ import net.pl3x.map.core.markers.area.Area;
 import net.pl3x.map.core.markers.area.Border;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("CanBeFinal")
+@NullMarked
 public final class WorldConfig extends AbstractConfig {
     @Key("enabled")
     @Comment("""
@@ -55,7 +56,7 @@ public final class WorldConfig extends AbstractConfig {
             nether_basic, nether_biomes, nether_night, nether_roof,
             the_end_basic, the_end_biomes, the_end_night,
             flowermap, inhabited, vanilla""")
-    public Map<@NotNull String, @NotNull String> RENDER_RENDERERS = new LinkedHashMap<>() {{
+    public Map<String, String> RENDER_RENDERERS = new LinkedHashMap<>() {{
         put("vintage_story", "overworld_basic");
     }};
 
@@ -174,7 +175,7 @@ public final class WorldConfig extends AbstractConfig {
 
     private final World world;
 
-    public WorldConfig(@NotNull World world) {
+    public WorldConfig(World world) {
         this.world = world;
 
         // we need an instance of the world to get the border
@@ -191,12 +192,12 @@ public final class WorldConfig extends AbstractConfig {
     }
 
     @Override
-    protected @NotNull Object getClassObject() {
+    protected Object getClassObject() {
         return this;
     }
 
     @Override
-    protected @Nullable Object getValue(@NotNull String path, @Nullable Object def) {
+    protected @Nullable Object getValue(String path, @Nullable Object def) {
         if (getConfig().get("world-settings.default." + path) == null) {
             set("world-settings.default." + path, def);
         }
@@ -205,12 +206,12 @@ public final class WorldConfig extends AbstractConfig {
     }
 
     @Override
-    protected void setComment(@NotNull String path, @Nullable String comment) {
+    protected void setComment(String path, @Nullable String comment) {
         getConfig().setComment("world-settings.default." + path, comment);
     }
 
     @Override
-    protected @Nullable Object get(@NotNull String path) {
+    protected @Nullable Object get(String path) {
         if (!path.contains("render.visible-areas")) {
             return super.get(path);
         }
@@ -228,7 +229,7 @@ public final class WorldConfig extends AbstractConfig {
     }
 
     @Override
-    protected void set(@NotNull String path, @Nullable Object value) {
+    protected void set(String path, @Nullable Object value) {
         if (value != null && path.contains("render.visible-areas")) {
             @SuppressWarnings("unchecked")
             List<Area> list = (List<Area>) value;

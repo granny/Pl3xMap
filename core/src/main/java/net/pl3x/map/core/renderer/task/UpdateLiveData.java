@@ -36,16 +36,17 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.layer.Layer;
 import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class UpdateLiveData extends AbstractDataTask {
-    private final Cache<@NotNull String, Integer> markerCache = CacheBuilder.newBuilder()
+    private final Cache<String, Integer> markerCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
     private Map<String, CompletableFuture<Void>> liveUpdateFutures;
 
-    public UpdateLiveData(@NotNull World world, int threads) {
+    public UpdateLiveData(World world, int threads) {
         super(1, true, world, "Pl3xMap-LiveData", threads);
         this.liveUpdateFutures = new HashMap<>();
     }

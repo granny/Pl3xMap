@@ -28,14 +28,15 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Fill properties of a marker.
  */
 @SuppressWarnings("unused")
-public class Fill extends Option<@NotNull Fill> {
+@NullMarked
+public class Fill extends Option<Fill> {
     private Boolean enabled;
     private Type type;
     private Integer color;
@@ -83,7 +84,7 @@ public class Fill extends Option<@NotNull Fill> {
      * @param enabled whether fill is enabled
      * @return this fill rule
      */
-    public @NotNull Fill setEnabled(@Nullable Boolean enabled) {
+    public Fill setEnabled(@Nullable Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -109,7 +110,7 @@ public class Fill extends Option<@NotNull Fill> {
      * @return this fill rule
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">MDN fill-rule</a>
      */
-    public @NotNull Fill setType(@Nullable Type type) {
+    public Fill setType(@Nullable Type type) {
         this.type = type;
         return this;
     }
@@ -133,7 +134,7 @@ public class Fill extends Option<@NotNull Fill> {
      * @param color new argb color
      * @return this fill rule
      */
-    public @NotNull Fill setColor(@Nullable Integer color) {
+    public Fill setColor(@Nullable Integer color) {
         this.color = color;
         return this;
     }
@@ -146,7 +147,7 @@ public class Fill extends Option<@NotNull Fill> {
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("enabled", isEnabled());
         wrapper.addProperty("type", getType());
@@ -154,7 +155,7 @@ public class Fill extends Option<@NotNull Fill> {
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull Fill fromJson(@NotNull JsonObject obj) {
+    public static Fill fromJson(JsonObject obj) {
         JsonElement el;
         Fill fill = new Fill();
         if ((el = obj.get("enabled")) != null && !(el instanceof JsonNull)) fill.setEnabled(el.getAsBoolean());
@@ -186,7 +187,7 @@ public class Fill extends Option<@NotNull Fill> {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Fill{enabled=" + isEnabled() + ",type=" + getType() + ",color=" + getColor() + "}";
     }
 

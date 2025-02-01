@@ -39,8 +39,9 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class RegionFileWatcher implements Runnable {
     private final World world;
 
@@ -50,7 +51,7 @@ public class RegionFileWatcher implements Runnable {
 
     private boolean stopped;
 
-    public RegionFileWatcher(@NotNull World world) {
+    public RegionFileWatcher(World world) {
         this.world = world;
     }
 

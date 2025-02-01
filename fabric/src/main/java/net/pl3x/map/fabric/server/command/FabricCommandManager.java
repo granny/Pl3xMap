@@ -35,11 +35,12 @@ import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.fabric.FabricServerCommandManager;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class FabricCommandManager implements CommandHandler {
-    private final FabricServerCommandManager<@NotNull Sender> manager;
-    private final Command.Builder<@NotNull Sender> root;
+    private final FabricServerCommandManager<Sender> manager;
+    private final Command.Builder<Sender> root;
 
     public FabricCommandManager() {
         this.manager = new FabricServerCommandManager<Sender>(
@@ -47,7 +48,7 @@ public class FabricCommandManager implements CommandHandler {
                 SenderMapper.create(FabricSender::create, Sender::getSender)
         );
 
-        CloudBrigadierManager<@NotNull Sender, ?> brigadier = getManager().brigadierManager();
+        CloudBrigadierManager<Sender, ?> brigadier = getManager().brigadierManager();
         brigadier.setNativeNumberSuggestions(false);
         brigadier.registerMapping(new TypeToken<WorldParser<Sender>>() {
         }, builder -> builder.cloudSuggestions().toConstant(DimensionArgument.dimension()));
@@ -60,17 +61,17 @@ public class FabricCommandManager implements CommandHandler {
     }
 
     @Override
-    public @NotNull FabricServerCommandManager<@NotNull Sender> getManager() {
+    public FabricServerCommandManager<Sender> getManager() {
         return this.manager;
     }
 
     @Override
-    public @NotNull PlatformParsers getPlatformParsers() {
+    public PlatformParsers getPlatformParsers() {
         return new FabricParsers();
     }
 
     @Override
-    public Command.@NotNull Builder<@NotNull Sender> getRoot() {
+    public Command.Builder<Sender> getRoot() {
         return this.root;
     }
 }

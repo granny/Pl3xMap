@@ -5,7 +5,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.network.Constants;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record ServerboundServerPayload(int protocol) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, ServerboundServerPayload> STREAM_CODEC = CustomPacketPayload.codec(ServerboundServerPayload::write, ServerboundServerPayload::new);
     public static final Type<ServerboundServerPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "server_server_data"));

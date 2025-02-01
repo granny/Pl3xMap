@@ -25,16 +25,17 @@ package net.pl3x.map.core.event.world;
 
 import net.pl3x.map.core.event.Event;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class WorldEvent extends Event {
     private final World world;
 
-    public WorldEvent(@NotNull World world) {
+    public WorldEvent(World world) {
         this.world = world;
     }
 
-    public @NotNull World getWorld() {
+    public World getWorld() {
         return this.world;
     }
 }

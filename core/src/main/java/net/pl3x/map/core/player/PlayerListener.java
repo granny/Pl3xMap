@@ -23,18 +23,19 @@
  */
 package net.pl3x.map.core.player;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Player event listener.
  */
+@NullMarked
 public class PlayerListener {
     /**
      * Fired when a player joins the server.
      *
      * @param player player that joined
      */
-    public void onJoin(@NotNull Player player) {
+    public void onJoin(Player player) {
         if (player.isHidden()) {
             player.setHidden(true, false);
         }
@@ -46,6 +47,6 @@ public class PlayerListener {
      *
      * @param player player that left
      */
-    public void onQuit(@NotNull Player player) {
+    public void onQuit(Player player) {
     }
 }

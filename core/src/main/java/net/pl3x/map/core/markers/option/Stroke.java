@@ -28,13 +28,14 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Stroke properties of a marker.
  */
-public class Stroke extends Option<@NotNull Stroke> {
+@NullMarked
+public class Stroke extends Option<Stroke> {
     private Boolean enabled;
     private Integer weight;
     private Integer color;
@@ -88,7 +89,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @param enabled whether stroke is enabled
      * @return this stroke rule
      */
-    public @NotNull Stroke setEnabled(@Nullable Boolean enabled) {
+    public Stroke setEnabled(@Nullable Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -112,7 +113,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @param weight new stroke weight
      * @return this stroke rule
      */
-    public @NotNull Stroke setWeight(@Nullable Integer weight) {
+    public Stroke setWeight(@Nullable Integer weight) {
         this.weight = weight;
         return this;
     }
@@ -136,7 +137,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @param color argb color
      * @return this stroke rule
      */
-    public @NotNull Stroke setColor(@Nullable Integer color) {
+    public Stroke setColor(@Nullable Integer color) {
         this.color = color;
         return this;
     }
@@ -162,7 +163,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @return this stroke rule
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap">MDN stroke-linecap</a>
      */
-    public @NotNull Stroke setLineCapShape(@Nullable LineCapShape lineCapShape) {
+    public Stroke setLineCapShape(@Nullable LineCapShape lineCapShape) {
         this.lineCapShape = lineCapShape;
         return this;
     }
@@ -188,7 +189,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @return this stroke rule
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin">MDN stroke-linejoin</a>
      */
-    public @NotNull Stroke setLineJoinShape(@Nullable LineJoinShape lineJoinShape) {
+    public Stroke setLineJoinShape(@Nullable LineJoinShape lineJoinShape) {
         this.lineJoinShape = lineJoinShape;
         return this;
     }
@@ -214,7 +215,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @return this stroke rule
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray">MDN stroke-dasharray</a>
      */
-    public @NotNull Stroke setDashPattern(@Nullable String dashPattern) {
+    public Stroke setDashPattern(@Nullable String dashPattern) {
         this.dashPattern = dashPattern;
         return this;
     }
@@ -242,7 +243,7 @@ public class Stroke extends Option<@NotNull Stroke> {
      * @see <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset">MDN stroke-dashoffset</a>
      * @see <a href="https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility">Browser compatibility</a>
      */
-    public @NotNull Stroke setDashOffset(@Nullable String dashOffset) {
+    public Stroke setDashOffset(@Nullable String dashOffset) {
         this.dashOffset = dashOffset;
         return this;
     }
@@ -259,7 +260,7 @@ public class Stroke extends Option<@NotNull Stroke> {
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("enabled", isEnabled());
         wrapper.addProperty("weight", getWeight());
@@ -271,7 +272,7 @@ public class Stroke extends Option<@NotNull Stroke> {
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull Stroke fromJson(@NotNull JsonObject obj) {
+    public static Stroke fromJson(JsonObject obj) {
         JsonElement el;
         Stroke stroke = new Stroke();
         if ((el = obj.get("enabled")) != null && !(el instanceof JsonNull)) stroke.setEnabled(el.getAsBoolean());
@@ -311,7 +312,7 @@ public class Stroke extends Option<@NotNull Stroke> {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Stroke{"
                 + "enabled=" + isEnabled()
                 + ",weight=" + getWeight()

@@ -42,9 +42,10 @@ import net.querz.nbt.io.NBTInputStream;
 import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Region {
     private final World world;
     private final int regionX;
@@ -55,7 +56,7 @@ public class Region {
 
     private final int hash;
 
-    public Region(@NotNull World world, int regionX, int regionZ, @NotNull Path regionFile) {
+    public Region(World world, int regionX, int regionZ, Path regionFile) {
         this.world = world;
         this.regionX = regionX;
         this.regionZ = regionZ;
@@ -64,7 +65,7 @@ public class Region {
         this.hash = Objects.hash(world, regionX, regionZ);
     }
 
-    public @NotNull World getWorld() {
+    public World getWorld() {
         return this.world;
     }
 
@@ -76,7 +77,7 @@ public class Region {
         return this.regionZ;
     }
 
-    public @NotNull File getRegionFile() {
+    public File getRegionFile() {
         return this.regionFile;
     }
 
@@ -84,7 +85,7 @@ public class Region {
         return (chunkX & 0x1F) + ((chunkZ & 0x1F) << 5);
     }
 
-    public @NotNull Chunk getChunk(int chunkX, int chunkZ) {
+    public Chunk getChunk(int chunkX, int chunkZ) {
         int index = getChunkIndex(chunkX, chunkZ);
         Chunk chunk = this.chunks[index];
         if (chunk == null) {
@@ -114,7 +115,7 @@ public class Region {
         }
     }
 
-    public @NotNull Chunk loadChunk(@NotNull RandomAccessFile raf, int index) throws IOException {
+    public Chunk loadChunk(RandomAccessFile raf, int index) throws IOException {
         raf.seek(index * 4L);
         int offset = raf.read() << 16;
         offset |= (raf.read() & 0xFF) << 8;
@@ -171,7 +172,7 @@ public class Region {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Region{"
                 + "world=" + getWorld()
                 + ",x=" + getX()

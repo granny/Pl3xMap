@@ -35,8 +35,9 @@ import net.querz.nbt.tag.IntArrayTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
 import net.querz.nbt.tag.Tag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ChunkAnvil115 extends Chunk {
     private Section[] sections = new Section[0];
 
@@ -46,7 +47,7 @@ public class ChunkAnvil115 extends Chunk {
 
     private final boolean full;
 
-    protected ChunkAnvil115(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
+    protected ChunkAnvil115(World world, Region region, CompoundTag chunkTag, int index) {
         super(world, region, chunkTag, index);
 
         CompoundTag levelData = chunkTag.getCompoundTag("Level");
@@ -95,7 +96,7 @@ public class ChunkAnvil115 extends Chunk {
     }
 
     @Override
-    public @NotNull BlockState getBlockState(int x, int y, int z) {
+    public BlockState getBlockState(int x, int y, int z) {
         int sectionY = y >> 4;
         if (sectionY < 0 || sectionY >= this.sections.length) {
             return Blocks.AIR.getDefaultState();
@@ -115,7 +116,7 @@ public class ChunkAnvil115 extends Chunk {
     }
 
     @Override
-    public @NotNull Biome getBiome(int x, int y, int z) {
+    public Biome getBiome(int x, int y, int z) {
         int index = ((y >> 2) << 4) + (((z & 0xF) >> 2) << 2) + ((x & 0xF) >> 2);
         if (index < 0) {
             return Biome.DEFAULT;
@@ -147,7 +148,7 @@ public class ChunkAnvil115 extends Chunk {
         private BlockState[] palette = new BlockState[0];
         private final int bitsPerBlock;
 
-        public Section(@NotNull CompoundTag sectionData) {
+        public Section(CompoundTag sectionData) {
             this.sectionY = sectionData.getNumber("Y").intValue();
             this.blockLight = sectionData.getByteArray("BlockLight");
             this.blocks = sectionData.getLongArray("BlockStates");
@@ -180,7 +181,7 @@ public class ChunkAnvil115 extends Chunk {
             this.bitsPerBlock = this.blocks.length >> 6;
         }
 
-        public @NotNull BlockState getBlockState(int x, int y, int z) {
+        public BlockState getBlockState(int x, int y, int z) {
             if (this.palette.length == 1) {
                 return this.palette[0];
             }

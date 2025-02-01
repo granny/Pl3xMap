@@ -25,8 +25,10 @@ package net.pl3x.map.core.configuration;
 
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.option.Stroke;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("CanBeFinal")
+@NullMarked
 public final class WorldBorderLayerConfig extends AbstractConfig {
     @Key("settings.enabled")
     @Comment("""

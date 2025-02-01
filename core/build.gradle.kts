@@ -39,7 +39,7 @@ dependencies {
 
     compileOnly(libs.log4j)
 
-    implementation(libs.jetbrainsAnnotations)
+    implementation(libs.jspecifyAnnotations)
 
     implementation(libs.undertow)
 

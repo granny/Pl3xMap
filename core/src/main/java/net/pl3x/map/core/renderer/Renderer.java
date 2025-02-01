@@ -39,9 +39,10 @@ import net.pl3x.map.core.world.Blocks;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public abstract class Renderer extends Keyed {
     private final RegionScanTask task;
     private final String name;
@@ -50,7 +51,7 @@ public abstract class Renderer extends Keyed {
 
     private TileImage tileImage;
 
-    public Renderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
+    public Renderer(RegionScanTask task, Builder builder) {
         super(builder.getKey());
         this.task = task;
         this.name = builder.getName();
@@ -60,35 +61,35 @@ public abstract class Renderer extends Keyed {
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get(key);
     }
 
-    public @NotNull RegionScanTask getRegionScanTask() {
+    public RegionScanTask getRegionScanTask() {
         return this.task;
     }
 
-    public @NotNull World getWorld() {
+    public World getWorld() {
         return this.world;
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 
-    public @NotNull Heightmap getHeightmap() {
+    public Heightmap getHeightmap() {
         return this.heightmap;
     }
 
-    public @NotNull TileImage getTileImage() {
+    public TileImage getTileImage() {
         return this.tileImage;
     }
 
-    public void allocateData(@NotNull Point region) {
+    public void allocateData(Point region) {
         this.tileImage = new TileImage(getKey(), getWorld(), region);
     }
 
-    public void saveData(@NotNull Point region) {
+    public void saveData(Point region) {
         this.tileImage.saveToDisk();
     }
 
-    public void scanData(@NotNull Region region) {
+    public void scanData(Region region) {
         int cX = region.getX() << 5;
         int cZ = region.getZ() << 5;
 
@@ -122,9 +123,9 @@ public abstract class Renderer extends Keyed {
         }
     }
 
-    public abstract void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ);
+    public abstract void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ);
 
-    public int basicPixelColor(@NotNull Region region, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
+    public int basicPixelColor(Region region, Chunk.BlockData data, int blockX, int blockZ) {
         // get biome once
         Biome biome = data.getBiome(region, blockX, blockZ);
 
@@ -152,7 +153,7 @@ public abstract class Renderer extends Keyed {
         return pixelColor;
     }
 
-    public int processFluids(boolean translucentFluid, @NotNull Region region, @NotNull Biome biome, Chunk.@NotNull BlockData data, int blockX, int blockZ, int pixelColor) {
+    public int processFluids(boolean translucentFluid, Region region, Biome biome, Chunk.BlockData data, int blockX, int blockZ, int pixelColor) {
         if (data.getFluidState() != null) {
             int fluidDepth = data.getFluidY() - data.getBlockY();
             if (translucentFluid) {
@@ -171,7 +172,7 @@ public abstract class Renderer extends Keyed {
         return pixelColor;
     }
 
-    public int fancyFluids(@NotNull Region region, @NotNull Biome biome, @NotNull BlockState fluidstate, int blockX, int blockZ, float depth) {
+    public int fancyFluids(Region region, Biome biome, BlockState fluidstate, int blockX, int blockZ, float depth) {
         // let's do some maths to get pretty fluid colors based on depth
         int color;
         if (fluidstate.getBlock().isWater()) {
@@ -186,7 +187,7 @@ public abstract class Renderer extends Keyed {
         return color;
     }
 
-    public int calculateLight(@NotNull Chunk chunk, @Nullable BlockState fluidState, int blockX, int blockY, int blockZ, int fluidY, int pixelColor) {
+    public int calculateLight(Chunk chunk, @Nullable BlockState fluidState, int blockX, int blockY, int blockZ, int fluidY, int pixelColor) {
         // get light level right above this block
         int blockLight;
         if (fluidState != null && !fluidState.getBlock().isWater()) {
@@ -215,20 +216,20 @@ public abstract class Renderer extends Keyed {
     }
 
     public static final class Builder extends Keyed {
-        private final @NotNull String name;
-        private final @NotNull Class<? extends @NotNull Renderer> clazz;
+        private final String name;
+        private final Class<? extends Renderer> clazz;
 
-        public Builder(@NotNull String key, @NotNull String name, @NotNull Class<? extends @NotNull Renderer> clazz) {
+        public Builder(String key, String name, Class<? extends Renderer> clazz) {
             super(key);
             this.name = name;
             this.clazz = clazz;
         }
 
-        public @NotNull String getName() {
+        public String getName() {
             return name;
         }
 
-        public @NotNull Class<? extends @NotNull Renderer> getClazz() {
+        public Class<? extends Renderer> getClazz() {
             return clazz;
         }
 
@@ -248,7 +249,7 @@ public abstract class Renderer extends Keyed {
         }
 
         @Override
-        public @NotNull String toString() {
+        public String toString() {
             return "Builder[" +
                     "key=" + getKey() + ", " +
                     "name=" + name + ", " +

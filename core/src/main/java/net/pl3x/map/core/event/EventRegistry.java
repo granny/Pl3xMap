@@ -27,10 +27,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import net.pl3x.map.core.log.Logger;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class EventRegistry {
-    public void callEvent(@NotNull Event event) {
+    public void callEvent(Event event) {
         for (RegisteredHandler handler : event.getHandlers()) {
             try {
                 Logger.debug("Executing Event " + handler);
@@ -41,7 +42,7 @@ public class EventRegistry {
         }
     }
 
-    public void register(@NotNull EventListener listener) {
+    public void register(EventListener listener) {
         for (Method method : listener.getClass().getMethods()) {
             if (method.getDeclaredAnnotation(EventHandler.class) == null) {
                 continue;

@@ -33,14 +33,15 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 
 /**
  * Represents a map marker.
  */
-public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed implements JsonSerializable {
+@NullMarked
+public abstract class Marker<T extends Marker<T>> extends Keyed implements JsonSerializable {
     private final String type;
     private String pane;
     private Options options;
@@ -51,7 +52,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param type type of marker
      * @param key  identifying key
      */
-    public Marker(@NotNull String type, @NotNull String key) {
+    public Marker(String type, String key) {
         super(key);
         this.type = Preconditions.checkNotNull(type, "Marker type is null");
     }
@@ -65,7 +66,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param radius  circle radius
      * @return a new circle
      */
-    public static @NotNull Circle circle(@NotNull String key, double centerX, double centerZ, double radius) {
+    public static Circle circle(String key, double centerX, double centerZ, double radius) {
         return Circle.of(key, centerX, centerZ, radius);
     }
 
@@ -77,7 +78,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param radius circle radius
      * @return a new circle
      */
-    public static @NotNull Circle circle(@NotNull String key, @NotNull Point center, double radius) {
+    public static Circle circle(String key, Point center, double radius) {
         return Circle.of(key, center, radius);
     }
 
@@ -91,7 +92,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, double centerX, double centerZ, double radiusX, double radiusZ) {
+    public static Ellipse ellipse(String key, double centerX, double centerZ, double radiusX, double radiusZ) {
         return Ellipse.of(key, centerX, centerZ, radiusX, radiusZ);
     }
 
@@ -104,7 +105,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param radiusZ z radius
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, @NotNull Point center, double radiusX, double radiusZ) {
+    public static Ellipse ellipse(String key, Point center, double radiusX, double radiusZ) {
         return Ellipse.of(key, center, radiusX, radiusZ);
     }
 
@@ -117,7 +118,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param radius  radius
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, double centerX, double centerZ, @NotNull Vector radius) {
+    public static Ellipse ellipse(String key, double centerX, double centerZ, Vector radius) {
         return Ellipse.of(key, centerX, centerZ, radius);
     }
 
@@ -129,7 +130,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param radius radius
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, @NotNull Point center, @NotNull Vector radius) {
+    public static Ellipse ellipse(String key, Point center, Vector radius) {
         return Ellipse.of(key, center, radius);
     }
 
@@ -144,7 +145,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param tilt    tilt
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
+    public static Ellipse ellipse(String key, double centerX, double centerZ, double radiusX, double radiusZ, double tilt) {
         return Ellipse.of(key, centerX, centerZ, radiusX, radiusZ, tilt);
     }
 
@@ -158,7 +159,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param tilt    tilt
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, @NotNull Point center, double radiusX, double radiusZ, double tilt) {
+    public static Ellipse ellipse(String key, Point center, double radiusX, double radiusZ, double tilt) {
         return Ellipse.of(key, center, radiusX, radiusZ, tilt);
     }
 
@@ -172,7 +173,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param tilt    tilt
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, double centerX, double centerZ, @NotNull Vector radius, double tilt) {
+    public static Ellipse ellipse(String key, double centerX, double centerZ, Vector radius, double tilt) {
         return Ellipse.of(key, centerX, centerZ, radius, tilt);
     }
 
@@ -185,7 +186,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param tilt   tilt
      * @return a new ellipse
      */
-    public static @NotNull Ellipse ellipse(@NotNull String key, @NotNull Point center, @NotNull Vector radius, double tilt) {
+    public static Ellipse ellipse(String key, Point center, Vector radius, double tilt) {
         return Ellipse.of(key, center, radius, tilt);
     }
 
@@ -198,7 +199,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param image image key
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, double x, double z, @NotNull String image) {
+    public static Icon icon(String key, double x, double z, String image) {
         return Icon.of(key, x, z, image);
     }
 
@@ -210,7 +211,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param image image key
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, @NotNull Point point, @NotNull String image) {
+    public static Icon icon(String key, Point point, String image) {
         return Icon.of(key, point, image);
     }
 
@@ -224,7 +225,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param size  size of image
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, double x, double z, @NotNull String image, double size) {
+    public static Icon icon(String key, double x, double z, String image, double size) {
         return Icon.of(key, x, z, image, size, size);
     }
 
@@ -239,7 +240,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param height height of image
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, double x, double z, @NotNull String image, double width, double height) {
+    public static Icon icon(String key, double x, double z, String image, double width, double height) {
         return Icon.of(key, x, z, image, width, height);
     }
 
@@ -252,7 +253,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param size  size of image
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, @NotNull Point point, @NotNull String image, double size) {
+    public static Icon icon(String key, Point point, String image, double size) {
         return Icon.of(key, point, image, size, size);
     }
 
@@ -266,7 +267,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param height height of image
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, @NotNull Point point, @NotNull String image, double width, double height) {
+    public static Icon icon(String key, Point point, String image, double width, double height) {
         return Icon.of(key, point, image, width, height);
     }
 
@@ -279,7 +280,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param size  size of image
      * @return a new icon
      */
-    public static @NotNull Icon icon(@NotNull String key, @NotNull Point point, @NotNull String image, @Nullable Vector size) {
+    public static Icon icon(String key, Point point, String image, @Nullable Vector size) {
         return Icon.of(key, point, image, size);
     }
 
@@ -290,7 +291,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polygon polygon to add
      * @return a new multi-polygon
      */
-    public static @NotNull MultiPolygon multiPolygon(@NotNull String key, @NotNull Polygon polygon) {
+    public static MultiPolygon multiPolygon(String key, Polygon polygon) {
         return MultiPolygon.of(key, polygon);
     }
 
@@ -301,7 +302,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    public static @NotNull MultiPolygon multiPolygon(@NotNull String key, @NotNull Polygon @NotNull ... polygons) {
+    public static MultiPolygon multiPolygon(String key, Polygon ... polygons) {
         return MultiPolygon.of(key, polygons);
     }
 
@@ -312,7 +313,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polygons polygons to add
      * @return a new multi-polygon
      */
-    public static @NotNull MultiPolygon multiPolygon(@NotNull String key, @NotNull List<@NotNull Polygon> polygons) {
+    public static MultiPolygon multiPolygon(String key, List<Polygon> polygons) {
         return MultiPolygon.of(key, polygons);
     }
 
@@ -323,7 +324,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polyline polyline to add
      * @return a new multi-polyline
      */
-    public static @NotNull MultiPolyline multiPolyline(@NotNull String key, @NotNull Polyline polyline) {
+    public static MultiPolyline multiPolyline(String key, Polyline polyline) {
         return MultiPolyline.of(key, polyline);
     }
 
@@ -334,7 +335,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    public static @NotNull MultiPolyline multiPolyline(@NotNull String key, @NotNull Polyline @NotNull ... polylines) {
+    public static MultiPolyline multiPolyline(String key, Polyline ... polylines) {
         return MultiPolyline.of(key, polylines);
     }
 
@@ -345,7 +346,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    public static @NotNull MultiPolyline multiPolyline(@NotNull String key, @NotNull List<@NotNull Polyline> polylines) {
+    public static MultiPolyline multiPolyline(String key, List<Polyline> polylines) {
         return MultiPolyline.of(key, polylines);
     }
 
@@ -356,7 +357,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polyline polyline to add
      * @return a new polygon
      */
-    public static @NotNull Polygon polygon(@NotNull String key, @NotNull Polyline polyline) {
+    public static Polygon polygon(String key, Polyline polyline) {
         return Polygon.of(key, polyline);
     }
 
@@ -367,7 +368,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polylines polylines to add
      * @return a new polygon
      */
-    public static @NotNull Polygon polygon(@NotNull String key, @NotNull Polyline @NotNull ... polylines) {
+    public static Polygon polygon(String key, Polyline ... polylines) {
         return Polygon.of(key, polylines);
     }
 
@@ -378,7 +379,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param polylines polylines to add
      * @return a new polygon
      */
-    public static @NotNull Polygon polygon(@NotNull String key, @NotNull List<@NotNull Polyline> polylines) {
+    public static Polygon polygon(String key, List<Polyline> polylines) {
         return Polygon.of(key, polylines);
     }
 
@@ -389,7 +390,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param point point to add
      * @return a new polyline
      */
-    public static @NotNull Polyline polyline(@NotNull String key, @NotNull Point point) {
+    public static Polyline polyline(String key, Point point) {
         return Polyline.of(key, point);
     }
 
@@ -400,7 +401,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param points points to add
      * @return a new polyline
      */
-    public static @NotNull Polyline polyline(@NotNull String key, @NotNull Point @NotNull ... points) {
+    public static Polyline polyline(String key, Point ... points) {
         return Polyline.of(key, points);
     }
 
@@ -411,7 +412,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param points points to add
      * @return a new polyline
      */
-    public static @NotNull Polyline polyline(@NotNull String key, @NotNull List<@NotNull Point> points) {
+    public static Polyline polyline(String key, List<Point> points) {
         return Polyline.of(key, points);
     }
 
@@ -425,7 +426,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param z2  second z point
      * @return a new rectangle
      */
-    public static @NotNull Rectangle rectangle(@NotNull String key, double x1, double z1, double x2, double z2) {
+    public static Rectangle rectangle(String key, double x1, double z1, double x2, double z2) {
         return Rectangle.of(key, x1, z1, x2, z2);
     }
 
@@ -437,7 +438,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param point2 second point
      * @return a new rectangle
      */
-    public static @NotNull Rectangle rectangle(@NotNull String key, @NotNull Point point1, @NotNull Point point2) {
+    public static Rectangle rectangle(String key, Point point1, Point point2) {
         return Rectangle.of(key, point1, point2);
     }
 
@@ -448,7 +449,7 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      *
      * @return marker type
      */
-    public @NotNull String getType() {
+    public String getType() {
         return this.type;
     }
 
@@ -474,9 +475,9 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @return this marker
      */
     @SuppressWarnings("unchecked")
-    public @NotNull T setPane(@Nullable String pane) {
+    public T setPane(@Nullable String pane) {
         this.pane = pane;
-        return (@NotNull T) this;
+        return (T) this;
     }
 
     /**
@@ -499,9 +500,9 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @return this marker
      */
     @SuppressWarnings("unchecked")
-    public @NotNull T setOptions(@Nullable Options options) {
+    public T setOptions(@Nullable Options options) {
         this.options = options;
-        return (@NotNull T) this;
+        return (T) this;
     }
 
     /**
@@ -512,11 +513,11 @@ public abstract class Marker<T extends Marker<@NotNull T>> extends Keyed impleme
      * @param builder new options builder or null
      * @return this marker
      */
-    public @NotNull T setOptions(Options.@Nullable Builder builder) {
+    public T setOptions(Options.@Nullable Builder builder) {
         return setOptions(builder == null ? null : builder.build());
     }
 
-    public static @NotNull Marker<?> fromJson(@NotNull JsonObject obj) {
+    public static Marker<?> fromJson(JsonObject obj) {
         JsonElement el;
         String type = obj.get("type").getAsString();
         JsonObject data = obj.get("data").getAsJsonObject();

@@ -32,23 +32,24 @@ import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class VintageStoryRenderer extends Renderer {
     private final Heightmap heightmap;
 
-    public VintageStoryRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
+    public VintageStoryRenderer(RegionScanTask task, Builder builder) {
         super(task, builder);
         this.heightmap = Pl3xMap.api().getHeightmapRegistry().get("vintage_story");
     }
 
     @Override
-    public @NotNull Heightmap getHeightmap() {
+    public Heightmap getHeightmap() {
         return this.heightmap;
     }
 
     @Override
-    public void scanData(@NotNull Region region) {
+    public void scanData(Region region) {
         int[] pixelMap = new int[512 << 9];
         byte[] shadowMap = new byte[512 << 9];
         Arrays.fill(shadowMap, (byte) 0);
@@ -127,7 +128,7 @@ public class VintageStoryRenderer extends Renderer {
     }
 
     @Override
-    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
     }
 
     private float CalculateAltitudeDiff(Region region, int blockX, int blockZ, int blockY) {

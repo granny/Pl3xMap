@@ -23,10 +23,11 @@
  */
 package net.pl3x.map.core.world;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class EmptyChunk extends Chunk {
-    protected EmptyChunk(@NotNull World world, @NotNull Region region) {
+    protected EmptyChunk(World world, Region region) {
         super(world, region);
     }
 
@@ -36,7 +37,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public @NotNull BlockState getBlockState(int x, int y, int z) {
+    public BlockState getBlockState(int x, int y, int z) {
         return Blocks.AIR.getDefaultState();
     }
 
@@ -46,7 +47,7 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public @NotNull Biome getBiome(int x, int y, int z) {
+    public Biome getBiome(int x, int y, int z) {
         return Biome.DEFAULT;
     }
 
@@ -61,12 +62,12 @@ public class EmptyChunk extends Chunk {
     }
 
     @Override
-    public @NotNull Chunk populate() {
+    public Chunk populate() {
         return this;
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "EmptyChunk{"
                 + "world=" + getWorld()
                 + ",xPos=" + getX()

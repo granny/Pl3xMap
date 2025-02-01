@@ -48,7 +48,9 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.registry.WorldRegistry;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class HttpdServer {
     private HttpString X_ACCEL_BUFFERING = new HttpString("X-Accel-Buffering");
     private Undertow server;

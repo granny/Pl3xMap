@@ -50,32 +50,33 @@ import org.incendo.cloud.description.CommandDescription;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents the command handler.
  */
+@NullMarked
 public interface CommandHandler {
     /**
      * Get the command manager.
      *
      * @return command manager
      */
-    @NotNull CommandManager<@NotNull Sender> getManager();
+    CommandManager<Sender> getManager();
 
     /**
      * Get the platform parsers.
      *
      * @return platform parsers
      */
-    @NotNull PlatformParsers getPlatformParsers();
+    PlatformParsers getPlatformParsers();
 
     /**
      * Get the root command.
      *
      * @return the root command
      */
-    Command.@NotNull Builder<@NotNull Sender> getRoot();
+    Command.Builder<Sender> getRoot();
 
     default void setupExceptionHandlers() {
         MinecraftExceptionHandler.<Sender>createNative()
@@ -94,11 +95,11 @@ public interface CommandHandler {
      *
      * @param builder command builder
      */
-    default void registerSubcommand(@NotNull UnaryOperator<Command.@NotNull Builder<@NotNull Sender>> builder) {
+    default void registerSubcommand(UnaryOperator<Command.Builder<Sender>> builder) {
         this.getManager().command(builder.apply(getRoot()));
     }
 
-    default Command.@NotNull Builder<@NotNull Sender> buildRoot() {
+    default Command.Builder<Sender> buildRoot() {
         return getManager().commandBuilder("map", "pl3xmap")
                 .permission("pl3xmap.command.map")
                 .commandDescription(CommandDescription.commandDescription("Pl3xMap command. '/map help'"))
