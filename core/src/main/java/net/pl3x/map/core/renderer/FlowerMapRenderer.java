@@ -53,6 +53,8 @@ public class FlowerMapRenderer extends Renderer {
         this.colorMap.put(Blocks.CORNFLOWER, 0x4100FF);
         this.colorMap.put(Blocks.LILY_OF_THE_VALLEY, 0xFFFFFF);
         this.colorMap.put(Blocks.BLUE_ORCHID, 0x00BFFF);
+        this.colorMap.put(Blocks.PINK_PETALS, 0xFF41BF);
+        this.colorMap.put(Blocks.CLOSED_EYEBLOSSOM, 0x7F3F00);
     }
 
     @Override
