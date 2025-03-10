@@ -42,24 +42,34 @@ public class BlockState {
         this.block = block;
 
         byte age = -1;
-        try {
-            age = Integer.valueOf(properties.get("age")).byteValue();
-        } catch (NumberFormatException ignore) {
-        }
-        this.age = age;
-
         byte moisture = -1;
-        try {
-            moisture = Integer.valueOf(properties.get("moisture")).byteValue();
-        } catch (NumberFormatException ignore) {
-        }
-        this.moisture = moisture;
-
         byte power = -1;
-        try {
-            power = Integer.valueOf(properties.get("power")).byteValue();
-        } catch (NumberFormatException ignore) {
+
+        if (!properties.isEmpty()) {
+            String ageProperty = properties.get("age");
+            if (ageProperty != null) {
+                try {
+                    age = Integer.valueOf(ageProperty).byteValue();
+                } catch (NumberFormatException ignore) {}
+            }
+
+            String moistureProperty = properties.get("moisture");
+            if (moistureProperty != null) {
+                try {
+                    moisture = Integer.valueOf(moistureProperty).byteValue();
+                } catch (NumberFormatException ignore) {}
+            }
+
+            String powerProperty = properties.get("power");
+            if (powerProperty != null) {
+                try {
+                    power = Integer.valueOf(powerProperty).byteValue();
+                } catch (NumberFormatException ignore) {}
+            }
         }
+
+        this.age = age;
+        this.moisture = moisture;
         this.power = power;
     }
 
