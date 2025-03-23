@@ -1,0 +1,133 @@
+prefix:
+  command: "<grey>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</grey> "
+command:
+  base: 查看地图 '<grey><click:open_url:'<web-address>'><web-address></click></grey>'
+  event:
+    click-for-help: 点击获得帮助
+    click-to-confirm: 点击确认
+  argument:
+    optional-player: 默认为执行指令的玩家（控制台必须指定玩家）
+    optional-center: 默认为 (<white>0<gray>,</gray> 0</white>)
+    optional-zoom: 缩放级别
+    required-renderer: 必须指定渲染器
+    required-world: 必须指定维度
+  confirm:
+    description: 确认一个待处理的命令
+    not-rendering: <red>需要确认。请使用 <grey>/map confirm 进行确认
+    success: <red>没有任何待确认的命令
+  fullrender:
+    description: 对一个维度进行完全渲染
+    starting: <green>开始执行完全渲染。通过 <grey>/map status</grey> 查看信息
+    no-region-files-found: <red>找不到 <world> 。请使用 <u><click:open_url:'https://modrinth.com/plugin/chunky'>Chunky</click></u> ，或等待加载的区块保存。
+  help:
+    description: 获得 Pl3xmap 的指令帮助
+    argument:
+      query: 查询帮助
+  hide:
+    description: 从地图上隐藏玩家
+    already-hidden: <grey><player> <red>已被隐藏
+    success: <grey><player> <green>已隐藏
+  pause:
+    description: 暂停渲染
+    paused: <green>渲染已暂停
+    already-paused: <grey>渲染已被暂停
+  resume:
+    description: 恢复渲染
+    resumed: <green>渲染已恢复
+    already-resumed: <grey>渲染未被暂停
+  radiusrender:
+    description: 半径渲染
+    starting: <green>半径渲染已开始，通过 <grey>/map status</grey> 查看信息
+  reload:
+    description: 重载插件
+    success: <green>Pl3xMap <grey>v<version></grey> 已重载
+  resetmap:
+    description: 重置已渲染的地图
+    begin: <green>开始重置 <grey><world></grey> 地图
+    success: <grey><world></grey><green> 地图重置成功
+    failed: <grey><world></grey><red> 地图重置失败
+  show:
+    description: 在地图上显示玩家
+    not-hidden: <grey><player> <red>未被隐藏
+    success: <grey><player> <green>已取消隐藏
+  status:
+    description: 查看渲染器状态
+  stitch:
+    description: 将图块拼接成一张图片
+    missing-directory: <red>找不到图块目录
+    error-reading-directory: <red>读取图块目录时出现问题
+    empty-directory: <red>没有可拼接的图块
+    starting: |-
+      <green>开始拼接 <count> 张图块..
+      <green><italic>(最小: <min-x>,<min-z> 最大: <max-x>,<max-z> 尺寸: <size-x>,<size-z>)
+    finished: |-
+      <green>拼接完成 <count> 张图块!
+      <green>你可以在 <grey>/tiles/<world>/stitched/<filename> 找到他
+  version:
+    description: 获取版本信息
+    please-wait: <italic>正在检查版本，请稍候...
+    still-checking: <italic>仍在检查，再等等...
+    error:
+      not-array: "<red>Error: response not an array"
+      corrupt-json: "<red>Error: response is corrupt json"
+      unknown-version: "<red>Error: response has unknown version"
+      unable-to-determine: "<red>Error: Unable to determine latest build"
+    success: Pl3xMap v3 <version> (<italic><platform></italic>) git-<commit>
+    snapshot: <yellow><italic>正在运行快照版本
+    latest-build-is: <yellow><italic>最新版本 <build>
+    running-latest-build: <green><italic>正在运行最新版本
+    builds-behind: <yellow><italic>落后 <number> 个版本
+    download: "<yellow><italic>下载新版本: <gold><link>"
+    time-traveler: <yellow><italic>你是时空旅行者吗？
+httpd:
+  started:
+    success: <green>网页地图服务已运行在 <yellow><bind></yellow>:<yellow><port></yellow>
+    error: <red>网页地图服务启用失败
+  stopped:
+    success: <green>网页地图服务已停用
+    error: <red>网页地图服务发生错误
+  disabled: <green>网页地图服务被禁用
+progress:
+  eta:
+    unknown: 未知
+error:
+  must-specify-player: <red>你必须指定玩家
+  no-such-player: <red>没有找到玩家 <grey><player>
+  must-specify-renderer: <red>你必须指定渲染器
+  no-such-renderer: <red>没有找到渲染器 <grey><renderer>
+  must-specify-world: <red>你必须指定维度
+  no-such-world: <red>没有找到维度 <grey><world>
+  world-disabled: <red>Pl3xMap 在 <grey><world></grey> 被禁用
+  not-valid-zoom-level: <red>缩放级别无效
+  point-invalid-format: "'<point>' 不是一个有效的坐标。 格式为 '<x> <z>'"
+ui:
+  layer:
+    players: 玩家
+    spawn: 重生点
+    worldborder: 世界边界
+  title: Pl3xMap
+  block-and-biome-lang-file: zh_cn.json
+  blockinfo:
+    label: 方块信息
+    value: <block><br /><biome>
+    unknown:
+      block: 未知方块
+      biome: 未知群系
+  coords:
+    label: 坐标
+    value: <x>, <y>, <z>
+  link:
+    label: 分享链接
+    value: ""
+  markers:
+    label: 标记点
+    value: 没有配置任何标记点
+  players:
+    label: 玩家 (<online>/<max>)
+    value: 没有玩家在线
+  worlds:
+    label: 维度
+    value: 没有配置任何维度
+  layers:
+    label: 图层
+    value: 没有配置任何图层
