@@ -37,7 +37,7 @@ dependencies {
 
     implementation(libs.adventurePlatformBukkit)
 
-    paperweight.paperDevBundle(libs.versions.bukkit)
+    paperweight.paperDevBundle("1.21.5-no-moonrise-SNAPSHOT") // TODO: hardcode for now
 }
 
 tasks {
