@@ -23,6 +23,8 @@
  */
 package net.pl3x.map.bukkit;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +35,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.event.world.WorldLoadedEvent;
@@ -47,6 +50,24 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class BukkitWorld extends World {
+    private static Field LEVEL_STORAGE_ACCESS_FIELD = null;
+
+    static {
+        if (LEVEL_STORAGE_ACCESS_FIELD == null) {
+            Arrays.stream(ServerLevel.class.getFields())
+                    .filter(field -> field.getType().equals(LevelStorageSource.LevelStorageAccess.class))
+                    .findAny().ifPresent(field -> LEVEL_STORAGE_ACCESS_FIELD = field);
+        }
+    }
+
+    private static LevelStorageSource.LevelStorageAccess getLevelStorageAccess(ServerLevel level) {
+        try {
+            return (LevelStorageSource.LevelStorageAccess) LEVEL_STORAGE_ACCESS_FIELD.get(level);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final ServerLevel level;
 
     public BukkitWorld(ServerLevel level, String name) {
@@ -55,7 +76,7 @@ public class BukkitWorld extends World {
                 level.getSeed(),
                 Point.of(level.getLevelData().getSpawnPos().getX(), level.getLevelData().getSpawnPos().getZ()),
                 Type.get(level.dimension().location().toString()),
-                level.levelStorageAccess.getDimensionPath(level.dimension()).resolve("region")
+                BukkitWorld.getLevelStorageAccess(level).getDimensionPath(level.dimension()).resolve("region")
         );
         this.level = level;
 
