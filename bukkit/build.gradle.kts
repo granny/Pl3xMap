@@ -37,7 +37,7 @@ dependencies {
 
     implementation(libs.adventurePlatformBukkit)
 
-    paperweight.paperDevBundle(libs.versions.bukkit) // TODO: hardcode for now
+    paperweight.paperDevBundle(libs.versions.bukkit)
 }
 
 tasks {
