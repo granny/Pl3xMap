@@ -3,8 +3,8 @@ bukkit="1.21.5-R0.1-SNAPSHOT"
 minecraft="1.21.5"
 
 # https://fabricmc.net/develop/
-fabricApi="0.119.6+1.21.5"
-fabricLoader="0.16.10"
+fabricApi="0.123.2+1.21.5"
+fabricLoader="0.16.14"
 fabricLoom="1.10-SNAPSHOT"
 
 #forge="1.20.2-48.0.6"
@@ -16,9 +16,9 @@ paperweight="2.0.0-beta.16" # https://github.com/PaperMC/Paperweight
 indra-git="3.1.3" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.5" # https://github.com/GradleUp/shadow
 
-adventure="4.19.0" # https://github.com/KyoriPowered/adventure
+adventure="4.21.0" # https://github.com/KyoriPowered/adventure
 adventureBukkit="4.3.4" # https://github.com/KyoriPowered/adventure-platform
-adventureFabric="6.1.1-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
+adventureFabric="6.4.0" # https://github.com/KyoriPowered/adventure-platform-fabric
 
 cloud="2.0.0" # https://github.com/incendo/cloud
 cloud-minecraft="2.0.0-beta.10" # https://github.com/Incendo/cloud-minecraft
