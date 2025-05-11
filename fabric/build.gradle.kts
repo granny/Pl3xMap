@@ -55,8 +55,12 @@ dependencies {
     modImplementation(libs.cloudFabric)
     include(libs.cloudFabric)
 
-    modImplementation(libs.adventurePlatformFabric)
-    include(libs.adventurePlatformFabric)
+    modImplementation(libs.adventurePlatformFabric) {
+        exclude("net.kyori", "ansi") // TODO: temporary
+    }
+    include(libs.adventurePlatformFabric) {
+        exclude("net.kyori", "ansi") // TODO: temporary
+    }
 }
 
 tasks {
