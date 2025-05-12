@@ -1170,6 +1170,15 @@ public class ColorsConfig extends AbstractConfig {
         //add("minecraft:spruce_leaves"); // evergreen 0x619961
     }};
 
+    @Key("blocks.dry-foliage")
+    @Comment("""
+            List of blocks that are considered dry foliage when it comes
+            to coloring. Blocks listed here will use the biome's
+            dry foliage color when rendering.""")
+    public static List<String> BLOCKS_DRY_FOLIAGE = new ArrayList<>() {{
+        add("minecraft:leaf_litter");
+    }};
+
     @Key("blocks.glass")
     @Comment("""
             List of blocks that are considered glass when it comes
@@ -1328,6 +1337,13 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:sparse_jungle", 0x1F8907);
         put("minecraft:swamp", 0x6A7039);
         put("minecraft:wooded_badlands", 0x9E814D);
+    }};
+
+    @Key("biomes.color-overrides.dry-foliage")
+    @Comment("""
+            Override foliage colors per biome.""")
+    public static Map<String, Integer> BIOME_DRY_FOLIAGE = new LinkedHashMap<>() {{
+        put("minecraft:badlands", 0x9E814D);
     }};
 
     @Key("biomes.color-overrides.grass")

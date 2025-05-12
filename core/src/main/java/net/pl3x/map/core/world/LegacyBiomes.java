@@ -116,7 +116,7 @@ public class LegacyBiomes {
     }
 
     private static Biome create(String id, float temperature, float humidity, int color, int foliage, int grass, int water) {
-        return new Biome(0, id, color, foliage, grass, water, (x, z, def) -> def);
+        return new Biome(0, id, color, 0x9E814D, foliage, grass, water, (x, z, def) -> def);
     }
 
     public static @Nullable Biome get(int legacyId) {

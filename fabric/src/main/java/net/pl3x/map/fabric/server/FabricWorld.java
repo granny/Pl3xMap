@@ -75,6 +75,7 @@ public class FabricWorld extends World {
             getBiomeRegistry().register(
                     id,
                     ColorsConfig.BIOME_COLORS.getOrDefault(id, 0),
+                    ColorsConfig.BIOME_DRY_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().getDryFoliageColorOverride().orElse(Colors.getDefaultDryFoliageColor(temperature, humidity))),
                     ColorsConfig.BIOME_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().getFoliageColorOverride().orElse(Colors.getDefaultFoliageColor(temperature, humidity))),
                     ColorsConfig.BIOME_GRASS.getOrDefault(id, biome.getSpecialEffects().getGrassColorOverride().orElse(Colors.getDefaultGrassColor(temperature, humidity))),
                     ColorsConfig.BIOME_WATER.getOrDefault(id, biome.getSpecialEffects().getWaterColor()),
