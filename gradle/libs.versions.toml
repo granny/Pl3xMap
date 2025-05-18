@@ -35,7 +35,7 @@ querzNbt="6.1" # https://github.com/Querz/NBT
 lz4Java="1.8.0" # https://github.com/lz4/lz4-java
 simpleYaml="1.8.4" # https://github.com/Carleslc/Simple-YAML
 slf4j="2.0.1"
-undertow="2.3.12.Final" # https://github.com/undertow-io/undertow
+undertow="2.3.18.Final" # https://github.com/undertow-io/undertow
 #xnio="3.8.8.Final"
 
 
