@@ -46,11 +46,13 @@ public final class Block extends Keyed {
         boolean flat = ColorsConfig.BLOCKS_FLAT.contains(id);
         boolean air = ColorsConfig.BLOCKS_AIR.contains(id);
         boolean foliage = ColorsConfig.BLOCKS_FOLIAGE.contains(id);
+        boolean dryFoliage = ColorsConfig.BLOCKS_DRY_FOLIAGE.contains(id);
         boolean grass = ColorsConfig.BLOCKS_GRASS.contains(id);
         boolean water = ColorsConfig.BLOCKS_WATER.contains(id);
         boolean glass = ColorsConfig.BLOCKS_GLASS.contains(id);
 
         this.bools = (byte) (
+                (dryFoliage ? 1 << 7 : 0) |
                 (flat ? 1 << 6 : 0) |
                 (air ? 1 << 5 : 0) |
                 (foliage ? 1 << 4 : 0) |
@@ -73,6 +75,10 @@ public final class Block extends Keyed {
 
     public int vanilla() {
         return this.vanilla;
+    }
+
+    public boolean isDryFoliage() {
+        return ((this.bools >> 7) & 1) > 0;
     }
 
     public boolean isFlat() {

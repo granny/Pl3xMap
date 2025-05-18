@@ -85,12 +85,12 @@ public class BiomeRegistry extends Registry<Biome> {
         }
     }
 
-    public Biome register(String id, int color, int foliage, int grass, int water, Biome.GrassModifier grassModifier) {
+    public Biome register(String id, int color, int dryFoliage, int foliage, int grass, int water, Biome.GrassModifier grassModifier) {
         if (has(id)) {
             throw new KeyAlreadyExistsException("Biome already registered: " + id);
         }
 
-        return register(id, new Biome(getNextIndex(id), id, color, foliage, grass, water, grassModifier));
+        return register(id, new Biome(getNextIndex(id), id, color, dryFoliage, foliage, grass, water, grassModifier));
     }
 
     @Override

@@ -30,19 +30,21 @@ import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public final class Biome extends Keyed {
-    public static final Biome DEFAULT = new Biome(0, "minecraft:default", 0x000070, 0x73A74E, 0x8EB971, 0x3F76E4, (x, z, def) -> def);
+    public static final Biome DEFAULT = new Biome(0, "minecraft:default", 0x000070, 0x9E814D, 0x73A74E, 0x8EB971, 0x3F76E4, (x, z, def) -> def);
     private final int index;
     private final int color;
     private final int foliage;
+    private final int dryFoliage;
     private final int grass;
     private final int water;
     private final GrassModifier grassModifier;
 
-    public Biome(int index, String key, int color, int foliage, int grass, int water, GrassModifier grassModifier) {
+    public Biome(int index, String key, int color, int dryFoliage, int foliage, int grass, int water, GrassModifier grassModifier) {
         super(key);
         this.index = index;
         this.color = color;
         this.foliage = foliage;
+        this.dryFoliage = foliage;
         this.grass = grass;
         this.water = water;
         this.grassModifier = grassModifier;
@@ -58,6 +60,10 @@ public final class Biome extends Keyed {
 
     public int color() {
         return color;
+    }
+
+    public int dryFoliage() {
+        return dryFoliage;
     }
 
     public int foliage() {
@@ -101,6 +107,7 @@ public final class Biome extends Keyed {
                 "index=" + index + ", " +
                 "key=" + getKey() + ", " +
                 "color=" + color + ", " +
+                "foliage=" + dryFoliage + ", " +
                 "foliage=" + foliage + ", " +
                 "grass=" + grass + ", " +
                 "water=" + water + ", " +

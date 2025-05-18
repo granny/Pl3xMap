@@ -42,14 +42,12 @@ public class MixinServerPlayer implements AccessServerPlayer {
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
-        compoundTag.putByte("pl3xmap.hidden", (byte) (this.hidden ? 1 : 0));
+        compoundTag.putBoolean("pl3xmap.hidden", this.hidden);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
-        if (compoundTag.contains("pl3xmap.hidden", 1)) {
-            this.hidden = compoundTag.getByte("pl3xmap.hidden") != (byte) 0;
-        }
+        this.hidden = compoundTag.getBooleanOr("pl3xmap.hidden", false);
     }
 
     @Override

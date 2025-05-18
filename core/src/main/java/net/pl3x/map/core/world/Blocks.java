@@ -1129,6 +1129,15 @@ public class Blocks {
     public static final Block WEATHERED_COPPER_BULB = register(new Block(1093, "minecraft:weathered_copper_bulb", 0x5B7D63));
     public static final Block WEATHERED_COPPER_GRATE = register(new Block(1094, "minecraft:weathered_copper_grate", 0x6A9A6F));
     public static final Block WEATHERED_COPPER_TRAPDOOR = register(new Block(1095, "minecraft:weathered_copper_trapdoor", 0x6D9A6E));
+    public static final Block CACTUS_FLOWER = register(new Block(1096, "minecraft:cactus_flower", 0x0D27988));
+    public static final Block BUSH = register(new Block(1097, "minecraft:bush", 0x797979));
+    public static final Block FIREFLY_BUSH = register(new Block(1098, "minecraft:firefly_bush", 0x57532B));
+    public static final Block WILDFLOWERS = register(new Block(1099, "minecraft:wildflowers", 0xECD678));
+    public static final Block TALL_DRY_GRASS = register(new Block(1100, "minecraft:tall_dry_grass", 0xC5AC7B));
+    public static final Block TEST_BLOCK = register(new Block(1101, "minecraft:test_block", 0x97B5D7));
+    public static final Block SHORT_DRY_GRASS = register(new Block(1102, "minecraft:short_dry_grass", 0xBDA16F));
+    public static final Block LEAF_LITTER = register(new Block(1103, "minecraft:leaf_litter", 0xA8A8A8));
+    public static final Block TEST_INSTANCE_BLOCK = register(new Block(1104, "minecraft:test_instance_block", 0x847E7D));
 
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
