@@ -72,7 +72,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
 
     public Pl3xMapFabricClient() {
         instance = this;
-        this.scheduler = new ClientScheduler();
+        this.scheduler = new Scheduler();
         this.tileManager = new TileManager(this);
     }
 
