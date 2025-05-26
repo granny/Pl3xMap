@@ -69,6 +69,10 @@ public class Logger {
     }
 
     private static void log(String message) {
-        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(Lang.PREFIX_COMMAND + message));
+        if (Pl3xMap.api().isEnabled()) {
+            Pl3xMap.api().adventure().console().sendMessage(Lang.parse(Lang.PREFIX_COMMAND + message));
+        } else {
+            System.out.println(Lang.strip(Lang.PREFIX_COMMAND + message));
+        }
     }
 }
