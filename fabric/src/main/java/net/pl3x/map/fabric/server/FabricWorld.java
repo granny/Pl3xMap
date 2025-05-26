@@ -24,6 +24,7 @@
 package net.pl3x.map.fabric.server;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.pl3x.map.core.Pl3xMap;
@@ -141,10 +143,14 @@ public class FabricWorld extends World {
 
     @Override
     public Collection<Player> getPlayers() {
-        return this.<ServerLevel>getLevel().players().stream()
-                .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        Set<Player> players = new HashSet<>();
+        for (ServerPlayer serverPlayer : this.<ServerLevel>getLevel().players()) {
+            Player player = Pl3xMap.api().getPlayerRegistry().get(serverPlayer.getUUID());
+            if (player != null) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     @Override
