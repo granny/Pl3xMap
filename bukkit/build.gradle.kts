@@ -2,6 +2,7 @@ plugins {
     id("java")
     alias(libs.plugins.paperweight.userdev)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.run.paper)
 }
 
 val buildNum = System.getenv("NEXT_BUILD_NUMBER") ?: "SNAPSHOT"
@@ -62,6 +63,10 @@ tasks {
 
     build {
         dependsOn(reobfJar)
+    }
+
+    runServer {
+        minecraftVersion(libs.versions.minecraft.get())
     }
 
     processResources {
