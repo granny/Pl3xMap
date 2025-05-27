@@ -97,3 +97,7 @@ permissions:
     default: op
     children:
       pl3xmap.command.map: true
+
+  pl3xmap.player.can-be-hidden:
+    description: Determines if a player can be hidden on the map
+    default: true

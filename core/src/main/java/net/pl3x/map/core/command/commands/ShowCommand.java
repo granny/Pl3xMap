@@ -54,22 +54,28 @@ public class ShowCommand extends Pl3xMapCommand {
 
     private void execute(CommandContext<Sender> context) {
         Sender sender = context.sender();
-        Player target = getHandler().getPlatformParsers().resolvePlayerFromPlayerSelector("player", context);
+        Player player = getHandler().getPlatformParsers().resolvePlayerFromPlayerSelector("player", context);
 
-        if (target == null) {
+        if (player == null) {
             sender.sendMessage(Lang.ERROR_MUST_SPECIFY_PLAYER);
             return;
         }
 
-        if (!target.isHidden()) {
-            sender.sendMessage(Lang.COMMAND_SHOW_NOT_HIDDEN,
-                    Placeholder.unparsed("player", target.getName()));
+        if (!player.canBeHidden()){
+            sender.sendMessage(Lang.PLAYER_CANNOT_BE_HIDDEN_OR_SHOWN,
+                    Placeholder.unparsed("player", player.getName()));
             return;
         }
 
-        target.setHidden(false, true);
+        if (!player.isHidden()) {
+            sender.sendMessage(Lang.COMMAND_SHOW_NOT_HIDDEN,
+                    Placeholder.unparsed("player", player.getName()));
+            return;
+        }
+
+        player.setHidden(false, true);
 
         sender.sendMessage(Lang.COMMAND_SHOW_SUCCESS,
-                Placeholder.unparsed("player", target.getName()));
+                Placeholder.unparsed("player", player.getName()));
     }
 }

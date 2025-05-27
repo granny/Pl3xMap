@@ -95,6 +95,9 @@ public class PlayersLayer extends WorldLayer {
     public Collection<Marker<?>> getMarkers() {
         Set<Marker<?>> icons = new HashSet<>();
         getWorld().getPlayers().forEach(player -> {
+            if (!player.canBeHidden()) {
+                return;
+            }
             if (player.isHidden()) {
                 return;
             }
