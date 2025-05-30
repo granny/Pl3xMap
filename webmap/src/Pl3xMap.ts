@@ -1,3 +1,4 @@
+import * as L from "leaflet";
 import {Settings} from "./settings/Settings";
 import {ControlManager} from "./control/ControlManager";
 import {PlayerManager} from "./player/PlayerManager";
@@ -57,9 +58,19 @@ export class Pl3xMap {
         getJSON('tiles/settings.json').then((json) => {
             this._settings = json as Settings;
             document.title = this._settings.lang.title;
-            //this.map.options.zoomSnap = json.zoom.snap;
-            //this.map.options.zoomDelta = json.zoom.delta;
-            //this.map.options.wheelPxPerZoomLevel = json.zoom.wheel;
+
+            // these get weird when changed. so don't.
+            this.map.options.zoomSnap = 1;
+            this.map.options.zoomDelta = 1;
+
+            // chrome based browsers on linux zoom twice as fast, so we have to double the ratio
+            // effectively undoes the fix for Leaflet/Leaflet#4538 and Leaflet/Leaflet#7403
+            // https://github.com/Leaflet/Leaflet/commit/96977a19358374b0166cff049862fa1f0fed5948
+            //
+            // remove this logic when this bug gets fixed: https://issues.chromium.org/issues/40887377
+            // it seems intentional, so it might not get fixed https://issues.chromium.org/issues/40804672
+            this.map.options.wheelPxPerZoomLevel = L.Browser.linux && L.Browser.chrome ? 120 : 60;
+
             getJSON('lang/' + this._settings.lang.langFile).then((json): void => {
                 Object.entries(json).forEach((data: [string, unknown]): void => {
                     this._langPalette.set(data[0], <string>data[1]);
