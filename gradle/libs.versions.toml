@@ -1,9 +1,9 @@
 [versions]
-bukkit="1.21.5-R0.1-SNAPSHOT"
-minecraft="1.21.5"
+bukkit="1.21.6-R0.1-SNAPSHOT"
+minecraft="1.21.6"
 
 # https://fabricmc.net/develop/
-fabricApi="0.123.2+1.21.5"
+fabricApi="0.127.0+1.21.6"
 fabricLoader="0.16.14"
 fabricLoom="1.10-SNAPSHOT"
 
@@ -17,7 +17,7 @@ run-paper="2.3.1" # https://github.com/jpenilla/run-task
 indra-git="3.1.3" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.5" # https://github.com/GradleUp/shadow
 
-adventure="4.21.0" # https://github.com/KyoriPowered/adventure
+adventure="4.22.0" # https://github.com/KyoriPowered/adventure
 adventureBukkit="4.4.0" # https://github.com/KyoriPowered/adventure-platform
 adventureFabric="6.4.0" # https://github.com/KyoriPowered/adventure-platform-fabric
 
