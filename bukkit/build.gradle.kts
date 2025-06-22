@@ -42,11 +42,10 @@ dependencies {
 }
 
 tasks {
-// TODO: uncomment once paper has reobf support again
-//    reobfJar {
-//        dependsOn(jar)
-//        outputJar.set(jar.get().archiveFile)
-//    }
+    reobfJar {
+        dependsOn(jar)
+        outputJar.set(jar.get().archiveFile)
+    }
 
     // needed for below jank
     compileJava {
@@ -60,12 +59,10 @@ tasks {
         manifest {
             from(project(":core").tasks.named<Jar>("shadowJar").get().manifest)
         }
-
-        archiveClassifier.set("") // TODO: remove once paper has reobf support again
     }
 
     build {
-        dependsOn(shadowJar) // TODO: change back once paper has reobf support again
+        dependsOn(reobfJar)
     }
 
     runServer {
