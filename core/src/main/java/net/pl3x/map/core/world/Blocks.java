@@ -1138,6 +1138,7 @@ public class Blocks {
     public static final Block SHORT_DRY_GRASS = register(new Block(1102, "minecraft:short_dry_grass", 0xBDA16F));
     public static final Block LEAF_LITTER = register(new Block(1103, "minecraft:leaf_litter", 0xA8A8A8));
     public static final Block TEST_INSTANCE_BLOCK = register(new Block(1104, "minecraft:test_instance_block", 0x847E7D));
+    public static final Block DRIED_GHAST = register(new Block(1105, "minecraft:dried_ghast", 0x9F9191));
 
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
