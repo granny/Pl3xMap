@@ -1,18 +1,18 @@
 [versions]
-bukkit="1.21.6-R0.1-SNAPSHOT"
-minecraft="1.21.6"
+bukkit="1.21.7-R0.1-SNAPSHOT"
+minecraft="1.21.7"
 
 # https://fabricmc.net/develop/
-fabricApi="0.127.0+1.21.6"
+fabricApi="0.128.2+1.21.7"
 fabricLoader="0.16.14"
-fabricLoom="1.10-SNAPSHOT"
+fabricLoom="1.11-SNAPSHOT"
 
 #forge="1.20.2-48.0.6"
 #forgeGradle="[6.0,6.2)"
 #forgeLoader="[48,)"
 
 minotaur="2.+" # https://github.com/modrinth/minotaur
-paperweight="2.0.0-beta.17" # https://github.com/PaperMC/Paperweight
+paperweight="2.0.0-beta.18" # https://github.com/PaperMC/Paperweight
 run-paper="2.3.1" # https://github.com/jpenilla/run-task
 indra-git="3.1.3" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.5" # https://github.com/GradleUp/shadow
