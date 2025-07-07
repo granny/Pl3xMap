@@ -44,7 +44,7 @@ public final class Biome extends Keyed {
         this.index = index;
         this.color = color;
         this.foliage = foliage;
-        this.dryFoliage = foliage;
+        this.dryFoliage = dryFoliage;
         this.grass = grass;
         this.water = water;
         this.grassModifier = grassModifier;
@@ -107,7 +107,7 @@ public final class Biome extends Keyed {
                 "index=" + index + ", " +
                 "key=" + getKey() + ", " +
                 "color=" + color + ", " +
-                "foliage=" + dryFoliage + ", " +
+                "dryFoliage=" + dryFoliage + ", " +
                 "foliage=" + foliage + ", " +
                 "grass=" + grass + ", " +
                 "water=" + water + ", " +
