@@ -138,6 +138,11 @@ public class BukkitWorld extends World {
     }
 
     @Override
+    public int getDimensionHeight() {
+        return this.level.dimensionType().height();
+    }
+
+    @Override
     public int getLogicalHeight() {
         return this.level.getLogicalHeight();
     }
