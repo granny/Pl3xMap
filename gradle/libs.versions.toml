@@ -1,9 +1,9 @@
 [versions]
-bukkit="1.21.7-R0.1-SNAPSHOT"
-minecraft="1.21.7"
+bukkit="1.21.8-R0.1-SNAPSHOT"
+minecraft="1.21.8"
 
 # https://fabricmc.net/develop/
-fabricApi="0.128.2+1.21.7"
+fabricApi="0.129.0+1.21.8"
 fabricLoader="0.16.14"
 fabricLoom="1.11-SNAPSHOT"
 
@@ -22,14 +22,14 @@ adventureBukkit="4.4.1-granny-SNAPSHOT" # https://github.com/KyoriPowered/advent
 adventureFabric="6.5.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
 
 cloud="2.0.0" # https://github.com/incendo/cloud
-cloud-minecraft="2.0.0-beta.10" # https://github.com/Incendo/cloud-minecraft
-cloud-minecraft-modded="2.0.0-beta.10" # https://github.com/Incendo/cloud-minecraft-modded
+cloud-minecraft="2.0.0-beta.11" # https://github.com/Incendo/cloud-minecraft
+cloud-minecraft-modded="2.0.0-beta.12" # https://github.com/Incendo/cloud-minecraft-modded
 cloud-processors="1.0.0-rc.1" # https://github.com/Incendo/cloud-processors
 
-caffeine="3.1.8" # https://github.com/ben-manes/caffeine
-gson="2.11.0" # https://github.com/google/gson
-guava="33.0.0-jre" # https://github.com/google/guava
-log4j="2.14.1" # https://github.com/apache/logging-log4j2
+caffeine="3.2.2" # https://github.com/ben-manes/caffeine
+gson="2.13.1" # https://github.com/google/gson
+guava="33.4.8-jre" # https://github.com/google/guava
+log4j="2.25.1" # https://github.com/apache/logging-log4j2
 
 querzNbt="6.1" # https://github.com/Querz/NBT
 
