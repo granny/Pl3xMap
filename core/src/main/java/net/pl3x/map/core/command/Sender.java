@@ -31,34 +31,35 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a command sender.
  */
+@NullMarked
 public abstract class Sender implements ForwardingAudience.Single {
     private final Object sender;
 
-    public <T> Sender(@NotNull T sender) {
+    public <T> Sender(T sender) {
         this.sender = sender;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> @NotNull T getSender() {
+    public <T> T getSender() {
         return (T) this.sender;
     }
 
     @Override
-    public @NotNull Audience audience() {
+    public Audience audience() {
         return Pl3xMap.api().adventure().console();
     }
 
-    public void sendMessage(@NotNull String message) {
+    public void sendMessage(String message) {
         sendMessage(message, true);
     }
 
-    public void sendMessage(@NotNull String message, boolean prefix) {
+    public void sendMessage(String message, boolean prefix) {
         if (!Lang.strip(message).isBlank()) {
             for (String part : message.split("\n")) {
                 sendMessage(prefix, Lang.parse(part));
@@ -66,11 +67,11 @@ public abstract class Sender implements ForwardingAudience.Single {
         }
     }
 
-    public void sendMessage(@NotNull String message, @NotNull TagResolver.@NotNull Single... placeholders) {
+    public void sendMessage(String message, TagResolver.Single... placeholders) {
         sendMessage(message, true, placeholders);
     }
 
-    public void sendMessage(@NotNull String message, boolean prefix, @NotNull TagResolver.@NotNull Single... placeholders) {
+    public void sendMessage(String message, boolean prefix, TagResolver.Single... placeholders) {
         if (!Lang.strip(message).isBlank()) {
             for (String part : message.split("\n")) {
                 sendMessage(prefix, Lang.parse(part, placeholders));
@@ -78,7 +79,7 @@ public abstract class Sender implements ForwardingAudience.Single {
         }
     }
 
-    public void sendMessage(boolean prefix, @NotNull ComponentLike message) {
+    public void sendMessage(boolean prefix, ComponentLike message) {
         audience().sendMessage(prefix ? Lang.parse(Lang.PREFIX_COMMAND).append(message) : message);
     }
 
@@ -89,12 +90,12 @@ public abstract class Sender implements ForwardingAudience.Single {
     public abstract int hashCode();
 
     @Override
-    public abstract @NotNull String toString();
+    public abstract String toString();
 
     public interface Player<T> {
-        @NotNull T getPlayer();
+        T getPlayer();
 
-        @NotNull UUID getUUID();
+        UUID getUUID();
 
         @Nullable World getWorld();
     }

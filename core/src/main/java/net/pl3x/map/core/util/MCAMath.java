@@ -24,6 +24,9 @@
  */
 package net.pl3x.map.core.util;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class MCAMath {
     /**
      * Having a long array where each long contains as many values as fit in it without overflowing, returning the "valueIndex"-th value when each value has "bitsPerValue" bits.

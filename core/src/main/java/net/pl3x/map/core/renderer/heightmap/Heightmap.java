@@ -28,18 +28,19 @@ import java.util.Objects;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public abstract class Heightmap extends Keyed {
     public final int[] x = new int[16];
     public final int[] z = new int[16];
 
-    public Heightmap(@NotNull String name) {
+    public Heightmap(String name) {
         super(name);
     }
 
-    public abstract int getColor(@NotNull Region region, int blockX, int blockZ);
+    public abstract int getColor(Region region, int blockX, int blockZ);
 
     public int getMin() {
         return 0x00;
@@ -81,7 +82,7 @@ public abstract class Heightmap extends Keyed {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Heightmap{"
                 + "key=" + getKey()
                 + ",x=" + Arrays.toString(this.x)

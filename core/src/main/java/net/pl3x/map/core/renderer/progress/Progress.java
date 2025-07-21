@@ -31,9 +31,10 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Progress implements Runnable {
     private final CPSTracker cpsTracker = new CPSTracker();
 
@@ -41,7 +42,7 @@ public class Progress implements Runnable {
     private final AtomicLong processedRegions = new AtomicLong(0);
 
     private final Executor executor;
-    private CompletableFuture<@NotNull Void> future;
+    private CompletableFuture<Void> future;
 
     private World world;
 
@@ -128,11 +129,11 @@ public class Progress implements Runnable {
         return this.cps;
     }
 
-    public @NotNull String getETA() {
+    public String getETA() {
         return this.eta;
     }
 
-    public @NotNull AtomicLong getProcessedChunks() {
+    public AtomicLong getProcessedChunks() {
         return this.processedChunks;
     }
 
@@ -141,7 +142,7 @@ public class Progress implements Runnable {
         this.prevProcessedChunks = processedChunks;
     }
 
-    public @NotNull AtomicLong getProcessedRegions() {
+    public AtomicLong getProcessedRegions() {
         return this.processedRegions;
     }
 
@@ -176,7 +177,7 @@ public class Progress implements Runnable {
         }
     }
 
-    public static @NotNull String formatMilliseconds(long time) {
+    public static String formatMilliseconds(long time) {
         int hrs = (int) TimeUnit.MILLISECONDS.toHours(time);
         int min = (int) TimeUnit.MILLISECONDS.toMinutes(time) % 60;
         int sec = (int) TimeUnit.MILLISECONDS.toSeconds(time) % 60;

@@ -33,13 +33,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class RegionModifiedState {
-    private final Map<@NotNull Long, @NotNull Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
+    private final Map<Long, Long> regionModifiedStates = new ConcurrentHashMap<>(); // <pos, modified>
     private final File file;
 
-    public RegionModifiedState(@NotNull World world) {
+    public RegionModifiedState(World world) {
         this.file = world.getTilesDirectory().resolve(".rms").toFile();
 
         if (this.file.exists()) {

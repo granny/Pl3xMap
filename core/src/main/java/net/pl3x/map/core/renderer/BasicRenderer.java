@@ -26,15 +26,16 @@ package net.pl3x.map.core.renderer;
 import net.pl3x.map.core.renderer.task.RegionScanTask;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public final class BasicRenderer extends Renderer {
-    public BasicRenderer(@NotNull RegionScanTask task, @NotNull Builder builder) {
+    public BasicRenderer(RegionScanTask task, Builder builder) {
         super(task, builder);
     }
 
     @Override
-    public void scanBlock(@NotNull Region region, @NotNull Chunk chunk, Chunk.@NotNull BlockData data, int blockX, int blockZ) {
+    public void scanBlock(Region region, Chunk chunk, Chunk.BlockData data, int blockX, int blockZ) {
         int pixelColor = basicPixelColor(region, data, blockX, blockZ);
         getTileImage().setPixel(blockX, blockZ, pixelColor);
     }

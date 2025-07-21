@@ -59,19 +59,20 @@ import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class FileUtil {
-    public static @NotNull Path getTilesDir() {
+    public static Path getTilesDir() {
         return getWebDir().resolve("tiles");
     }
 
-    public static @NotNull Path getWebDir() {
+    public static Path getWebDir() {
         return Config.WEB_DIR.startsWith("/") ? Path.of(Config.WEB_DIR) : Pl3xMap.api().getMainDir().resolve(Config.WEB_DIR);
     }
 
-    public static void extractFile(@NotNull Class<?> clazz, @NotNull String filename, @NotNull Path outDir, boolean replace) {
+    public static void extractFile(Class<?> clazz, String filename, Path outDir, boolean replace) {
         try (InputStream in = clazz.getResourceAsStream("/" + filename)) {
             if (in == null) {
                 throw new RuntimeException("Could not read file from jar! (" + filename + ")");
@@ -86,7 +87,7 @@ public class FileUtil {
         }
     }
 
-    public static void extractDir(@NotNull String sourceDir, @NotNull Path outDir, boolean replace) {
+    public static void extractDir(String sourceDir, Path outDir, boolean replace) {
         try (JarFile jarFile = new JarFile(Pl3xMap.api().getJarPath().toFile())) {
             Logger.debug("Extracting " + sourceDir + " directory from jar...");
             String path = sourceDir.substring(1);
@@ -137,7 +138,7 @@ public class FileUtil {
         }
     }
 
-    public static void writeJson(@NotNull String str, @NotNull Path file) {
+    public static void writeJson(String str, Path file) {
         Path tmp = tmp(file);
         try (
                 OutputStream fileOut = Files.newOutputStream(mkDirs(tmp));
@@ -155,7 +156,7 @@ public class FileUtil {
         }
     }
 
-    public static void saveGzip(@NotNull String json, @NotNull Path file) throws IOException {
+    public static void saveGzip(String json, Path file) throws IOException {
         Path tmp = tmp(file);
         try (
                 OutputStream fileOut = Files.newOutputStream(mkDirs(tmp));
@@ -168,7 +169,7 @@ public class FileUtil {
         atomicMove(tmp, file);
     }
 
-    public static void saveGzip(byte[] bytes, @NotNull Path file) throws IOException {
+    public static void saveGzip(byte[] bytes, Path file) throws IOException {
         Path tmp = tmp(file);
         try (
                 OutputStream fileOut = Files.newOutputStream(mkDirs(tmp));
@@ -180,7 +181,7 @@ public class FileUtil {
         atomicMove(tmp, file);
     }
 
-    public static void readGzip(@NotNull Path file, @NotNull ByteBuffer buffer) throws IOException {
+    public static void readGzip(Path file, ByteBuffer buffer) throws IOException {
         try (
                 InputStream fileIn = Files.newInputStream(file);
                 GZIPInputStream gzipIn = new GZIPInputStream(fileIn)
@@ -192,7 +193,7 @@ public class FileUtil {
         }
     }
 
-    public static String readGzip(@NotNull Path file) throws IOException {
+    public static String readGzip(Path file) throws IOException {
         try (
                 InputStream fileIn = Files.newInputStream(file);
                 GZIPInputStream gzipIn = new GZIPInputStream(fileIn);
@@ -240,7 +241,7 @@ public class FileUtil {
         }
     }
 
-    public static @NotNull Path mkDirs(@NotNull Path file) throws IOException {
+    public static Path mkDirs(Path file) throws IOException {
         if (!Files.exists(file)) {
             Files.createDirectories(file.getParent());
             Files.createFile(file);
@@ -248,7 +249,7 @@ public class FileUtil {
         return file;
     }
 
-    public static void createDirs(@NotNull Path dirPath) {
+    public static void createDirs(Path dirPath) {
         if (!Files.exists(dirPath)) {
             try {
                 Files.createDirectories(dirPath);
@@ -259,7 +260,7 @@ public class FileUtil {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void deleteDirectory(@NotNull Path dir) throws IOException {
+    public static void deleteDirectory(Path dir) throws IOException {
         try (Stream<Path> walk = Files.walk(dir)) {
             walk.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
@@ -267,7 +268,7 @@ public class FileUtil {
         }
     }
 
-    public static @NotNull Collection<@NotNull Point> regionPathsToPoints(@NotNull World world, @Nullable Collection<@NotNull Path> paths, boolean ignoreTimestamp) {
+    public static Collection<Point> regionPathsToPoints(World world, @Nullable Collection<Path> paths, boolean ignoreTimestamp) {
         if (paths == null || paths.isEmpty()) {
             return Collections.emptyList();
         }

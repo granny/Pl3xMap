@@ -3,8 +3,9 @@
  */
 package net.pl3x.map.core.world;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BiomeManager {
     private final long hashedSeed;
 
@@ -12,7 +13,7 @@ public class BiomeManager {
         this.hashedSeed = hashedSeed;
     }
 
-    public @NotNull Biome getBiome(@NotNull Region region, int x, int y, int z) {
+    public Biome getBiome(Region region, int x, int y, int z) {
         int i = x - 2;
         int j = y - 2;
         int k = z - 2;

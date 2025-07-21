@@ -19,11 +19,12 @@ package net.pl3x.map.core.util;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 // from apache commons StringEscapeUtils
 
+@NullMarked
 public class StringUtils {
     public static @Nullable String unescapeJava(@Nullable String str) {
         if (str == null) {
@@ -89,7 +90,7 @@ public class StringUtils {
         }
     }
 
-    private static boolean handleSlash(@NotNull Writer out, char ch, boolean inUnicode) throws IOException {
+    private static boolean handleSlash(Writer out, char ch, boolean inUnicode) throws IOException {
         switch (ch) {
             case '\\' -> out.write('\\');
             case '\'' -> out.write('\'');

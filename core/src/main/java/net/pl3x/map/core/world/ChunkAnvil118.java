@@ -36,9 +36,10 @@ import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.StringTag;
 import net.querz.nbt.tag.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class ChunkAnvil118 extends Chunk {
     private int sectionMin = Integer.MAX_VALUE;
 
@@ -48,7 +49,7 @@ public class ChunkAnvil118 extends Chunk {
 
     private final boolean full;
 
-    protected ChunkAnvil118(@NotNull World world, @NotNull Region region, @NotNull CompoundTag chunkTag, int index) {
+    protected ChunkAnvil118(World world, Region region, CompoundTag chunkTag, int index) {
         super(world, region, chunkTag, index);
 
         this.full = chunkTag.getString("Status").endsWith("full"); // 1.20 uses minecraft namespace here
@@ -85,7 +86,7 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
-    public @NotNull BlockState getBlockState(int x, int y, int z) {
+    public BlockState getBlockState(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
         return section == null ? Blocks.AIR.getDefaultState() : section.getBlockState(x, y, z);
@@ -99,7 +100,7 @@ public class ChunkAnvil118 extends Chunk {
     }
 
     @Override
-    public @NotNull Biome getBiome(int x, int y, int z) {
+    public Biome getBiome(int x, int y, int z) {
         int sectionY = y >> 4;
         Section section = getSection(sectionY);
         return section == null ? Biome.DEFAULT : section.getBiome(x, y, z);
@@ -115,7 +116,7 @@ public class ChunkAnvil118 extends Chunk {
         if (noHeightmap()) {
             return getWorld().getMinBuildHeight();
         }
-        return heightmap(getWorld().getMaxBuildHeight(), this.worldSurfaceHeights).get(((z & 0xF) << 4) + (x & 0xF));
+        return heightmap(getWorld().getDimensionHeight(), this.worldSurfaceHeights).get(((z & 0xF) << 4) + (x & 0xF));
     }
 
     private @Nullable Section getSection(int y) {
@@ -137,7 +138,7 @@ public class ChunkAnvil118 extends Chunk {
         private final int bitsPerBlock;
         private final int bitsPerBiome;
 
-        public Section(@NotNull World world, @NotNull CompoundTag sectionData) {
+        public Section(World world, CompoundTag sectionData) {
             this.sectionY = sectionData.getNumber("Y").intValue();
             this.blockLight = sectionData.getByteArray("BlockLight");
             this.blocks = sectionData.getLongArray("BlockStates");
@@ -186,7 +187,7 @@ public class ChunkAnvil118 extends Chunk {
             this.bitsPerBiome = MCAMath.ceilLog2(this.biomePalette.length);
         }
 
-        public @NotNull BlockState getBlockState(int x, int y, int z) {
+        public BlockState getBlockState(int x, int y, int z) {
             if (this.blockPalette.length == 1) {
                 return this.blockPalette[0];
             }
@@ -211,7 +212,7 @@ public class ChunkAnvil118 extends Chunk {
             return MCAMath.getByteHalf(this.blockLight[blockHalfByteIndex], largeHalf);
         }
 
-        public @NotNull Biome getBiome(int x, int y, int z) {
+        public Biome getBiome(int x, int y, int z) {
             if (this.biomePalette.length == 0) {
                 return Biome.DEFAULT;
             }

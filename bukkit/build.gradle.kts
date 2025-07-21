@@ -2,6 +2,7 @@ plugins {
     id("java")
     alias(libs.plugins.paperweight.userdev)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.run.paper)
 }
 
 val buildNum = System.getenv("NEXT_BUILD_NUMBER") ?: "SNAPSHOT"
@@ -13,6 +14,7 @@ base {
 }
 
 repositories {
+    maven("https://repo.granny.dev/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/") {
         name = "oss-sonatype-snapshots"
         mavenContent {
@@ -48,7 +50,8 @@ dependencies {
 
 tasks {
     reobfJar {
-        dependsOn(shadowJar)
+        dependsOn(jar)
+        outputJar.set(jar.get().archiveFile)
     }
 
     // needed for below jank
@@ -73,6 +76,10 @@ tasks {
 
     build {
         dependsOn(reobfJar)
+    }
+
+    runServer {
+        minecraftVersion(libs.versions.minecraft.get())
     }
 
     processResources {

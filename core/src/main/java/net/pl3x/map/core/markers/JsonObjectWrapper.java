@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.pl3x.map.core.markers.option.Option;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a wrapped {@link JsonObject} with extra '<code>addProperty</code>' methods,
@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * Null values cannot be added to this JsonObject, they will simply be ignored when added.
  */
 @SuppressWarnings("unused")
+@NullMarked
 public class JsonObjectWrapper {
     private final JsonObject wrapped;
 
@@ -48,7 +49,7 @@ public class JsonObjectWrapper {
      *
      * @return JsonObject
      */
-    public @NotNull JsonObject getJsonObject() {
+    public JsonObject getJsonObject() {
         return this.wrapped;
     }
 
@@ -61,7 +62,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the enum value associated with the member.
      */
-    public void addProperty(@NotNull String property, @Nullable Enum<?> value) {
+    public void addProperty(String property, @Nullable Enum<?> value) {
         if (value == null) {
             return;
         }
@@ -75,7 +76,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the json serializable value associated with the member.
      */
-    public void addProperty(@NotNull String property, @Nullable JsonSerializable value) {
+    public void addProperty(String property, @Nullable JsonSerializable value) {
         if (value == null) {
             return;
         }
@@ -89,7 +90,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the option value associated with the member.
      */
-    public void addProperty(@NotNull String property, @Nullable Option<?> value) {
+    public void addProperty(String property, @Nullable Option<?> value) {
         if (value == null) {
             return;
         }
@@ -103,7 +104,7 @@ public class JsonObjectWrapper {
      * @param property name of the member.
      * @param value    the value associated with the member.
      */
-    public void addProperty(@NotNull String property, @Nullable List<? extends @NotNull JsonSerializable> value) {
+    public void addProperty(String property, @Nullable List<? extends JsonSerializable> value) {
         if (value == null) {
             return;
         }

@@ -7,7 +7,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record ClientboundServerPayload(int protocol, int response, String webAddress) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, ClientboundServerPayload> STREAM_CODEC = CustomPacketPayload.codec(ClientboundServerPayload::write, ClientboundServerPayload::new);
     public static final Type<ClientboundServerPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "client_server_data"));

@@ -5,7 +5,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.network.Constants;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record ClientboundMapPayload(int protocol, int response, int mapId, byte scale, int centerX, int centerZ, String worldName) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, ClientboundMapPayload> STREAM_CODEC = CustomPacketPayload.codec(ClientboundMapPayload::write, ClientboundMapPayload::new);
     public static final Type<ClientboundMapPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "client_map_data"));

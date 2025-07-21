@@ -31,7 +31,9 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.message.Message;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class LogFilter implements Filter {
     private final List<String> filters = new ArrayList<>();
 

@@ -45,41 +45,42 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class BukkitPlayer extends Player {
     private final NamespacedKey hiddenKey = new NamespacedKey(Pl3xMapBukkit.getProvidingPlugin(Pl3xMapBukkit.class), "hidden");
 
-    public BukkitPlayer(org.bukkit.entity.@NotNull Player player) {
+    public BukkitPlayer(org.bukkit.entity.Player player) {
         super(player.getName(), player);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public org.bukkit.entity.@NotNull Player getPlayer() {
+    public org.bukkit.entity.Player getPlayer() {
         return super.getPlayer();
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return getPlayer().getName();
     }
 
     @Override
-    public @NotNull UUID getUUID() {
+    public UUID getUUID() {
         return getPlayer().getUniqueId();
     }
 
     @Override
-    public @NotNull World getWorld() {
+    public World getWorld() {
         org.bukkit.World world = getPlayer().getWorld();
         return Pl3xMap.api().getWorldRegistry().getOrDefault(world.getName(),
                 () -> new BukkitWorld(((CraftWorld) world).getHandle(), world.getName()));
     }
 
     @Override
-    public @NotNull Point getPosition() {
+    public Point getPosition() {
         Location loc = getPlayer().getLocation();
         return Point.of(loc.getBlockX(), loc.getBlockZ());
     }
@@ -96,7 +97,7 @@ public class BukkitPlayer extends Player {
 
     @Override
     public int getArmorPoints() {
-        AttributeInstance attr = getPlayer().getAttribute(Attribute.GENERIC_ARMOR);
+        AttributeInstance attr = getPlayer().getAttribute(Attribute.ARMOR);
         return attr == null ? 0 : (int) Math.round(attr.getValue());
     }
 
@@ -157,7 +158,7 @@ public class BukkitPlayer extends Player {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "BukkitPlayer{"
                 + "player=" + getPlayer().getUniqueId()
                 + "}";

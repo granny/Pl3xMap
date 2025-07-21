@@ -24,9 +24,10 @@
 package net.pl3x.map.core.world;
 
 import java.util.Arrays;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class LegacyBiomes {
     private static final Biome[] BIOME_IDS = new Biome[174];
 
@@ -114,8 +115,8 @@ public class LegacyBiomes {
         BIOME_IDS[173] = create("minecraft:basalt_deltas", 2.0F, 0.0F, 0x403636, 0xA9A52C, 0xBFB755, 0x3F76E4);
     }
 
-    private static @NotNull Biome create(@NotNull String id, float temperature, float humidity, int color, int foliage, int grass, int water) {
-        return new Biome(0, id, color, foliage, grass, water, (x, z, def) -> def);
+    private static Biome create(String id, float temperature, float humidity, int color, int foliage, int grass, int water) {
+        return new Biome(0, id, color, 0x9E814D, foliage, grass, water, (x, z, def) -> def);
     }
 
     public static @Nullable Biome get(int legacyId) {

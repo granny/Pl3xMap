@@ -26,8 +26,9 @@ package net.pl3x.map.core.markers.area;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class Border implements Area {
     private final World world;
 
@@ -67,18 +68,18 @@ public class Border implements Area {
     }
 
     @Override
-    public @NotNull Map<String, Object> serialize() {
+    public Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("type", "world-border");
         return map;
     }
 
-    public static @NotNull Border deserialize(World world, @SuppressWarnings("unused") Map<String, Object> map) {
+    public static Border deserialize(World world, @SuppressWarnings("unused") Map<String, Object> map) {
         return new Border(world);
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Border{"
                 + "minX=" + getMinX()
                 + ",minZ=" + getMinZ()

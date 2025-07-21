@@ -1,42 +1,43 @@
 [versions]
-bukkit="1.21.1-R0.1-SNAPSHOT"
-minecraft="1.21.1"
+bukkit="1.21.8-R0.1-SNAPSHOT"
+minecraft="1.21.8"
 
 # https://fabricmc.net/develop/
-fabricApi="0.102.1+1.21.1"
-fabricLoader="0.16.2"
-fabricLoom="1.7-SNAPSHOT"
+fabricApi="0.129.0+1.21.8"
+fabricLoader="0.16.14"
+fabricLoom="1.11-SNAPSHOT"
 
 neoforge="21.1.23"
 neoGradle="7.0.145"
 neoforgeLoader="[4,)"
 
 minotaur="2.+" # https://github.com/modrinth/minotaur
-paperweight="1.7.2" # https://github.com/PaperMC/Paperweight
+paperweight="2.0.0-beta.18" # https://github.com/PaperMC/Paperweight
+run-paper="2.3.1" # https://github.com/jpenilla/run-task
 indra-git="3.1.3" # https://github.com/KyoriPowered/indra
-shadowJar="8.3.0" # https://github.com/GradleUp/shadow
+shadowJar="8.3.5" # https://github.com/GradleUp/shadow
 
-adventure="4.17.0"
-adventureBukkit="4.3.4" # https://github.com/KyoriPowered/adventure-platform
-adventureFabric="5.14.1" # https://github.com/KyoriPowered/adventure-platform-fabric
+adventure="4.24.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure
+adventureBukkit="4.4.1-granny-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform
+adventureFabric="6.5.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
 adventureModded="6.0.0" # https://github.com/KyoriPowered/adventure-platform-fabric
 
 cloud="2.0.0" # https://github.com/incendo/cloud
-cloud-minecraft="2.0.0-beta.10" # https://github.com/Incendo/cloud-minecraft
-cloud-minecraft-modded="2.0.0-beta.9" # https://github.com/Incendo/cloud-minecraft-modded
+cloud-minecraft="2.0.0-beta.11" # https://github.com/Incendo/cloud-minecraft
+cloud-minecraft-modded="2.0.0-beta.12" # https://github.com/Incendo/cloud-minecraft-modded
 cloud-processors="1.0.0-rc.1" # https://github.com/Incendo/cloud-processors
 
-caffeine="3.1.8" # https://github.com/ben-manes/caffeine
-gson="2.10.1" # https://github.com/google/gson
-guava="33.0.0-jre" # https://github.com/google/guava
-log4j="2.14.1" # https://github.com/apache/logging-log4j2
+caffeine="3.2.2" # https://github.com/ben-manes/caffeine
+gson="2.13.1" # https://github.com/google/gson
+guava="33.4.8-jre" # https://github.com/google/guava
+log4j="2.25.1" # https://github.com/apache/logging-log4j2
 
 querzNbt="6.1" # https://github.com/Querz/NBT
 
 lz4Java="1.8.0" # https://github.com/lz4/lz4-java
 simpleYaml="1.8.4" # https://github.com/Carleslc/Simple-YAML
 slf4j="2.0.1"
-undertow="2.3.12.Final" # https://github.com/undertow-io/undertow
+undertow="2.3.18.Final" # https://github.com/undertow-io/undertow
 #xnio="3.8.8.Final"
 
 
@@ -46,6 +47,7 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadowJar" }
 fabric-loom = { id = "fabric-loom", version.ref = "fabricLoom" }
 indra-git = { id = "net.kyori.indra.git", version.ref = "indra-git" }
 paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }
 neoforged-userdev = { id = "net.neoforged.gradle.userdev", version.ref = "neoGradle" }
 
 [libraries]
@@ -54,7 +56,7 @@ minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft
 
 log4j = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 
-jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
+jspecifyAnnotations = { group = "org.jspecify", name = "jspecify", version = "1.0.0" }
 
 undertow = { group = "io.undertow", name = "undertow-core", version.ref = "undertow" }
 

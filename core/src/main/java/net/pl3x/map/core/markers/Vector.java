@@ -24,26 +24,27 @@
 package net.pl3x.map.core.markers;
 
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record Vector(double x, double z) implements JsonSerializable {
-    public static @NotNull Vector of(int x, int z) {
+    public static Vector of(int x, int z) {
         return new Vector(x, z);
     }
 
-    public static @NotNull Vector of(double x, double z) {
+    public static Vector of(double x, double z) {
         return new Vector(x, z);
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("x", x());
         wrapper.addProperty("z", z());
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull Vector fromJson(@NotNull JsonObject obj) {
+    public static Vector fromJson(JsonObject obj) {
         return Vector.of(obj.get("x").getAsDouble(), obj.get("z").getAsDouble());
     }
 }

@@ -43,17 +43,18 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class TileManager {
     private static final BufferedImage EMPTY_IMAGE = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
 
-    private final Map<@NotNull String, @NotNull LoadingCache<@NotNull Long, @NotNull BufferedImage>> tiles = new ConcurrentHashMap<>();
+    private final Map<String, LoadingCache<Long, BufferedImage>> tiles = new ConcurrentHashMap<>();
     private final Pl3xMapFabricClient mod;
 
     private Task task;
 
-    public TileManager(@NotNull Pl3xMapFabricClient mod) {
+    public TileManager(Pl3xMapFabricClient mod) {
         this.mod = mod;
     }
 
@@ -75,7 +76,7 @@ public class TileManager {
         this.mod.getScheduler().addTask(this.task);
     }
 
-    public @NotNull BufferedImage get(@NotNull String world, int regionX, int regionZ) {
+    public BufferedImage get(String world, int regionX, int regionZ) {
         try {
             return this.tiles.computeIfAbsent(world, k -> Loader.create(this.mod, world)).get(Mathf.asLong(regionX, regionZ));
         } catch (ExecutionException e) {
@@ -100,21 +101,21 @@ public class TileManager {
         this.mod.updateAllMapTextures();
     }
 
-    private static class Loader extends CacheLoader<@NotNull Long, @NotNull BufferedImage> {
-        private static @NotNull LoadingCache<@NotNull Long, @NotNull BufferedImage> create(@NotNull Pl3xMapFabricClient mod, @NotNull String world) {
+    private static class Loader extends CacheLoader<Long, BufferedImage> {
+        private static LoadingCache<Long, BufferedImage> create(Pl3xMapFabricClient mod, String world) {
             return CacheBuilder.newBuilder().maximumSize(100).build(new Loader(mod, world));
         }
 
         private final Pl3xMapFabricClient mod;
         private final String world;
 
-        private Loader(@NotNull Pl3xMapFabricClient mod, @NotNull String world) {
+        private Loader(Pl3xMapFabricClient mod, String world) {
             this.mod = mod;
             this.world = world;
         }
 
         @Override
-        public @NotNull BufferedImage load(@NotNull Long region) {
+        public BufferedImage load(Long region) {
             if (this.mod.getServerUrl() == null) {
                 return EMPTY_IMAGE;
             }

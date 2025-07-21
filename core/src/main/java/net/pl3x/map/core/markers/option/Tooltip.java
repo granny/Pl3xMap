@@ -30,13 +30,14 @@ import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Mathf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tooltip properties of a marker.
  */
-public class Tooltip extends Option<@NotNull Tooltip> {
+@NullMarked
+public class Tooltip extends Option<Tooltip> {
     public static final Point DEFAULT_OFFSET = Point.ZERO;
 
     private String content;
@@ -83,7 +84,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param content tooltip content
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setContent(@Nullable String content) {
+    public Tooltip setContent(@Nullable String content) {
         this.content = content;
         return this;
     }
@@ -109,7 +110,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param pane map pane
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setPane(@Nullable String pane) {
+    public Tooltip setPane(@Nullable String pane) {
         this.pane = pane;
         return this;
     }
@@ -133,7 +134,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param offset tooltip offset
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setOffset(@Nullable Point offset) {
+    public Tooltip setOffset(@Nullable Point offset) {
         this.offset = offset;
         return this;
     }
@@ -157,7 +158,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param direction opening direction
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setDirection(@Nullable Direction direction) {
+    public Tooltip setDirection(@Nullable Direction direction) {
         this.direction = direction;
         return this;
     }
@@ -181,7 +182,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param permanent opened permanently
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setPermanent(@Nullable Boolean permanent) {
+    public Tooltip setPermanent(@Nullable Boolean permanent) {
         this.permanent = permanent;
         return this;
     }
@@ -209,7 +210,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param sticky sticky state
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setSticky(@Nullable Boolean sticky) {
+    public Tooltip setSticky(@Nullable Boolean sticky) {
         this.sticky = sticky;
         return this;
     }
@@ -233,7 +234,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
      * @param opacity tooltip opacity
      * @return this tooltip rule
      */
-    public @NotNull Tooltip setOpacity(@Nullable Double opacity) {
+    public Tooltip setOpacity(@Nullable Double opacity) {
         this.opacity = opacity == null ? null : Mathf.clamp(0D, 1D, opacity);
         return this;
     }
@@ -250,7 +251,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("content", getContent());
         wrapper.addProperty("pane", getPane());
@@ -262,7 +263,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull Tooltip fromJson(@NotNull JsonObject obj) {
+    public static Tooltip fromJson(JsonObject obj) {
         JsonElement el;
         Tooltip tooltip = new Tooltip();
         if ((el = obj.get("content")) != null && !(el instanceof JsonNull)) tooltip.setContent(el.getAsString());
@@ -302,7 +303,7 @@ public class Tooltip extends Option<@NotNull Tooltip> {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Tooltip{"
                 + ",content=" + getContent()
                 + ",pane=" + getPane()

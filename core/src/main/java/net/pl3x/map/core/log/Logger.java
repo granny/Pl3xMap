@@ -27,40 +27,41 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.configuration.Lang;
 import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Logger {
     static {
         ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new LogFilter());
     }
 
-    public static void debug(@NotNull String message) {
+    public static void debug(String message) {
         if (Config.DEBUG_MODE) {
             log("<gray>[<yellow>DEBUG</yellow>] " + message);
         }
     }
 
-    public static void info(@NotNull String message) {
+    public static void info(String message) {
         log("<gray>[INFO] " + message);
     }
 
-    public static void severe(@NotNull String message) {
+    public static void severe(String message) {
         severe(message, null);
     }
 
-    public static void severe(@NotNull String message, @Nullable Throwable throwable) {
+    public static void severe(String message, @Nullable Throwable throwable) {
         log("<gray>[<red>ERROR</red>]</gray> <red>" + message);
         if (throwable != null) {
             throwable.printStackTrace();
         }
     }
 
-    public static void warn(@NotNull String message) {
+    public static void warn(String message) {
         warn(message, null);
     }
 
-    public static void warn(@NotNull String message, @Nullable Throwable throwable) {
+    public static void warn(String message, @Nullable Throwable throwable) {
         log("<gray>[<yellow>WARN</yellow>]</gray> <yellow>" + message);
         if (throwable != null && Config.DEBUG_MODE) {
             throwable.printStackTrace();
@@ -68,6 +69,10 @@ public class Logger {
     }
 
     private static void log(String message) {
-        Pl3xMap.api().adventure().console().sendMessage(Lang.parse(Lang.PREFIX_COMMAND + message));
+        if (Pl3xMap.api().isEnabled()) {
+            Pl3xMap.api().adventure().console().sendMessage(Lang.parse(Lang.PREFIX_COMMAND + message));
+        } else {
+            System.out.println(Lang.strip(Lang.PREFIX_COMMAND + message));
+        }
     }
 }

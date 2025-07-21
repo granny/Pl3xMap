@@ -31,10 +31,11 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.player.Player;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class HideCommand extends Pl3xMapCommand {
-    public HideCommand(@NotNull CommandHandler handler) {
+    public HideCommand(CommandHandler handler) {
         super(handler);
     }
 
@@ -52,7 +53,7 @@ public class HideCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
+    private void execute(CommandContext<Sender> context) {
         Sender sender = context.sender();
         Player player = getHandler().getPlatformParsers().resolvePlayerFromPlayerSelector("player", context);
 

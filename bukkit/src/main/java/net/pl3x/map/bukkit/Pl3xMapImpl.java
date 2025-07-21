@@ -54,9 +54,10 @@ import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Pl3xMapImpl extends Pl3xMap {
     @SuppressWarnings("deprecation")
     private final RandomSource randomSource = RandomSource.createThreadSafe();
@@ -65,7 +66,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     private BukkitAudiences adventure;
     private Path jarPath;
 
-    public Pl3xMapImpl(@NotNull JavaPlugin plugin) {
+    public Pl3xMapImpl(JavaPlugin plugin) {
         super(true);
         this.plugin = plugin;
     }
@@ -86,7 +87,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NotNull String getPlatform() {
+    public String getPlatform() {
         String name = Bukkit.getName();
         if ("CraftBukkit".equals(name)) {
             // Spigot erroneously reports itself as CraftBukkit,
@@ -102,7 +103,7 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     @SuppressWarnings("deprecation")
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return this.plugin.getDescription().getVersion();
     }
 
@@ -122,7 +123,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NotNull AudienceProvider adventure() {
+    public AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");
         }
@@ -130,12 +131,12 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NotNull Path getMainDir() {
+    public Path getMainDir() {
         return this.plugin.getDataFolder().toPath();
     }
 
     @Override
-    public @NotNull Path getJarPath() {
+    public Path getJarPath() {
         if (this.jarPath == null) {
             try {
                 this.jarPath = Path.of(Pl3xMap.class.getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -152,9 +153,9 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public net.pl3x.map.core.world.@Nullable Block getFlower(@NotNull World world, net.pl3x.map.core.world.@NotNull Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
-        Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(ResourceLocation.parse(biome.getKey()));
+        Biome nms = world.<ServerLevel>getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getValue(ResourceLocation.parse(biome.getKey()));
         if (nms == null) {
             return null;
         }
@@ -162,7 +163,7 @@ public class Pl3xMapImpl extends Pl3xMap {
         if (flowers.isEmpty()) {
             return null;
         }
-        RandomPatchConfiguration config = (RandomPatchConfiguration) flowers.get(0).config();
+        RandomPatchConfiguration config = (RandomPatchConfiguration) flowers.getFirst().config();
         SimpleBlockConfiguration flower = (SimpleBlockConfiguration) config.feature().value().feature().value().config();
         Block block = flower.toPlace().getState(this.randomSource, new BlockPos(blockX, blockY, blockZ)).getBlock();
         return getBlockRegistry().get(BuiltInRegistries.BLOCK.getKey(block).toString());
@@ -170,13 +171,8 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     @Override
     protected void loadBlocks() {
-        Set<Map.Entry<ResourceKey<Block>, Block>> entries = MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.BLOCK).entrySet();
+        Set<Map.Entry<ResourceKey<Block>, Block>> entries = MinecraftServer.getServer().registryAccess().lookupOrThrow(Registries.BLOCK).entrySet();
         for (Map.Entry<ResourceKey<Block>, Block> entry : entries) {
-            if (getBlockRegistry().size() > BlockRegistry.MAX_INDEX) {
-                Logger.debug(String.format("Cannot register any more biomes. Registered: %d Unregistered: %d", getBlockRegistry().size(), entries.size() - getBlockRegistry().size()));
-                break;
-            }
-
             String id = entry.getKey().location().toString();
             int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);
@@ -199,7 +195,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     }
 
     @Override
-    public @NotNull World cloneWorld(@NotNull World world) {
+    public World cloneWorld(World world) {
         return new BukkitWorld(world.getLevel(), world.getName());
     }
 }

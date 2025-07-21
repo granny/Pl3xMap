@@ -28,10 +28,11 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.util.TickUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class Scheduler {
-    private final Queue<@NotNull Task> tasks = new ConcurrentLinkedQueue<>();
+    private final Queue<Task> tasks = new ConcurrentLinkedQueue<>();
 
     private boolean ticking;
 
@@ -62,14 +63,9 @@ public class Scheduler {
                 iter.remove();
             }
         } catch (Throwable t) {
-            error("Failed to tick a task", t);
+            Logger.severe("Failed to tick a task", t);
         }
         this.ticking = false;
-    }
-
-    // TODO: make logger work in fabric client
-    protected void error(String message, Throwable t) {
-        Logger.severe(message, t);
     }
 
     /**
@@ -88,7 +84,7 @@ public class Scheduler {
      *
      * @param task Task to add
      */
-    public void addTask(@NotNull Task task) {
+    public void addTask(Task task) {
         this.tasks.add(task);
     }
 
@@ -98,7 +94,7 @@ public class Scheduler {
      * @param delay    Delay (in seconds) before task starts
      * @param runnable Task to add
      */
-    public void addTask(int delay, @NotNull Runnable runnable) {
+    public void addTask(int delay, Runnable runnable) {
         addTask(delay, false, runnable);
     }
 
@@ -109,7 +105,7 @@ public class Scheduler {
      * @param runnable Task to add
      * @param ticks    Set to true to pass the delay as ticks instead of seconds
      */
-    public void addTask(int delay, @NotNull Runnable runnable, boolean ticks) {
+    public void addTask(int delay, Runnable runnable, boolean ticks) {
         addTask(delay, false, runnable, ticks);
     }
 
@@ -120,7 +116,7 @@ public class Scheduler {
      * @param repeat   Whether this task should repeat
      * @param runnable Task to add
      */
-    public void addTask(int delay, boolean repeat, @NotNull Runnable runnable) {
+    public void addTask(int delay, boolean repeat, Runnable runnable) {
         addTask(delay, repeat, runnable, false);
     }
 
@@ -132,7 +128,7 @@ public class Scheduler {
      * @param runnable Task to add
      * @param ticks    Set to true to pass the delay as ticks instead of seconds
      */
-    public void addTask(int delay, boolean repeat, @NotNull Runnable runnable, boolean ticks) {
+    public void addTask(int delay, boolean repeat, Runnable runnable, boolean ticks) {
         addTask(new Task(ticks ? delay : TickUtil.toTicks(delay), repeat) {
             @Override
             public void run() {

@@ -26,11 +26,12 @@ package net.pl3x.map.core.world;
 import java.util.HashMap;
 import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("unused")
+@NullMarked
 public class Blocks {
-    private static final Map<@NotNull String, @NotNull Block> blocks = new HashMap<>();
+    private static final Map<String, Block> blocks = new HashMap<>();
 
     public static final Block ACACIA_BUTTON = register(new Block(0, "minecraft:acacia_button", 0x000000));
     public static final Block ACACIA_DOOR = register(new Block(1, "minecraft:acacia_door", 0xD87F33));
@@ -413,7 +414,7 @@ public class Blocks {
     public static final Block GRANITE_SLAB = register(new Block(378, "minecraft:granite_slab", 0x976D4D));
     public static final Block GRANITE_STAIRS = register(new Block(379, "minecraft:granite_stairs", 0x976D4D));
     public static final Block GRANITE_WALL = register(new Block(380, "minecraft:granite_wall", 0x976D4D));
-    public static final Block GRASS = register(new Block(381, "minecraft:grass", 0x007C00));
+    public static final Block GRASS = register(new Block(381, "minecraft:grass", 0x007C00)); // TODO: remove in the future
     public static final Block GRASS_BLOCK = register(new Block(382, "minecraft:grass_block", 0x7FB238));
     public static final Block GRAVEL = register(new Block(383, "minecraft:gravel", 0x707070));
     public static final Block GRAY_BANNER = register(new Block(384, "minecraft:gray_banner", 0x8F7748));
@@ -1053,11 +1054,93 @@ public class Blocks {
     public static final Block WEATHERED_CHISELED_COPPER = register(new Block(1018, "minecraft:weathered_chiseled_copper", 0x69966E));
     public static final Block TRIAL_SPAWNER = register(new Block(1019, "minecraft:trial_spawner", 0x385162));
     public static final Block WAXED_OXIDIZED_COPPER_TRAPDOOR = register(new Block(1020, "minecraft:waxed_oxidized_copper_trapdoor", 0x52A385));
-    public static final Block WAXED_WEATHERED_COPPER_GRATE = register(new Block(1021, "minecraft:waxed_weathered_copper_grate", 0x69966E));
+    public static final Block WAXED_WEATHERED_COPPER_GRATE = register(new Block(1021, "minecraft:waxed_weathered_copper_grate", 0x6A9A6F));
     public static final Block EXPOSED_COPPER_TRAPDOOR = register(new Block(1022, "minecraft:exposed_copper_trapdoor", 0xA17D69));
     public static final Block SHORT_GRASS = register(new Block(1023, "minecraft:short_grass", 0x007C00));
+    public static final Block CHISELED_COPPER = register(new Block(1024, "minecraft:chiseled_copper", 0xB76449));
+    public static final Block CHISELED_RESIN_BRICKS = register(new Block(1025, "minecraft:chiseled_resin_bricks", 0xC95519));
+    public static final Block CHISELED_TUFF = register(new Block(1026, "minecraft:chiseled_tuff", 0x595E57));
+    public static final Block CLOSED_EYEBLOSSOM = register(new Block(1027, "minecraft:closed_eyeblossom", 0x007C00));
+    public static final Block COPPER_GRATE = register(new Block(1028, "minecraft:copper_grate", 0xC06C4F));
+    public static final Block COPPER_TRAPDOOR = register(new Block(1029, "minecraft:copper_trapdoor", 0xBF6A4F));
+    public static final Block CRAFTER = register(new Block(1030, "minecraft:crafter", 0x6F6061));
+    public static final Block CREAKING_HEART = register(new Block(1031, "minecraft:creaking_heart", 0x483A34));
+    public static final Block EXPOSED_CHISELED_COPPER = register(new Block(1032, "minecraft:exposed_chiseled_copper", 0x9A7764));
+    public static final Block EXPOSED_COPPER_BULB = register(new Block(1033, "minecraft:exposed_copper_bulb", 0x856A59));
+    public static final Block EXPOSED_COPPER_DOOR = register(new Block(1034, "minecraft:exposed_copper_door", 0xA47B6A));
+    public static final Block HEAVY_CORE = register(new Block(1035, "minecraft:heavy_core", 0x51555D));
+    public static final Block OPEN_EYEBLOSSOM = register(new Block(1036, "minecraft:open_eyeblossom", 0x007C00));
+    public static final Block OXIDIZED_CHISELED_COPPER = register(new Block(1037, "minecraft:oxidized_chiseled_copper", 0x53A184));
+    public static final Block OXIDIZED_COPPER_DOOR = register(new Block(1038, "minecraft:oxidized_copper_door", 0x52A084));
+    public static final Block OXIDIZED_COPPER_TRAPDOOR = register(new Block(1039, "minecraft:oxidized_copper_trapdoor", 0x54A385));
+    public static final Block PALE_HANGING_MOSS = register(new Block(1040, "minecraft:pale_hanging_moss", 0x636862));
+    public static final Block PALE_MOSS_BLOCK = register(new Block(1041, "minecraft:pale_moss_block", 0x6B7169));
+    public static final Block PALE_MOSS_CARPET = register(new Block(1042, "minecraft:pale_moss_carpet", 0x6B7169));
+    public static final Block PALE_OAK_BUTTON = register(new Block(1043, "minecraft:pale_oak_button", 0x000000));
+    public static final Block PALE_OAK_DOOR = register(new Block(1044, "minecraft:pale_oak_door", 0xE4DAD8));
+    public static final Block PALE_OAK_FENCE = register(new Block(1045, "minecraft:pale_oak_fence", 0xE4DAD8));
+    public static final Block PALE_OAK_FENCE_GATE = register(new Block(1046, "minecraft:pale_oak_fence_gate", 0xE4DAD8));
+    public static final Block PALE_OAK_HANGING_SIGN = register(new Block(1047, "minecraft:pale_oak_hanging_sign", 0xE4DAD8));
+    public static final Block PALE_OAK_LEAVES = register(new Block(1048, "minecraft:pale_oak_leaves", 0x757A73));
+    public static final Block PALE_OAK_LOG = register(new Block(1049, "minecraft:pale_oak_log", 0x574D4B));
+    public static final Block PALE_OAK_PLANKS = register(new Block(1050, "minecraft:pale_oak_planks", 0xE4DAD8));
+    public static final Block PALE_OAK_PRESSURE_PLATE = register(new Block(1051, "minecraft:pale_oak_pressure_plate", 0xE4DAD8));
+    public static final Block PALE_OAK_SAPLING = register(new Block(1052, "minecraft:pale_oak_sapling", 0x6E6A63));
+    public static final Block PALE_OAK_SIGN = register(new Block(1053, "minecraft:pale_oak_sign", 0xE4DAD8));
+    public static final Block PALE_OAK_SLAB = register(new Block(1054, "minecraft:pale_oak_slab", 0xE4DAD8));
+    public static final Block PALE_OAK_STAIRS = register(new Block(1055, "minecraft:pale_oak_stairs", 0xE4DAD8));
+    public static final Block PALE_OAK_TRAPDOOR = register(new Block(1056, "minecraft:pale_oak_trapdoor", 0xE4DAD8));
+    public static final Block PALE_OAK_WALL_HANGING_SIGN = register(new Block(1057, "minecraft:pale_oak_wall_hanging_sign", 0xE4DAD8));
+    public static final Block PALE_OAK_WALL_SIGN = register(new Block(1058, "minecraft:pale_oak_wall_sign", 0xE4DAD8));
+    public static final Block PALE_OAK_WOOD = register(new Block(1059, "minecraft:pale_oak_wood", 0x574D4B));
+    public static final Block POLISHED_TUFF_SLAB = register(new Block(1060, "minecraft:polished_tuff_slab", 0x626864));
+    public static final Block POLISHED_TUFF_STAIRS = register(new Block(1061, "minecraft:polished_tuff_stairs", 0x626864));
+    public static final Block POLISHED_TUFF_WALL = register(new Block(1062, "minecraft:polished_tuff_wall", 0x626864));
+    public static final Block POTTED_CLOSED_EYEBLOSSOM = register(new Block(1063, "minecraft:potted_closed_eyeblossom", 0x000000));
+    public static final Block POTTED_OPEN_EYEBLOSSOM = register(new Block(1064, "minecraft:potted_open_eyeblossom", 0x000000));
+    public static final Block POTTED_PALE_OAK_SAPLING = register(new Block(1065, "minecraft:potted_pale_oak_sapling", 0x000000));
+    public static final Block RESIN_BLOCK = register(new Block(1066, "minecraft:resin_block", 0xD96319));
+    public static final Block RESIN_BRICKS = register(new Block(1067, "minecraft:resin_bricks", 0xCE5918));
+    public static final Block RESIN_BRICK_SLAB = register(new Block(1068, "minecraft:resin_brick_slab", 0xCE5918));
+    public static final Block RESIN_BRICK_STAIRS = register(new Block(1069, "minecraft:resin_brick_stairs", 0xCE5918));
+    public static final Block RESIN_BRICK_WALL = register(new Block(1070, "minecraft:resin_brick_wall", 0xCE5918));
+    public static final Block RESIN_CLUMP = register(new Block(1071, "minecraft:resin_clump", 0xDF701B));
+    public static final Block STRIPPED_PALE_OAK_LOG = register(new Block(1072, "minecraft:stripped_pale_oak_log", 0xF6EEED));
+    public static final Block STRIPPED_PALE_OAK_WOOD = register(new Block(1073, "minecraft:stripped_pale_oak_wood", 0xF6EEED));
+    public static final Block TUFF_BRICKS = register(new Block(1074, "minecraft:tuff_bricks", 0x62675F));
+    public static final Block TUFF_BRICK_STAIRS = register(new Block(1075, "minecraft:tuff_brick_stairs", 0x62675F));
+    public static final Block TUFF_BRICK_WALL = register(new Block(1076, "minecraft:tuff_brick_wall", 0x62675F));
+    public static final Block TUFF_SLAB = register(new Block(1077, "minecraft:tuff_slab", 0x62675F));
+    public static final Block TUFF_STAIRS = register(new Block(1078, "minecraft:tuff_stairs", 0x62675F));
+    public static final Block TUFF_WALL = register(new Block(1079, "minecraft:tuff_wall", 0x62675F));
+    public static final Block VAULT = register(new Block(1080, "minecraft:vault", 0x34454F));
+    public static final Block WAXED_CHISELED_COPPER = register(new Block(1081, "minecraft:waxed_chiseled_copper", 0x53A184));
+    public static final Block WAXED_COPPER_GRATE = register(new Block(1082, "minecraft:waxed_copper_grate", 0xC06C4F));
+    public static final Block WAXED_COPPER_TRAPDOOR = register(new Block(1083, "minecraft:waxed_copper_trapdoor", 0xBF6A4F));
+    public static final Block WAXED_EXPOSED_CHISELED_COPPER = register(new Block(1084, "minecraft:waxed_exposed_chiseled_copper", 0x9A7764));
+    public static final Block WAXED_EXPOSED_COPPER_BULB = register(new Block(1085, "minecraft:waxed_exposed_copper_bulb", 0x856A59));
+    public static final Block WAXED_EXPOSED_COPPER_GRATE = register(new Block(1086, "minecraft:waxed_exposed_copper_grate", 0xA27E68));
+    public static final Block WAXED_OXIDIZED_CHISELED_COPPER = register(new Block(1087, "minecraft:waxed_oxidized_chiseled_copper", 0x53A184));
+    public static final Block WAXED_OXIDIZED_COPPER_BULB = register(new Block(1088, "minecraft:waxed_oxidized_copper_bulb", 0x45836C));
+    public static final Block WAXED_OXIDIZED_COPPER_DOOR = register(new Block(1089, "minecraft:waxed_oxidized_copper_door", 0x52A084));
+    public static final Block WAXED_OXIDIZED_COPPER_GRATE = register(new Block(1090, "minecraft:waxed_oxidized_copper_grate", 0x52A385));
+    public static final Block WAXED_WEATHERED_COPPER_BULB = register(new Block(1091, "minecraft:waxed_weathered_copper_bulb", 0x5B7D63));
+    public static final Block WAXED_WEATHERED_COPPER_TRAPDOOR = register(new Block(1092, "minecraft:waxed_weathered_copper_trapdoor", 0x6D9A6E));
+    public static final Block WEATHERED_COPPER_BULB = register(new Block(1093, "minecraft:weathered_copper_bulb", 0x5B7D63));
+    public static final Block WEATHERED_COPPER_GRATE = register(new Block(1094, "minecraft:weathered_copper_grate", 0x6A9A6F));
+    public static final Block WEATHERED_COPPER_TRAPDOOR = register(new Block(1095, "minecraft:weathered_copper_trapdoor", 0x6D9A6E));
+    public static final Block CACTUS_FLOWER = register(new Block(1096, "minecraft:cactus_flower", 0x0D27988));
+    public static final Block BUSH = register(new Block(1097, "minecraft:bush", 0x797979));
+    public static final Block FIREFLY_BUSH = register(new Block(1098, "minecraft:firefly_bush", 0x57532B));
+    public static final Block WILDFLOWERS = register(new Block(1099, "minecraft:wildflowers", 0xECD678));
+    public static final Block TALL_DRY_GRASS = register(new Block(1100, "minecraft:tall_dry_grass", 0xC5AC7B));
+    public static final Block TEST_BLOCK = register(new Block(1101, "minecraft:test_block", 0x97B5D7));
+    public static final Block SHORT_DRY_GRASS = register(new Block(1102, "minecraft:short_dry_grass", 0xBDA16F));
+    public static final Block LEAF_LITTER = register(new Block(1103, "minecraft:leaf_litter", 0xA8A8A8));
+    public static final Block TEST_INSTANCE_BLOCK = register(new Block(1104, "minecraft:test_instance_block", 0x847E7D));
+    public static final Block DRIED_GHAST = register(new Block(1105, "minecraft:dried_ghast", 0x9F9191));
 
-    private static @NotNull Block register(@NotNull Block block) {
+    private static Block register(Block block) {
         blocks.put(block.getKey(), block);
         return block;
     }

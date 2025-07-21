@@ -23,9 +23,12 @@
  */
 package net.pl3x.map.bukkit.command;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import io.leangen.geantyref.TypeToken;
 import net.pl3x.map.core.command.CommandHandler;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.command.parser.PlatformParsers;
+import net.pl3x.map.core.command.parser.WorldParser;
 import org.bukkit.plugin.Plugin;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.SenderMapper;
@@ -33,13 +36,14 @@ import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BukkitCommandManager implements CommandHandler {
-    private final LegacyPaperCommandManager<@NotNull Sender> manager;
-    private final Command.Builder<@NotNull Sender> root;
+    private final LegacyPaperCommandManager<Sender> manager;
+    private final Command.Builder<Sender> root;
 
-    public BukkitCommandManager(@NotNull Plugin plugin) throws Exception {
+    public BukkitCommandManager(Plugin plugin) throws Exception {
         this.manager = new LegacyPaperCommandManager<Sender>(plugin,
                 ExecutionCoordinator.simpleCoordinator(),
                 SenderMapper.create(BukkitSender::create, Sender::getSender));
@@ -49,6 +53,8 @@ public class BukkitCommandManager implements CommandHandler {
             CloudBrigadierManager<Sender, ?> brigadier = getManager().brigadierManager();
             if (brigadier != null) {
                 brigadier.setNativeNumberSuggestions(false);
+                brigadier.registerMapping(new TypeToken<WorldParser<Sender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.string()));
             }
         } else if (getManager().hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             getManager().registerAsynchronousCompletions();
@@ -62,17 +68,17 @@ public class BukkitCommandManager implements CommandHandler {
     }
 
     @Override
-    public @NotNull LegacyPaperCommandManager<@NotNull Sender> getManager() {
+    public LegacyPaperCommandManager<Sender> getManager() {
         return this.manager;
     }
 
     @Override
-    public @NotNull PlatformParsers getPlatformParsers() {
+    public PlatformParsers getPlatformParsers() {
         return new BukkitParsers();
     }
 
     @Override
-    public Command.@NotNull Builder<@NotNull Sender> getRoot() {
+    public Command.Builder<Sender> getRoot() {
         return this.root;
     }
 }

@@ -33,25 +33,26 @@ import java.util.stream.Collectors;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a player.
  */
+@NullMarked
 public abstract class Player extends Keyed {
     private Object player;
 
-    private Map<@NotNull BiFunction<@NotNull Player, @NotNull String, @NotNull String>, @NotNull Integer> nameDecorators = new LinkedHashMap<>();
+    private Map<BiFunction<Player, String, String>, Integer> nameDecorators = new LinkedHashMap<>();
     private boolean hidden;
 
-    public <T> Player(@NotNull String key, @NotNull T player) {
+    public <T> Player(String key, T player) {
         super(key);
         this.player = player;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> @NotNull T getPlayer() {
+    public <T> T getPlayer() {
         return (T) this.player;
     }
 
@@ -64,28 +65,28 @@ public abstract class Player extends Keyed {
      *
      * @return player's name
      */
-    public abstract @NotNull String getName();
+    public abstract String getName();
 
     /**
      * Get the player's UUID.
      *
      * @return player's UUID
      */
-    public abstract @NotNull UUID getUUID();
+    public abstract UUID getUUID();
 
     /**
      * Get the world this player is currently in.
      *
      * @return player's world
      */
-    public abstract @NotNull World getWorld();
+    public abstract World getWorld();
 
     /**
      * Get the player's current position.
      *
      * @return player's position
      */
-    public abstract @NotNull Point getPosition();
+    public abstract Point getPosition();
 
     /**
      * Get the player's current yaw.
@@ -188,7 +189,7 @@ public abstract class Player extends Keyed {
      * @param priority  Priority of decorator
      * @param decorator Name decorator to register
      */
-    public void registerNameDecorator(int priority, @NotNull BiFunction<@NotNull Player, @NotNull String, @NotNull String> decorator) {
+    public void registerNameDecorator(int priority, BiFunction<Player, String, String> decorator) {
         this.nameDecorators.put(decorator, priority);
         this.nameDecorators = this.nameDecorators.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
@@ -201,7 +202,7 @@ public abstract class Player extends Keyed {
      *
      * @return decorated name
      */
-    public @NotNull String getDecoratedName() {
+    public String getDecoratedName() {
         String name = getName();
         for (BiFunction<Player, String, String> fn : this.nameDecorators.keySet()) {
             name = fn.apply(this, name);

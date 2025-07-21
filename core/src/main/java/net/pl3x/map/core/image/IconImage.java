@@ -26,12 +26,13 @@ package net.pl3x.map.core.image;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents an icon image
  */
+@NullMarked
 public class IconImage extends Keyed {
     private final BufferedImage image;
     private final String type;
@@ -43,7 +44,7 @@ public class IconImage extends Keyed {
      * @param image buffered image
      * @param type  image type
      */
-    public IconImage(@NotNull String key, @NotNull BufferedImage image, @NotNull String type) {
+    public IconImage(String key, BufferedImage image, String type) {
         super(key);
         this.image = image;
         this.type = type;
@@ -54,7 +55,7 @@ public class IconImage extends Keyed {
      *
      * @return buffered image
      */
-    public @NotNull BufferedImage getImage() {
+    public BufferedImage getImage() {
         return this.image;
     }
 
@@ -63,7 +64,7 @@ public class IconImage extends Keyed {
      *
      * @return image type
      */
-    public @NotNull String getType() {
+    public String getType() {
         return this.type;
     }
 
@@ -90,7 +91,7 @@ public class IconImage extends Keyed {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "IconImage{"
                 + "key=" + getKey()
                 + ",image=" + getImage()

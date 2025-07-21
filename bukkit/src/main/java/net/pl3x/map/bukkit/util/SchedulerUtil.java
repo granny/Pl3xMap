@@ -4,7 +4,9 @@ import net.pl3x.map.core.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class SchedulerUtil {
     private static boolean IS_FOLIA = false;
 

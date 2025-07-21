@@ -26,15 +26,16 @@ package net.pl3x.map.core.command;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.configuration.Lang;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents a Pl3xMap command.
  */
+@NullMarked
 public abstract class Pl3xMapCommand {
     private final CommandHandler handler;
 
-    protected Pl3xMapCommand(@NotNull CommandHandler handler) {
+    protected Pl3xMapCommand(CommandHandler handler) {
         this.handler = handler;
     }
 
@@ -43,7 +44,7 @@ public abstract class Pl3xMapCommand {
      *
      * @return command handler
      */
-    public @NotNull CommandHandler getHandler() {
+    public CommandHandler getHandler() {
         return this.handler;
     }
 
@@ -59,7 +60,7 @@ public abstract class Pl3xMapCommand {
      * @param placeholders placeholders
      * @return rich description
      */
-    protected static @NotNull RichDescription description(@NotNull String description, @NotNull TagResolver.@NotNull Single... placeholders) {
+    protected static RichDescription description(String description, TagResolver.Single... placeholders) {
         return RichDescription.of(Lang.parse(description, placeholders));
     }
 }

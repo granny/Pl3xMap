@@ -30,27 +30,27 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.pl3x.map.core.command.exception.ZoomParseException;
 import net.pl3x.map.core.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.parser.ParserDescriptor;
 import org.incendo.cloud.suggestion.BlockingSuggestionProvider;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Parser that parses strings into {@link Integer}s for zoom levels.
  *
  * @param <C> command sender type
  */
+@NullMarked
 public class ZoomParser<C> implements ArgumentParser<C, Integer>, BlockingSuggestionProvider.Strings<C> {
     public static <C> ParserDescriptor<C, Integer> parser() {
         return ParserDescriptor.of(new ZoomParser<>(), Integer.class);
     }
 
     @Override
-    public @NonNull ArgumentParseResult<@NonNull Integer> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
+    public ArgumentParseResult<Integer> parse(CommandContext<C> commandContext, CommandInput commandInput) {
         String input = commandInput.peekString();
         try {
             int zoom = Integer.parseInt(input);
@@ -66,7 +66,7 @@ public class ZoomParser<C> implements ArgumentParser<C, Integer>, BlockingSugges
 
 
     @Override
-    public @NonNull Iterable<@NonNull String> stringSuggestions(@NonNull CommandContext<C> commandContext, @NonNull CommandInput input) {
+    public Iterable<String> stringSuggestions(CommandContext<C> commandContext, CommandInput input) {
         final Set<Long> numbers = new TreeSet<>();
         final String token = input.peekString();
 
@@ -94,7 +94,7 @@ public class ZoomParser<C> implements ArgumentParser<C, Integer>, BlockingSugges
         }
     }
 
-    private int getMax(@NotNull CommandContext<C> context) {
+    private int getMax(CommandContext<C> context) {
         return ((World) context.get("world")).getConfig().ZOOM_MAX_OUT;
     }
 }

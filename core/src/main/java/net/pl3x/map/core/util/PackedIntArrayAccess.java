@@ -24,6 +24,9 @@
  */
 package net.pl3x.map.core.util;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class PackedIntArrayAccess {
     private static final int[] INDEX_PARAMETERS = new int[]{
             -1, -1, 0,

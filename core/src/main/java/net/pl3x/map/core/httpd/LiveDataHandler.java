@@ -28,9 +28,10 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.sse.ServerSentEventConnection;
 import io.undertow.server.handlers.sse.ServerSentEventHandler;
 import java.io.IOException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class LiveDataHandler {
     private ServerSentEventHandler serverSentEventHandler;
 
@@ -45,7 +46,7 @@ public class LiveDataHandler {
      * @param success The callback that is called when a message is sucessfully sent.
      * @param failure The callback that is called when a message send fails.
      */
-    public void send(String event, String data, SuccessCallback success, FailureCallback failure) {
+    public void send(@Nullable String event, @Nullable String data, @Nullable SuccessCallback success, @Nullable FailureCallback failure) {
         if (serverSentEventHandler == null) {
             return;
         }
@@ -62,7 +63,7 @@ public class LiveDataHandler {
      * @param data    The message data
      * @param success The callback that is called when a message is sucessfully sent.
      */
-    public void send(String event, String data, SuccessCallback success) {
+    public void send(@Nullable String event, @Nullable String data, @Nullable SuccessCallback success) {
         this.send(event, data, success, null);
     }
 
@@ -71,7 +72,7 @@ public class LiveDataHandler {
      * @param event   The message event
      * @param data    The message data
      */
-    public void send(String event, String data) {
+    public void send(@Nullable String event, @Nullable String data) {
         this.send(event, data, null, null);
     }
 
@@ -79,7 +80,7 @@ public class LiveDataHandler {
      *
      * @param data    The message data
      */
-    public void send(String data) {
+    public void send(@Nullable String data) {
         this.send(null, data);
     }
 
@@ -108,7 +109,7 @@ public class LiveDataHandler {
          * @param event      The message event
          * @param id         The message id
          */
-        void apply(@NotNull ServerSentEventConnection connection, @Nullable String data, @Nullable String event, @Nullable String id);
+        void apply(ServerSentEventConnection connection, @Nullable String data, @Nullable String event, @Nullable String id);
     }
 
     /**
@@ -123,27 +124,27 @@ public class LiveDataHandler {
          * @param id         The message id
          * @param exception  The exception
          */
-        void apply(@NotNull ServerSentEventConnection connection, @Nullable String data, @Nullable String event, @Nullable String id, @NotNull IOException exception);
+        void apply(ServerSentEventConnection connection, @Nullable String data, @Nullable String event, @Nullable String id, IOException exception);
     }
 
     private class Callback implements ServerSentEventConnection.EventCallback {
         private SuccessCallback success;
         private FailureCallback failure;
 
-        public Callback(SuccessCallback success, FailureCallback failure) {
+        public Callback(@Nullable SuccessCallback success, @Nullable FailureCallback failure) {
             this.success = success;
             this.failure = failure;
         }
 
         @Override
-        public void done(ServerSentEventConnection connection, String data, String event, String id) {
+        public void done(ServerSentEventConnection connection, @Nullable String data, @Nullable String event, @Nullable String id) {
             if (success != null) {
                 success.apply(connection, data, event, id);
             }
         }
 
         @Override
-        public void failed(ServerSentEventConnection connection, String data, String event, String id, IOException e) {
+        public void failed(ServerSentEventConnection connection, @Nullable String data, @Nullable String event, @Nullable String id, IOException e) {
             if (failure != null) {
                 failure.apply(connection, data, event, id, e);
             }

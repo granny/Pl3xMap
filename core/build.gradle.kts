@@ -18,6 +18,7 @@ base {
 }
 
 repositories {
+    maven("https://repo.granny.dev/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/") {
         name = "oss-sonatype-snapshots"
         mavenContent {
@@ -39,7 +40,7 @@ dependencies {
 
     compileOnly(libs.log4j)
 
-    implementation(libs.jetbrainsAnnotations)
+    implementation(libs.jspecifyAnnotations)
 
     implementation(libs.undertow)
 

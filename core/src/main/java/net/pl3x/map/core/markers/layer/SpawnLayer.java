@@ -37,11 +37,12 @@ import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Manages world spawn marker.
  */
+@NullMarked
 public class SpawnLayer extends WorldLayer {
     public static final String KEY = "pl3xmap_spawn";
 
@@ -52,7 +53,7 @@ public class SpawnLayer extends WorldLayer {
      *
      * @param world world
      */
-    public SpawnLayer(@NotNull World world) {
+    public SpawnLayer(World world) {
         super(KEY, world, () -> Lang.UI_LAYER_SPAWN);
 
         this.icon = SpawnLayerConfig.ICON;
@@ -83,7 +84,7 @@ public class SpawnLayer extends WorldLayer {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
+    public Collection<Marker<?>> getMarkers() {
         return Collections.singletonList(Marker.icon(KEY, getWorld().getSpawn(), this.icon, 16).setOptions(getOptions()));
     }
 }

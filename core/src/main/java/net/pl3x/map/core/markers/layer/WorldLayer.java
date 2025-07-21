@@ -26,13 +26,14 @@ package net.pl3x.map.core.markers.layer;
 import java.util.function.Supplier;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a layer for worlds.
  */
 @SuppressWarnings("UnusedReturnValue")
+@NullMarked
 public abstract class WorldLayer extends SimpleLayer {
     private final World world;
 
@@ -45,12 +46,12 @@ public abstract class WorldLayer extends SimpleLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public WorldLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
+    public WorldLayer(String key, World world, Supplier<String> labelSupplier) {
         super(key, labelSupplier);
         this.world = world;
     }
 
-    public @NotNull World getWorld() {
+    public World getWorld() {
         return this.world;
     }
 
@@ -58,7 +59,7 @@ public abstract class WorldLayer extends SimpleLayer {
         return this.options;
     }
 
-    public @NotNull WorldLayer setOptions(@Nullable Options options) {
+    public WorldLayer setOptions(@Nullable Options options) {
         this.options = options;
         return this;
     }

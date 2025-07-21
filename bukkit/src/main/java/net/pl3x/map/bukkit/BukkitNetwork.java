@@ -38,8 +38,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapView;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BukkitNetwork extends Network {
     private final Pl3xMapBukkit plugin;
 
@@ -92,7 +93,6 @@ public class BukkitNetwork extends Network {
         );
     }
 
-    @NotNull
     private void sendCustomPayloadPacket(Player player, CustomPacketPayload customPacketPayload, FriendlyByteBuf friendlyByteBuf) {
         byte[] byteArray = new byte[friendlyByteBuf.readableBytes()];
         friendlyByteBuf.readBytes(byteArray);

@@ -31,10 +31,11 @@ import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ReloadCommand extends Pl3xMapCommand {
-    public ReloadCommand(@NotNull CommandHandler handler) {
+    public ReloadCommand(CommandHandler handler) {
         super(handler);
     }
 
@@ -46,7 +47,7 @@ public class ReloadCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    public void execute(@NotNull CommandContext<@NotNull Sender> context) {
+    public void execute(CommandContext<Sender> context) {
         Pl3xMap.api().disable();
 
         Pl3xMap.api().enable();

@@ -30,18 +30,19 @@ import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a rectangle marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class Rectangle extends Marker<@NotNull Rectangle> {
+@NullMarked
+public class Rectangle extends Marker<Rectangle> {
     private Point point1;
     private Point point2;
 
-    private Rectangle(@NotNull String key) {
+    private Rectangle(String key) {
         super("rect", key);
     }
 
@@ -54,7 +55,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      * @param x2  second x point
      * @param z2  second z point
      */
-    public Rectangle(@NotNull String key, double x1, double z1, double x2, double z2) {
+    public Rectangle(String key, double x1, double z1, double x2, double z2) {
         this(key);
         setPoint1(Point.of(x1, z1));
         setPoint2(Point.of(x2, z2));
@@ -67,7 +68,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      * @param point1 first point
      * @param point2 second point
      */
-    public Rectangle(@NotNull String key, @NotNull Point point1, @NotNull Point point2) {
+    public Rectangle(String key, Point point1, Point point2) {
         this(key);
         setPoint1(point1);
         setPoint2(point2);
@@ -83,7 +84,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      * @param z2  second z point
      * @return a new rectangle
      */
-    public static @NotNull Rectangle of(@NotNull String key, double x1, double z1, double x2, double z2) {
+    public static Rectangle of(String key, double x1, double z1, double x2, double z2) {
         return new Rectangle(key, x1, z1, x2, z2);
     }
 
@@ -95,7 +96,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      * @param point2 second point
      * @return a new rectangle
      */
-    public static @NotNull Rectangle of(@NotNull String key, @NotNull Point point1, @NotNull Point point2) {
+    public static Rectangle of(String key, Point point1, Point point2) {
         return new Rectangle(key, point1, point2);
     }
 
@@ -104,7 +105,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      *
      * @return first point
      */
-    public @NotNull Point getPoint1() {
+    public Point getPoint1() {
         return this.point1;
     }
 
@@ -114,7 +115,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      * @param point1 first point
      * @return this rectangle
      */
-    public @NotNull Rectangle setPoint1(@NotNull Point point1) {
+    public Rectangle setPoint1(Point point1) {
         this.point1 = Preconditions.checkNotNull(point1, "Rectangle point1 is null");
         return this;
     }
@@ -124,7 +125,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      *
      * @return second point
      */
-    public @NotNull Point getPoint2() {
+    public Point getPoint2() {
         return this.point2;
     }
 
@@ -134,13 +135,13 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
      * @param point2 second point
      * @return this rectangle
      */
-    public @NotNull Rectangle setPoint2(@NotNull Point point2) {
+    public Rectangle setPoint2(Point point2) {
         this.point2 = Preconditions.checkNotNull(point2, "Rectangle point2 is null");
         return this;
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("point1", getPoint1());
@@ -149,7 +150,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull Rectangle fromJson(@NotNull JsonObject obj) {
+    public static Rectangle fromJson(JsonObject obj) {
         JsonElement el;
         Rectangle rectangle = Rectangle.of(
                 obj.get("key").getAsString(),
@@ -185,7 +186,7 @@ public class Rectangle extends Marker<@NotNull Rectangle> {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Rectangle{"
                 + "key=" + getKey()
                 + ",point1=" + getPoint1()

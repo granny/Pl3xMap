@@ -31,24 +31,25 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-public class Registry<T extends Keyed> implements Iterable<@NotNull T> {
-    protected final Map<@NotNull String, @NotNull T> entries = new ConcurrentHashMap<>();
+@NullMarked
+public class Registry<T extends Keyed> implements Iterable<T> {
+    protected final Map<String, T> entries = new ConcurrentHashMap<>();
 
-    public @NotNull T register(@NotNull T value) {
+    public T register(T value) {
         return register(value.getKey(), value);
     }
 
-    public @NotNull T register(@NotNull String id, @NotNull T value) {
+    public T register(String id, T value) {
         Preconditions.checkNotNull(id, "Id cannot be null");
         Preconditions.checkNotNull(value, "Value cannot be null");
         this.entries.put(id, value);
         return value;
     }
 
-    public @Nullable T unregister(@NotNull String id) {
+    public @Nullable T unregister(String id) {
         return this.entries.remove(id);
     }
 
@@ -59,23 +60,23 @@ public class Registry<T extends Keyed> implements Iterable<@NotNull T> {
         Collections.unmodifiableSet(this.entries.keySet()).forEach(this::unregister);
     }
 
-    public boolean has(@NotNull String key) {
+    public boolean has(String key) {
         return this.entries.containsKey(key);
     }
 
-    public @Nullable T get(@NotNull String id) {
+    public @Nullable T get(String id) {
         return this.entries.get(id);
     }
 
-    public @NotNull T getOrDefault(@NotNull String id, @NotNull T def) {
+    public T getOrDefault(String id, T def) {
         return this.entries.getOrDefault(id, def);
     }
 
-    public @NotNull Set<Map.@NotNull Entry<@NotNull String, @NotNull T>> entrySet() {
+    public Set<Map.Entry<String, T>> entrySet() {
         return this.entries.entrySet();
     }
 
-    public @NotNull Collection<@NotNull T> values() {
+    public Collection<T> values() {
         return this.entries.values();
     }
 
@@ -84,7 +85,7 @@ public class Registry<T extends Keyed> implements Iterable<@NotNull T> {
     }
 
     @Override
-    public @NotNull Iterator<@NotNull T> iterator() {
+    public Iterator<T> iterator() {
         return this.entries.values().iterator();
     }
 }

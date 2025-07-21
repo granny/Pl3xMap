@@ -33,38 +33,44 @@ import net.pl3x.map.core.world.Biome;
 import net.pl3x.map.core.world.BlockState;
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("unused")
+@NullMarked
 public class Colors {
     private static final int[] mapGrass;
+    private static final int[] mapDryFoliage;
     private static final int[] mapFoliage;
 
     static {
-        int[] grass, foliage;
+        int[] grass, dryFoliage, foliage;
         try {
             Path imagesDir = FileUtil.getWebDir().resolve("images");
-            BufferedImage imgGrass, imgFoliage;
+            BufferedImage imgGrass, imgDryFoliage, imgFoliage;
 
             try {
                 imgGrass = ImageIO.read(imagesDir.resolve("grass.png").toFile());
+                imgDryFoliage = ImageIO.read(imagesDir.resolve("dry_foliage.png").toFile());
                 imgFoliage = ImageIO.read(imagesDir.resolve("foliage.png").toFile());
             } catch (IOException e) {
                 throw new IllegalStateException("Failed to read color images", e);
             }
 
             grass = getColorsFromImage(imgGrass);
+            dryFoliage = getColorsFromImage(imgDryFoliage);
             foliage = getColorsFromImage(imgFoliage);
         } catch (Throwable ignore) {
             grass = new int[0];
+            dryFoliage = new int[0];
             foliage = new int[0];
         }
 
         mapGrass = grass;
+        mapDryFoliage = dryFoliage;
         mapFoliage = foliage;
     }
 
-    private static int[] getColorsFromImage(@NotNull BufferedImage image) {
+    private static int[] getColorsFromImage(BufferedImage image) {
         int[] map = new int[256 * 256];
         for (int x = 0; x < 256; ++x) {
             for (int y = 0; y < 256; ++y) {
@@ -77,6 +83,10 @@ public class Colors {
 
     public static int getDefaultGrassColor(double temperature, double humidity) {
         return getDefaultColor(temperature, humidity, mapGrass);
+    }
+
+    public static int getDefaultDryFoliageColor(double temperature, double humidity) {
+        return getDefaultColor(temperature, humidity, mapDryFoliage);
     }
 
     public static int getDefaultFoliageColor(double temperature, double humidity) {
@@ -224,19 +234,23 @@ public class Colors {
         return (0xFF << 24) | (r << 16) | (g << 8) | b;
     }
 
-    public static int getFoliageColor(@NotNull Region region, @NotNull Biome biome, int color, int x, int z) {
+    public static int getDryFoliageColor(Region region, Biome biome, int color, int x, int z) {
+        return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> mix(biome2.dryFoliage(), color));
+    }
+
+    public static int getFoliageColor(Region region, Biome biome, int color, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> mix(biome2.foliage(), color));
     }
 
-    public static int getGrassColor(@NotNull Region region, @NotNull Biome biome, int color, int x, int z) {
+    public static int getGrassColor(Region region, Biome biome, int color, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> mix(biome2.grass(x2, z2), color));
     }
 
-    public static int getWaterColor(@NotNull Region region, @NotNull Biome biome, int x, int z) {
+    public static int getWaterColor(Region region, Biome biome, int x, int z) {
         return sampleNeighbors(region, biome, x, z, (biome2, x2, z2) -> biome2.water());
     }
 
-    private static int sampleNeighbors(@NotNull Region region, @NotNull Biome biome, int x, int z, @NotNull Sampler colorSampler) {
+    private static int sampleNeighbors(Region region, Biome biome, int x, int z, Sampler colorSampler) {
         int radius = region.getWorld().getConfig().RENDER_BIOME_BLEND;
         int color = colorSampler.apply(biome, x, z);
         if (radius < 1) {
@@ -267,10 +281,13 @@ public class Colors {
         return rgb(red / count, green / count, blue / count);
     }
 
-    public static int fixBlockColor(@NotNull Region region, @NotNull Biome biome, @NotNull BlockState blockstate, int x, int z) {
+    public static int fixBlockColor(Region region, Biome biome, BlockState blockstate, int x, int z) {
         int color = blockstate.getBlock().color();
         if (color <= 0) {
             return 0;
+        }
+        if (blockstate.getBlock().isDryFoliage()) {
+            return getDryFoliageColor(region, biome, color, x, z);
         }
         if (blockstate.getBlock().isFoliage()) {
             return getFoliageColor(region, biome, color, x, z);
@@ -340,20 +357,20 @@ public class Colors {
         return (alpha << 24) | (argb & 0xFFFFFF);
     }
 
-    public static int fromHex(@NotNull String color) {
+    public static int fromHex(String color) {
         return (int) Long.parseLong(color.replace("#", ""), 16);
     }
 
-    public static @NotNull String toHex(int argb) {
+    public static String toHex(int argb) {
         return String.format("#%06X", (0xFFFFFF & argb));
     }
 
-    public static @NotNull String toHex8(int argb) {
+    public static String toHex8(int argb) {
         return String.format("#%08X", argb);
     }
 
     @FunctionalInterface
     public interface Sampler {
-        @NotNull Integer apply(@NotNull Biome biome, @NotNull Integer x, @NotNull Integer z);
+        Integer apply(Biome biome, Integer x, Integer z);
     }
 }

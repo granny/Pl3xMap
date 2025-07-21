@@ -23,7 +23,10 @@
  */
 package net.pl3x.map.bukkit;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -31,8 +34,10 @@ import java.util.stream.Collectors;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.ColorsConfig;
 import net.pl3x.map.core.event.world.WorldLoadedEvent;
@@ -43,18 +48,37 @@ import net.pl3x.map.core.registry.BiomeRegistry;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BukkitWorld extends World {
+    private static Field LEVEL_STORAGE_ACCESS_FIELD = null;
+
+    static {
+        if (LEVEL_STORAGE_ACCESS_FIELD == null) {
+            Arrays.stream(ServerLevel.class.getFields())
+                    .filter(field -> field.getType().equals(LevelStorageSource.LevelStorageAccess.class))
+                    .findAny().ifPresent(field -> LEVEL_STORAGE_ACCESS_FIELD = field);
+        }
+    }
+
+    private static LevelStorageSource.LevelStorageAccess getLevelStorageAccess(ServerLevel level) {
+        try {
+            return (LevelStorageSource.LevelStorageAccess) LEVEL_STORAGE_ACCESS_FIELD.get(level);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final ServerLevel level;
 
-    public BukkitWorld(@NotNull ServerLevel level, @NotNull String name) {
+    public BukkitWorld(ServerLevel level, String name) {
         super(
                 name,
                 level.getSeed(),
                 Point.of(level.getLevelData().getSpawnPos().getX(), level.getLevelData().getSpawnPos().getZ()),
                 Type.get(level.dimension().location().toString()),
-                level.convertable.getDimensionPath(level.dimension()).resolve("region")
+                BukkitWorld.getLevelStorageAccess(level).getDimensionPath(level.dimension()).resolve("region")
         );
         this.level = level;
 
@@ -65,13 +89,8 @@ public class BukkitWorld extends World {
         init();
 
         // register biomes
-        Set<Map.Entry<ResourceKey<Biome>, Biome>> entries = level.registryAccess().registryOrThrow(Registries.BIOME).entrySet();
+        Set<Map.Entry<ResourceKey<Biome>, Biome>> entries = level.registryAccess().lookupOrThrow(Registries.BIOME).entrySet();
         for (Map.Entry<ResourceKey<Biome>, Biome> entry : entries) {
-            if (getBiomeRegistry().size() > BiomeRegistry.MAX_INDEX) {
-                Logger.debug(String.format("Cannot register any more biomes. Registered: %d Unregistered: %d", getBiomeRegistry().size(), entries.size() - getBiomeRegistry().size()));
-                break;
-            }
-
             String id = entry.getKey().location().toString();
             Biome biome = entry.getValue();
             float temperature = Mathf.clamp(0.0F, 1.0F, biome.getBaseTemperature());
@@ -79,6 +98,7 @@ public class BukkitWorld extends World {
             getBiomeRegistry().register(
                     id,
                     ColorsConfig.BIOME_COLORS.getOrDefault(id, 0),
+                    ColorsConfig.BIOME_DRY_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().getDryFoliageColorOverride().orElse(Colors.getDefaultDryFoliageColor(temperature, humidity))),
                     ColorsConfig.BIOME_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().getFoliageColorOverride().orElse(Colors.getDefaultFoliageColor(temperature, humidity))),
                     ColorsConfig.BIOME_GRASS.getOrDefault(id, biome.getSpecialEffects().getGrassColorOverride().orElse(Colors.getDefaultGrassColor(temperature, humidity))),
                     ColorsConfig.BIOME_WATER.getOrDefault(id, biome.getSpecialEffects().getWaterColor()),
@@ -93,8 +113,8 @@ public class BukkitWorld extends World {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public <T> @NotNull T getLevel() {
-        return (@NotNull T) this.level;
+    public <T> T getLevel() {
+        return (T) this.level;
     }
 
     @Override
@@ -109,12 +129,17 @@ public class BukkitWorld extends World {
 
     @Override
     public int getMinBuildHeight() {
-        return this.level.getMinBuildHeight();
+        return this.level.getMinY();
     }
 
     @Override
     public int getMaxBuildHeight() {
-        return this.level.getMaxBuildHeight();
+        return this.level.getMaxY() + 1;
+    }
+
+    @Override
+    public int getDimensionHeight() {
+        return this.level.dimensionType().height();
     }
 
     @Override
@@ -143,15 +168,19 @@ public class BukkitWorld extends World {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Player> getPlayers() {
-        return this.<ServerLevel>getLevel().players().stream()
-                .map(player -> Pl3xMap.api().getPlayerRegistry().get(player.getUUID()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+    public Collection<Player> getPlayers() {
+        Set<Player> players = new HashSet<>();
+        for (ServerPlayer serverPlayer : this.<ServerLevel>getLevel().players()) {
+            Player player = Pl3xMap.api().getPlayerRegistry().get(serverPlayer.getUUID());
+            if (player != null) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "BukkitWorld{"
                 + "name=" + getName()
                 + ",seed=" + getSeed()

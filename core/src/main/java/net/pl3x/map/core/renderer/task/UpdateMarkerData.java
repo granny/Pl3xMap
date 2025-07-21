@@ -31,10 +31,11 @@ import net.pl3x.map.core.markers.marker.Marker;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class UpdateMarkerData extends AbstractDataTask {
-    public UpdateMarkerData(@NotNull World world) {
+    public UpdateMarkerData(World world) {
         super(TickUtil.toTicks(1), true, world, "Pl3xMap-Markers");
     }
 

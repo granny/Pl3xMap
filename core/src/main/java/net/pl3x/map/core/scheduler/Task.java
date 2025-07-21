@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.core.scheduler;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public abstract class Task implements Runnable {
     final int delay;
     final boolean repeat;

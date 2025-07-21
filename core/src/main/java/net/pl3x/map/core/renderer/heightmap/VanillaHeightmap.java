@@ -25,8 +25,9 @@ package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.world.Chunk;
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class VanillaHeightmap extends Heightmap {
     public VanillaHeightmap() {
         super("vanilla");
@@ -34,7 +35,7 @@ public class VanillaHeightmap extends Heightmap {
 
     @Override
     @SuppressWarnings("DuplicatedCode")
-    public int getColor(@NotNull Region region, int blockX, int blockZ) {
+    public int getColor(Region region, int blockX, int blockZ) {
         Chunk.BlockData origin = region.getWorld().getChunk(region, blockX >> 4, blockZ >> 4).getData(blockX, blockZ);
         Chunk.BlockData north = region.getWorld().getChunk(region, blockX >> 4, (blockZ - 1) >> 4).getData(blockX, blockZ - 1);
         int heightColor = 0x22;

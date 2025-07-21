@@ -44,12 +44,13 @@ import net.pl3x.map.fabric.common.network.ClientboundMapPayload;
 import net.pl3x.map.fabric.common.network.ClientboundServerPayload;
 import net.pl3x.map.fabric.common.network.ServerboundMapPayload;
 import net.pl3x.map.fabric.common.network.ServerboundServerPayload;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NullMarked
 public class Pl3xMapFabricClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(Pl3xMapFabricClient.class);
 
@@ -71,7 +72,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
 
     public Pl3xMapFabricClient() {
         instance = this;
-        this.scheduler = new ClientScheduler();
+        this.scheduler = new Scheduler();
         this.tileManager = new TileManager(this);
     }
 
@@ -127,15 +128,15 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
         });
     }
 
-    public @NotNull Scheduler getScheduler() {
+    public Scheduler getScheduler() {
         return this.scheduler;
     }
 
-    public @NotNull TileManager getTileManager() {
+    public TileManager getTileManager() {
         return this.tileManager;
     }
 
-    public @NotNull ExecutorService getExecutor() {
+    public ExecutorService getExecutor() {
         return this.executor;
     }
 
@@ -164,6 +165,6 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
     }
 
     public void updateAllMapTextures() {
-        Minecraft.getInstance().gameRenderer.getMapRenderer().maps.values().forEach(tex -> ((MapInstance) tex).updateImage());
+        Minecraft.getInstance().getMapTextureManager().maps.values().forEach(tex -> ((MapInstance) tex).pl3xMap$updateImage());
     }
 }

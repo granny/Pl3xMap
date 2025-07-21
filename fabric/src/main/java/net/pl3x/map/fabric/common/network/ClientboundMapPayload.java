@@ -9,7 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import net.pl3x.map.fabric.client.duck.MapInstance;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record ClientboundMapPayload(int protocol, int response, int mapId, byte scale, int centerX, int centerZ, String worldName) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, ClientboundMapPayload> STREAM_CODEC = CustomPacketPayload.codec(ClientboundMapPayload::write, ClientboundMapPayload::new);
     public static final Type<ClientboundMapPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "client_map_data"));
@@ -46,15 +48,15 @@ public record ClientboundMapPayload(int protocol, int response, int mapId, byte 
 
         switch (payload.response) {
             case Constants.ERROR_NO_SUCH_MAP, Constants.ERROR_NO_SUCH_WORLD, Constants.ERROR_NOT_VANILLA_MAP -> {
-                MapInstance texture = (MapInstance) Minecraft.getInstance().gameRenderer.getMapRenderer().maps.get(payload.mapId);
+                MapInstance texture = (MapInstance) Minecraft.getInstance().getMapTextureManager().maps.get(payload.mapId);
                 if (texture != null) {
-                    texture.skip();
+                    texture.pl3xMap$skip();
                 }
             }
             case Constants.RESPONSE_SUCCESS -> {
-                MapInstance texture = (MapInstance) Minecraft.getInstance().gameRenderer.getMapRenderer().maps.get(payload.mapId);
+                MapInstance texture = (MapInstance) Minecraft.getInstance().getMapTextureManager().maps.get(payload.mapId);
                 if (texture != null) {
-                    texture.setData(payload.scale, payload.centerX, payload.centerZ, payload.worldName);
+                    texture.pl3xMap$setData(payload.scale, payload.centerX, payload.centerZ, payload.worldName);
                 }
             }
         }

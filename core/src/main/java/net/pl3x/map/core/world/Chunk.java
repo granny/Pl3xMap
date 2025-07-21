@@ -32,9 +32,10 @@ import net.querz.nbt.tag.ByteTag;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntTag;
 import net.querz.nbt.tag.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public abstract class Chunk {
     private final World world;
     private final Region region;
@@ -49,7 +50,7 @@ public abstract class Chunk {
 
     protected boolean populated;
 
-    protected Chunk(@NotNull World world, @NotNull Region region) {
+    protected Chunk(World world, Region region) {
         this.world = world;
         this.region = region;
 
@@ -60,7 +61,7 @@ public abstract class Chunk {
         this.inhabitedTime = 0;
     }
 
-    protected Chunk(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag, int index) {
+    protected Chunk(World world, Region region, CompoundTag tag, int index) {
         this.world = world;
         this.region = region;
 
@@ -81,11 +82,11 @@ public abstract class Chunk {
         return failsafe.get();
     }
 
-    public @NotNull World getWorld() {
+    public World getWorld() {
         return this.world;
     }
 
-    public @NotNull Region getRegion() {
+    public Region getRegion() {
         return this.region;
     }
 
@@ -111,13 +112,13 @@ public abstract class Chunk {
 
     public abstract int getWorldSurfaceY(int x, int z);
 
-    public abstract @NotNull BlockState getBlockState(int x, int y, int z);
+    public abstract BlockState getBlockState(int x, int y, int z);
 
     public abstract int getLight(int x, int y, int z);
 
-    public abstract @NotNull Biome getBiome(int x, int y, int z);
+    public abstract Biome getBiome(int x, int y, int z);
 
-    public @NotNull Chunk populate() {
+    public Chunk populate() {
         if (this.populated) {
             return this;
         }
@@ -189,7 +190,7 @@ public abstract class Chunk {
         return this;
     }
 
-    public @NotNull BlockData[] getData() {
+    public BlockData[] getData() {
         return this.data;
     }
 
@@ -197,7 +198,7 @@ public abstract class Chunk {
         return this.data[((z & 0xF) << 4) + (x & 0xF)];
     }
 
-    public static @NotNull Chunk create(@NotNull World world, @NotNull Region region, @NotNull CompoundTag tag, int index) {
+    public static Chunk create(World world, Region region, CompoundTag tag, int index) {
         // https://minecraft.wiki/w/Data_version#List_of_data_versions
         int version = tag.getInt("DataVersion");
         Chunk chunk;
@@ -233,7 +234,7 @@ public abstract class Chunk {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Chunk{"
                 + "world=" + getWorld()
                 + ",xPos=" + getX()
@@ -270,7 +271,7 @@ public abstract class Chunk {
             return this.fluidY;
         }
 
-        public @NotNull BlockState getBlockState() {
+        public BlockState getBlockState() {
             return this.blockstate;
         }
 
@@ -278,7 +279,7 @@ public abstract class Chunk {
             return this.fluidstate;
         }
 
-        public @NotNull Biome getBiome(@NotNull Region region, int x, int z) {
+        public Biome getBiome(Region region, int x, int z) {
             if (this.biome == null) {
                 int y = this.blockY;
                 // use fluid block level if fluid
@@ -291,7 +292,7 @@ public abstract class Chunk {
             return this.biome;
         }
 
-        public @NotNull List<Integer> getGlassColors() {
+        public List<Integer> getGlassColors() {
             return this.glass;
         }
     }

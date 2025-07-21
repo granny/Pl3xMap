@@ -23,5 +23,8 @@
  */
 package net.pl3x.map.core.event;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public interface EventListener {
 }

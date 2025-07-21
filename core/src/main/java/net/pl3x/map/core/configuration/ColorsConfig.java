@@ -30,10 +30,11 @@ import java.util.Map;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("CanBeFinal")
+@NullMarked
 public class ColorsConfig extends AbstractConfig {
     @Key("blocks.colors")
     @Comment("""
@@ -41,7 +42,7 @@ public class ColorsConfig extends AbstractConfig {
             pick your own color here for any blocks you want to change.
             Any blocks _not_ in this list will use Mojang's color.
             Setting a color to black (#000000) will make it invisible.""")
-    public static Map<@NotNull String, @NotNull Integer> BLOCK_COLORS = new LinkedHashMap<>() {{
+    public static Map<String, Integer> BLOCK_COLORS = new LinkedHashMap<>() {{
         put("minecraft:acacia_button", 0x000000);
         put("minecraft:acacia_door", 0xA85F3D);
         put("minecraft:acacia_fence", 0xA85A32);
@@ -978,13 +979,105 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:yellow_wool", 0xF9C628);
         put("minecraft:zombie_head", 0x52763F);
         put("minecraft:zombie_wall_head", 0x52763F);
+        put("minecraft:oxidized_copper_grate", 0x52A385);
+        put("minecraft:weathered_copper_door", 0x6E966D);
+        put("minecraft:chiseled_tuff_bricks", 0x6E726A);
+        put("minecraft:polished_tuff", 0x626864);
+        put("minecraft:oxidized_copper_bulb", 0x45836C);
+        put("minecraft:waxed_copper_bulb", 0x9A5638);
+        put("minecraft:waxed_weathered_copper_door", 0x6E966D);
+        put("minecraft:waxed_weathered_chiseled_copper", 0x69966E);
+        put("minecraft:waxed_copper_door", 0xC06D52);
+        put("minecraft:waxed_exposed_copper_trapdoor", 0xA17D69);
+        put("minecraft:copper_door", 0xC06D52);
+        put("minecraft:tuff_brick_slab", 0x6E726A);
+        put("minecraft:waxed_exposed_copper_door", 0x876B62);
+        put("minecraft:exposed_copper_grate", 0xA27E68);
+        put("minecraft:copper_bulb", 0x9A5638);
+        put("minecraft:weathered_chiseled_copper", 0x69966E);
+        put("minecraft:trial_spawner", 0x385162);
+        put("minecraft:waxed_oxidized_copper_trapdoor", 0x52A385);
+        put("minecraft:waxed_weathered_copper_grate", 0x6A9A6F);
+        put("minecraft:exposed_copper_trapdoor", 0xA17D69);
+        put("minecraft:chiseled_copper", 0xB76449);
+        put("minecraft:chiseled_resin_bricks", 0xC95519);
+        put("minecraft:chiseled_tuff", 0x595E57);
+        put("minecraft:closed_eyeblossom", 0x007C00);
+        put("minecraft:copper_grate", 0xC06C4F);
+        put("minecraft:copper_trapdoor", 0xBF6A4F);
+        put("minecraft:crafter", 0x6F6061);
+        put("minecraft:creaking_heart", 0x483A34);
+        put("minecraft:exposed_chiseled_copper", 0x9A7764);
+        put("minecraft:exposed_copper_bulb", 0x856A59);
+        put("minecraft:exposed_copper_door", 0xA47B6A);
+        put("minecraft:heavy_core", 0x51555D);
+        put("minecraft:open_eyeblossom", 0x007C00);
+        put("minecraft:oxidized_chiseled_copper", 0x53A184);
+        put("minecraft:oxidized_copper_door", 0x52A084);
+        put("minecraft:oxidized_copper_trapdoor", 0x54A385);
+        put("minecraft:pale_hanging_moss", 0x636862);
+        put("minecraft:pale_moss_block", 0x6B7169);
+        put("minecraft:pale_moss_carpet", 0x6B7169);
+        put("minecraft:pale_oak_button", 0x000000);
+        put("minecraft:pale_oak_door", 0xE4DAD8);
+        put("minecraft:pale_oak_fence", 0xE4DAD8);
+        put("minecraft:pale_oak_fence_gate", 0xE4DAD8);
+        put("minecraft:pale_oak_hanging_sign", 0xE4DAD8);
+        put("minecraft:pale_oak_leaves", 0x757A73);
+        put("minecraft:pale_oak_log", 0x574D4B);
+        put("minecraft:pale_oak_planks", 0xE4DAD8);
+        put("minecraft:pale_oak_pressure_plate", 0xE4DAD8);
+        put("minecraft:pale_oak_sapling", 0x6E6A63);
+        put("minecraft:pale_oak_sign", 0xE4DAD8);
+        put("minecraft:pale_oak_slab", 0xE4DAD8);
+        put("minecraft:pale_oak_stairs", 0xE4DAD8);
+        put("minecraft:pale_oak_trapdoor", 0xE4DAD8);
+        put("minecraft:pale_oak_wall_hanging_sign", 0xE4DAD8);
+        put("minecraft:pale_oak_wall_sign", 0xE4DAD8);
+        put("minecraft:pale_oak_wood", 0x574D4B);
+        put("minecraft:polished_tuff_slab", 0x626864);
+        put("minecraft:polished_tuff_stairs", 0x626864);
+        put("minecraft:polished_tuff_wall", 0x626864);
+        put("minecraft:potted_closed_eyeblossom", 0x007C00);
+        put("minecraft:potted_open_eyeblossom", 0x007C00);
+        put("minecraft:potted_pale_oak_sapling", 0x6E6A63);
+        put("minecraft:resin_block", 0xD96319);
+        put("minecraft:resin_bricks", 0xCE5918);
+        put("minecraft:resin_brick_slab", 0xCE5918);
+        put("minecraft:resin_brick_stairs", 0xCE5918);
+        put("minecraft:resin_brick_wall", 0xCE5918);
+        put("minecraft:resin_clump", 0xDF701B);
+        put("minecraft:stripped_pale_oak_log", 0xF6EEED);
+        put("minecraft:stripped_pale_oak_wood", 0xF6EEED);
+        put("minecraft:tuff_bricks", 0x62675F);
+        put("minecraft:tuff_brick_stairs", 0x62675F);
+        put("minecraft:tuff_brick_wall", 0x62675F);
+        put("minecraft:tuff_slab", 0x62675F);
+        put("minecraft:tuff_stairs", 0x62675F);
+        put("minecraft:tuff_wall", 0x62675F);
+        put("minecraft:vault", 0x34454F);
+        put("minecraft:waxed_chiseled_copper", 0x53A184);
+        put("minecraft:waxed_copper_grate", 0xC06C4F);
+        put("minecraft:waxed_copper_trapdoor", 0xBF6A4F);
+        put("minecraft:waxed_exposed_chiseled_copper", 0x9A7764);
+        put("minecraft:waxed_exposed_copper_bulb", 0x856A59);
+        put("minecraft:waxed_exposed_copper_grate", 0xA27E68);
+        put("minecraft:waxed_oxidized_chiseled_copper", 0x53A184);
+        put("minecraft:waxed_oxidized_copper_bulb", 0x45836C);
+        put("minecraft:waxed_oxidized_copper_door", 0x52A084);
+        put("minecraft:waxed_oxidized_copper_grate", 0x52A385);
+        put("minecraft:waxed_weathered_copper_bulb", 0x5B7D63);
+        put("minecraft:waxed_weathered_copper_trapdoor", 0x6D9A6E);
+        put("minecraft:weathered_copper_bulb", 0x5B7D63);
+        put("minecraft:weathered_copper_grate", 0x6A9A6F);
+        put("minecraft:weathered_copper_trapdoor", 0x6D9A6E);
     }};
 
     @Key("biomes.colors")
     @Comment("""
             Each biome has a specific color assigned to it. You can
             pick your own color here for any biomes you want to change.""")
-    public static Map<@NotNull String, @NotNull Integer> BIOME_COLORS = new LinkedHashMap<>() {{
+    public static Map<String, Integer> BIOME_COLORS = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0xD94515);
         put("minecraft:bamboo_jungle", 0x768E14);
         put("minecraft:basalt_deltas", 0x403636);
@@ -1049,33 +1142,13 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:windswept_hills", 0x597D72);
         put("minecraft:windswept_savanna", 0xE5DA87);
         put("minecraft:wooded_badlands", 0xB09765);
-        put("minecraft:oxidized_copper_grate", 0x52A385);
-        put("minecraft:weathered_copper_door", 0x6E966D);
-        put("minecraft:chiseled_tuff_bricks", 0x6E726A);
-        put("minecraft:polished_tuff", 0x626864);
-        put("minecraft:oxidized_copper_bulb", 0x45836C);
-        put("minecraft:waxed_copper_bulb", 0x9A5638);
-        put("minecraft:waxed_weathered_copper_door", 0x6E966D);
-        put("minecraft:waxed_weathered_chiseled_copper", 0x69966E);
-        put("minecraft:waxed_copper_door", 0xC06D52);
-        put("minecraft:waxed_exposed_copper_trapdoor", 0xA17D69);
-        put("minecraft:copper_door", 0xC06D52);
-        put("minecraft:tuff_brick_slab", 0x6E726A);
-        put("minecraft:waxed_exposed_copper_door", 0x876B62);
-        put("minecraft:exposed_copper_grate", 0xA27E68);
-        put("minecraft:copper_bulb", 0x9A5638);
-        put("minecraft:weathered_chiseled_copper", 0x69966E);
-        put("minecraft:trial_spawner", 0x385162);
-        put("minecraft:waxed_oxidized_copper_trapdoor", 0x52A385);
-        put("minecraft:waxed_weathered_copper_grate", 0x69966E);
-        put("minecraft:exposed_copper_trapdoor", 0xA17D69);
     }};
 
     @Key("blocks.air")
     @Comment("""
             List of blocks that are considered air when it comes
             to coloring. Blocks listed here will not be rendered.""")
-    public static List<@NotNull String> BLOCKS_AIR = new ArrayList<>() {{
+    public static List<String> BLOCKS_AIR = new ArrayList<>() {{
         add("minecraft:air");
         add("minecraft:cave_air");
         add("minecraft:void_air");
@@ -1087,7 +1160,7 @@ public class ColorsConfig extends AbstractConfig {
             to coloring. Blocks listed here will use the biome's
             foliage color when rendering.
             Note: Birch and Spruce are intentionally absent by default.""")
-    public static List<@NotNull String> BLOCKS_FOLIAGE = new ArrayList<>() {{
+    public static List<String> BLOCKS_FOLIAGE = new ArrayList<>() {{
         add("minecraft:acacia_leaves");
         //add("minecraft:birch_leaves"); // birch 0x80A755
         add("minecraft:dark_oak_leaves");
@@ -1097,12 +1170,21 @@ public class ColorsConfig extends AbstractConfig {
         //add("minecraft:spruce_leaves"); // evergreen 0x619961
     }};
 
+    @Key("blocks.dry-foliage")
+    @Comment("""
+            List of blocks that are considered dry foliage when it comes
+            to coloring. Blocks listed here will use the biome's
+            dry foliage color when rendering.""")
+    public static List<String> BLOCKS_DRY_FOLIAGE = new ArrayList<>() {{
+        add("minecraft:leaf_litter");
+    }};
+
     @Key("blocks.glass")
     @Comment("""
             List of blocks that are considered glass when it comes
             to coloring. Blocks listed here will use blend with
             blocks below it when rendering.""")
-    public static List<@NotNull String> BLOCKS_GLASS = new ArrayList<>() {{
+    public static List<String> BLOCKS_GLASS = new ArrayList<>() {{
         add("minecraft:glass");
         add("minecraft:black_stained_glass");
         add("minecraft:blue_stained_glass");
@@ -1145,7 +1227,7 @@ public class ColorsConfig extends AbstractConfig {
             List of blocks that are considered grass when it comes
             to coloring. Blocks listed here will use the biome's
             grass color modifier when rendering.""")
-    public static List<@NotNull String> BLOCKS_GRASS = new ArrayList<>() {{
+    public static List<String> BLOCKS_GRASS = new ArrayList<>() {{
         add("minecraft:fern");
         add("minecraft:grass");
         add("minecraft:short_grass");
@@ -1160,7 +1242,7 @@ public class ColorsConfig extends AbstractConfig {
             List of blocks that are considered water when it comes
             to coloring. Blocks listed here will use the biome's
             water color when rendering.""")
-    public static List<@NotNull String> BLOCKS_WATER = new ArrayList<>() {{
+    public static List<String> BLOCKS_WATER = new ArrayList<>() {{
         add("minecraft:water");
         add("minecraft:bubble_column");
         add("minecraft:water_cauldron");
@@ -1191,7 +1273,7 @@ public class ColorsConfig extends AbstractConfig {
             List of blocks that are considered "flat" when it comes
             to heightmaps. Blocks listed here will use the Y coordinate
             below them when rendering.""")
-    public static List<@NotNull String> BLOCKS_FLAT = new ArrayList<>() {{
+    public static List<String> BLOCKS_FLAT = new ArrayList<>() {{
         add("minecraft:acacia_pressure_plate");
         add("minecraft:acacia_trapdoor");
         add("minecraft:bamboo_pressure_plate");
@@ -1238,12 +1320,14 @@ public class ColorsConfig extends AbstractConfig {
         add("minecraft:warped_trapdoor");
         add("minecraft:white_carpet");
         add("minecraft:yellow_carpet");
+        add("minecraft:pale_moss_carpet");
+        add("minecraft:pale_oak_pressure_plate");
     }};
 
     @Key("biomes.color-overrides.foliage")
     @Comment("""
             Override foliage colors per biome.""")
-    public static Map<@NotNull String, @NotNull Integer> BIOME_FOLIAGE = new LinkedHashMap<>() {{
+    public static Map<String, Integer> BIOME_FOLIAGE = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0x9E814D);
         put("minecraft:bamboo_jungle", 0x1F8907);
         put("minecraft:dark_forest", 0x1C7B07);
@@ -1255,10 +1339,17 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:wooded_badlands", 0x9E814D);
     }};
 
+    @Key("biomes.color-overrides.dry-foliage")
+    @Comment("""
+            Override foliage colors per biome.""")
+    public static Map<String, Integer> BIOME_DRY_FOLIAGE = new LinkedHashMap<>() {{
+        put("minecraft:badlands", 0x9E814D);
+    }};
+
     @Key("biomes.color-overrides.grass")
     @Comment("""
             Override grass colors per biome.""")
-    public static Map<@NotNull String, @NotNull Integer> BIOME_GRASS = new LinkedHashMap<>() {{
+    public static Map<String, Integer> BIOME_GRASS = new LinkedHashMap<>() {{
         put("minecraft:badlands", 0x90814D);
         put("minecraft:wooded_badlands", 0x90814D);
         put("minecraft:eroded_badlands", 0x90814D);
@@ -1267,7 +1358,7 @@ public class ColorsConfig extends AbstractConfig {
     @Key("biomes.color-overrides.water")
     @Comment("""
             Override water colors per biome.""")
-    public static Map<@NotNull String, @NotNull Integer> BIOME_WATER = new LinkedHashMap<>();
+    public static Map<String, Integer> BIOME_WATER = new LinkedHashMap<>();
 
     private static final ColorsConfig CONFIG = new ColorsConfig();
 
@@ -1279,12 +1370,12 @@ public class ColorsConfig extends AbstractConfig {
     }
 
     @Override
-    protected @NotNull Object addToMap(@NotNull String rawValue) {
+    protected Object addToMap(String rawValue) {
         return Colors.fromHex(rawValue);
     }
 
     @Override
-    protected void set(@NotNull String path, @Nullable Object value) {
+    protected void set(String path, @Nullable Object value) {
         if (value instanceof Map<?, ?> map && !map.isEmpty()) {
             map.forEach((key, rawValue) -> getConfig().set(path + "." + key, Colors.toHex((int) rawValue)));
         } else {

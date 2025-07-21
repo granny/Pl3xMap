@@ -40,8 +40,9 @@ import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.configuration.Lang;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class VersionCommand extends Pl3xMapCommand {
     private static final String URL = "https://api.modrinth.com/v2/project/pl3xmap/version?featured=true&game_versions=[%%22%s%%22]&loaders=[%%22%s%%22]";
     private static final String MODRINTH = "<click:open_url:https://modrinth.com/mod/pl3xmap>https://modrinth.com/mod/pl3xmap</click>";
@@ -49,7 +50,7 @@ public class VersionCommand extends Pl3xMapCommand {
     private String version;
     private long lastChecked;
 
-    public VersionCommand(@NotNull CommandHandler handler) {
+    public VersionCommand(CommandHandler handler) {
         super(handler);
     }
 
@@ -61,7 +62,7 @@ public class VersionCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    public void execute(@NotNull CommandContext<@NotNull Sender> context) {
+    public void execute(CommandContext<Sender> context) {
         Sender sender = context.sender();
 
         long now = System.currentTimeMillis();

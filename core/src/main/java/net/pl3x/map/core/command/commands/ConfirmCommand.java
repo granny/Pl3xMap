@@ -39,10 +39,11 @@ import org.incendo.cloud.processors.cache.CloudCache;
 import org.incendo.cloud.processors.cache.GuavaCache;
 import org.incendo.cloud.processors.confirmation.ConfirmationConfiguration;
 import org.incendo.cloud.processors.confirmation.ConfirmationManager;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ConfirmCommand extends Pl3xMapCommand {
-    private final ConfirmationManager<@NotNull Sender> confirmationManager = ConfirmationManager.confirmationManager(
+    private final ConfirmationManager<Sender> confirmationManager = ConfirmationManager.confirmationManager(
             ConfirmationConfiguration.<Sender>builder()
                     .cache(GuavaCache.of(CacheBuilder.newBuilder().build()))
                     .noPendingCommandNotifier(sender -> sender.sendMessage(Lang.COMMAND_CONFIRM_NO_PENDING_MESSAGE))
@@ -55,7 +56,7 @@ public class ConfirmCommand extends Pl3xMapCommand {
                     .build()
     );
 
-    public ConfirmCommand(@NotNull CommandHandler handler) {
+    public ConfirmCommand(CommandHandler handler) {
         super(handler);
     }
 

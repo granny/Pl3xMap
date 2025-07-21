@@ -43,16 +43,17 @@ import net.pl3x.map.core.renderer.progress.Progress;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.SpiralIterator;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class RegionProcessor {
-    private final Map<@NotNull World, @NotNull Collection<@NotNull Point>> regionsToScan = new ConcurrentHashMap<>();
-    private final Deque<@NotNull Ticket> ticketsToScan = new ConcurrentLinkedDeque<>();
+    private final Map<World, Collection<Point>> regionsToScan = new ConcurrentHashMap<>();
+    private final Deque<Ticket> ticketsToScan = new ConcurrentLinkedDeque<>();
 
     private final Executor executor;
     private final Progress progress;
 
-    private CompletableFuture<@NotNull Void> future;
+    private CompletableFuture<Void> future;
 
     private boolean paused;
 
@@ -82,7 +83,7 @@ public class RegionProcessor {
         this.paused = paused;
     }
 
-    public @NotNull Progress getProgress() {
+    public Progress getProgress() {
         return this.progress;
     }
 
@@ -116,7 +117,7 @@ public class RegionProcessor {
         }
     }
 
-    public void addRegions(@NotNull World world, @NotNull Collection<@NotNull Point> regions) {
+    public void addRegions(World world, Collection<Point> regions) {
         for (Point region : regions) {
             Ticket ticket = new Ticket(world, region);
             if (!this.ticketsToScan.contains(ticket)) {
@@ -165,7 +166,7 @@ public class RegionProcessor {
         Logger.debug("Region processor finished queuing at " + System.currentTimeMillis());
     }
 
-    private void process(@NotNull World world, @NotNull Collection<@NotNull Point> regionPositions) {
+    private void process(World world, Collection<Point> regionPositions) {
         Logger.debug(world.getName() + " Region processor started processing at " + System.currentTimeMillis());
 
         // create spiral iterator to order region scanning
@@ -207,7 +208,7 @@ public class RegionProcessor {
         Logger.debug(world.getName() + " Region processor finished processing at " + System.currentTimeMillis());
     }
 
-    private void schedule(@NotNull World world, @NotNull List<@NotNull Point> orderedRegionsToScan) {
+    private void schedule(World world, List<Point> orderedRegionsToScan) {
         getProgress().setWorld(world);
         getProgress().setTotalRegions(orderedRegionsToScan.size());
         getProgress().setTotalChunks(getProgress().getTotalRegions() * 1024L);
@@ -251,6 +252,6 @@ public class RegionProcessor {
         }).join();
     }
 
-    private record Ticket(@NotNull World world, @NotNull Point region) {
+    private record Ticket(World world, Point region) {
     }
 }

@@ -36,14 +36,15 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.PlayersLayerConfig;
 import net.pl3x.map.core.registry.Registry;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Manages player specific data
  */
-public class PlayerRegistry extends Registry<@NotNull Player> {
-    public @NotNull Player getOrDefault(@NotNull UUID uuid, @NotNull Supplier<@NotNull Player> supplier) {
+@NullMarked
+public class PlayerRegistry extends Registry<Player> {
+    public Player getOrDefault(UUID uuid, Supplier<Player> supplier) {
         Player player = get(uuid);
         if (player == null) {
             player = supplier.get();
@@ -52,13 +53,13 @@ public class PlayerRegistry extends Registry<@NotNull Player> {
         return player;
     }
 
-    public @NotNull Player register(@NotNull UUID uuid, @NotNull Player player) {
+    public Player register(UUID uuid, Player player) {
         Preconditions.checkNotNull(uuid, "UUID cannot be null");
         Preconditions.checkNotNull(player, "Player cannot be null");
         return super.register(uuid.toString(), player);
     }
 
-    public @Nullable Player unregister(@NotNull UUID uuid) {
+    public @Nullable Player unregister(UUID uuid) {
         return super.unregister(uuid.toString());
     }
 
@@ -70,7 +71,7 @@ public class PlayerRegistry extends Registry<@NotNull Player> {
      * @param uuid player uuid
      * @return registered player or null
      */
-    public @Nullable Player get(@NotNull UUID uuid) {
+    public @Nullable Player get(UUID uuid) {
         return super.get(uuid.toString());
     }
 
@@ -82,7 +83,7 @@ public class PlayerRegistry extends Registry<@NotNull Player> {
      * @param name player name
      * @return registered player or null
      */
-    public @Nullable Player get(@NotNull String name) {
+    public @Nullable Player get(String name) {
         String lowercaseName = name.toLowerCase(Locale.ROOT);
         for (Player player : values()) {
             if (player.getName().toLowerCase(Locale.ROOT).equals(lowercaseName)) {
@@ -92,12 +93,12 @@ public class PlayerRegistry extends Registry<@NotNull Player> {
         return null;
     }
 
-    public @NotNull Optional<Player> optional(@NotNull UUID uuid) {
+    public Optional<Player> optional(UUID uuid) {
         Player player = get(uuid);
         return player == null ? Optional.empty() : Optional.of(player);
     }
 
-    public @NotNull List<@NotNull Object> parsePlayers() {
+    public List<Object> parsePlayers() {
         if (!PlayersLayerConfig.ENABLED) {
             return Collections.emptyList();
         }

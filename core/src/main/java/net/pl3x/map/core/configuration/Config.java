@@ -26,9 +26,11 @@ package net.pl3x.map.core.configuration;
 import java.nio.file.Path;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
+import org.jspecify.annotations.NullMarked;
 import org.simpleyaml.configuration.file.YamlFile;
 
 @SuppressWarnings("CanBeFinal")
+@NullMarked
 public final class Config extends AbstractConfig {
     @Key("settings.debug-mode")
     @Comment("""

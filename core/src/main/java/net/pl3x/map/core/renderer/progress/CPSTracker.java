@@ -24,7 +24,9 @@
 package net.pl3x.map.core.renderer.progress;
 
 import java.util.Arrays;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class CPSTracker {
     private static final int SAMPLE_SIZE = 10;
 

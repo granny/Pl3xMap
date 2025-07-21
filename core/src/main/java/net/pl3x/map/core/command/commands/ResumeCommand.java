@@ -31,10 +31,11 @@ import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.renderer.task.RegionProcessor;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ResumeCommand extends Pl3xMapCommand {
-    public ResumeCommand(@NotNull CommandHandler handler) {
+    public ResumeCommand(CommandHandler handler) {
         super(handler);
     }
 
@@ -46,7 +47,7 @@ public class ResumeCommand extends Pl3xMapCommand {
                 .handler(this::execute));
     }
 
-    private void execute(@NotNull CommandContext<@NotNull Sender> context) {
+    private void execute(CommandContext<Sender> context) {
         Sender sender = context.sender();
 
         RegionProcessor processor = Pl3xMap.api().getRegionProcessor();

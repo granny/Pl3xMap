@@ -33,11 +33,12 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Mathf;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class RegionDoubleChecker implements Runnable {
     private final Executor executor;
-    private CompletableFuture<@NotNull Void> future;
+    private CompletableFuture<Void> future;
 
     private boolean running;
 

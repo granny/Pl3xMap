@@ -48,7 +48,9 @@ import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.registry.WorldRegistry;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class HttpdServer {
     private HttpString X_ACCEL_BUFFERING = new HttpString("X-Accel-Buffering");
     private Undertow server;
@@ -118,10 +120,20 @@ public class HttpdServer {
 
                                     WorldRegistry worldRegistry = Pl3xMap.api().getWorldRegistry();
                                     World world = worldRegistry.get(worldName);
+
+                                    if (world == null) {
+                                        world = worldRegistry.values().stream()
+                                                .filter(World::isEnabled)
+                                                .filter(world1 -> world1.getName().replace(":", "-").equals(worldName))
+                                                .findFirst().orElse(null);
+                                    }
+
                                     if (world == null || !world.isEnabled()) {
                                         String listOfValidWorlds = worldRegistry.values().stream()
                                                 .filter(World::isEnabled)
-                                                .map(World::getName).collect(Collectors.joining(", "));
+                                                .map(World::getName)
+                                                .map(s -> s.replace(":", "-"))
+                                                .collect(Collectors.joining(", "));
                                         handleError(exchange, "Could not find world named '%s'. Available worlds: %s"
                                                 .formatted(worldName, listOfValidWorlds));
                                         exchange.endExchange();

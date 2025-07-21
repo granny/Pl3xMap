@@ -29,9 +29,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.util.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("CanBeFinal")
+@NullMarked
 public final class Lang extends AbstractConfig {
     @Key("prefix.command")
     public static String PREFIX_COMMAND = "<grey>[<gradient:#C028FF:#5B00FF>Pl3xMap</gradient>]</grey> ";
@@ -253,11 +254,11 @@ public final class Lang extends AbstractConfig {
         CONFIG.reload(localeDir.resolve(Config.LANGUAGE_FILE), Lang.class);
     }
 
-    public static @NotNull Component parse(@NotNull String msg, @NotNull TagResolver.@NotNull Single... placeholders) {
+    public static Component parse(String msg, TagResolver.Single... placeholders) {
         return MiniMessage.miniMessage().deserialize(msg, placeholders);
     }
 
-    public static @NotNull String strip(@NotNull String msg) {
+    public static String strip(String msg) {
         return MiniMessage.miniMessage().stripTags(msg);
     }
 }

@@ -23,6 +23,9 @@
  */
 package net.pl3x.map.core.image.io;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class Png extends IO.Type {
     public Png() {
         super("png");

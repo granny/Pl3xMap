@@ -33,17 +33,18 @@ import java.util.List;
 import java.util.Objects;
 import net.pl3x.map.core.markers.JsonObjectWrapper;
 import net.pl3x.map.core.util.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a multi-polyline marker.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
-    private final List<@NotNull Polyline> polylines = new ArrayList<>();
+@NullMarked
+public class MultiPolyline extends Marker<MultiPolyline> {
+    private final List<Polyline> polylines = new ArrayList<>();
 
-    private MultiPolyline(@NotNull String key) {
+    private MultiPolyline(String key) {
         super("multiline", key);
     }
 
@@ -53,7 +54,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param key      identifying key
      * @param polyline polyline to add
      */
-    public MultiPolyline(@NotNull String key, @NotNull Polyline polyline) {
+    public MultiPolyline(String key, Polyline polyline) {
         this(key);
         addPolyline(polyline);
     }
@@ -64,7 +65,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param key       identifying key
      * @param polylines polylines to add
      */
-    public MultiPolyline(@NotNull String key, @NotNull Polyline @NotNull ... polylines) {
+    public MultiPolyline(String key, Polyline ... polylines) {
         this(key);
         addPolyline(polylines);
     }
@@ -75,7 +76,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param key       identifying key
      * @param polylines polylines to add
      */
-    public MultiPolyline(@NotNull String key, @NotNull Collection<@NotNull Polyline> polylines) {
+    public MultiPolyline(String key, Collection<Polyline> polylines) {
         this(key);
         addPolyline(polylines);
     }
@@ -87,7 +88,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polyline polyline to add
      * @return a new multi-polyline
      */
-    public static @NotNull MultiPolyline of(@NotNull String key, @NotNull Polyline polyline) {
+    public static MultiPolyline of(String key, Polyline polyline) {
         return new MultiPolyline(key, polyline);
     }
 
@@ -98,7 +99,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    public static @NotNull MultiPolyline of(@NotNull String key, @NotNull Polyline @NotNull ... polylines) {
+    public static MultiPolyline of(String key, Polyline ... polylines) {
         return new MultiPolyline(key, polylines);
     }
 
@@ -109,7 +110,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polylines polylines to add
      * @return a new multi-polyline
      */
-    public static @NotNull MultiPolyline of(@NotNull String key, @NotNull Collection<@NotNull Polyline> polylines) {
+    public static MultiPolyline of(String key, Collection<Polyline> polylines) {
         return new MultiPolyline(key, polylines);
     }
 
@@ -118,7 +119,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      *
      * @return list of polylines
      */
-    public @NotNull List<@NotNull Polyline> getPolylines() {
+    public List<Polyline> getPolylines() {
         return this.polylines;
     }
 
@@ -127,7 +128,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      *
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline clearPolylines() {
+    public MultiPolyline clearPolylines() {
         this.polylines.clear();
         return this;
     }
@@ -138,7 +139,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polyline polyline to add
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline addPolyline(@NotNull Polyline polyline) {
+    public MultiPolyline addPolyline(Polyline polyline) {
         Preconditions.checkNotNull(polyline, "MultiPolyline polyline is null");
         this.polylines.add(polyline);
         return this;
@@ -150,7 +151,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polylines polylines to add
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline addPolyline(@NotNull Polyline @NotNull ... polylines) {
+    public MultiPolyline addPolyline(Polyline ... polylines) {
         Preconditions.checkNotNull(polylines, "MultiPolyline polylines is null");
         for (Polyline polyline : polylines) {
             addPolyline(polyline);
@@ -164,7 +165,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polylines polylines to add
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline addPolyline(@NotNull Collection<@NotNull Polyline> polylines) {
+    public MultiPolyline addPolyline(Collection<Polyline> polylines) {
         Preconditions.checkNotNull(polylines, "MultiPolyline polylines is null");
         this.polylines.addAll(polylines);
         return this;
@@ -176,7 +177,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polyline polyline to remove
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline removePolyline(@NotNull Polyline polyline) {
+    public MultiPolyline removePolyline(Polyline polyline) {
         Preconditions.checkNotNull(polyline, "MultiPolyline polyline is null");
         this.polylines.remove(polyline);
         return this;
@@ -188,7 +189,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polylines polylines to remove
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline removePolyline(@NotNull Polyline @NotNull ... polylines) {
+    public MultiPolyline removePolyline(Polyline ... polylines) {
         Preconditions.checkNotNull(polylines, "MultiPolyline polylines is null");
         for (Polyline polyline : polylines) {
             removePolyline(polyline);
@@ -202,14 +203,14 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
      * @param polylines polylines to remove
      * @return this multi-polyline
      */
-    public @NotNull MultiPolyline removePolyline(@NotNull Collection<@NotNull Polyline> polylines) {
+    public MultiPolyline removePolyline(Collection<Polyline> polylines) {
         Preconditions.checkNotNull(polylines, "MultiPolyline polylines is null");
         this.polylines.removeAll(polylines);
         return this;
     }
 
     @Override
-    public @NotNull JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
         wrapper.addProperty("key", getKey());
         wrapper.addProperty("polylines", getPolylines());
@@ -217,7 +218,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
         return wrapper.getJsonObject();
     }
 
-    public static @NotNull MultiPolyline fromJson(@NotNull JsonObject obj) {
+    public static MultiPolyline fromJson(JsonObject obj) {
         JsonElement el;
         MultiPolyline multiPolyline = MultiPolyline.of(obj.get("key").getAsString());
         if ((el = obj.get("polylines")) != null && !(el instanceof JsonNull)) {
@@ -254,7 +255,7 @@ public class MultiPolyline extends Marker<@NotNull MultiPolyline> {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "MultiPolyline{"
                 + "key=" + getKey()
                 + ",polylines=" + getPolylines()

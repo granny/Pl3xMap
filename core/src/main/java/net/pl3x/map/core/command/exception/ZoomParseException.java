@@ -25,12 +25,13 @@ package net.pl3x.map.core.command.exception;
 
 import net.pl3x.map.core.configuration.Lang;
 import net.pl3x.map.core.renderer.Renderer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown to indicate that a method has been passed an illegal or inappropriate {@link Renderer.Builder} argument.
  */
+@NullMarked
 public class ZoomParseException extends ArgumentParseException {
     public static final Reason NOT_VALID_ZOOM_LEVEL = new Reason(() -> Lang.ERROR_NOT_VALID_ZOOM_LEVEL);
 
@@ -40,7 +41,7 @@ public class ZoomParseException extends ArgumentParseException {
      * @param input  Input
      * @param reason Failure reason
      */
-    public ZoomParseException(@Nullable String input, @NotNull Reason reason) {
+    public ZoomParseException(@Nullable String input, Reason reason) {
         super(input, "<renderer>", reason);
     }
 }

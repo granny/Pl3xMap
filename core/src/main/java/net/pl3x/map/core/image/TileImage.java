@@ -40,11 +40,12 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.util.Colors;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class TileImage extends Keyed {
-    private static final Map<@NotNull Path, @NotNull ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
+    private static final Map<Path, ReadWriteLock> FILE_LOCKS = new ConcurrentHashMap<>();
 
     public static final String DIR_PATH = "%d/%s/";
     public static final String FILE_PATH = "%d_%d.%s";
@@ -58,7 +59,7 @@ public class TileImage extends Keyed {
 
     private boolean written = false;
 
-    public TileImage(@NotNull String key, @NotNull World world, @NotNull Point region) {
+    public TileImage(String key, World world, Point region) {
         super(key);
         this.world = world;
         this.region = region;
@@ -115,7 +116,7 @@ public class TileImage extends Keyed {
         }
     }
 
-    private @NotNull BufferedImage getBuffer(@NotNull Path path) throws IOException {
+    private BufferedImage getBuffer(Path path) throws IOException {
         BufferedImage buffer = null;
 
         // try to read existing image
@@ -131,7 +132,7 @@ public class TileImage extends Keyed {
         return buffer;
     }
 
-    private void writePixels(@NotNull BufferedImage buffer, int size, int zoom) {
+    private void writePixels(BufferedImage buffer, int size, int zoom) {
         int step = 1 << zoom;
         int baseX = (this.region.x() * size) & 0x1FF;
         int baseZ = (this.region.z() * size) & 0x1FF;
@@ -192,7 +193,7 @@ public class TileImage extends Keyed {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "TileImage{"
                 + "key=" + getKey()
                 + ",region=" + this.region

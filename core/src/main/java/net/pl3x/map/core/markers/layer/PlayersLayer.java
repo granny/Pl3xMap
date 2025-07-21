@@ -42,11 +42,12 @@ import net.pl3x.map.core.markers.option.Tooltip;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.util.FileUtil;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Manages player markers.
  */
+@NullMarked
 public class PlayersLayer extends WorldLayer {
     public static final String KEY = "pl3xmap_players";
 
@@ -57,7 +58,7 @@ public class PlayersLayer extends WorldLayer {
      *
      * @param world world
      */
-    public PlayersLayer(@NotNull World world) {
+    public PlayersLayer(World world) {
         this(KEY, world, () -> Lang.UI_LAYER_PLAYERS);
         setUpdateInterval(PlayersLayerConfig.UPDATE_INTERVAL);
         setLiveUpdate(PlayersLayerConfig.LIVE_UPDATE);
@@ -76,7 +77,7 @@ public class PlayersLayer extends WorldLayer {
      * @param world         world
      * @param labelSupplier label
      */
-    public PlayersLayer(@NotNull String key, @NotNull World world, @NotNull Supplier<@NotNull String> labelSupplier) {
+    public PlayersLayer(String key, World world, Supplier<String> labelSupplier) {
         super(key, world, labelSupplier);
 
         this.icon = PlayersLayerConfig.ICON;
@@ -91,7 +92,7 @@ public class PlayersLayer extends WorldLayer {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Marker<?>> getMarkers() {
+    public Collection<Marker<?>> getMarkers() {
         Set<Marker<?>> icons = new HashSet<>();
         getWorld().getPlayers().forEach(player -> {
             if (player.isHidden()) {
@@ -111,7 +112,7 @@ public class PlayersLayer extends WorldLayer {
         return icons;
     }
 
-    private @NotNull Icon createIcon(@NotNull Player player) {
+    private Icon createIcon(Player player) {
         Icon icon = Marker.icon(player.getUUID().toString(), player.getPosition(), this.icon, 16)
                 .setRotationAngle((double) player.getYaw())
                 .setRotationOrigin("center")

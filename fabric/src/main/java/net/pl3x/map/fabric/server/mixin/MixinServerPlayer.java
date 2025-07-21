@@ -23,39 +23,41 @@
  */
 package net.pl3x.map.fabric.server.mixin;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.pl3x.map.fabric.server.duck.AccessServerPlayer;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
+@NullMarked
 @Mixin(ServerPlayer.class)
 public class MixinServerPlayer implements AccessServerPlayer {
+    @Unique
     private boolean hidden;
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void addAdditionalSaveData(@NotNull CompoundTag compoundTag, @NotNull CallbackInfo info) {
-        compoundTag.putByte("pl3xmap.hidden", (byte) (this.hidden ? 1 : 0));
+    private void addAdditionalSaveData(ValueOutput valueOutput, CallbackInfo ci) {
+        valueOutput.putBoolean("pl3xmap.hidden", this.hidden);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readAdditionalSaveData(@NotNull CompoundTag compoundTag, @NotNull CallbackInfo info) {
-        if (compoundTag.contains("pl3xmap.hidden", 1)) {
-            this.hidden = compoundTag.getByte("pl3xmap.hidden") != (byte) 0;
-        }
+    private void readAdditionalSaveData(ValueInput valueInput, CallbackInfo ci) {
+        this.hidden = valueInput.getBooleanOr("pl3xmap.hidden", false);
     }
 
     @Override
-    public boolean isHidden() {
+    public boolean pl3xMap$isHidden() {
         return this.hidden;
     }
 
     @Override
-    public void setHidden(boolean hidden) {
+    public void pl3xMap$setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 }

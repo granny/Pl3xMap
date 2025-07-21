@@ -24,15 +24,16 @@
 package net.pl3x.map.core.renderer.heightmap;
 
 import net.pl3x.map.core.world.Region;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class NoneHeightmap extends Heightmap {
     public NoneHeightmap() {
         super("none");
     }
 
     @Override
-    public int getColor(@NotNull Region region, int blockX, int blockZ) {
+    public int getColor(Region region, int blockX, int blockZ) {
         return 0x22 << 24;
     }
 }

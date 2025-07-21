@@ -24,8 +24,10 @@
 package net.pl3x.map.core.configuration;
 
 import net.pl3x.map.core.Pl3xMap;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("CanBeFinal")
+@NullMarked
 public final class PlayersLayerConfig extends AbstractConfig {
     @Key("settings.enabled")
     @Comment("""

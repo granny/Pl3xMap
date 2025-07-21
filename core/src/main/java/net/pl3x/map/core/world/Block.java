@@ -26,9 +26,10 @@ package net.pl3x.map.core.world;
 import java.util.Objects;
 import net.pl3x.map.core.Keyed;
 import net.pl3x.map.core.configuration.ColorsConfig;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public final class Block extends Keyed {
     private final int index;
     private final int color;
@@ -36,7 +37,7 @@ public final class Block extends Keyed {
     private final byte bools;
     private final BlockState defaultState;
 
-    public Block(int index, @NotNull String id, int vanilla) {
+    public Block(int index, String id, int vanilla) {
         super(id);
         this.index = index;
         this.color = ColorsConfig.BLOCK_COLORS.getOrDefault(id, vanilla);
@@ -45,11 +46,13 @@ public final class Block extends Keyed {
         boolean flat = ColorsConfig.BLOCKS_FLAT.contains(id);
         boolean air = ColorsConfig.BLOCKS_AIR.contains(id);
         boolean foliage = ColorsConfig.BLOCKS_FOLIAGE.contains(id);
+        boolean dryFoliage = ColorsConfig.BLOCKS_DRY_FOLIAGE.contains(id);
         boolean grass = ColorsConfig.BLOCKS_GRASS.contains(id);
         boolean water = ColorsConfig.BLOCKS_WATER.contains(id);
         boolean glass = ColorsConfig.BLOCKS_GLASS.contains(id);
 
         this.bools = (byte) (
+                (dryFoliage ? 1 << 7 : 0) |
                 (flat ? 1 << 6 : 0) |
                 (air ? 1 << 5 : 0) |
                 (foliage ? 1 << 4 : 0) |
@@ -72,6 +75,10 @@ public final class Block extends Keyed {
 
     public int vanilla() {
         return this.vanilla;
+    }
+
+    public boolean isDryFoliage() {
+        return ((this.bools >> 7) & 1) > 0;
     }
 
     public boolean isFlat() {
@@ -102,7 +109,7 @@ public final class Block extends Keyed {
         return (this.bools & 1) > 0;
     }
 
-    public @NotNull BlockState getDefaultState() {
+    public BlockState getDefaultState() {
         return this.defaultState;
     }
 
@@ -131,7 +138,7 @@ public final class Block extends Keyed {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "BlockState{"
                 + "key=" + getKey()
                 + "index=" + getIndex()

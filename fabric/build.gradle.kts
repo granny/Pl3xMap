@@ -25,6 +25,7 @@ loom {
 }
 
 repositories {
+    maven("https://repo.granny.dev/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/") {
         name = "sonatype-snapshots"
         mavenContent {
@@ -47,14 +48,20 @@ dependencies {
 
     implementation(project(path = ":core", configuration = "shadow"))
 
+    implementation(libs.jspecifyAnnotations)
+
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
 
     modImplementation(libs.cloudFabric)
     include(libs.cloudFabric)
 
-    modImplementation(libs.adventurePlatformFabric)
-    include(libs.adventurePlatformFabric)
+    modImplementation(libs.adventurePlatformFabric) {
+        exclude("net.kyori", "ansi") // TODO: temporary
+    }
+    include(libs.adventurePlatformFabric) {
+        exclude("net.kyori", "ansi") // TODO: temporary
+    }
 }
 
 tasks {
