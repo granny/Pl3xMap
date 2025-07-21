@@ -74,17 +74,18 @@ import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.world.World;
 import net.pl3x.map.neoforge.command.NeoForgeCommandManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 @Mod("pl3xmap")
+@NullMarked
 public class Pl3xMapNeoForge extends Pl3xMap {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Constants.MODID);
 
     public static final Supplier<AttachmentType<Boolean>> HIDDEN = Pl3xMapNeoForge.ATTACHMENT_TYPES.register(
             "hidden",
             () -> AttachmentType.builder(() -> false)
-                    .serialize(Codec.BOOL)
+                    .serialize(Codec.BOOL.fieldOf("hidden"))
                     .copyOnDeath()
                     .build()
     );
@@ -121,26 +122,21 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onServerTick(ServerTickEvent.@NotNull Post event) {
-        if (this.tick++ >= 20) {
-            this.tick = 0;
-            getScheduler().tick();
-        }
+    public void onServerTick(ServerTickEvent.Post event) {
+        getScheduler().tick();
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-        PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
-        UUID uuid = event.getEntity().getUUID();
-        Player forgePlayer = registry.getOrDefault(uuid, () -> new NeoForgePlayer((ServerPlayer) event.getEntity()));
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        ServerPlayer serverPlayer = (ServerPlayer) event.getEntity();
+        Player forgePlayer = getPlayerRegistry().getOrDefault(serverPlayer.getUUID(), () -> new NeoForgePlayer(serverPlayer));
         this.playerListener.onJoin(forgePlayer);
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedOut(PlayerEvent.@NotNull PlayerLoggedOutEvent event) {
-        PlayerRegistry registry = Pl3xMap.api().getPlayerRegistry();
-        UUID uuid = event.getEntity().getUUID();
-        Player forgePlayer = registry.unregister(uuid);
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayer serverPlayer = (ServerPlayer) event.getEntity();
+        Player forgePlayer = getPlayerRegistry().unregister(serverPlayer.getUUID());
         if (forgePlayer != null) {
             this.playerListener.onQuit(forgePlayer);
         }
@@ -168,7 +164,7 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onServerStarted(@NotNull ServerStartedEvent event) {
+    public void onServerStarted(ServerStartedEvent event) {
         this.server = event.getServer();
         this.adventure = MinecraftServerAudiences.of(this.server);
 
@@ -176,7 +172,7 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @SubscribeEvent
-    public void onServerStopping(@NotNull ServerStoppingEvent event) {
+    public void onServerStopping(ServerStoppingEvent event) {
         this.network.unregister();
 
         disable();
@@ -199,7 +195,7 @@ public class Pl3xMapNeoForge extends Pl3xMap {
         }
     }
 
-    public @NotNull IModInfo getModInfo() {
+    public IModInfo getModInfo() {
         if (this.modInfo == null) {
             this.modInfo = ModList.get().getModContainerById("pl3xmap").orElseThrow().getModInfo();
         }
@@ -207,12 +203,12 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @Override
-    public @NotNull String getPlatform() {
+    public String getPlatform() {
         return this.server.getServerModName().toLowerCase(Locale.ROOT);
     }
 
     @Override
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return getModInfo().getVersion().toString();
     }
 
@@ -228,11 +224,11 @@ public class Pl3xMapNeoForge extends Pl3xMap {
 
     @Override
     public String getServerVersion() {
-        return SharedConstants.getCurrentVersion().getName();
+        return SharedConstants.getCurrentVersion().name();
     }
 
     @Override
-    public @NotNull AudienceProvider adventure() {
+    public AudienceProvider adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure without a running server!");
         }
@@ -240,12 +236,12 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @Override
-    public @NotNull Path getMainDir() {
+    public Path getMainDir() {
         return FMLPaths.GAMEDIR.get().resolve("config").resolve("pl3xmap");
     }
 
     @Override
-    public @NotNull Path getJarPath() {
+    public Path getJarPath() {
         return getModInfo().getOwningFile().getFile().getFilePath();
     }
 
@@ -255,9 +251,9 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @Override
-    public net.pl3x.map.core.world.@Nullable Block getFlower(@NotNull World world, net.pl3x.map.core.world.@NotNull Biome biome, int blockX, int blockY, int blockZ) {
+    public net.pl3x.map.core.world.@Nullable Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
-        Biome nms = world.<ServerLevel>getLevel().registryAccess().registryOrThrow(Registries.BIOME).get(ResourceLocation.parse(biome.getKey()));
+        Biome nms = world.<ServerLevel>getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getValue(ResourceLocation.parse(biome.getKey()));
         if (nms == null) {
             return null;
         }
@@ -265,16 +261,15 @@ public class Pl3xMapNeoForge extends Pl3xMap {
         if (flowers.isEmpty()) {
             return null;
         }
-        RandomPatchConfiguration config = (RandomPatchConfiguration) flowers.get(0).config();
+        RandomPatchConfiguration config = (RandomPatchConfiguration) flowers.getFirst().config();
         SimpleBlockConfiguration flower = (SimpleBlockConfiguration) config.feature().value().feature().value().config();
         Block block = flower.toPlace().getState(this.randomSource, new BlockPos(blockX, blockY, blockZ)).getBlock();
-        ResourceLocation key = BuiltInRegistries.BLOCK.getKey(block);
-        return key == null ? null : getBlockRegistry().get(key.toString());
+        return getBlockRegistry().get(BuiltInRegistries.BLOCK.getKey(block).toString());
     }
 
     @Override
     protected void loadBlocks() {
-        Set<Map.Entry<ResourceKey<Block>, Block>> entries = this.server.registryAccess().registryOrThrow(Registries.BLOCK).entrySet();
+        Set<Map.Entry<ResourceKey<Block>, Block>> entries = this.server.registryAccess().lookupOrThrow(Registries.BLOCK).entrySet();
         for (Map.Entry<ResourceKey<Block>, Block> entry : entries) {
             if (getBlockRegistry().size() > BlockRegistry.MAX_INDEX) {
                 Logger.debug(String.format("Cannot register any more blocks. Registered: %d Unregistered: %d", getBlockRegistry().size(), entries.size() - getBlockRegistry().size()));
@@ -305,7 +300,7 @@ public class Pl3xMapNeoForge extends Pl3xMap {
     }
 
     @Override
-    public @NotNull World cloneWorld(@NotNull World world) {
+    public World cloneWorld(World world) {
         return new NeoForgeWorld(world.getLevel(), world.getName());
     }
 

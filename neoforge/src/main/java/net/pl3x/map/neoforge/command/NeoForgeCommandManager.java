@@ -34,11 +34,12 @@ import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.neoforge.NeoForgeServerCommandManager;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class NeoForgeCommandManager implements CommandHandler {
-    private final NeoForgeServerCommandManager<@NotNull Sender> manager;
-    private final Command.Builder<@NotNull Sender> root;
+    private final NeoForgeServerCommandManager<Sender> manager;
+    private final Command.Builder<Sender> root;
 
     public NeoForgeCommandManager() {
         this.manager = new NeoForgeServerCommandManager<>(
@@ -46,10 +47,10 @@ public class NeoForgeCommandManager implements CommandHandler {
                 SenderMapper.create(NeoForgeSender::create, Sender::getSender)
         );
 
-        CloudBrigadierManager<@NotNull Sender, ?> brigadier = getManager().brigadierManager();
+        CloudBrigadierManager<Sender, ?> brigadier = getManager().brigadierManager();
         brigadier.setNativeNumberSuggestions(false);
         brigadier.registerMapping(new TypeToken<WorldParser<Sender>>() {
-        }, builder -> builder.toConstant(DimensionArgument.dimension()).cloudSuggestions());
+        }, builder -> builder.cloudSuggestions().toConstant(DimensionArgument.dimension()));
 
         setupExceptionHandlers();
 
@@ -59,17 +60,17 @@ public class NeoForgeCommandManager implements CommandHandler {
     }
 
     @Override
-    public @NotNull NeoForgeServerCommandManager<@NotNull Sender> getManager() {
+    public NeoForgeServerCommandManager<Sender> getManager() {
         return this.manager;
     }
 
     @Override
-    public @NotNull PlatformParsers getPlatformParsers() {
+    public PlatformParsers getPlatformParsers() {
         return new NeoForgeParsers();
     }
 
     @Override
-    public Command.@NotNull Builder<@NotNull Sender> getRoot() {
+    public Command.Builder<Sender> getRoot() {
         return this.root;
     }
 }

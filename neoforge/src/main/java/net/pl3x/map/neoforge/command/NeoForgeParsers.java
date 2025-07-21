@@ -12,7 +12,10 @@ import org.incendo.cloud.minecraft.modded.data.Coordinates;
 import org.incendo.cloud.minecraft.modded.data.SinglePlayerSelector;
 import org.incendo.cloud.minecraft.modded.parser.VanillaArgumentParsers;
 import org.incendo.cloud.parser.ParserDescriptor;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class NeoForgeParsers implements PlatformParsers {
     @Override
     public ParserDescriptor<Sender, ?> columnPosParser() {
@@ -35,7 +38,7 @@ public class NeoForgeParsers implements PlatformParsers {
     }
 
     @Override
-    public Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context) {
+    public @Nullable Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context) {
         Sender sender = context.sender();
         SinglePlayerSelector playerSelector = context.<SinglePlayerSelector>getOrDefault(name, null);
         if (playerSelector == null) {

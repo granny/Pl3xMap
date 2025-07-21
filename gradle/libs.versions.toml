@@ -7,8 +7,8 @@ fabricApi="0.129.0+1.21.8"
 fabricLoader="0.16.14"
 fabricLoom="1.11-SNAPSHOT"
 
-neoforge="21.1.23"
-neoGradle="7.0.145"
+neoforge="21.8.2-beta"
+neoGradle="7.0.190"
 neoforgeLoader="[4,)"
 
 minotaur="2.+" # https://github.com/modrinth/minotaur
@@ -19,8 +19,7 @@ shadowJar="8.3.5" # https://github.com/GradleUp/shadow
 
 adventure="4.24.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure
 adventureBukkit="4.4.1-granny-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform
-adventureFabric="6.5.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
-adventureModded="6.0.0" # https://github.com/KyoriPowered/adventure-platform-fabric
+adventureModded="6.5.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-mod
 
 cloud="2.0.0" # https://github.com/incendo/cloud
 cloud-minecraft="2.0.0-beta.11" # https://github.com/Incendo/cloud-minecraft
@@ -80,9 +79,8 @@ adventureTextSerializerPlain = { group = "net.kyori", name = "adventure-text-ser
 
 adventurePlatformFacet = { group = "net.kyori", name = "adventure-platform-facet", version.ref = "adventureBukkit" }
 adventurePlatformBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventureBukkit" }
-adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventureFabric" }
+adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventureModded" }
 adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version.ref = "adventureModded" }
-
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 querzNbt = { group = "com.github.Querz", name = "NBT", version.ref = "querzNbt" }

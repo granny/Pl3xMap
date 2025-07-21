@@ -32,29 +32,30 @@ import net.minecraft.server.level.ServerPlayer;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.command.Sender;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class NeoForgeSender extends Sender {
-    public static @NotNull Sender create(@NotNull CommandSourceStack stack) {
+    public static Sender create(CommandSourceStack stack) {
         if (stack.source instanceof ServerPlayer) {
             return new Player(stack);
         }
         return new NeoForgeSender(stack);
     }
 
-    public NeoForgeSender(@NotNull CommandSourceStack sender) {
+    public NeoForgeSender(CommandSourceStack sender) {
         super(sender);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NotNull CommandSourceStack getSender() {
+    public CommandSourceStack getSender() {
         return super.getSender();
     }
 
     @Override
-    public @NotNull Audience audience() {
+    public Audience audience() {
         return ((MinecraftServerAudiences) Pl3xMap.api().adventure()).audience(getSender());
     }
 
@@ -79,29 +80,29 @@ public class NeoForgeSender extends Sender {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "ForgeSender{"
                 + "sender=" + getSender().getTextName()
                 + "}";
     }
 
     public static class Player extends NeoForgeSender implements Audience, Sender.Player<ServerPlayer> {
-        public Player(@NotNull CommandSourceStack sender) {
+        public Player(CommandSourceStack sender) {
             super(sender);
         }
 
         @Override
-        public @NotNull ServerPlayer getPlayer() {
+        public ServerPlayer getPlayer() {
             return (ServerPlayer) getSender().source;
         }
 
         @Override
-        public @NotNull Audience audience() {
+        public Audience audience() {
             return Pl3xMap.api().adventure().player(getPlayer().getUUID());
         }
 
         @Override
-        public @NotNull UUID getUUID() {
+        public UUID getUUID() {
             return getPlayer().getUUID();
         }
 
@@ -111,7 +112,7 @@ public class NeoForgeSender extends Sender {
         }
 
         @Override
-        public @NotNull String toString() {
+        public String toString() {
             return "ForgeSender$Player{"
                     + "player=" + getPlayer().getUUID()
                     + "}";

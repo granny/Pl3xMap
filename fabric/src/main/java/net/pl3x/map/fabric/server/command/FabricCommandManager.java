@@ -23,7 +23,6 @@
  */
 package net.pl3x.map.fabric.server.command;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import net.minecraft.commands.arguments.DimensionArgument;
 import net.pl3x.map.core.command.CommandHandler;

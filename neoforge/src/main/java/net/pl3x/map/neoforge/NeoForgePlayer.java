@@ -44,39 +44,40 @@ import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class NeoForgePlayer extends Player {
-    public NeoForgePlayer(@NotNull ServerPlayer player) {
+    public NeoForgePlayer(ServerPlayer player) {
         super(player.getScoreboardName(), player);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NotNull ServerPlayer getPlayer() {
+    public ServerPlayer getPlayer() {
         return super.getPlayer();
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return getPlayer().getScoreboardName();
     }
 
     @Override
-    public @NotNull UUID getUUID() {
+    public UUID getUUID() {
         return getPlayer().getUUID();
     }
 
     @Override
-    public @NotNull World getWorld() {
+    public World getWorld() {
         ServerLevel level = (ServerLevel) getPlayer().level();
         String name = level.dimension().location().toString();
         return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new NeoForgeWorld(level, name));
     }
 
     @Override
-    public @NotNull Point getPosition() {
+    public Point getPosition() {
         Vec3 loc = getPlayer().position();
         return Point.of(loc.x(), loc.z());
     }
@@ -153,7 +154,7 @@ public class NeoForgePlayer extends Player {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "NeoForgePlayer{"
                 + "player=" + getPlayer().getUUID()
                 + "}";
