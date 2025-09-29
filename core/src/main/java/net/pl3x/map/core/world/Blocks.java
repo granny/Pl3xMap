@@ -1139,7 +1139,77 @@ public class Blocks {
     public static final Block LEAF_LITTER = register(new Block(1103, "minecraft:leaf_litter", 0xA8A8A8));
     public static final Block TEST_INSTANCE_BLOCK = register(new Block(1104, "minecraft:test_instance_block", 0x847E7D));
     public static final Block DRIED_GHAST = register(new Block(1105, "minecraft:dried_ghast", 0x9F9191));
+    public static final Block IRON_CHAIN = register(new Block(1106, "minecraft:iron_chain", 0x000000));
 
+    public static final Block COPPER_CHAIN = register(new Block(1107, "minecraft:copper_chain", 0x000000));
+    public static final Block EXPOSED_COPPER_CHAIN = register(new Block(1108, "minecraft:exposed_copper_chain", 0x000000));
+    public static final Block WEATHERED_COPPER_CHAIN = register(new Block(1109, "minecraft:weathered_copper_chain", 0x000000));
+    public static final Block OXIDIZED_COPPER_CHAIN = register(new Block(1110, "minecraft:oxidized_copper_chain", 0x000000));
+    public static final Block WAXED_COPPER_CHAIN = register(new Block(1111, "minecraft:waxed_copper_chain", 0x000000));
+    public static final Block WAXED_EXPOSED_COPPER_CHAIN = register(new Block(1112, "minecraft:waxed_exposed_copper_chain", 0x000000));
+    public static final Block WAXED_WEATHERED_COPPER_CHAIN = register(new Block(1113, "minecraft:waxed_weathered_copper_chain", 0x000000));
+    public static final Block WAXED_OXIDIZED_COPPER_CHAIN = register(new Block(1114, "minecraft:waxed_oxidized_copper_chain", 0x000000));
+
+    public static final Block COPPER_BARS = register(new Block(1115, "minecraft:copper_bars", 0x000000));
+    public static final Block EXPOSED_COPPER_BARS = register(new Block(1116, "minecraft:exposed_copper_bars", 0x000000));
+    public static final Block WEATHERED_COPPER_BARS = register(new Block(1117, "minecraft:weathered_copper_bars", 0x000000));
+    public static final Block OXIDIZED_COPPER_BARS = register(new Block(1118, "minecraft:oxidized_copper_bars", 0x000000));
+    public static final Block WAXED_COPPER_BARS = register(new Block(1119, "minecraft:waxed_copper_bars", 0x000000));
+    public static final Block WAXED_EXPOSED_COPPER_BARS = register(new Block(1120, "minecraft:waxed_exposed_copper_bars", 0x000000));
+    public static final Block WAXED_WEATHERED_COPPER_BARS = register(new Block(1121, "minecraft:waxed_weathered_copper_bars", 0x000000));
+    public static final Block WAXED_OXIDIZED_COPPER_BARS = register(new Block(1122, "minecraft:waxed_oxidized_copper_bars", 0x000000));
+
+    public static final Block COPPER_CHEST = register(new Block(1123, "minecraft:copper_chest", 0x000000));
+    public static final Block EXPOSED_COPPER_CHEST = register(new Block(1124, "minecraft:exposed_copper_chest", 0x000000));
+    public static final Block WEATHERED_COPPER_CHEST = register(new Block(1125, "minecraft:weathered_copper_chest", 0x000000));
+    public static final Block OXIDIZED_COPPER_CHEST = register(new Block(1126, "minecraft:oxidized_copper_chest", 0x000000));
+    public static final Block WAXED_COPPER_CHEST = register(new Block(1127, "minecraft:waxed_copper_chest", 0x000000));
+    public static final Block WAXED_EXPOSED_COPPER_CHEST = register(new Block(1128, "minecraft:waxed_exposed_copper_chest", 0x000000));
+    public static final Block WAXED_WEATHERED_COPPER_CHEST = register(new Block(1129, "minecraft:waxed_weathered_copper_chest", 0x000000));
+    public static final Block WAXED_OXIDIZED_COPPER_CHEST = register(new Block(1130, "minecraft:waxed_oxidized_copper_chest", 0x000000));
+
+    public static final Block COPPER_GOLEM_STATUE = register(new Block(1131, "minecraft:copper_golem_statue", 0x000000));
+    public static final Block EXPOSED_COPPER_GOLEM_STATUE = register(new Block(1132, "minecraft:exposed_copper_golem_statue", 0x000000));
+    public static final Block WEATHERED_COPPER_GOLEM_STATUE = register(new Block(1133, "minecraft:weathered_copper_golem_statue", 0x000000));
+    public static final Block OXIDIZED_COPPER_GOLEM_STATUE = register(new Block(1134, "minecraft:oxidized_copper_golem_statue", 0x000000));
+    public static final Block WAXED_COPPER_GOLEM_STATUE = register(new Block(1135, "minecraft:waxed_copper_golem_statue", 0x000000));
+    public static final Block WAXED_EXPOSED_COPPER_GOLEM_STATUE = register(new Block(1136, "minecraft:waxed_exposed_copper_golem_statue", 0x000000));
+    public static final Block WAXED_WEATHERED_COPPER_GOLEM_STATUE = register(new Block(1137, "minecraft:waxed_weathered_copper_golem_statue", 0x000000));
+    public static final Block WAXED_OXIDIZED_COPPER_GOLEM_STATUE = register(new Block(1138, "minecraft:waxed_oxidized_copper_golem_statue", 0x000000));
+
+    public static final Block EXPOSED_LIGHTNING_ROD = register(new Block(1139, "minecraft:exposed_lightning_rod", 0x000000));
+    public static final Block WEATHERED_LIGHTNING_ROD = register(new Block(1140, "minecraft:weathered_lightning_rod", 0x000000));
+    public static final Block OXIDIZED_LIGHTNING_ROD = register(new Block(1141, "minecraft:oxidized_lightning_rod", 0x000000));
+    public static final Block WAXED_LIGHTNING_ROD = register(new Block(1142, "minecraft:waxed_lightning_rod", 0x000000));
+    public static final Block WAXED_EXPOSED_LIGHTNING_ROD = register(new Block(1143, "minecraft:waxed_exposed_lightning_rod", 0x000000));
+    public static final Block WAXED_WEATHERED_LIGHTNING_ROD = register(new Block(1144, "minecraft:waxed_weathered_lightning_rod", 0x000000));
+    public static final Block WAXED_OXIDIZED_LIGHTNING_ROD = register(new Block(1145, "minecraft:waxed_oxidized_lightning_rod", 0x000000));
+
+    public static final Block COPPER_LANTERN = register(new Block(1146, "minecraft:copper_lantern", 0x000000));
+    public static final Block EXPOSED_COPPER_LANTERN = register(new Block(1147, "minecraft:exposed_copper_lantern", 0x000000));
+    public static final Block WEATHERED_COPPER_LANTERN = register(new Block(1148, "minecraft:weathered_copper_lantern", 0x000000));
+    public static final Block OXIDIZED_COPPER_LANTERN = register(new Block(11349, "minecraft:oxidized_copper_lantern", 0x000000));
+    public static final Block WAXED_COPPER_LANTERN = register(new Block(1150, "minecraft:waxed_copper_lantern", 0x000000));
+    public static final Block WAXED_EXPOSED_COPPER_LANTERN = register(new Block(1151, "minecraft:waxed_exposed_copper_lantern", 0x000000));
+    public static final Block WAXED_WEATHERED_COPPER_LANTERN = register(new Block(1152, "minecraft:waxed_weathered_copper_lantern", 0x000000));
+    public static final Block WAXED_OXIDIZED_COPPER_LANTERN = register(new Block(1153, "minecraft:waxed_oxidized_copper_lantern", 0x000000));
+
+    public static final Block COPPER_TORCH = register(new Block(1154, "minecraft:copper_torch", 0x000000));
+    public static final Block COPPER_WALL_TORCH = register(new Block(1155, "minecraft:copper_wall_torch", 0x000000));
+
+    public static final Block ACACIA_SHELF = register(new Block(1156, "minecraft:acacia_shelf", 0xD87F33));
+    public static final Block BAMBOO_SHELF = register(new Block(1157, "minecraft:bamboo_shelf", 0xE5E533));
+    public static final Block BIRCH_SHELF = register(new Block(1158, "minecraft:birch_shelf", 0xF7E9A3));
+    public static final Block CHERRY_SHELF = register(new Block(1159, "minecraft:cherry_shelf", 0xD1B1A1));
+    public static final Block CRIMSON_SHELF = register(new Block(1160, "minecraft:crimson_shelf", 0x943F61));
+    public static final Block DARK_OAK_SHELF = register(new Block(1161, "minecraft:dark_oak_shelf", 0x664C33));
+    public static final Block JUNGLE_SHELF = register(new Block(1162, "minecraft:jungle_shelf", 0x976D4D));
+    public static final Block MANGROVE_SHELF = register(new Block(1163, "minecraft:mangrove_shelf", 0x993333));
+    public static final Block OAK_SHELF = register(new Block(1164, "minecraft:oak_shelf", 0x8F7748));
+    public static final Block PALE_OAK_SHELF = register(new Block(1165, "minecraft:pale_oak_shelf", 0xE4DAD8));
+    public static final Block SPRUCE_SHELF = register(new Block(1166, "minecraft:spruce_shelf", 0x815631));
+    public static final Block WARPED_SHELF = register(new Block(1167, "minecraft:warped_shelf", 0x3A8E8C));
+    
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
         return block;
