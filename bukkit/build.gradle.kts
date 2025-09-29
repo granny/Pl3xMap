@@ -15,17 +15,9 @@ base {
 
 repositories {
     maven("https://repo.granny.dev/snapshots/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-        name = "oss-sonatype-snapshots"
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-        name = "s01-sonatype-snapshots"
-        mavenContent {
-            snapshotsOnly()
-        }
+    maven("https://central.sonatype.com/repository/maven-snapshots/") {
+        name = "sonatypeSnapshots"
+        mavenContent { snapshotsOnly() }
     }
     mavenCentral()
     maven("https://jitpack.io")
@@ -43,10 +35,11 @@ dependencies {
 }
 
 tasks {
-    reobfJar {
-        dependsOn(jar)
-        outputJar.set(jar.get().archiveFile)
-    }
+// TODO: uncomment once paper has reobf support again
+//    reobfJar {
+//        dependsOn(jar)
+//        outputJar.set(jar.get().archiveFile)
+//    }
 
     // needed for below jank
     compileJava {
@@ -60,10 +53,13 @@ tasks {
         manifest {
             from(project(":core").tasks.named<Jar>("shadowJar").get().manifest)
         }
+
+        archiveClassifier.set("") // TODO: comment out once paper has reobf support again
     }
 
     build {
-        dependsOn(reobfJar)
+        dependsOn(shadowJar)
+//        dependsOn(reobfJar) // TODO: uncomment once paper has reobf support again
     }
 
     runServer {

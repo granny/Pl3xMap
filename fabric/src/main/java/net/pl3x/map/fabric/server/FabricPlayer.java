@@ -99,7 +99,7 @@ public class FabricPlayer extends Player {
     @Override
     public @Nullable URL getSkin() {
         try {
-            Property property = getPlayer().getGameProfile().getProperties().get("textures").stream().findFirst().orElse(null);
+            Property property = getPlayer().getGameProfile().properties().get("textures").stream().findFirst().orElse(null);
             if (property == null) {
                 return null;
             }

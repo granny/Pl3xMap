@@ -27,7 +27,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import java.util.concurrent.ExecutorService;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -35,6 +34,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.core.scheduler.Scheduler;
@@ -46,7 +46,6 @@ import net.pl3x.map.fabric.common.network.ServerboundMapPayload;
 import net.pl3x.map.fabric.common.network.ServerboundServerPayload;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,13 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(Pl3xMapFabricClient.class);
 
     private static Pl3xMapFabricClient instance;
+
+    private static final KeyMapping.Category PL3XMAP_KEYMAP_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "title"));
+    private static final KeyMapping PL3XMAP_TOGGLE_KEYMAP = new KeyMapping(
+            "pl3xmap.keymap.toggle",
+            InputConstants.KEY_M,
+            PL3XMAP_KEYMAP_CATEGORY
+    );
 
     private final Scheduler scheduler;
     private final TileManager tileManager;
@@ -78,13 +84,6 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        this.keyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-                "pl3xmap.keymap.toggle",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_M,
-                "pl3xmap.title"
-        ));
-
         PayloadTypeRegistry.playC2S().register(ServerboundServerPayload.TYPE, ServerboundServerPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ClientboundServerPayload.TYPE, ClientboundServerPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(ServerboundMapPayload.TYPE, ServerboundMapPayload.STREAM_CODEC);
@@ -115,7 +114,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
             if (client.player == null) {
                 return;
             }
-            while (this.keyBinding.consumeClick()) {
+            while (PL3XMAP_TOGGLE_KEYMAP.consumeClick()) {
                 this.isEnabled = !this.isEnabled;
                 MutableComponent onOff = Component.translatable("pl3xmap.toggled." + (this.isEnabled ? "on" : "off"));
                 MutableComponent component = Component.translatable("pl3xmap.toggled.response", onOff);
