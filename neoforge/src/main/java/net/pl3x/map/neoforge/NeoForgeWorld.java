@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric.server;
+package net.pl3x.map.neoforge;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -48,10 +48,10 @@ import net.pl3x.map.core.world.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class FabricWorld extends World {
+public class NeoForgeWorld extends World {
     private final ServerLevel level;
 
-    public FabricWorld(ServerLevel level, String name) {
+    public NeoForgeWorld(ServerLevel level, String name) {
         super(
                 name,
                 level.getSeed(),
@@ -78,7 +78,7 @@ public class FabricWorld extends World {
             String id = entry.getKey().location().toString();
             Biome biome = entry.getValue();
             float temperature = Mathf.clamp(0.0F, 1.0F, biome.getBaseTemperature());
-            float humidity = Mathf.clamp(0.0F, 1.0F, biome.climateSettings.downfall());
+            float humidity = Mathf.clamp(0.0F, 1.0F, biome.getModifiedClimateSettings().downfall());
             getBiomeRegistry().register(
                     id,
                     ColorsConfig.BIOME_COLORS.getOrDefault(id, 0),
@@ -165,7 +165,7 @@ public class FabricWorld extends World {
 
     @Override
     public String toString() {
-        return "FabricWorld{"
+        return "NeoForgeWorld{"
                 + "name=" + getName()
                 + ",seed=" + getSeed()
                 + ",spawn=" + getSpawn()

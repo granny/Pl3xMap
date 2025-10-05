@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric.server.command;
+package net.pl3x.map.neoforge.command;
 
 import io.leangen.geantyref.TypeToken;
 import net.minecraft.commands.arguments.DimensionArgument;
@@ -33,18 +33,18 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import org.incendo.cloud.neoforge.NeoForgeServerCommandManager;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class FabricCommandManager implements CommandHandler {
-    private final FabricServerCommandManager<Sender> manager;
+public class NeoForgeCommandManager implements CommandHandler {
+    private final NeoForgeServerCommandManager<Sender> manager;
     private final Command.Builder<Sender> root;
 
-    public FabricCommandManager() {
-        this.manager = new FabricServerCommandManager<Sender>(
+    public NeoForgeCommandManager() {
+        this.manager = new NeoForgeServerCommandManager<>(
                 ExecutionCoordinator.simpleCoordinator(),
-                SenderMapper.create(FabricSender::create, Sender::getSender)
+                SenderMapper.create(NeoForgeSender::create, Sender::getSender)
         );
 
         CloudBrigadierManager<Sender, ?> brigadier = getManager().brigadierManager();
@@ -60,13 +60,13 @@ public class FabricCommandManager implements CommandHandler {
     }
 
     @Override
-    public FabricServerCommandManager<Sender> getManager() {
+    public NeoForgeServerCommandManager<Sender> getManager() {
         return this.manager;
     }
 
     @Override
     public PlatformParsers getPlatformParsers() {
-        return new FabricParsers();
+        return new NeoForgeParsers();
     }
 
     @Override

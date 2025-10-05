@@ -21,22 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.pl3x.map.fabric.server;
+package net.pl3x.map.neoforge;
 
+import com.mojang.serialization.Codec;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
+import java.util.function.Supplier;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.SharedConstants;
@@ -55,111 +49,157 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforgespi.language.IModInfo;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.server.ServerLoadedEvent;
 import net.pl3x.map.core.log.Logger;
+import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.core.player.Player;
 import net.pl3x.map.core.player.PlayerListener;
+import net.pl3x.map.core.player.PlayerRegistry;
 import net.pl3x.map.core.registry.BlockRegistry;
 import net.pl3x.map.core.world.World;
-import net.pl3x.map.fabric.server.command.FabricCommandManager;
+import net.pl3x.map.neoforge.command.NeoForgeCommandManager;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+@Mod("pl3xmap")
 @NullMarked
-public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModInitializer {
-    @SuppressWarnings("deprecation")
-    private final RandomSource randomSource = RandomSource.createThreadSafe();
+public class Pl3xMapNeoForge extends Pl3xMap {
+    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Constants.MODID);
+
+    public static final Supplier<AttachmentType<Boolean>> HIDDEN = Pl3xMapNeoForge.ATTACHMENT_TYPES.register(
+            "hidden",
+            () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL.fieldOf("hidden"))
+                    .copyOnDeath()
+                    .build()
+    );
+
     private final PlayerListener playerListener = new PlayerListener();
 
+    @SuppressWarnings("deprecation")
+    private final RandomSource randomSource = RandomSource.createThreadSafe();
+
     private MinecraftServer server;
-    private ModContainer modContainer;
+    private IModInfo modInfo;
+
     private MinecraftServerAudiences adventure;
 
-    private boolean firstTick = true;
+    private int tick;
 
-    private FabricNetwork network;
+    private final NeoForgeNetwork network;
 
-    public Pl3xMapFabricServer() {
+    @SuppressWarnings("InstantiationOfUtilityClass")
+    public Pl3xMapNeoForge(IEventBus eventBus) {
         super(false);
-    }
 
-    @Override
-    public void onInitializeServer() {
+        NeoForge.EVENT_BUS.register(this);
+        ATTACHMENT_TYPES.register(eventBus);
+
         try {
-            new FabricCommandManager();
+            new NeoForgeCommandManager();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            if (this.firstTick) {
-                Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
-                this.firstTick = false;
-            }
-            getScheduler().tick();
-        });
-
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            ServerPlayer player = handler.getPlayer();
-            Player fabricPlayer = getPlayerRegistry().getOrDefault(player.getUUID(), () -> new FabricPlayer(player));
-            this.playerListener.onJoin(fabricPlayer);
-        });
-
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            ServerPlayer player = handler.getPlayer();
-            Player fabricPlayer = getPlayerRegistry().unregister(player.getUUID());
-            if (fabricPlayer != null) {
-                this.playerListener.onQuit(fabricPlayer);
-            }
-        });
-
-        ServerWorldEvents.LOAD.register((server, level) -> {
-            if (isEnabled()) {
-                String name = level.dimension().location().toString();
-                Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
-            }
-        });
-
-        ServerWorldEvents.UNLOAD.register((server, level) -> {
-            String name = level.dimension().location().toString();
-            Pl3xMap.api().getWorldRegistry().unregister(name);
-        });
-
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            this.server = server;
-            this.adventure = MinecraftServerAudiences.of(this.server);
-
-            enable();
-
-            this.network = new FabricNetwork(this);
-            this.network.register();
-        });
-
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-            if (this.network != null) {
-                this.network.unregister();
-                this.network = null;
-            }
-
-            disable();
-
-            if (this.adventure != null) {
-                this.adventure.close();
-                this.adventure = null;
-            }
-        });
-
-        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) ->
-                getPlayerRegistry().getOrDefault(newPlayer.getUUID(), () -> new FabricPlayer(newPlayer)).setPlayer(newPlayer)
-        );
+        this.network = new NeoForgeNetwork(this);
+        eventBus.register(this.network);
     }
 
-    public ModContainer getModContainer() {
-        if (this.modContainer == null) {
-            this.modContainer = FabricLoader.getInstance().getModContainer("pl3xmap").orElseThrow();
+    @SubscribeEvent
+    public void onServerTick(ServerTickEvent.Post event) {
+        getScheduler().tick();
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        ServerPlayer serverPlayer = (ServerPlayer) event.getEntity();
+        Player forgePlayer = getPlayerRegistry().getOrDefault(serverPlayer.getUUID(), () -> new NeoForgePlayer(serverPlayer));
+        this.playerListener.onJoin(forgePlayer);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayer serverPlayer = (ServerPlayer) event.getEntity();
+        Player forgePlayer = getPlayerRegistry().unregister(serverPlayer.getUUID());
+        if (forgePlayer != null) {
+            this.playerListener.onQuit(forgePlayer);
         }
-        return this.modContainer;
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(LevelEvent.Load event) {
+        if (!isEnabled()) {
+            return;
+        }
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+        String name = level.dimension().location().toString();
+        Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new NeoForgeWorld(level, name));
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(LevelEvent.Unload event) {
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+        String name = level.dimension().location().toString();
+        Pl3xMap.api().getWorldRegistry().unregister(name);
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        this.server = event.getServer();
+        this.adventure = MinecraftServerAudiences.of(this.server);
+
+        enable();
+    }
+
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        this.network.unregister();
+
+        disable();
+
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
+    }
+
+    @SubscribeEvent
+    public void onServerLoad(ServerStartedEvent event) {
+        Pl3xMap.api().getEventRegistry().callEvent(new ServerLoadedEvent());
+    }
+
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer newPlayer) {
+            getPlayerRegistry().getOrDefault(newPlayer.getUUID(), () -> new NeoForgePlayer(newPlayer)).setPlayer(newPlayer);
+        }
+    }
+
+    public IModInfo getModInfo() {
+        if (this.modInfo == null) {
+            this.modInfo = ModList.get().getModContainerById("pl3xmap").orElseThrow().getModInfo();
+        }
+        return this.modInfo;
     }
 
     @Override
@@ -169,7 +209,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
 
     @Override
     public String getVersion() {
-        return getModContainer().getMetadata().getVersion().getFriendlyString();
+        return getModInfo().getVersion().toString();
     }
 
     @Override
@@ -197,12 +237,12 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
 
     @Override
     public Path getMainDir() {
-        return FabricLoader.getInstance().getGameDir().resolve("config").resolve("pl3xmap");
+        return FMLPaths.GAMEDIR.get().resolve("config").resolve("pl3xmap");
     }
 
     @Override
     public Path getJarPath() {
-        return getModContainer().getOrigin().getPaths().getFirst();
+        return getModInfo().getOwningFile().getFile().getFilePath();
     }
 
     @Override
@@ -247,7 +287,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     protected void loadWorlds() {
         this.server.getAllLevels().forEach(level -> {
             String name = level.dimension().location().toString();
-            Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
+            Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new NeoForgeWorld(level, name));
         });
     }
 
@@ -255,13 +295,13 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     protected void loadPlayers() {
         this.server.getPlayerList().getPlayers().forEach(player -> {
             UUID uuid = player.getUUID();
-            getPlayerRegistry().getOrDefault(uuid, () -> new FabricPlayer(player));
+            getPlayerRegistry().getOrDefault(uuid, () -> new NeoForgePlayer(player));
         });
     }
 
     @Override
     public World cloneWorld(World world) {
-        return new FabricWorld(world.getLevel(), world.getName());
+        return new NeoForgeWorld(world.getLevel(), world.getName());
     }
 
     public @Nullable MinecraftServer getServer() {
