@@ -55,7 +55,7 @@ public class FabricWorld extends World {
         super(
                 name,
                 level.getSeed(),
-                Point.of(level.getLevelData().getSpawnPos().getX(), level.getLevelData().getSpawnPos().getZ()),
+                Point.of(level.getLevelData().getRespawnData().pos().getX(), level.getLevelData().getRespawnData().pos().getZ()),
                 Type.get(level.dimension().location().toString()),
                 level.getChunkSource().getDataStorage().dataFolder.getParent().resolve("region")
         );
