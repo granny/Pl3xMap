@@ -27,6 +27,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import java.util.concurrent.ExecutorService;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -70,7 +71,6 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
         return instance;
     }
 
-    private KeyMapping keyBinding;
     private boolean isEnabled;
     private boolean isOnServer;
     private String serverUrl;
@@ -84,6 +84,8 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        KeyBindingHelper.registerKeyBinding(PL3XMAP_TOGGLE_KEYMAP);
+
         PayloadTypeRegistry.playC2S().register(ServerboundServerPayload.TYPE, ServerboundServerPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ClientboundServerPayload.TYPE, ClientboundServerPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(ServerboundMapPayload.TYPE, ServerboundMapPayload.STREAM_CODEC);
