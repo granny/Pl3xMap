@@ -98,33 +98,33 @@ public class PackedIntArrayAccess {
     private final int bitsPerElement;
     private final long[] data;
 
-    private final long maxValue;
-    private final int elementsPerLong, indexScale, indexOffset, indexShift;
+    private final long maxValue, indexScale, indexOffset;
+    private final int elementsPerLong, indexShift;
 
     public PackedIntArrayAccess(int bitsPerElement, long[] data) {
         this.bitsPerElement = bitsPerElement;
         this.data = data;
 
         this.maxValue = (1L << this.bitsPerElement) - 1L;
-        this.elementsPerLong = (char) (64 / this.bitsPerElement);
+        this.elementsPerLong = 64 / this.bitsPerElement;
 
         int i = 3 * (this.elementsPerLong - 1);
-        this.indexScale = INDEX_PARAMETERS[i];
-        this.indexOffset = INDEX_PARAMETERS[i + 1];
-        this.indexShift = INDEX_PARAMETERS[i + 2];
+        this.indexScale = Integer.toUnsignedLong(INDEX_PARAMETERS[i]);
+        this.indexOffset = Integer.toUnsignedLong(INDEX_PARAMETERS[i + 1]);
+        this.indexShift = INDEX_PARAMETERS[i + 2] + 32;
     }
 
     public int get(int i) {
         int j = this.storageIndex(i);
+        if (j >= this.data.length) return 0;
         long l = this.data[j];
         int k = (i - j * this.elementsPerLong) * this.bitsPerElement;
         return (int) (l >> k & this.maxValue);
     }
 
-    public int storageIndex(int i) {
-        long l = Integer.toUnsignedLong(this.indexScale);
-        long m = Integer.toUnsignedLong(this.indexOffset);
-        return (int) ((long) i * l + m >> 32 >> this.indexShift);
+    private int storageIndex(int i) {
+        // this is the same as doing: floor(i / elementsPerLong)
+        return (int) ((long) i * this.indexScale + this.indexOffset >> this.indexShift);
     }
 
 }
