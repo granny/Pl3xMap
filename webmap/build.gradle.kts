@@ -10,6 +10,11 @@ tasks {
         delete("$projectDir/dist")
     }
 
+    node {
+        download = true
+        version = "22.20.0"
+    }
+
     val buildWebmap = register<NpxTask>("buildWebmap") {
         dependsOn(npmInstall)
         command = "webpack"
