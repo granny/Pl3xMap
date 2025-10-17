@@ -10,6 +10,4 @@ rootProject.name = "Pl3xMap"
 
 include("core")
 include("bukkit")
-include("fabric")
-//include ("forge")
 include("webmap")
