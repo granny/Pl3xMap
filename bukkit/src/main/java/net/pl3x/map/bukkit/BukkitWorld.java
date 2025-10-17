@@ -76,7 +76,7 @@ public class BukkitWorld extends World {
         super(
                 name,
                 level.getSeed(),
-                Point.of(level.getLevelData().getRespawnData().pos().getX(), level.getLevelData().getRespawnData().pos().getZ()),
+                Point.of(level.getLevelData().getSpawnPos().getX(), level.getLevelData().getSpawnPos().getZ()),
                 Type.get(level.dimension().location().toString()),
                 BukkitWorld.getLevelStorageAccess(level).getDimensionPath(level.dimension()).resolve("region")
         );
