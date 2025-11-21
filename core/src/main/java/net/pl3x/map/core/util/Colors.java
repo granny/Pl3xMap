@@ -371,6 +371,6 @@ public class Colors {
 
     @FunctionalInterface
     public interface Sampler {
-        Integer apply(Biome biome, Integer x, Integer z);
+        int apply(Biome biome, int x, int z);
     }
 }
