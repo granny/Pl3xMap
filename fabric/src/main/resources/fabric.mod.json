@@ -40,9 +40,6 @@
     "cloud": "*",
     "adventure-platform-fabric": "*"
   },
-  "recommends": {
-    "better-fabric-console": "*"
-  },
   "custom": {
     "modmenu": {
       "links": {
