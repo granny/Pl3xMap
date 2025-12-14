@@ -1,6 +1,6 @@
 [versions]
-bukkit="1.21.8-R0.1-SNAPSHOT"
-minecraft="1.21.8"
+bukkit="1.21.10-R0.1-SNAPSHOT"
+minecraft="1.21.10"
 
 # https://fabricmc.net/develop/
 fabricApi="0.135.0+1.21.10"
