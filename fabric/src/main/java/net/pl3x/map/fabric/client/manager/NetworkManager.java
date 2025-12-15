@@ -30,14 +30,14 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class NetworkManager {
-    private final ResourceLocation channel = ResourceLocation.fromNamespaceAndPath(Constants.MODID, Constants.MODID);
+    private final Identifier channel = Identifier.fromNamespaceAndPath(Constants.MODID, Constants.MODID);
     private final Pl3xMapFabricClient mod;
 
     public NetworkManager(Pl3xMapFabricClient mod) {

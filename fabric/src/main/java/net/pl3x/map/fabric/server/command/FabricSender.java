@@ -108,7 +108,7 @@ public class FabricSender extends Sender {
 
         @Override
         public @Nullable World getWorld() {
-            return Pl3xMap.api().getWorldRegistry().get(getPlayer().level().dimension().location().toString());
+            return Pl3xMap.api().getWorldRegistry().get(getPlayer().level().dimension().identifier().toString());
         }
 
         @Override

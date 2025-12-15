@@ -56,7 +56,7 @@ public class FabricWorld extends World {
                 name,
                 level.getSeed(),
                 Point.of(level.getLevelData().getRespawnData().pos().getX(), level.getLevelData().getRespawnData().pos().getZ()),
-                Type.get(level.dimension().location().toString()),
+                Type.get(level.dimension().identifier().toString()),
                 level.getChunkSource().getDataStorage().dataFolder.getParent().resolve("region")
         );
         this.level = level;
@@ -70,18 +70,18 @@ public class FabricWorld extends World {
         // register biomes
         Set<Map.Entry<ResourceKey<Biome>, Biome>> entries = level.registryAccess().lookupOrThrow(Registries.BIOME).entrySet();
         for (Map.Entry<ResourceKey<Biome>, Biome> entry : entries) {
-            String id = entry.getKey().location().toString();
+            String id = entry.getKey().identifier().toString();
             Biome biome = entry.getValue();
             float temperature = Mathf.clamp(0.0F, 1.0F, biome.getBaseTemperature());
             float humidity = Mathf.clamp(0.0F, 1.0F, biome.climateSettings.downfall());
             getBiomeRegistry().register(
                     id,
                     ColorsConfig.BIOME_COLORS.getOrDefault(id, 0),
-                    ColorsConfig.BIOME_DRY_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().getDryFoliageColorOverride().orElse(Colors.getDefaultDryFoliageColor(temperature, humidity))),
-                    ColorsConfig.BIOME_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().getFoliageColorOverride().orElse(Colors.getDefaultFoliageColor(temperature, humidity))),
-                    ColorsConfig.BIOME_GRASS.getOrDefault(id, biome.getSpecialEffects().getGrassColorOverride().orElse(Colors.getDefaultGrassColor(temperature, humidity))),
-                    ColorsConfig.BIOME_WATER.getOrDefault(id, biome.getSpecialEffects().getWaterColor()),
-                    (x, z, color) -> biome.getSpecialEffects().getGrassColorModifier().modifyColor(x, z, color)
+                    ColorsConfig.BIOME_DRY_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().dryFoliageColorOverride().orElse(Colors.getDefaultDryFoliageColor(temperature, humidity))),
+                    ColorsConfig.BIOME_FOLIAGE.getOrDefault(id, biome.getSpecialEffects().foliageColorOverride().orElse(Colors.getDefaultFoliageColor(temperature, humidity))),
+                    ColorsConfig.BIOME_GRASS.getOrDefault(id, biome.getSpecialEffects().grassColorOverride().orElse(Colors.getDefaultGrassColor(temperature, humidity))),
+                    ColorsConfig.BIOME_WATER.getOrDefault(id, biome.getSpecialEffects().waterColor()),
+                    (x, z, color) -> biome.getSpecialEffects().grassColorModifier().modifyColor(x, z, color)
             );
         }
 

@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import net.pl3x.map.fabric.client.duck.MapInstance;
@@ -14,7 +14,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public record ClientboundMapPayload(int protocol, int response, int mapId, byte scale, int centerX, int centerZ, String worldName) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, ClientboundMapPayload> STREAM_CODEC = CustomPacketPayload.codec(ClientboundMapPayload::write, ClientboundMapPayload::new);
-    public static final Type<ClientboundMapPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "client_map_data"));
+    public static final Type<ClientboundMapPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Constants.MODID, "client_map_data"));
 
     public ClientboundMapPayload(int protocol, int response, int mapId) {
         this(protocol, response, mapId, (byte) 0, 0, 0, null);
