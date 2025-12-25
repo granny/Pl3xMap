@@ -145,7 +145,7 @@ public class TileManager {
     }
 
     private static HttpClient createClient() {
-        return HttpClient.newBuilder().executor(Util.nonCriticalIoPool()).connectTimeout(Duration.ofMinutes(2L)).build();
+        return HttpClient.newBuilder().executor(Util.ioPool()).connectTimeout(Duration.ofMinutes(2L)).build();
     }
 
     private static HttpRequest.Builder createRequest(String string) {
