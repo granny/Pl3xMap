@@ -88,7 +88,7 @@ tasks {
 
         manifest {
             attributes["Main-Class"] = "${project.group}.Pl3xMap"
-            attributes["Git-Commit"] = (if (indraGit.isPresent) indraGit.commit()?.name() ?: "" else "").substring(0, 7)
+            attributes["Git-Commit"] = (if (indraGit.isPresent) indraGit.commit().get()?.name() ?: "" else "").substring(0, 7)
         }
     }
 

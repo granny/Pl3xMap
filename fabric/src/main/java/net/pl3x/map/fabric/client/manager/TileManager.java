@@ -27,22 +27,25 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.realmsclient.client.FileDownload;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
+import net.minecraft.util.Util;
 import net.pl3x.map.core.scheduler.Task;
 import net.pl3x.map.core.util.Mathf;
 import net.pl3x.map.core.util.TickUtil;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -130,15 +133,22 @@ public class TileManager {
             );
 
             BufferedImage image = null;
-            try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-                try (CloseableHttpResponse response = httpclient.execute(new HttpGet(url));
-                     InputStream stream = response.getEntity().getContent()) {
-                    image = ImageIO.read(stream);
-                }
+            try (HttpClient httpClient = createClient()) {
+                HttpResponse<InputStream> httpResponse = httpClient.send(createRequest(url).GET().build(), HttpResponse.BodyHandlers.ofInputStream());
+                image = ImageIO.read(httpResponse.body());
             } catch (IOException ignore) {
+            } catch (InterruptedException ignore) {
             }
 
             return image == null ? EMPTY_IMAGE : image;
         }
+    }
+
+    private static HttpClient createClient() {
+        return HttpClient.newBuilder().executor(Util.ioPool()).connectTimeout(Duration.ofMinutes(2L)).build();
+    }
+
+    private static HttpRequest.Builder createRequest(String string) {
+        return HttpRequest.newBuilder(URI.create(string)).timeout(Duration.ofMinutes(2L));
     }
 }

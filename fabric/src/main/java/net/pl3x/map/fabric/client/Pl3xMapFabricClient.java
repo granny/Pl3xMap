@@ -35,7 +35,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.core.scheduler.Scheduler;
@@ -56,7 +56,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
 
     private static Pl3xMapFabricClient instance;
 
-    private static final KeyMapping.Category PL3XMAP_KEYMAP_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "title"));
+    private static final KeyMapping.Category PL3XMAP_KEYMAP_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(Constants.MODID, "title"));
     private static final KeyMapping PL3XMAP_TOGGLE_KEYMAP = new KeyMapping(
             "pl3xmap.keymap.toggle",
             InputConstants.KEY_M,

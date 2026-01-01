@@ -70,7 +70,7 @@ public class FabricPlayer extends Player {
     @Override
     public World getWorld() {
         ServerLevel level = (ServerLevel) getPlayer().level();
-        String name = level.dimension().location().toString();
+        String name = level.dimension().identifier().toString();
         return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
     }
 
