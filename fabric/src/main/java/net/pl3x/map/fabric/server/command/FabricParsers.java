@@ -41,15 +41,14 @@ public class FabricParsers implements PlatformParsers {
     public @Nullable Player resolvePlayerFromPlayerSelector(String name, CommandContext<Sender> context) {
         Sender sender = context.sender();
         SinglePlayerSelector playerSelector = context.<SinglePlayerSelector>getOrDefault(name, null);
-        if (playerSelector == null) {
-            if (sender instanceof Sender.Player<?> senderPlayer) {
-                Player player = Pl3xMap.api().getPlayerRegistry().get(senderPlayer.getUUID());
-                if (player != null) {
-                    return player;
-                }
-            }
-            return null;
+        if (playerSelector != null) {
+            Player player = Pl3xMap.api().getPlayerRegistry().get(playerSelector.single().getUUID());
+            return player;
         }
-        return new FabricPlayer(playerSelector.single());
+        if (sender instanceof Sender.Player<?> senderPlayer) {
+            Player player = Pl3xMap.api().getPlayerRegistry().get(senderPlayer.getUUID());
+            return player;
+        }
+        return null;
     }
 }
