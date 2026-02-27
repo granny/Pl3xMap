@@ -17,6 +17,7 @@ declare global {
         overlayremoved: CustomEvent<MarkerLayer>;
         playeradded: CustomEvent<Player>;
         playerremoved: CustomEvent<Player>;
+        playerupdate: CustomEvent<Player>;
         rendererselected: CustomEvent<World>;
         worldadded: CustomEvent<World>;
         worldremoved: CustomEvent<World>;

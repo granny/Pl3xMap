@@ -105,13 +105,18 @@ public class PlayerRegistry extends Registry<Player> {
         List<Object> players = new ArrayList<>();
         forEach(player -> {
             // do not expose hidden players in the json
+            boolean isHidden = false;
             if (player.isHidden() || player.isNPC()) {
-                return;
+                isHidden = true;
             }
             if (PlayersLayerConfig.HIDE_SPECTATORS && player.isSpectator()) {
-                return;
+                isHidden = true;
             }
             if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
+                isHidden = true;
+            }
+
+            if (isHidden && !PlayersLayerConfig.SHOW_HIDDEN_PLAYERS_IN_SIDEBAR) {
                 return;
             }
 
@@ -120,8 +125,11 @@ public class PlayerRegistry extends Registry<Player> {
             playerEntry.put("name", player.getDecoratedName());
             playerEntry.put("uuid", player.getUUID().toString());
             playerEntry.put("displayName", player.getDecoratedName());
-            playerEntry.put("world", player.getWorld().getName());
-            playerEntry.put("position", player.getPosition());
+
+            if (!isHidden) {
+                playerEntry.put("world", player.getWorld().getName());
+                playerEntry.put("position", player.getPosition());
+            }
 
             players.add(playerEntry);
         });

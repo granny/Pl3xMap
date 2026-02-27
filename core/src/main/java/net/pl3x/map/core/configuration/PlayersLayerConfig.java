@@ -34,6 +34,11 @@ public final class PlayersLayerConfig extends AbstractConfig {
             Show online players on the map and sidebar.""")
     public static boolean ENABLED = true;
 
+    @Key("settings.hide.show-hidden-players-in-sidebar")
+    @Comment("""
+            Should hidden players be shown in the sidebar.""")
+    public static boolean SHOW_HIDDEN_PLAYERS_IN_SIDEBAR = false;
+
     @Key("settings.hide.invisible")
     @Comment("""
             Should invisible players be hidden from the map.""")
