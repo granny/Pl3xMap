@@ -14,17 +14,10 @@ base {
 }
 
 repositories {
-    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-        name = "oss-sonatype-snapshots"
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-        name = "s01-sonatype-snapshots"
-        mavenContent {
-            snapshotsOnly()
-        }
+    maven("https://repo.granny.dev/snapshots/")
+    maven("https://central.sonatype.com/repository/maven-snapshots/") {
+        name = "sonatypeSnapshots"
+        mavenContent { snapshotsOnly() }
     }
     mavenCentral()
     maven("https://jitpack.io")

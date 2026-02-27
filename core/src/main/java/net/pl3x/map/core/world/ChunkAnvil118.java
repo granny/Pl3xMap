@@ -116,7 +116,7 @@ public class ChunkAnvil118 extends Chunk {
         if (noHeightmap()) {
             return getWorld().getMinBuildHeight();
         }
-        return heightmap(getWorld().getMaxBuildHeight(), this.worldSurfaceHeights).get(((z & 0xF) << 4) + (x & 0xF));
+        return heightmap(getWorld().getDimensionHeight(), this.worldSurfaceHeights).get(((z & 0xF) << 4) + (x & 0xF));
     }
 
     private @Nullable Section getSection(int y) {

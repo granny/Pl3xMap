@@ -44,7 +44,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -116,13 +116,13 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
 
         ServerWorldEvents.LOAD.register((server, level) -> {
             if (isEnabled()) {
-                String name = level.dimension().location().toString();
+                String name = level.dimension().identifier().toString();
                 Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
             }
         });
 
         ServerWorldEvents.UNLOAD.register((server, level) -> {
-            String name = level.dimension().location().toString();
+            String name = level.dimension().identifier().toString();
             Pl3xMap.api().getWorldRegistry().unregister(name);
         });
 
@@ -184,7 +184,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
 
     @Override
     public String getServerVersion() {
-        return SharedConstants.getCurrentVersion().getName();
+        return SharedConstants.getCurrentVersion().name();
     }
 
     @Override
@@ -213,7 +213,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     @Override
     public net.pl3x.map.core.world.@Nullable Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
-        Biome nms = world.<ServerLevel>getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getValue(ResourceLocation.parse(biome.getKey()));
+        Biome nms = world.<ServerLevel>getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getValue(Identifier.parse(biome.getKey()));
         if (nms == null) {
             return null;
         }
@@ -231,7 +231,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     protected void loadBlocks() {
         Set<Map.Entry<ResourceKey<Block>, Block>> entries = this.server.registryAccess().lookupOrThrow(Registries.BLOCK).entrySet();
         for (Map.Entry<ResourceKey<Block>, Block> entry : entries) {
-            String id = entry.getKey().location().toString();
+            String id = entry.getKey().identifier().toString();
             int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);
         }
@@ -241,7 +241,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
     @Override
     protected void loadWorlds() {
         this.server.getAllLevels().forEach(level -> {
-            String name = level.dimension().location().toString();
+            String name = level.dimension().identifier().toString();
             Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
         });
     }

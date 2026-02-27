@@ -296,6 +296,8 @@ public abstract class World extends Keyed {
 
     public abstract int getMaxBuildHeight();
 
+    public abstract int getDimensionHeight();
+
     public abstract int getLogicalHeight();
 
     public abstract double getBorderMinX();

@@ -6,13 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.commits[0].message, '[ci-skip]')"
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - name: Build
         run: ./gradlew build --stacktrace

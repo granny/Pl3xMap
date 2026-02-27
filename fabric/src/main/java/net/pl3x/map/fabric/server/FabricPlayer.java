@@ -70,7 +70,7 @@ public class FabricPlayer extends Player {
     @Override
     public World getWorld() {
         ServerLevel level = (ServerLevel) getPlayer().level();
-        String name = level.dimension().location().toString();
+        String name = level.dimension().identifier().toString();
         return Pl3xMap.api().getWorldRegistry().getOrDefault(name, () -> new FabricWorld(level, name));
     }
 
@@ -99,7 +99,7 @@ public class FabricPlayer extends Player {
     @Override
     public @Nullable URL getSkin() {
         try {
-            Property property = getPlayer().getGameProfile().getProperties().get("textures").stream().findFirst().orElse(null);
+            Property property = getPlayer().getGameProfile().properties().get("textures").stream().findFirst().orElse(null);
             if (property == null) {
                 return null;
             }

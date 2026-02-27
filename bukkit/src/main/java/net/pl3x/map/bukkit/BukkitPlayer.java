@@ -105,7 +105,7 @@ public class BukkitPlayer extends Player {
     public @Nullable URL getSkin() {
         try {
             ServerPlayer player = ((CraftPlayer) getPlayer()).getHandle();
-            Property property = player.getGameProfile().getProperties().get("textures").stream().findFirst().orElse(null);
+            Property property = player.getGameProfile().properties().get("textures").stream().findFirst().orElse(null);
             if (property == null) {
                 return null;
             }

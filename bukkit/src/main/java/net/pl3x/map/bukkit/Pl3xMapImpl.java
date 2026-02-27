@@ -35,8 +35,8 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -155,7 +155,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     @Override
     public net.pl3x.map.core.world.@Nullable Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
-        Biome nms = world.<ServerLevel>getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getValue(ResourceLocation.parse(biome.getKey()));
+        Biome nms = world.<ServerLevel>getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getValue(Identifier.parse(biome.getKey()));
         if (nms == null) {
             return null;
         }
@@ -173,7 +173,7 @@ public class Pl3xMapImpl extends Pl3xMap {
     protected void loadBlocks() {
         Set<Map.Entry<ResourceKey<Block>, Block>> entries = MinecraftServer.getServer().registryAccess().lookupOrThrow(Registries.BLOCK).entrySet();
         for (Map.Entry<ResourceKey<Block>, Block> entry : entries) {
-            String id = entry.getKey().location().toString();
+            String id = entry.getKey().identifier().toString();
             int color = entry.getValue().defaultMapColor().col;
             getBlockRegistry().register(id, color);
         }

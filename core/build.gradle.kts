@@ -18,17 +18,10 @@ base {
 }
 
 repositories {
-    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-        name = "oss-sonatype-snapshots"
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-        name = "s01-sonatype-snapshots"
-        mavenContent {
-            snapshotsOnly()
-        }
+    maven("https://repo.granny.dev/snapshots/")
+    maven("https://central.sonatype.com/repository/maven-snapshots/") {
+        name = "sonatypeSnapshots"
+        mavenContent { snapshotsOnly() }
     }
     mavenCentral()
     maven("https://jitpack.io")
@@ -95,7 +88,7 @@ tasks {
 
         manifest {
             attributes["Main-Class"] = "${project.group}.Pl3xMap"
-            attributes["Git-Commit"] = (if (indraGit.isPresent) indraGit.commit()?.name() ?: "" else "").substring(0, 7)
+            attributes["Git-Commit"] = (if (indraGit.isPresent) indraGit.commit().get()?.name() ?: "" else "").substring(0, 7)
         }
     }
 

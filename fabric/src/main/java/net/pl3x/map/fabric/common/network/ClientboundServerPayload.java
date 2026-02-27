@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.pl3x.map.core.network.Constants;
 import net.pl3x.map.fabric.client.Pl3xMapFabricClient;
 import org.jspecify.annotations.NullMarked;
@@ -12,7 +12,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public record ClientboundServerPayload(int protocol, int response, String webAddress) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, ClientboundServerPayload> STREAM_CODEC = CustomPacketPayload.codec(ClientboundServerPayload::write, ClientboundServerPayload::new);
-    public static final Type<ClientboundServerPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "client_server_data"));
+    public static final Type<ClientboundServerPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Constants.MODID, "client_server_data"));
 
     public ClientboundServerPayload(int protocol, int response) {
         this(protocol, response, null);
