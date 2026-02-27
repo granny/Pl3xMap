@@ -18,10 +18,15 @@ export class PlayerManager {
 
     public update(players: Player[]): void {
         const toRemove: Set<string> = new Set(this._players.keys());
+        const toUpdate: Set<string> = new Set();
 
         players.forEach((data: Player): void => {
             const existing: Player | undefined = this._players.get(data.uuid);
             if (existing) {
+                if (existing.position === undefined && data.position !== undefined) {
+                   toUpdate.add(data.uuid);
+                }
+
                 // update existing
                 existing.displayName = data.displayName;
                 existing.world = data.world;
@@ -45,6 +50,13 @@ export class PlayerManager {
             this._players.delete(uuid);
             fireCustomEvent('playerremoved', player);
         });
+
+        toUpdate.forEach((uuid: string): void => {
+           // remove players not in updated settings file
+           const player: Player | undefined = this._players.get(uuid);
+           fireCustomEvent('playerupdate', player);
+        });
+
 
         // follow
         this.updateFollow();

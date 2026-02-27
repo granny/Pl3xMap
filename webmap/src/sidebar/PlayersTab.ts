@@ -59,6 +59,27 @@ export default class PlayersTab extends BaseTab {
                 item.input.checked = player === e.detail;
             });
         });
+        addEventListener('playerupdate', (e: CustomEvent<Player>): void => {
+            const listItem: PlayerListItem | undefined = this._players.get(e.detail);
+            if (listItem === undefined) {
+                return;
+            }
+            let wasDisabled: boolean = listItem.input.disabled;
+            let isDisabled: boolean = e.detail.position === undefined;
+            listItem.input.disabled = isDisabled;
+            if (isDisabled) {
+                listItem.label.setAttribute('disabled', "");
+            } else {
+                listItem.label.removeAttribute('disabled');
+            }
+            if (wasDisabled && !isDisabled) {
+                const manager: PlayerManager = this._pl3xmap.playerManager;
+                if (e.detail === manager.follow) {
+                    manager.follow = undefined;
+                    manager.updateFollow();
+                }
+            }
+        });
 
         this._list.addEventListener('keydown', (e: KeyboardEvent) =>
             handleKeyboardEvent(e, Array.from(this._list.elements) as HTMLElement[]))
@@ -92,6 +113,9 @@ export default class PlayersTab extends BaseTab {
         input.addEventListener('click', async (): Promise<void> => {
             const manager: PlayerManager = this._pl3xmap.playerManager;
             const player: Player | undefined = manager.players.get(input.id);
+            if (player !== undefined && player.position === undefined) {
+                return;
+            }
             if (player === manager.follow) {
                 manager.follow = undefined;
             } else {
