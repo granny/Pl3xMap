@@ -385,8 +385,9 @@ public abstract class Pl3xMap {
         }
 
         public static ExecutorService createService(String name, int threads) {
-            int max = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
-            int parallelism = Mathf.clamp(1, max, threads < 1 ? max : threads);
+            int maxThreads = Runtime.getRuntime().availableProcessors();
+            int defaultThreads = Math.max(1, maxThreads / 2);
+            int parallelism = Mathf.clamp(1, maxThreads, threads < 1 ? defaultThreads : threads);
             return createService(new ThreadFactory(name, parallelism));
         }
 
