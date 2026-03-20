@@ -115,6 +115,9 @@ public class PlayerRegistry extends Registry<Player> {
             if (PlayersLayerConfig.HIDE_INVISIBLE && player.isInvisible()) {
                 isHidden = true;
             }
+            if (player.getWorld().isEnabled()) {
+                isHidden = true;
+            }
 
             if (isHidden && !PlayersLayerConfig.SHOW_HIDDEN_PLAYERS_IN_SIDEBAR) {
                 return;
