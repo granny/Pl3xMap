@@ -128,13 +128,15 @@ public final class Config extends AbstractConfig {
     @Key("settings.performance.live-update.threads")
     @Comment("""
             The number of process-threads to use for real-time marker updates on the map.
-            Value of -1 will use 50% of the available cpu-threads. (recommended)""")
+            Value of -1 will use half of the available cpu-threads. (recommended)
+            Warning: Using all available cpu-threads may cause thread starvation and impact system performance.""")
     public static int LIVE_UPDATE_THREADS = -1;
 
     @Key("settings.performance.render-threads")
     @Comment("""
             The number of process-threads to use for loading and scanning chunks.
-            Value of -1 will use 50% of the available cpu-threads. (recommended)""")
+            Value of -1 will use half of the available cpu-threads. (recommended)
+            Warning: Using all available cpu-threads may cause thread starvation and impact system performance.""")
     public static int RENDER_THREADS = -1;
 
     @Key("settings.performance.gc.when-finished")
