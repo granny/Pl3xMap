@@ -36,19 +36,18 @@ repositories {
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
 
     implementation(project(path = ":core", configuration = "shadow"))
 
     implementation(libs.jspecifyAnnotations)
 
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.api)
 
-    modImplementation(libs.cloudFabric)
+    implementation(libs.cloudFabric)
     include(libs.cloudFabric)
 
-    modImplementation(libs.adventurePlatformFabric) {
+    implementation(libs.adventurePlatformFabric) {
         exclude("net.kyori", "ansi") // TODO: temporary
     }
     include(libs.adventurePlatformFabric) {
@@ -57,19 +56,13 @@ dependencies {
 }
 
 tasks {
-    remapJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.get().archiveFile)
-
-        archiveClassifier = ""
-    }
-
     // needed for below jank
     compileJava {
         dependsOn(":core:jar")
     }
 
     shadowJar {
+        dependsOn(jar)
         mergeServiceFiles()
 
         dependencies {
@@ -80,10 +73,12 @@ tasks {
         manifest {
             from(project(":core").tasks.named<Jar>("shadowJar").get().manifest)
         }
+
+        archiveClassifier.set("")
     }
 
     build {
-        dependsOn(remapJar)
+        dependsOn(shadowJar)
     }
 
     processResources {
