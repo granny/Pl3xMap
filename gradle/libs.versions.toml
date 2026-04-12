@@ -12,7 +12,7 @@ fabricLoom="1.16-SNAPSHOT"
 #forgeLoader="[48,)"
 
 minotaur="2.+" # https://github.com/modrinth/minotaur
-paperweight="2.0.0-beta.19" # https://github.com/PaperMC/Paperweight
+paperweight="2.0.0-beta.21" # https://github.com/PaperMC/Paperweight
 run-paper="3.0.2" # https://github.com/jpenilla/run-task
 indra-git="4.0.0" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.9" # https://github.com/GradleUp/shadow

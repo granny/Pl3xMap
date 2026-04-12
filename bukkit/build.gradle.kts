@@ -35,11 +35,6 @@ dependencies {
 }
 
 tasks {
-    reobfJar {
-        dependsOn(jar)
-        outputJar.set(jar.get().archiveFile)
-    }
-
     // needed for below jank
     compileJava {
         dependsOn(":core:jar")
@@ -52,10 +47,12 @@ tasks {
         manifest {
             from(project(":core").tasks.named<Jar>("shadowJar").get().manifest)
         }
+
+        archiveClassifier.set("")
     }
 
     build {
-        dependsOn(reobfJar)
+        dependsOn(shadowJar)
     }
 
     runServer {

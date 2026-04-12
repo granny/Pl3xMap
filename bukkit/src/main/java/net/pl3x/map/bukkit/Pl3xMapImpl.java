@@ -23,18 +23,25 @@
  */
 package net.pl3x.map.bukkit;
 
+import com.google.common.collect.ImmutableList;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -44,8 +51,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.log.Logger;
 import net.pl3x.map.core.registry.BiomeRegistry;
@@ -65,6 +72,8 @@ public class Pl3xMapImpl extends Pl3xMap {
 
     private BukkitAudiences adventure;
     private Path jarPath;
+    private Map<Biome, List<ConfiguredFeature<?,?>>> biomeFeatureCache = new LinkedHashMap<>();
+    ArrayList<ResourceKey<ConfiguredFeature<?, ?>>> canSpawnFromBonemealList = new ArrayList<>(10);
 
     public Pl3xMapImpl(JavaPlugin plugin) {
         super(true);
@@ -74,6 +83,14 @@ public class Pl3xMapImpl extends Pl3xMap {
     @Override
     public void enable() {
         this.adventure = BukkitAudiences.create(this.plugin);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_DEFAULT);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_FLOWER_FOREST);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_SWAMP);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_PLAIN);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_MEADOW);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_CHERRY);
+        canSpawnFromBonemealList.add(VegetationFeatures.WILDFLOWER);
+        canSpawnFromBonemealList.add(VegetationFeatures.FLOWER_PALE_GARDEN);
         super.enable();
     }
 
@@ -152,6 +169,26 @@ public class Pl3xMapImpl extends Pl3xMap {
         return RedStoneWireBlock.getColorForPower(power);
     }
 
+    private List<ConfiguredFeature<?,?>> getBoneMealFeatures(Biome biome) {
+        // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
+        // the biomes created from the builtin registry are missing tags
+        // with the new can_spawn_from_bonemeal tag for vegetation features we can no longer just call getFlowerFeatures (now called getBonemealFeatures)
+        // iterate through the feature stream and collect matching features manually
+        if (!biomeFeatureCache.containsKey(biome)) {
+            biomeFeatureCache.put(biome,
+                    biome.getGenerationSettings().features().stream()
+                            .flatMap(HolderSet::stream)
+                            .flatMap(feature -> ((PlacedFeature) feature.value()).getFeatures())
+                            .filter(feature -> {
+                                Optional<ResourceKey<ConfiguredFeature<?, ?>>> key = feature.unwrapKey();
+                                return key.isPresent() && canSpawnFromBonemealList.contains(key.get());
+                            })
+                            .map(Holder::value)
+                            .collect(ImmutableList.toImmutableList()));
+        }
+        return biomeFeatureCache.get(biome);
+    }
+
     @Override
     public net.pl3x.map.core.world.@Nullable Block getFlower(World world, net.pl3x.map.core.world.Biome biome, int blockX, int blockY, int blockZ) {
         // https://github.com/Draradech/FlowerMap (CC0-1.0 license)
@@ -159,13 +196,12 @@ public class Pl3xMapImpl extends Pl3xMap {
         if (nms == null) {
             return null;
         }
-        List<ConfiguredFeature<?, ?>> flowers = nms.getGenerationSettings().getFlowerFeatures();
+        List<ConfiguredFeature<?, ?>> flowers = this.getBoneMealFeatures(nms);
         if (flowers.isEmpty()) {
             return null;
         }
-        RandomPatchConfiguration config = (RandomPatchConfiguration) flowers.getFirst().config();
-        SimpleBlockConfiguration flower = (SimpleBlockConfiguration) config.feature().value().feature().value().config();
-        Block block = flower.toPlace().getState(this.randomSource, new BlockPos(blockX, blockY, blockZ)).getBlock();
+        SimpleBlockConfiguration flowerMap = (SimpleBlockConfiguration) flowers.getFirst().config();
+        Block block = flowerMap.toPlace().getState(world.getLevel(), this.randomSource, new BlockPos(blockX, blockY, blockZ)).getBlock();
         return getBlockRegistry().get(BuiltInRegistries.BLOCK.getKey(block).toString());
     }
 
