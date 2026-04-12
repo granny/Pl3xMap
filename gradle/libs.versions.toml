@@ -1,11 +1,11 @@
 [versions]
-bukkit="26.1-R0.1-SNAPSHOT"
-minecraft="26.1"
+bukkit="26.1.2.build.+"
+minecraft="26.1.2"
 
 # https://fabricmc.net/develop/
-fabricApi="0.144.3+26.1"
-fabricLoader="0.18.5"
-fabricLoom="1.15-SNAPSHOT"
+fabricApi="0.145.4+26.1.2"
+fabricLoader="0.19.1"
+fabricLoom="1.16-SNAPSHOT"
 
 #forge="1.20.2-48.0.6"
 #forgeGradle="[6.0,6.2)"
