@@ -54,22 +54,6 @@ import org.jspecify.annotations.NullMarked;
 public class BukkitWorld extends World {
     private static Field LEVEL_STORAGE_ACCESS_FIELD = null;
 
-    static {
-        if (LEVEL_STORAGE_ACCESS_FIELD == null) {
-            Arrays.stream(ServerLevel.class.getFields())
-                    .filter(field -> field.getType().equals(LevelStorageSource.LevelStorageAccess.class))
-                    .findAny().ifPresent(field -> LEVEL_STORAGE_ACCESS_FIELD = field);
-        }
-    }
-
-    private static LevelStorageSource.LevelStorageAccess getLevelStorageAccess(ServerLevel level) {
-        try {
-            return (LevelStorageSource.LevelStorageAccess) LEVEL_STORAGE_ACCESS_FIELD.get(level);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private final ServerLevel level;
 
     public BukkitWorld(ServerLevel level, String name) {
@@ -78,7 +62,7 @@ public class BukkitWorld extends World {
                 level.getSeed(),
                 Point.of(level.getLevelData().getRespawnData().pos().getX(), level.getLevelData().getRespawnData().pos().getZ()),
                 Type.get(level.dimension().identifier().toString()),
-                BukkitWorld.getLevelStorageAccess(level).getDimensionPath(level.dimension()).resolve("region")
+                level.getServer().storageSource.getDimensionPath(level.dimension()).resolve("region")
         );
         this.level = level;
 
