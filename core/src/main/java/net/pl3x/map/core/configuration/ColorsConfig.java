@@ -1117,6 +1117,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:old_growth_birch_forest", 0x307444);
         put("minecraft:old_growth_pine_taiga", 0x596651);
         put("minecraft:old_growth_spruce_taiga", 0x818E79);
+        put("minecraft:pale_garden", 0x6C6F96);
         put("minecraft:plains", 0x8DB360);
         put("minecraft:river", 0x0000FF);
         put("minecraft:savanna", 0xBDB25F);
