@@ -373,6 +373,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:glowstone", 0xAD8455);
         put("minecraft:gold_block", 0xF8D33E);
         put("minecraft:gold_ore", 0x938769);
+        put("minecraft:golden_dandelion", 0xA56D29);
         put("minecraft:granite", 0x956756);
         put("minecraft:granite_slab", 0x956756);
         put("minecraft:granite_stairs", 0x956756);
@@ -690,6 +691,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:potted_dead_bush", 0x6D5029);
         put("minecraft:potted_fern", 0x7EA44D);
         put("minecraft:potted_flowering_azalea_bush", 0x9D5CAB);
+        put("minecraft:potted_golden_dandelion", 0xA56D29);
         put("minecraft:potted_jungle_sapling", 0x305111);
         put("minecraft:potted_lily_of_the_valley", 0x7DB061);
         put("minecraft:potted_mangrove_propagule", 0x5FAF54);
