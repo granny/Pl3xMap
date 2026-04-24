@@ -55,6 +55,23 @@ dependencies {
     }
 }
 
+// https://github.com/BlueMap-Minecraft/BlueMap/blob/master/implementations/fabric/build.gradle.kts#L95-L109
+val mergeShadowAndJarJar = tasks.register<Jar>("mergeShadowAndJarJar") {
+    dependsOn( tasks.shadowJar, tasks.jar )
+    from (
+        zipTree( tasks.shadowJar.map { it.outputs.files.singleFile } ).matching {
+            exclude("fabric.mod.json")
+        },
+        zipTree( tasks.jar.map { it.outputs.files.singleFile } ).matching {
+            include("META-INF/jars/**")
+            include("fabric.mod.json")
+        }
+    ).exclude(
+        "META-INF/services/net.kyori.adventure*" // not correctly relocated and not needed -> exclude
+    )
+    archiveFileName = tasks.jar.map { it.outputs.files.singleFile.name + ".tmp"}
+}
+
 tasks {
     // needed for below jank
     compileJava {
@@ -74,11 +91,10 @@ tasks {
             from(project(":core").tasks.named<Jar>("shadowJar").get().manifest)
         }
 
-        archiveClassifier.set("")
     }
 
     build {
-        dependsOn(shadowJar)
+        dependsOn(mergeShadowAndJarJar)
     }
 
     processResources {
