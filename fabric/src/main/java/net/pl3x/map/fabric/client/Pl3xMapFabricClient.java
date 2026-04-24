@@ -27,7 +27,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import java.util.concurrent.ExecutorService;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -84,12 +84,12 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        KeyBindingHelper.registerKeyBinding(PL3XMAP_TOGGLE_KEYMAP);
+        KeyMappingHelper.registerKeyMapping(PL3XMAP_TOGGLE_KEYMAP);
 
-        PayloadTypeRegistry.playC2S().register(ServerboundServerPayload.TYPE, ServerboundServerPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(ClientboundServerPayload.TYPE, ClientboundServerPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(ServerboundMapPayload.TYPE, ServerboundMapPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(ClientboundMapPayload.TYPE, ClientboundMapPayload.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ServerboundServerPayload.TYPE, ServerboundServerPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ClientboundServerPayload.TYPE, ClientboundServerPayload.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ServerboundMapPayload.TYPE, ServerboundMapPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ClientboundMapPayload.TYPE, ClientboundMapPayload.STREAM_CODEC);
 
         ClientPlayNetworking.registerGlobalReceiver(ClientboundServerPayload.TYPE, ClientboundServerPayload::handle);
         ClientPlayNetworking.registerGlobalReceiver(ClientboundMapPayload.TYPE, ClientboundMapPayload::handle);
@@ -120,7 +120,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
                 this.isEnabled = !this.isEnabled;
                 MutableComponent onOff = Component.translatable("pl3xmap.toggled." + (this.isEnabled ? "on" : "off"));
                 MutableComponent component = Component.translatable("pl3xmap.toggled.response", onOff);
-                Minecraft.getInstance().player.displayClientMessage(component, true);
+                Minecraft.getInstance().player.sendSystemMessage(component);
             }
             if (this.tick++ >= 20) {
                 this.tick = 0;

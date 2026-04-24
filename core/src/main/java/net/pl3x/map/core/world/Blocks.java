@@ -1209,7 +1209,10 @@ public class Blocks {
     public static final Block PALE_OAK_SHELF = register(new Block(1165, "minecraft:pale_oak_shelf", 0xE4DAD8));
     public static final Block SPRUCE_SHELF = register(new Block(1166, "minecraft:spruce_shelf", 0x815631));
     public static final Block WARPED_SHELF = register(new Block(1167, "minecraft:warped_shelf", 0x3A8E8C));
-    
+
+    public static final Block GOLDEN_DANDELION = register(new Block(1168, "minecraft:golden_dandelion", 0xA56D29));
+    public static final Block POTTED_GOLDEN_DANDELION = register(new Block(1169, "minecraft:potted_golden_dandelion", 0xA56D29));
+
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
         return block;

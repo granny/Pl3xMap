@@ -36,19 +36,18 @@ repositories {
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
 
     implementation(project(path = ":core", configuration = "shadow"))
 
     implementation(libs.jspecifyAnnotations)
 
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.api)
 
-    modImplementation(libs.cloudFabric)
+    implementation(libs.cloudFabric)
     include(libs.cloudFabric)
 
-    modImplementation(libs.adventurePlatformFabric) {
+    implementation(libs.adventurePlatformFabric) {
         exclude("net.kyori", "ansi") // TODO: temporary
     }
     include(libs.adventurePlatformFabric) {
@@ -56,20 +55,31 @@ dependencies {
     }
 }
 
+// https://github.com/BlueMap-Minecraft/BlueMap/blob/master/implementations/fabric/build.gradle.kts#L95-L109
+val mergeShadowAndJarJar = tasks.register<Jar>("mergeShadowAndJarJar") {
+    dependsOn( tasks.shadowJar, tasks.jar )
+    from (
+        zipTree( tasks.shadowJar.map { it.outputs.files.singleFile } ).matching {
+            exclude("fabric.mod.json")
+        },
+        zipTree( tasks.jar.map { it.outputs.files.singleFile } ).matching {
+            include("META-INF/jars/**")
+            include("fabric.mod.json")
+        }
+    ).exclude(
+        "META-INF/services/net.kyori.adventure*" // not correctly relocated and not needed -> exclude
+    )
+    archiveFileName = tasks.jar.map { it.outputs.files.singleFile.name + ".tmp"}
+}
+
 tasks {
-    remapJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.get().archiveFile)
-
-        archiveClassifier = ""
-    }
-
     // needed for below jank
     compileJava {
         dependsOn(":core:jar")
     }
 
     shadowJar {
+        dependsOn(jar)
         mergeServiceFiles()
 
         dependencies {
@@ -80,10 +90,11 @@ tasks {
         manifest {
             from(project(":core").tasks.named<Jar>("shadowJar").get().manifest)
         }
+
     }
 
     build {
-        dependsOn(remapJar)
+        dependsOn(mergeShadowAndJarJar)
     }
 
     processResources {

@@ -34,9 +34,9 @@
   "accessWidener": "pl3xmap.accesswidener",
   "depends": {
     "fabricloader": ">=${fabricLoaderVersion}",
-    "fabric": ">=${fabricApiVersion}",
+    "fabric-api": ">=${fabricApiVersion}",
     "minecraft": "~${minecraftVersion}",
-    "java": ">=21",
+    "java": ">=25",
     "cloud": "*",
     "adventure-platform-fabric": "*"
   },

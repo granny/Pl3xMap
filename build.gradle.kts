@@ -19,8 +19,11 @@ tasks {
         // this is janky, but it works
         val manifestFiles = subprojects.filter({ it.name != "webmap" && it.name != "core" }).map {
             val regularFile = it.layout.buildDirectory.file("libs/${project.name}-${it.name}-${it.version}.jar")
+            val fabricFile = it.layout.buildDirectory.file("libs/${project.name}-${it.name}-${it.version}.jar.tmp")
             if (regularFile.isPresent) {
                 zipTree(regularFile)
+            } else if (fabricFile.isPresent) {
+                zipTree(fabricFile)
             } else {
                 null
             }

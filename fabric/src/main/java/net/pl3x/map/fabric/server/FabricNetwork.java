@@ -52,10 +52,10 @@ public class FabricNetwork extends Network {
 
     @Override
     public void register() {
-        PayloadTypeRegistry.playC2S().register(ServerboundServerPayload.TYPE, ServerboundServerPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(ClientboundServerPayload.TYPE, ClientboundServerPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(ServerboundMapPayload.TYPE, ServerboundMapPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(ClientboundMapPayload.TYPE, ClientboundMapPayload.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ServerboundServerPayload.TYPE, ServerboundServerPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ClientboundServerPayload.TYPE, ClientboundServerPayload.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ServerboundMapPayload.TYPE, ServerboundMapPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ClientboundMapPayload.TYPE, ClientboundMapPayload.STREAM_CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(ServerboundServerPayload.TYPE, (payload, context) -> {
             ServerPlayNetworking.send(context.player(), new ClientboundServerPayload(Constants.PROTOCOL, Constants.RESPONSE_SUCCESS, Config.WEB_ADDRESS));
