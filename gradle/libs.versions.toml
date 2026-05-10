@@ -17,7 +17,7 @@ run-paper="3.0.2" # https://github.com/jpenilla/run-task
 indra-git="4.0.0" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.9" # https://github.com/GradleUp/shadow
 
-adventure="5.0.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure
+adventure="4.25.0" # https://github.com/KyoriPowered/adventure
 adventureBukkit="4.4.1" # https://github.com/KyoriPowered/adventure-platform
 adventureFabric="6.9.0" # https://github.com/KyoriPowered/adventure-platform-fabric
 
