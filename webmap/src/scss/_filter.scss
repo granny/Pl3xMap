@@ -8,7 +8,7 @@
 @for $i from 0 through 20 {
   $percentage: $i * 10;
   .sat-#{$percentage} {
-    --sat: #{$percentage};
+    --sat: percentage(#{$percentage});
   }
 }
 

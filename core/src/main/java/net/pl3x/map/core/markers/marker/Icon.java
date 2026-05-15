@@ -60,9 +60,9 @@ public class Icon extends Marker<Icon> {
     private Vector shadowSize;
     private Vector shadowAnchor;
 
-    private int hueRotation;
-    private int saturation;
-    private int opacity;
+    private int hueRotation = 0;
+    private int saturation = 100;
+    private int opacity = 100;
 
     private Icon(String key) {
         super("icon", key);
