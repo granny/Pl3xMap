@@ -19,6 +19,9 @@ interface IconOptions extends L.MarkerOptions {
     rotationAngle?: number;
     rotationOrigin?: string;
     pane: string;
+    className: string;
+    hueRotation: number;
+    saturation: number;
 }
 
 export class Icon extends Marker {
@@ -38,6 +41,11 @@ export class Icon extends Marker {
         if (isset(data.shadowRetina)) props = {...props, shadowRetinaUrl: url(data.shadowRetina!)};
         if (isset(data.shadowSize)) props = {...props, shadowSize: [data.shadowSize!.x, data.shadowSize!.z]};
         if (isset(data.shadowAnchor)) props = {...props, shadowAnchor: [data.shadowAnchor!.x, data.shadowAnchor!.z]};
+
+        let filterClasses = "";
+        if (isset(data.hueRotation)) filterClasses += ` hue-${Math.round(data.hueRotation / 10) * 10}`;
+        if (isset(data.saturation)) filterClasses += ` sat-${Math.round(data.saturation / 10) * 10}`;
+        if(filterClasses.length > 0) props = {...props, className: "dynamic-filter " + filterClasses.trim()};
 
         const tooltipOffset: L.PointExpression | undefined = type.options?.tooltip?.properties?.offset;
         const popupOffset: L.PointExpression | undefined = type.options?.popup?.properties?.offset;
@@ -73,6 +81,7 @@ export class Icon extends Marker {
         const iconOptions: IconOptions = icon.options as IconOptions;
         iconOptions.rotationAngle = data.rotationAngle;
         iconOptions.rotationOrigin = data.rotationOrigin;
+        iconOptions.hueRotation = data.hueRotation;
         if (options?.tooltip?.content) {
             icon.setTooltipContent(options?.tooltip?.content);
         }

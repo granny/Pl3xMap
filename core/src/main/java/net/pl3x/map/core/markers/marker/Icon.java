@@ -60,6 +60,9 @@ public class Icon extends Marker<Icon> {
     private Vector shadowSize;
     private Vector shadowAnchor;
 
+    private int hueRotation = 180;
+    private int saturation = 200;
+
     private Icon(String key) {
         super("icon", key);
     }
@@ -560,6 +563,46 @@ public class Icon extends Marker<Icon> {
         return this;
     }
 
+    /**
+     * Get the hue rotation to be applied to the icon image, in degrees, clockwise.
+     *
+     * @return hue rotation
+     */
+    public int getHueRotation() {
+        return this.hueRotation;
+    }
+
+    /**
+     * Set the hue rotation to be applied to the icon image, in degrees, clockwise.
+     *
+     * @param hueRotation new hue rotation
+     * @return this icon
+     */
+    public Icon setHueRotation(int hueRotation) {
+        this.hueRotation = hueRotation;
+        return this;
+    }
+
+    /**
+     * Get the saturation to be applied to the icon image, in percentages between 0 and 200.
+     *
+     * @return saturation
+     */
+    public int getSaturation() {
+        return this.saturation;
+    }
+
+    /**
+     * Set the saturation to be applied to the icon image, in percentages between 0 and 200.
+     *
+     * @param saturation new saturation
+     * @return this icon
+     */
+    public Icon getSaturation(int saturation) {
+        this.saturation = saturation;
+        return this;
+    }
+
     @Override
     public JsonObject toJson() {
         JsonObjectWrapper wrapper = new JsonObjectWrapper();
@@ -576,6 +619,8 @@ public class Icon extends Marker<Icon> {
         wrapper.addProperty("rotationAngle", getRotationAngle());
         wrapper.addProperty("rotationOrigin", getRotationOrigin());
         wrapper.addProperty("pane", getPane());
+        wrapper.addProperty("hueRotation", getHueRotation());
+        wrapper.addProperty("saturation", getSaturation());
         return wrapper.getJsonObject();
     }
 
@@ -677,6 +722,8 @@ public class Icon extends Marker<Icon> {
                 + ",shadowAnchor=" + getShadowAnchor()
                 + ",pane=" + getPane()
                 + ",options=" + getOptions()
+                + ",hueRotation=" + getHueRotation()
+                + ",saturation=" + getSaturation()
                 + "}";
     }
 }
