@@ -22,6 +22,7 @@ interface IconOptions extends L.MarkerOptions {
     className: string;
     hueRotation: number;
     saturation: number;
+    opacity: number;
 }
 
 export class Icon extends Marker {
@@ -45,6 +46,7 @@ export class Icon extends Marker {
         let filterClasses = "";
         if (isset(data.hueRotation)) filterClasses += ` hue-${Math.round(data.hueRotation / 10) * 10}`;
         if (isset(data.saturation)) filterClasses += ` sat-${Math.round(data.saturation / 10) * 10}`;
+        if (isset(data.opacity)) filterClasses += ` opacity-${Math.round(data.opacity / 5) * 5}`;
         if(filterClasses.length > 0) props = {...props, className: "dynamic-filter " + filterClasses.trim()};
 
         const tooltipOffset: L.PointExpression | undefined = type.options?.tooltip?.properties?.offset;

@@ -18,3 +18,10 @@
     --hue: #{$degrees}deg;
   }
 }
+
+@for $i from 0 through 20 {
+  $percentage: $i * 5;
+  .opacity-#{$percentage} {
+    opacity: #{$percentage / 100};
+  }
+}

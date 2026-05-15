@@ -60,8 +60,9 @@ public class Icon extends Marker<Icon> {
     private Vector shadowSize;
     private Vector shadowAnchor;
 
-    private int hueRotation = 180;
-    private int saturation = 200;
+    private int hueRotation;
+    private int saturation;
+    private int opacity;
 
     private Icon(String key) {
         super("icon", key);
@@ -598,8 +599,28 @@ public class Icon extends Marker<Icon> {
      * @param saturation new saturation
      * @return this icon
      */
-    public Icon getSaturation(int saturation) {
+    public Icon setSaturation(int saturation) {
         this.saturation = saturation;
+        return this;
+    }
+
+    /**
+     * Get the opacity of to the icon image, in percentages between 0 and 100.
+     *
+     * @return opacity
+     */
+    public int getOpacity() {
+        return this.opacity;
+    }
+
+    /**
+     * Set the opacity of to the icon image, in percentages between 0 and 100.
+     *
+     * @param opacity new opacity
+     * @return this icon
+     */
+    public Icon setOpacity(int opacity) {
+        this.opacity = opacity;
         return this;
     }
 
@@ -621,6 +642,7 @@ public class Icon extends Marker<Icon> {
         wrapper.addProperty("pane", getPane());
         wrapper.addProperty("hueRotation", getHueRotation());
         wrapper.addProperty("saturation", getSaturation());
+        wrapper.addProperty("opacity", getOpacity());
         return wrapper.getJsonObject();
     }
 
@@ -724,6 +746,7 @@ public class Icon extends Marker<Icon> {
                 + ",options=" + getOptions()
                 + ",hueRotation=" + getHueRotation()
                 + ",saturation=" + getSaturation()
+                + ",opacity=" + getOpacity()
                 + "}";
     }
 }
