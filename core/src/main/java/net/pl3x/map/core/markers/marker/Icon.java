@@ -62,6 +62,7 @@ public class Icon extends Marker<Icon> {
 
     private int hueRotation = 0;
     private int saturation = 100;
+    private int brightness = 100;
     private int opacity = 100;
 
     private Icon(String key) {
@@ -605,6 +606,26 @@ public class Icon extends Marker<Icon> {
     }
 
     /**
+     * Get the brightness to be applied to the icon image, in percentages between 0 and 200.
+     *
+     * @return brightness
+     */
+    public int getBrightness() {
+        return this.brightness;
+    }
+
+    /**
+     * Set the brightness to be applied to the icon image, in percentages between 0 and 200.
+     *
+     * @param brightness new brightness
+     * @return this icon
+     */
+    public Icon setBrightness(int brightness) {
+        this.brightness = brightness;
+        return this;
+    }
+
+    /**
      * Get the opacity of to the icon image, in percentages between 0 and 100.
      *
      * @return opacity
@@ -642,6 +663,7 @@ public class Icon extends Marker<Icon> {
         wrapper.addProperty("pane", getPane());
         wrapper.addProperty("hueRotation", getHueRotation());
         wrapper.addProperty("saturation", getSaturation());
+        wrapper.addProperty("brightness", getBrightness());
         wrapper.addProperty("opacity", getOpacity());
         return wrapper.getJsonObject();
     }
@@ -746,6 +768,7 @@ public class Icon extends Marker<Icon> {
                 + ",options=" + getOptions()
                 + ",hueRotation=" + getHueRotation()
                 + ",saturation=" + getSaturation()
+                + ",brightness=" + getBrightness()
                 + ",opacity=" + getOpacity()
                 + "}";
     }

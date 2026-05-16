@@ -22,6 +22,7 @@ interface IconOptions extends L.MarkerOptions {
     className: string;
     hueRotation: number;
     saturation: number;
+    brightness: number;
     opacity: number;
 }
 
@@ -44,8 +45,9 @@ export class Icon extends Marker {
         if (isset(data.shadowAnchor)) props = {...props, shadowAnchor: [data.shadowAnchor!.x, data.shadowAnchor!.z]};
 
         let filterClasses = "";
-        if (isset(data.hueRotation)) filterClasses += ` hue-${Math.round(data.hueRotation / 10) * 10}`;
+        if (isset(data.hueRotation)) filterClasses += ` hue-${Math.round(data.hueRotation / 5) * 5}`;
         if (isset(data.saturation)) filterClasses += ` sat-${Math.round(data.saturation / 10) * 10}`;
+        if (isset(data.brightness)) filterClasses += ` bright-${Math.round(data.brightness / 10) * 10}`;
         if (isset(data.opacity)) filterClasses += ` opacity-${Math.round(data.opacity / 5) * 5}`;
         if(filterClasses.length > 0) props = {...props, className: "dynamic-filter " + filterClasses.trim()};
 

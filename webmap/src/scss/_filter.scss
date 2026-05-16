@@ -1,21 +1,25 @@
 .dynamic-filter {
-  --hue: 0deg;
-  --sat: 100%;
-
-  filter: hue-rotate(var(--hue, 0deg)) Saturate(var(--sat, 100%));
+  filter: hue-rotate(var(--hue,)) Saturate(var(--sat,)) Brightness(var(--bright,));
 }
 
 @for $i from 0 through 20 {
   $percentage: $i * 10;
   .sat-#{$percentage} {
-    --sat: percentage(#{$percentage});
+    --sat: #{$percentage / 100};
   }
 }
 
-@for $i from 0 through 36 {
-  $degrees: $i * 10;
+@for $i from 0 through 72 {
+  $degrees: $i * 5;
   .hue-#{$degrees} {
     --hue: #{$degrees}deg;
+  }
+}
+
+@for $i from 0 through 40 {
+  $percentage: $i * 10;
+  .bright-#{$percentage} {
+    --bright: #{$percentage / 100};
   }
 }
 
