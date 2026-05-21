@@ -1,14 +1,7 @@
-import java.util.Locale
-import java.util.Locale.getDefault
-
 plugins {
     id("java-library")
     alias(libs.plugins.minotaur)
-    `maven-publish`
 }
-
-// ensure a group so mavenLocal has a sensible path
-project.group = "net.pl3x.map"
 
 val buildNum = System.getenv("NEXT_BUILD_NUMBER") ?: "SNAPSHOT"
 project.version = "${libs.versions.minecraft.get()}-$buildNum"
