@@ -46,9 +46,9 @@ export class Icon extends Marker {
 
         let filterClasses = "";
         if (isset(data.hueRotation)) filterClasses += ` hue-${Math.round(data.hueRotation / 5) * 5}`;
-        if (isset(data.saturation)) filterClasses += ` sat-${Math.round(data.saturation / 10) * 10}`;
-        if (isset(data.brightness)) filterClasses += ` bright-${Math.round(data.brightness / 10) * 10}`;
-        if (isset(data.opacity)) filterClasses += ` opacity-${Math.round(data.opacity / 5) * 5}`;
+        if (isset(data.saturation)) filterClasses += ` sat-${Math.round(data.saturation * 10) * 10}`;
+        if (isset(data.brightness)) filterClasses += ` bright-${Math.round(data.brightness * 10) * 10}`;
+        if (isset(data.opacity)) filterClasses += ` opacity-${Math.round(data.opacity * 5) * 20}`;
         if(filterClasses.length > 0) props = {...props, className: "dynamic-filter " + filterClasses.trim()};
 
         const tooltipOffset: L.PointExpression | undefined = type.options?.tooltip?.properties?.offset;

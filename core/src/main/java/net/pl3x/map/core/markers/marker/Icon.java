@@ -60,10 +60,10 @@ public class Icon extends Marker<Icon> {
     private Vector shadowSize;
     private Vector shadowAnchor;
 
-    private int hueRotation = 0;
-    private int saturation = 100;
-    private int brightness = 100;
-    private int opacity = 100;
+    private double hueRotation = 0.0;
+    private double saturation = 1.0;
+    private double brightness = 1.0;
+    private double opacity = 1.0;
 
     private Icon(String key) {
         super("icon", key);
@@ -566,81 +566,81 @@ public class Icon extends Marker<Icon> {
     }
 
     /**
-     * Get the hue rotation to be applied to the icon image, in degrees, clockwise.
+     * Get the hue rotation to be applied to the icon image, in degrees between 0 and 360.
      *
      * @return hue rotation
      */
-    public int getHueRotation() {
+    public double getHueRotation() {
         return this.hueRotation;
     }
 
     /**
-     * Set the hue rotation to be applied to the icon image, in degrees, clockwise.
+     * Set the hue rotation to be applied to the icon image, in degrees between 0 and 360.
      *
      * @param hueRotation new hue rotation
      * @return this icon
      */
-    public Icon setHueRotation(int hueRotation) {
+    public Icon setHueRotation(double hueRotation) {
         this.hueRotation = hueRotation;
         return this;
     }
 
     /**
-     * Get the saturation to be applied to the icon image, in percentages between 0 and 200.
+     * Get the saturation filter to be applied to the icon image, as a double between 0 and 2.
      *
      * @return saturation
      */
-    public int getSaturation() {
+    public double getSaturation() {
         return this.saturation;
     }
 
     /**
-     * Set the saturation to be applied to the icon image, in percentages between 0 and 200.
+     * Set the saturation filter to be applied to the icon image, as a double between 0 and 2.
      *
      * @param saturation new saturation
      * @return this icon
      */
-    public Icon setSaturation(int saturation) {
+    public Icon setSaturation(double saturation) {
         this.saturation = saturation;
         return this;
     }
 
     /**
-     * Get the brightness to be applied to the icon image, in percentages between 0 and 200.
+     * Get the brightness filter to be applied to the icon image, as a double between 0 and 2.
      *
      * @return brightness
      */
-    public int getBrightness() {
+    public double getBrightness() {
         return this.brightness;
     }
 
     /**
-     * Set the brightness to be applied to the icon image, in percentages between 0 and 200.
+     * Set the brightness filter to be applied to the icon image, as a double between 0 and 2.
      *
      * @param brightness new brightness
      * @return this icon
      */
-    public Icon setBrightness(int brightness) {
+    public Icon setBrightness(double brightness) {
         this.brightness = brightness;
         return this;
     }
 
     /**
-     * Get the opacity of to the icon image, in percentages between 0 and 100.
+     * Get the opacity of the icon image, as a double between 0 and 1.
      *
      * @return opacity
      */
-    public int getOpacity() {
+    public double getOpacity() {
         return this.opacity;
     }
 
     /**
-     * Set the opacity of to the icon image, in percentages between 0 and 100.
+     * Set the opacity of the icon image, as a double between 0 and 1.
      *
      * @param opacity new opacity
      * @return this icon
      */
-    public Icon setOpacity(int opacity) {
+    public Icon setOpacity(double opacity) {
         this.opacity = opacity;
         return this;
     }
