@@ -78,26 +78,3 @@ modrinth {
          //)
     }
 }
-
-// Publish the assembled root project jar (the same file uploaded via modrinth)
-publishing {
-    publications {
-        // create a publication that uses the built root jar
-        create<MavenPublication>("mavenJava") {
-            groupId = project.group.toString()
-            artifactId = rootProject.name.lowercase(getDefault())
-            version = project.version.toString()
-
-            // point to the fat/assembled jar that the root build produces
-            val assembledRootJar = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${project.version}.jar")
-            artifact(assembledRootJar) {
-                builtBy(tasks.named("jar"))
-            }
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
-}
-
