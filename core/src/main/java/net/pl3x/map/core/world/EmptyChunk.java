@@ -27,8 +27,9 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class EmptyChunk extends Chunk {
-    protected EmptyChunk(World world, Region region) {
-        super(world, region);
+
+    protected EmptyChunk(World world, Region region, int index) {
+        super(world, region, new Data(), index);
     }
 
     @Override
@@ -49,6 +50,26 @@ public class EmptyChunk extends Chunk {
     @Override
     public Biome getBiome(int x, int y, int z) {
         return Biome.DEFAULT;
+    }
+
+    @Override
+    public int getMinY() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxY() {
+        return 0;
+    }
+
+    @Override
+    public long getInhabitedTime() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasWorldSurfaceHeights() {
+        return false;
     }
 
     @Override

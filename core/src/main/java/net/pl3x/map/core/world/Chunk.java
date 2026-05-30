@@ -23,63 +23,49 @@
  */
 package net.pl3x.map.core.world;
 
+import de.bluecolored.bluenbt.NBTName;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
+import lombok.Getter;
 import net.pl3x.map.core.util.Colors;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public abstract class Chunk {
+
+    protected static final int BLOCKS_PER_SECTION = 16 * 16 * 16;
+    protected static final int VALUES_PER_HEIGHTMAP = 16 * 16;
+
+    protected static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+    protected static final int[] EMPTY_INT_ARRAY = new int[0];
+    protected static final long[] EMPTY_LONG_ARRAY = new long[0];
+    protected static final String[] EMPTY_STRING_ARRAY = new String[0];
+    protected static final BlockState[] EMPTY_BLOCKSTATE_ARRAY = new BlockState[0];
+
     private final World world;
     private final Region region;
+
+    private final int dataVersion;
 
     private final int xPos;
     private final int yPos;
     private final int zPos;
 
-    private final long inhabitedTime;
-
     protected final BlockData[] data = new BlockData[256];
 
     protected boolean populated;
 
-    protected Chunk(World world, Region region) {
+    protected Chunk(World world, Region region, Data chunkData, int index) {
         this.world = world;
         this.region = region;
 
-        this.xPos = 0;
-        this.yPos = 0;
-        this.zPos = 0;
+        this.dataVersion = chunkData.dataVersion;
 
-        this.inhabitedTime = 0;
-    }
-
-    protected Chunk(World world, Region region, CompoundTag tag, int index) {
-        this.world = world;
-        this.region = region;
-
-        this.xPos = pos(tag.get("xPos"), () -> (region.getX() << 5) + (index & 31));
-        this.yPos = pos(tag.get("yPos"), () -> world.getMinBuildHeight() >> 4);
-        this.zPos = pos(tag.get("zPos"), () -> (region.getZ() << 5) + (index << 5));
-
-        this.inhabitedTime = tag.getLong("InhabitedTime");
-    }
-
-    private int pos(Tag<?> tag, Supplier<Integer> failsafe) {
-        if (tag instanceof IntTag intTag) {
-            return intTag.asInt();
-        }
-        if (tag instanceof ByteTag byteTag) {
-            return byteTag.asInt();
-        }
-        return failsafe.get();
+        this.xPos = (region.getX() << 5) + (index & 31);
+        this.yPos = world.getMinBuildHeight() >> 4;
+        this.zPos = (region.getZ() << 5) + (index << 5);
     }
 
     public World getWorld() {
@@ -88,6 +74,10 @@ public abstract class Chunk {
 
     public Region getRegion() {
         return this.region;
+    }
+
+    public int getDataVersion() {
+        return dataVersion;
     }
 
     public int getX() {
@@ -102,13 +92,19 @@ public abstract class Chunk {
         return this.zPos;
     }
 
-    public long getInhabitedTime() {
-        return this.inhabitedTime;
-    }
+    public abstract int getMinY();
+
+    public abstract int getMaxY();
+
+    public abstract long getInhabitedTime();
 
     public abstract boolean isFull();
 
-    public abstract boolean noHeightmap();
+    public abstract boolean hasWorldSurfaceHeights();
+
+    public boolean noHeightmap() {
+        return !hasWorldSurfaceHeights();
+    }
 
     public abstract int getWorldSurfaceY(int x, int z);
 
@@ -132,7 +128,7 @@ public abstract class Chunk {
         for (int blockZ = startX; blockZ < startX + 16; blockZ++) {
             for (int blockX = startZ; blockX < startZ + 16; blockX++) {
                 BlockData data = new BlockData();
-                data.blockY = noHeightmap() ? getWorld().getMaxBuildHeight() : getWorldSurfaceY(blockX, blockZ) + 1;
+                data.blockY = noHeightmap() ? getMaxY() : getWorldSurfaceY(blockX, blockZ) + 1;
 
                 // if world has ceiling iterate down until we find air
                 if (getWorld().hasCeiling()) {
@@ -196,18 +192,6 @@ public abstract class Chunk {
 
     public @Nullable BlockData getData(int x, int z) {
         return this.data[((z & 0xF) << 4) + (x & 0xF)];
-    }
-
-    public static Chunk create(World world, Region region, CompoundTag tag, int index) {
-        // https://minecraft.wiki/w/Data_version#List_of_data_versions
-        int version = tag.getInt("DataVersion");
-        Chunk chunk;
-        if (version < 1519) chunk = new EmptyChunk(world, region); // wtf, older than 1.13
-        else if (version < 2200) chunk = new ChunkAnvil113(world, region, tag, index); // 1.13 - 1.14
-        else if (version < 2500) chunk = new ChunkAnvil115(world, region, tag, index); // 1.15
-        else if (version < 2844) chunk = new ChunkAnvil116(world, region, tag, index); // 1.16 - 1.18 (21w42a)
-        else chunk = new ChunkAnvil118(world, region, tag, index); // 1.18+ (21w43a+)
-        return chunk.isFull() ? chunk : new EmptyChunk(world, region);
     }
 
     @Override
@@ -296,4 +280,14 @@ public abstract class Chunk {
             return this.glass;
         }
     }
+
+    @SuppressWarnings("FieldMayBeFinal")
+    @Getter
+    public static class Data {
+
+        @NBTName("DataVersion")
+        private int dataVersion = 0;
+
+    }
+
 }
