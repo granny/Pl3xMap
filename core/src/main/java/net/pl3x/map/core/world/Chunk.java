@@ -27,7 +27,6 @@ import de.bluecolored.bluenbt.NBTName;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import lombok.Getter;
 import net.pl3x.map.core.util.Colors;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -282,11 +281,14 @@ public abstract class Chunk {
     }
 
     @SuppressWarnings("FieldMayBeFinal")
-    @Getter
     public static class Data {
 
         @NBTName("DataVersion")
         private int dataVersion = 0;
+
+        public int getDataVersion() {
+            return dataVersion;
+        }
 
     }
 

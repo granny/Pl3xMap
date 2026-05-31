@@ -33,11 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.List;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 
-@RequiredArgsConstructor
 public class ChunkLoader {
 
     public static final @Nullable CompressionType[] CHUNK_COMPRESSION_MAP = new CompressionType[255];
@@ -57,6 +54,11 @@ public class ChunkLoader {
 
     private final World world;
     private final Region region;
+
+    public ChunkLoader(World world, Region region) {
+        this.world = world;
+        this.region = region;
+    }
 
     // sorted list of chunk-versions, loaders at the start of the list are preferred over loaders at the end
     private static final List<ChunkVersionLoader<?>> CHUNK_VERSION_LOADERS = List.of(
@@ -101,13 +103,17 @@ public class ChunkLoader {
         return null;
     }
 
-    @RequiredArgsConstructor
-    @Getter
     private static class ChunkVersionLoader<D extends Chunk.Data> {
 
         private final Class<D> dataType;
         private final ChunkConstructor<D> constructor;
         private final int dataVersion;
+
+        ChunkVersionLoader(Class<D> dataType, ChunkConstructor<D> constructor, int dataVersion) {
+            this.dataType = dataType;
+            this.constructor = constructor;
+            this.dataVersion = dataVersion;
+        }
 
         public Chunk load(World world, Region region, InputStream in, int index) throws IOException {
             try {

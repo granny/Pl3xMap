@@ -58,10 +58,6 @@ dependencies {
     // provided by mojang
     compileOnly(libs.gson)
     compileOnly(libs.guava)
-
-    // lombok
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
 }
 
 tasks {

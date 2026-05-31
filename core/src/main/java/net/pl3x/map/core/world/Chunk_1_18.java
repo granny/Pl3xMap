@@ -25,7 +25,6 @@
 package net.pl3x.map.core.world;
 
 import de.bluecolored.bluenbt.NBTName;
-import lombok.Getter;
 import net.pl3x.map.core.util.MCAMath;
 import net.pl3x.map.core.util.PackedIntArrayAccess;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +66,7 @@ public class Chunk_1_18 extends Chunk {
 
             // find section min/max y
             for (SectionData sectionData : sectionsData) {
-                int y = sectionData.getY();
+                int y = sectionData.y;
                 if (min > y) min = y;
                 if (max < y) max = y;
             }
@@ -216,7 +215,6 @@ public class Chunk_1_18 extends Chunk {
 
     }
 
-    @Getter
     @SuppressWarnings("FieldMayBeFinal")
     public static class Data extends Chunk.Data {
 
@@ -233,7 +231,6 @@ public class Chunk_1_18 extends Chunk {
 
     }
 
-    @Getter
     @SuppressWarnings("FieldMayBeFinal")
     public static class HeightmapsData {
 
@@ -242,7 +239,6 @@ public class Chunk_1_18 extends Chunk {
 
     }
 
-    @Getter
     @SuppressWarnings("FieldMayBeFinal")
     public static class SectionData {
 
@@ -258,7 +254,6 @@ public class Chunk_1_18 extends Chunk {
 
     }
 
-    @Getter
     @SuppressWarnings("FieldMayBeFinal")
     public static class BlockStatesData {
 
@@ -268,7 +263,6 @@ public class Chunk_1_18 extends Chunk {
 
     }
 
-    @Getter
     @SuppressWarnings("FieldMayBeFinal")
     public static class BiomesData {
 
