@@ -93,7 +93,7 @@ public class ChunkLoader {
             lastUsedLoader = actualLoader;
         }
 
-        return chunk.isFull() ? chunk : new EmptyChunk(world, region, index);
+        return chunk.isFull() ? chunk.populate() : new EmptyChunk(world, region, index);
     }
 
     private @Nullable ChunkVersionLoader<?> findBestLoaderForVersion(int version) {
