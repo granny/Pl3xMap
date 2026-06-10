@@ -23,25 +23,15 @@
  */
 package net.pl3x.map.core.world;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.util.Objects;
-import net.jpountz.lz4.LZ4BlockInputStream;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.log.Logger;
-import net.querz.mca.CompressionType;
-import net.querz.nbt.io.NBTInputStream;
-import net.querz.nbt.io.NamedTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -52,6 +42,8 @@ public class Region {
     private final int regionZ;
     private final File regionFile;
 
+    private final ChunkLoader chunkLoader;
+
     private final Chunk[] chunks = new Chunk[32 << 5];
 
     private final int hash;
@@ -61,6 +53,8 @@ public class Region {
         this.regionX = regionX;
         this.regionZ = regionZ;
         this.regionFile = regionFile.toFile();
+
+        this.chunkLoader = new ChunkLoader(world, this);
 
         this.hash = Objects.hash(world, regionX, regionZ);
     }
@@ -96,7 +90,7 @@ public class Region {
                 Logger.severe("Failed to load chunk at region [%d, %d]".formatted(chunkX, chunkZ), e);
             }
             if (chunk == null) {
-                return this.chunks[index] = new EmptyChunk(getWorld(), this);
+                return this.chunks[index] = new EmptyChunk(getWorld(), this, index);
             }
         }
         return chunk;
@@ -117,36 +111,18 @@ public class Region {
 
     public Chunk loadChunk(RandomAccessFile raf, int index) throws IOException {
         raf.seek(index * 4L);
-        int offset = raf.read() << 16;
-        offset |= (raf.read() & 0xFF) << 8;
-        offset |= raf.read() & 0xFF;
-        if (raf.readByte() == 0) {
-            return this.chunks[index] = new EmptyChunk(getWorld(), this);
-        }
-        raf.seek(4096L * offset + 4); // +4 skip chunk size
 
-        byte compressionTypeByte = raf.readByte();
-        CompressionType compressionType = CompressionType.getFromID(compressionTypeByte);
+        byte[] header = new byte[4];
+        raf.readFully(header, 0, 4);
 
-        // TODO: hotfix until querz' nbt library supports id as 3 for uncompressed
-        if (compressionType == null && compressionTypeByte == 3) {
-            compressionType = CompressionType.NONE;
-        }
+        long offset = (header[0] & 0xFF) << 16;
+        offset |= (header[1] & 0xFF) << 8;
+        offset |= header[2] & 0xFF;
+        offset *= 4096;
+        int size = (header[3] & 0xFF) * 4096;
 
-        if (compressionTypeByte != 4 && compressionType == null) {
-            throw new IOException("Invalid compression type " + compressionTypeByte);
-        }
-
-        FileInputStream fileInputStream = new FileInputStream(raf.getFD());
-        // TODO: hotfix until querz' nbt library supports the LZ4 compression type
-        InputStream decompress = compressionTypeByte == 4 ? new LZ4BlockInputStream(fileInputStream) : compressionType.decompress(fileInputStream);
-        DataInputStream dis = new DataInputStream(new BufferedInputStream(decompress));
-        NamedTag tag = new NBTInputStream(dis).readTag(Tag.DEFAULT_MAX_DEPTH);
-        if (tag != null && tag.getTag() instanceof CompoundTag compoundTag) {
-            return this.chunks[index] = Chunk.create(getWorld(), this, compoundTag, index).populate();
-        } else {
-            throw new IOException("Invalid data tag: " + (tag == null ? "null" : tag.getName()));
-        }
+        if (size <= 0) return this.chunks[index] = new EmptyChunk(world, this, index);
+        return this.chunks[index] = chunkLoader.load(raf, offset, index);
     }
 
     @Override

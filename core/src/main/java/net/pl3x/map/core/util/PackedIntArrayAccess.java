@@ -101,6 +101,10 @@ public class PackedIntArrayAccess {
     private final long maxValue, indexScale, indexOffset;
     private final int elementsPerLong, indexShift;
 
+    public PackedIntArrayAccess(long[] data, int elementCount) {
+        this(Math.max(data.length * Long.SIZE / elementCount, 1), data);
+    }
+
     public PackedIntArrayAccess(int bitsPerElement, long[] data) {
         this.bitsPerElement = bitsPerElement;
         this.data = data;
@@ -125,6 +129,15 @@ public class PackedIntArrayAccess {
     private int storageIndex(int i) {
         // this is the same as doing: floor(i / elementsPerLong)
         return (int) ((long) i * this.indexScale + this.indexOffset >> this.indexShift);
+    }
+
+    public int getCapacity() {
+        return data.length * elementsPerLong;
+    }
+
+    public boolean isCorrectSize(int expectedSize) {
+        int capacity = getCapacity();
+        return expectedSize <= capacity && expectedSize + elementsPerLong > capacity;
     }
 
 }

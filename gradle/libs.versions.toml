@@ -31,7 +31,7 @@ gson="2.13.2" # https://github.com/google/gson
 guava="33.5.0-jre" # https://github.com/google/guava
 log4j="2.25.2" # https://github.com/apache/logging-log4j2
 
-querzNbt="6.1" # https://github.com/Querz/NBT
+bluenbt="3.5.0" # https://github.com/BlueMap-Minecraft/BlueNBT
 
 lz4Java="1.8.0" # https://github.com/lz4/lz4-java
 simpleYaml="1.8.4" # https://github.com/Carleslc/Simple-YAML
@@ -76,9 +76,8 @@ adventurePlatformFacet = { group = "net.kyori", name = "adventure-platform-facet
 adventurePlatformBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventureBukkit" }
 adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventureFabric" }
 
-
+bluenbt = { module = "de.bluecolored:bluenbt", version.ref = "bluenbt" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
-querzNbt = { group = "com.github.Querz", name = "NBT", version.ref = "querzNbt" }
 lz4Java = { group = "org.lz4", name = "lz4-java", version.ref = "lz4Java" }
 simpleYaml = { group = "com.github.Carleslc.Simple-YAML", name = "Simple-Yaml", version.ref = "simpleYaml" }
 
