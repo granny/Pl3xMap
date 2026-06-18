@@ -170,7 +170,7 @@ public abstract class MapInstanceMixin implements MapInstance {
                 img = this.mod.getTileManager().get(this.world, blockX >> 9, blockZ >> 9);
 
                 // get pixel color from tile
-                this.image.setRGB(x, z, Colors.rgb2bgr(img.getRGB(blockX & 511, blockZ & 511)));
+                this.image.setRGB(x, z, img.getRGB(blockX & 511, blockZ & 511));
             }
         }
 
