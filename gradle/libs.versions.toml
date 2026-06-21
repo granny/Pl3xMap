@@ -3,7 +3,7 @@ bukkit="26.1.2.build.+"
 minecraft="26.1.2"
 
 # https://fabricmc.net/develop/
-fabricApi="0.145.4+26.1.2"
+fabricApi="0.152.1+26.1.2"
 fabricLoader="0.19.1"
 fabricLoom="1.16-SNAPSHOT"
 
