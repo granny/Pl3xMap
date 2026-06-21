@@ -36,7 +36,7 @@ bluenbt="3.5.0" # https://github.com/BlueMap-Minecraft/BlueNBT
 lz4Java="1.11.0" # https://github.com/yawkat/lz4-java
 simpleYaml="1.8.4" # https://github.com/Carleslc/Simple-YAML
 slf4j="2.0.1"
-undertow="2.4.0.Beta1" # https://github.com/undertow-io/undertow
+undertow="2.4.1.Final" # https://github.com/undertow-io/undertow
 #xnio="3.8.8.Final"
 
 
