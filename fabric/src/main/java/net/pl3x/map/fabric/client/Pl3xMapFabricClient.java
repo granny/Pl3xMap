@@ -95,7 +95,7 @@ public class Pl3xMapFabricClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ClientboundMapPayload.TYPE, ClientboundMapPayload::handle);
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (client.isSingleplayer()) {
+            if (client.hasSingleplayerServer()) {
                 return;
             }
             setEnabled(true);

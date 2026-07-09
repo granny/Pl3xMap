@@ -1,11 +1,11 @@
 [versions]
-bukkit="26.1.2.build.+"
-minecraft="26.1.2"
+bukkit="26.2.build.+"
+minecraft="26.2"
 
 # https://fabricmc.net/develop/
-fabricApi="0.152.1+26.1.2"
-fabricLoader="0.19.1"
-fabricLoom="1.16-SNAPSHOT"
+fabricApi="0.152.2+26.2"
+fabricLoader="0.19.3"
+fabricLoom="1.17-SNAPSHOT"
 
 #forge="1.20.2-48.0.6"
 #forgeGradle="[6.0,6.2)"
@@ -19,7 +19,7 @@ shadowJar="8.3.9" # https://github.com/GradleUp/shadow
 
 adventure="4.25.0" # https://github.com/KyoriPowered/adventure
 adventureBukkit="4.4.1" # https://github.com/KyoriPowered/adventure-platform
-adventureFabric="6.9.0" # https://github.com/KyoriPowered/adventure-platform-fabric
+adventureFabric="7.0.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
 
 cloud="2.0.0" # https://github.com/incendo/cloud
 cloud-minecraft="2.0.0-SNAPSHOT" # https://github.com/Incendo/cloud-minecraft
@@ -33,10 +33,10 @@ log4j="2.25.2" # https://github.com/apache/logging-log4j2
 
 bluenbt="3.5.0" # https://github.com/BlueMap-Minecraft/BlueNBT
 
-lz4Java="1.8.0" # https://github.com/lz4/lz4-java
+lz4Java="1.11.0" # https://github.com/yawkat/lz4-java
 simpleYaml="1.8.4" # https://github.com/Carleslc/Simple-YAML
 slf4j="2.0.1"
-undertow="2.4.0.Beta1" # https://github.com/undertow-io/undertow
+undertow="2.4.1.Final" # https://github.com/undertow-io/undertow
 #xnio="3.8.8.Final"
 
 
@@ -78,7 +78,7 @@ adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabr
 
 bluenbt = { module = "de.bluecolored:bluenbt", version.ref = "bluenbt" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
-lz4Java = { group = "org.lz4", name = "lz4-java", version.ref = "lz4Java" }
+lz4Java = { group = "at.yawk.lz4", name = "lz4-java", version.ref = "lz4Java" }
 simpleYaml = { group = "com.github.Carleslc.Simple-YAML", name = "Simple-Yaml", version.ref = "simpleYaml" }
 
 
