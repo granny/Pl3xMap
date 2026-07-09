@@ -1213,6 +1213,33 @@ public class Blocks {
     public static final Block GOLDEN_DANDELION = register(new Block(1168, "minecraft:golden_dandelion", 0xA56D29));
     public static final Block POTTED_GOLDEN_DANDELION = register(new Block(1169, "minecraft:potted_golden_dandelion", 0xA56D29));
 
+    public static final Block CINNABAR = register(new Block(1170, "minecraft:cinnabar", 0x98534F));
+    public static final Block CINNABAR_SLAB = register(new Block(1171, "minecraft:cinnabar_slab", 0x98534F));
+    public static final Block CINNABAR_STAIRS = register(new Block(1172, "minecraft:cinnabar_stairs", 0x98534F));
+    public static final Block CINNABAR_WALL = register(new Block(1173, "minecraft:cinnabar_wall", 0x98534F));
+    public static final Block POLISHED_CINNABAR = register(new Block(1174, "minecraft:polished_cinnabar", 0x993A37));
+    public static final Block POLISHED_CINNABAR_SLAB = register(new Block(1175, "minecraft:polished_cinnabar_slab", 0x993A37));
+    public static final Block POLISHED_CINNABAR_STAIRS = register(new Block(1176, "minecraft:polished_cinnabar_stairs", 0x993A37));
+    public static final Block POLISHED_CINNABAR_WALL = register(new Block(1177, "minecraft:polished_cinnabar_wall", 0x993A37));
+    public static final Block CINNABAR_BRICKS = register(new Block(1178, "minecraft:cinnabar_bricks", 0x953836));
+    public static final Block CINNABAR_BRICK_SLAB = register(new Block(1179, "minecraft:cinnabar_brick_slab", 0x953836));
+    public static final Block CINNABAR_BRICK_STAIRS = register(new Block(1180, "minecraft:cinnabar_brick_stairs", 0x953836));
+    public static final Block CINNABAR_BRICK_WALL = register(new Block(1181, "minecraft:cinnabar_brick_wall", 0x953836));
+    public static final Block CHISELED_CINNABAR = register(new Block(1182, "minecraft:chiseled_cinnabar", 0x923737));
+    public static final Block SULFUR = register(new Block(1183, "minecraft:sulfur", 0xBEAF66));
+    public static final Block POTENT_SULFUR = register(new Block(1184, "minecraft:potent_sulfur", 0xD3D162));
+    public static final Block SULFUR_SLAB = register(new Block(1185, "minecraft:sulfur_slab", 0xBEAF66));
+    public static final Block SULFUR_STAIRS = register(new Block(1186, "minecraft:sulfur_stairs", 0xBEAF66));
+    public static final Block SULFUR_WALL = register(new Block(1187, "minecraft:sulfur_wall", 0xBEAF66));
+    public static final Block POLISHED_SULFUR = register(new Block(1188, "minecraft:polished_sulfur", 0xBDAB5B));
+    public static final Block POLISHED_SULFUR_SLAB = register(new Block(1189, "minecraft:polished_sulfur_slab", 0xBDAB5B));
+    public static final Block POLISHED_SULFUR_STAIRS = register(new Block(1190, "minecraft:polished_sulfur_stairs", 0xBDAB5B));
+    public static final Block POLISHED_SULFUR_WALL = register(new Block(1191, "minecraft:polished_sulfur_wall", 0xBDAB5B));
+    public static final Block SULFUR_BRICKS = register(new Block(1192, "minecraft:sulfur_bricks", 0xBBA85B));
+    public static final Block SULFUR_BRICK_SLAB = register(new Block(1193, "minecraft:sulfur_brick_slab", 0xBBA85B));
+    public static final Block SULFUR_BRICK_STAIRS = register(new Block(1194, "minecraft:sulfur_brick_stairs", 0xBBA85B));
+    public static final Block SULFUR_SPIKE = register(new Block(1195, "minecraft:sulfur_spike", 0xB8AB5F));
+
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
         return block;
