@@ -23,6 +23,9 @@ repositories {
         name = "sonatypeSnapshots"
         mavenContent { snapshotsOnly() }
     }
+    maven ( "https://repo.bluecolored.de/releases" ) {
+        content { includeGroupByRegex ("de\\.bluecolored.*") }
+    }
     mavenCentral()
     maven("https://jitpack.io")
 }
@@ -46,7 +49,7 @@ dependencies {
     implementation(libs.adventurePlatformFacet)
 
     implementation(libs.caffeine)
-    implementation(libs.querzNbt)
+    implementation(libs.bluenbt)
     implementation(libs.lz4Java)
     implementation(libs.simpleYaml) {
         exclude("org.yaml", "snakeyaml")

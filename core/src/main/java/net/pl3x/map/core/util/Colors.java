@@ -100,16 +100,6 @@ public class Colors {
         return k > map.length ? 0 : map[k];
     }
 
-    public static int rgb2bgr(int color) {
-        // Minecraft flips red and blue for some reason
-        // lets flip them back
-        int a = color >> 24 & 0xFF;
-        int r = color >> 16 & 0xFF;
-        int g = color >> 8 & 0xFF;
-        int b = color & 0xFF;
-        return (a << 24) | (b << 16) | (g << 8) | r;
-    }
-
     public static int lerpRGB(int color0, int color1, float delta) {
         if (color0 == color1) return color0;
         if (delta >= 1F) return color1;

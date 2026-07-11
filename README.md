@@ -85,7 +85,7 @@ Maven
 <dependency>
   <groupId>maven.modrinth</groupId>
   <artifactId>pl3xmap</artifactId>
-  <version>26.1.2.546</version>
+  <version>26.2.551</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -101,7 +101,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'maven.modrinth:pl3xmap:26.1.2.546'
+    compileOnly 'maven.modrinth:pl3xmap:26.2.551'
 }
 ```
 

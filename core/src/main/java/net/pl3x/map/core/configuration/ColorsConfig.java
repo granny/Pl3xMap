@@ -1134,6 +1134,7 @@ public class ColorsConfig extends AbstractConfig {
         put("minecraft:stony_peaks", 0x888888);
         put("minecraft:stony_shore", 0xA2A284);
         put("minecraft:sunflower_plains", 0xB5DB88);
+        put("minecraft:sulfur_caves", 0xc2b261);
         put("minecraft:swamp", 0x07F9B2);
         put("minecraft:taiga", 0x0B6659);
         put("minecraft:the_end", 0x8080FF);
