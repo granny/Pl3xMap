@@ -1239,6 +1239,8 @@ public class Blocks {
     public static final Block SULFUR_BRICK_SLAB = register(new Block(1193, "minecraft:sulfur_brick_slab", 0xBBA85B));
     public static final Block SULFUR_BRICK_STAIRS = register(new Block(1194, "minecraft:sulfur_brick_stairs", 0xBBA85B));
     public static final Block SULFUR_SPIKE = register(new Block(1195, "minecraft:sulfur_spike", 0xB8AB5F));
+    public static final Block CHISELED_SULFUR = register(new Block(1195, "minecraft:chiseled_sulfur", 0xBCAA5B));
+    public static final Block SULFUR_BRICK_WALL = register(new Block(1195, "minecraft:sulfur_brick_wall", 0xBBA85B));
 
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
