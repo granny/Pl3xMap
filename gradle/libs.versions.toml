@@ -18,7 +18,7 @@ indra-git="4.0.0" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.9" # https://github.com/GradleUp/shadow
 
 adventure="5.0.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure
-adventureBukkit="4.4.1" # https://github.com/KyoriPowered/adventure-platform
+adventureBukkit="b4bfb8a" # https://github.com/OvercastCommunity/adventure-platform
 adventureFabric="7.0.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
 
 cloud="2.0.0" # https://github.com/incendo/cloud
@@ -72,8 +72,8 @@ adventureApi = { group = "net.kyori", name = "adventure-api", version.ref = "adv
 adventureTextMinimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
 adventureTextSerializerPlain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure" }
 
-adventurePlatformFacet = { group = "net.kyori", name = "adventure-platform-facet", version.ref = "adventureBukkit" }
-adventurePlatformBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventureBukkit" }
+adventurePlatformFacet = { group = "com.github.OvercastCommunity.adventure-platform", name = "adventure-platform-facet", version.ref = "adventureBukkit" }
+adventurePlatformBukkit = { group = "com.github.OvercastCommunity.adventure-platform", name = "adventure-platform-bukkit", version.ref = "adventureBukkit" }
 adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventureFabric" }
 
 bluenbt = { module = "de.bluecolored:bluenbt", version.ref = "bluenbt" }
