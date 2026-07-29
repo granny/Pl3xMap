@@ -51,10 +51,17 @@ public class UpdateMarkerData extends AbstractDataTask {
 
                 long now = System.currentTimeMillis();
                 long lastUpdated = this.lastUpdated.getOrDefault(key, 0L);
+                long lastHashCode = this.lastHashCode.getOrDefault(key, 0L);
 
                 if (now - lastUpdated > Math.max(TickUtil.toMilliseconds(layer.getUpdateInterval()), 1000)) {
                     List<Marker<?>> list = new ArrayList<>(layer.getMarkers());
-                    FileUtil.writeJson(this.gson.toJson(list), this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    String jsonMarkers = this.gson.toJson(list);
+                    long hashCode = jsonMarkers.hashCode();
+                    if (lastHashCode != hashCode)
+                    {
+                        FileUtil.writeJson(jsonMarkers, this.world.getMarkersDirectory().resolve(key.replace(":", "-") + ".json"));
+                    }
+                    this.lastHashCode.put(key, hashCode);
                     this.lastUpdated.put(key, now);
                 }
             } catch (Throwable t) {
@@ -62,6 +69,13 @@ public class UpdateMarkerData extends AbstractDataTask {
             }
         });
 
-        FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+        long lastHashCode = this.lastHashCode.getOrDefault("", 0L);
+        String markersJson = this.gson.toJson(layers);
+        long hashCode = markersJson.hashCode();
+        if (lastHashCode != hashCode)
+        {
+            FileUtil.writeJson(this.gson.toJson(layers), this.world.getTilesDirectory().resolve("markers.json"));
+            this.lastHashCode.put("", hashCode);
+        }
     }
 }
