@@ -123,17 +123,20 @@ public final class WorldConfig extends AbstractConfig {
 
     @Key("ui.blockinfo")
     @Comment("""
-            The display position for the blockinfo box""")
+            The display position for the blockinfo box.
+            Set the value as an empty string e.g. '' to disable.""")
     public String UI_BLOCKINFO = "bottomleft";
 
     @Key("ui.coords")
     @Comment("""
-            The display position for the coordinates box""")
+            The display position for the coordinates box
+            Set the value as an empty string e.g. '' to disable.""")
     public String UI_COORDS = "bottomcenter";
 
     @Key("ui.link")
     @Comment("""
-            The display position for the link box""")
+            The display position for the link box
+            Set the value as an empty string e.g. '' to disable.""")
     public String UI_LINK = "bottomright";
 
     @Key("center.x")
