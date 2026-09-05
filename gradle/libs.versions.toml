@@ -6,6 +6,7 @@ minecraft="26.2"
 fabricApi="0.152.2+26.2"
 fabricLoader="0.19.3"
 fabricLoom="1.17-SNAPSHOT"
+zstdJni = "1.5.6-4"
 
 #forge="1.20.2-48.0.6"
 #forgeGradle="[6.0,6.2)"
@@ -49,7 +50,7 @@ paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "pa
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }
 
 [libraries]
-
+zstdJni = { module = "com.github.luben:zstd-jni", version.ref = "zstdJni" }
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
 
 log4j = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }

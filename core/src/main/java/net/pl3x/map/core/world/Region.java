@@ -48,6 +48,10 @@ public class Region {
 
     private final int hash;
 
+    // NEW: detect BLinear-v3 (.b_linear) region files so we can branch to the
+    // alternate reader without touching the existing MCA sector-table logic.
+    private final boolean blinear;
+
     public Region(World world, int regionX, int regionZ, Path regionFile) {
         this.world = world;
         this.regionX = regionX;
@@ -57,6 +61,9 @@ public class Region {
         this.chunkLoader = new ChunkLoader(world, this);
 
         this.hash = Objects.hash(world, regionX, regionZ);
+
+        // NEW: cheap, one-time extension check.
+        this.blinear = this.regionFile.getName().endsWith(BLinearV3Region.FILE_SUFFIX);
     }
 
     public World getWorld() {
@@ -110,6 +117,14 @@ public class Region {
     }
 
     public Chunk loadChunk(RandomAccessFile raf, int index) throws IOException {
+        // NEW: BLinear-v3 files have a completely different layout (superblock +
+        // bucket-offset table instead of the Anvil 4KB sector table). Branch out
+        // early and leave the rest of this method (the MCA path) untouched.
+        if (this.blinear) {
+            Chunk chunk = BLinearV3Region.loadChunk(this, this.chunkLoader, raf, index);
+            return this.chunks[index] = chunk;
+        }
+
         raf.seek(index * 4L);
 
         byte[] header = new byte[4];
