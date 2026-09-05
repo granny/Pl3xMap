@@ -34,7 +34,10 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.configuration.Config;
 import net.pl3x.map.core.log.Logger;
@@ -47,22 +50,51 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class RegionProcessor {
+    // bounds how long schedule() will wait for a world's region scan tasks
+    // before giving up, instead of blocking the sole processor thread
+    // forever with zero error output on a stuck/orphaned task
+    private static final long SCHEDULE_TIMEOUT_MINUTES = 60;
+
     private final Map<World, Collection<Point>> regionsToScan = new ConcurrentHashMap<>();
     private final Deque<Ticket> ticketsToScan = new ConcurrentLinkedDeque<>();
 
-    private final Executor executor;
+    // guards creation/replacement of the executor field so start() and
+    // stop() can never race each other while swapping it out
+    private final Object executorLock = new Object();
+
+    // non-final -- stop() may shut this down permanently, and start() must
+    // be able to lazily create a fresh one afterward so the processor can
+    // actually resume/restart after a reload cycle
+    private ExecutorService executor;
+
     private final Progress progress;
 
-    private CompletableFuture<Void> future;
+    private volatile CompletableFuture<Void> future;
 
-    private boolean paused;
+    private volatile boolean paused;
 
     private long timeStarted;
-    private boolean running;
+    private volatile boolean running;
 
     public RegionProcessor() {
         this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Processor");
         this.progress = new Progress();
+    }
+
+    /**
+     * Ensures {@link #executor} is a live, usable executor, transparently
+     * replacing it with a fresh one if it was previously shut down (e.g.
+     * by {@link #stop()}), so this instance can be stopped and later
+     * resumed/restarted indefinitely.
+     */
+    private ExecutorService getOrCreateExecutor() {
+        synchronized (this.executorLock) {
+            if (this.executor.isShutdown() || this.executor.isTerminated()) {
+                Logger.debug("Region processor executor was shut down; creating a fresh one.");
+                this.executor = Pl3xMap.ThreadFactory.createService("Pl3xMap-Processor");
+            }
+            return this.executor;
+        }
     }
 
     @SuppressWarnings("BusyWait")
@@ -92,11 +124,17 @@ public class RegionProcessor {
     }
 
     public void start(long delay) {
+        ExecutorService liveExecutor = getOrCreateExecutor();
+
         this.future = CompletableFuture.runAsync(() -> {
             // wait...
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException ignore) {
+                // interrupted (e.g. via a concurrent stop()) -- don't keep
+                // the self-rescheduling loop alive, let this chain die
+                // cleanly instead of calling run() and re-arming again
+                return;
             }
 
             // run the task
@@ -106,15 +144,28 @@ public class RegionProcessor {
 
             // rinse and repeat
             start(5000L);
-        }, this.executor);
+        }, liveExecutor);
     }
 
+    /**
+     * Stops the processor, genuinely interrupting any in-progress work via
+     * {@code shutdownNow()}. The processor remains fully reusable
+     * afterward: the next call to {@link #start(long)} will transparently
+     * create a fresh executor.
+     */
     public void stop() {
         this.progress.stop();
+
         if (this.future != null) {
             boolean result = this.future.cancel(true);
             Logger.debug("Stopped region processor: " + result);
         }
+
+        synchronized (this.executorLock) {
+            this.executor.shutdownNow();
+        }
+
+        this.running = false;
     }
 
     public void addRegions(World world, Collection<Point> regions) {
@@ -151,19 +202,44 @@ public class RegionProcessor {
 
             Iterator<Map.Entry<World, Collection<Point>>> iter = this.regionsToScan.entrySet().iterator();
             while (iter.hasNext()) {
+                // NEW: check for interruption BEFORE touching the next
+                // world, so a deliberate stop() (e.g. during reload)
+                // cleanly halts the ENTIRE remaining cycle instead of
+                // limping forward into more schedule() calls against an
+                // executor that may already be dead -- which previously
+                // threw RejectedExecutionException from world_nether's
+                // schedule() call, aborted this whole loop via the
+                // catch(Throwable) below, and silently dropped every
+                // world after that point (e.g. world_the_end) from the
+                // scan cycle entirely.
+                //
+                // NOTE: entries are deliberately left un-removed from
+                // regionsToScan when we bail out here, so they remain
+                // queued and will be picked up again on the next run()
+                // cycle instead of being lost.
+                if (Thread.currentThread().isInterrupted()) {
+                    // clear the flag before returning: this thread belongs
+                    // to a reusable pool, and an uncleared interrupt status
+                    // would otherwise leak into and spuriously abort a
+                    // completely unrelated future task run on the same
+                    // pooled thread.
+                    Thread.interrupted();
+                    Logger.debug("Region processor stopping early due to interrupt; remaining worlds will be retried next cycle.");
+                    break;
+                }
+
                 Map.Entry<World, Collection<Point>> entry = iter.next();
                 iter.remove();
                 World world = entry.getKey();
                 Collection<Point> regions = entry.getValue();
                 process(world, regions);
-
             }
         } catch (Throwable t) {
             Logger.severe("Region processor failed to process tickets", t);
+        } finally {
+            this.running = false;
+            Logger.debug("Region processor finished queuing at " + System.currentTimeMillis());
         }
-
-        this.running = false;
-        Logger.debug("Region processor finished queuing at " + System.currentTimeMillis());
     }
 
     private void process(World world, Collection<Point> regionPositions) {
@@ -213,23 +289,48 @@ public class RegionProcessor {
         getProgress().setTotalRegions(orderedRegionsToScan.size());
         getProgress().setTotalChunks(getProgress().getTotalRegions() * 1024L);
 
-        CompletableFuture.allOf(orderedRegionsToScan.stream()
-                .map(pos -> CompletableFuture.runAsync(new RegionScanTask(world, pos), Pl3xMap.api().getRenderExecutor())
-                        .whenComplete((result, throwable) -> {
-                            if (throwable != null) {
-                                Logger.severe("Failed to run region scan task for %s".formatted(world.getName(), pos), throwable);
-                            }
+        // NEW: the stream/allOf construction itself (specifically
+        // CompletableFuture.runAsync(...) for each region task) can throw
+        // RejectedExecutionException SYNCHRONOUSLY if the shared render
+        // executor (Pl3xMap.api().getRenderExecutor() -- a different
+        // executor than this class's own, managed elsewhere and commonly
+        // shut down/recreated during a plugin reload) is not currently
+        // accepting tasks. Previously this was NOT caught here, so it
+        // propagated all the way up through process() into run()'s outer
+        // catch(Throwable), which aborted the ENTIRE remaining scan cycle
+        // -- silently dropping every world processed after this one (e.g.
+        // world_the_end never got scheduled at all). Catching it locally
+        // means only THIS world's tasks are skipped for now; other worlds
+        // still get their chance, and this world's regions remain queued
+        // for the next scan cycle.
+        CompletableFuture<Void> allFutures;
+        try {
+            allFutures = CompletableFuture.allOf(orderedRegionsToScan.stream()
+                    .map(pos -> CompletableFuture.runAsync(new RegionScanTask(world, pos), Pl3xMap.api().getRenderExecutor())
+                            .whenComplete((result, throwable) -> {
+                                if (throwable != null) {
+                                    Logger.severe("Failed to run region scan task for %s".formatted(world.getName(), pos), throwable);
+                                }
 
-                            // set region modified time
-                            world.getRegionModifiedState().set(Mathf.asLong(pos), this.timeStarted);
+                                // set region modified time
+                                world.getRegionModifiedState().set(Mathf.asLong(pos), this.timeStarted);
 
-                            // run the garbage collector
-                            if (Config.GC_WHEN_RUNNING) {
-                                System.gc();
-                            }
-                        })
-                ).toArray(CompletableFuture[]::new)
-        ).whenComplete((result, throwable) -> {
+                                // run the garbage collector
+                                if (Config.GC_WHEN_RUNNING) {
+                                    System.gc();
+                                }
+                            })
+                    ).toArray(CompletableFuture[]::new)
+            );
+        } catch (RejectedExecutionException e) {
+            Logger.severe("Region processor could not schedule region scan tasks for world " + world.getName()
+                    + " because the render executor is not currently accepting tasks (likely mid-reload). "
+                    + "This world's regions remain queued and will be retried on the next scan cycle.");
+            getProgress().finish();
+            return;
+        }
+
+        allFutures.whenComplete((result, throwable) -> {
             if (throwable != null) {
                 Logger.severe("Failed to run region scan tasks for world %s".formatted(world.getName()), throwable);
             }
@@ -249,7 +350,29 @@ public class RegionProcessor {
             this.running = false;
 
             Logger.debug(world.getName() + " Region processor finished task at " + System.currentTimeMillis());
-        }).join();
+        });
+
+        try {
+            allFutures.get(SCHEDULE_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            // NEW: caught specifically (before the generic Throwable
+            // catch below) so this expected, benign consequence of a
+            // deliberate stop()/reload doesn't get logged as a scary
+            // unhandled failure with a full stack trace. The interrupt
+            // flag is restored here (get() consumes/clears it when
+            // throwing) so run()'s world-iteration loop can observe it
+            // and stop processing further worlds cleanly.
+            Thread.currentThread().interrupt();
+            Logger.debug("Region processor's wait for world " + world.getName()
+                    + " was interrupted (expected during a deliberate stop/reload).");
+        } catch (TimeoutException e) {
+            Logger.severe("Region processor timed out after " + SCHEDULE_TIMEOUT_MINUTES
+                    + " minutes waiting for region scan tasks to finish for world " + world.getName()
+                    + " -- some region files may be unusually slow to read, or a task is stuck. "
+                    + "Continuing without waiting further so the processor doesn't hang permanently.", e);
+        } catch (Throwable t) {
+            Logger.severe("Region processor failed while waiting for region scan tasks for world " + world.getName(), t);
+        }
     }
 
     private record Ticket(World world, Point region) {

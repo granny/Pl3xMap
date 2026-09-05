@@ -1,58 +1,6 @@
-/*
- * This file is part of Pl3xMap, licensed under the MIT License (MIT).
- *
- * BLinear-v3 (.b_linear) region file reader.
- *
- * Format CONFIRMED directly against LuminolMC/Shiroha's reference
- * implementation, BufferedLinearRegionFile.java. Key insight that fixed
- * the final remaining bug: LZ4 compression is used ONLY in the transient
- * swap file (.swp); when a bucket is flushed to the MASTER file (the
- * .b_linear file this reader parses), buildBucketRecord() DECOMPRESSES
- * each chunk's LZ4 payload first, then writes the raw NBT bytes into the
- * section (which is then Zstd-compressed as a whole bucket). So inside a
- * Zstd-decompressed bucket, chunk payloads are PLAIN NBT, not LZ4 data --
- * confirmed by the previous attempt's "LZ4Exception: Malformed input at
- * 22" (16-byte meta header + 6 bytes into what is actually a raw NBT
- * TAG_Compound stream, not an LZ4 frame).
- *
- *   -- Master file header (14 bytes, offset 0) --
- *   long superblock       (8 bytes)  -0x200812250269L
- *   byte version          (1 byte)   0x03 (MASTER_FILE_VERSION_BUCKET)
- *   byte compressionLevel (1 byte)   write-time zstd level; unused for reads
- *   int  xxHashSeed       (4 bytes)  unused for reads
- *
- *   -- Position table (128 bytes, offset 14) --
- *   long[16] bucketOffsets            ABSOLUTE file offsets, one per
- *                                     bucket. 0 = bucket has no chunks.
- *
- *   -- Bucket record (at each non-zero offset above) --
- *   int decompressedSize  (4 bytes)  size of the FULL section stream below
- *   int compressedSize    (4 bytes)  zstd-compressed byte count that follows
- *   byte[compressedSize]             zstd frame; decompresses to a stream
- *                                     of 64 INTERLEAVED per-chunk sections,
- *                                     read strictly sequentially (each
- *                                     slot's size-prefix is immediately
- *                                     followed by that slot's full payload,
- *                                     then the next slot's size-prefix):
- *
- *     for each of the 64 chunk slots in this bucket, IN ORDER:
- *       int sectionSize             0 = empty slot; if >0, IMMEDIATELY
- *                                     followed (no gap) by:
- *         int  dataLen      (4)     length of the raw NBT payload below
- *         long timestamp    (8)     unused for reads
- *         int  xxhash32     (4)     xxHash32 of the NBT payload (seed
- *                                    0x0721); NOT verified here, see TODO
- *         byte[dataLen]             RAW (uncompressed) NBT data -- no
- *                                    LZ4 layer at this level
- *
- * TODO: xxHash32 integrity verification is not performed here; a hash
- * mismatch would currently surface later as a garbled/failed NBT parse
- * instead of a clean "corrupt chunk" error.
- */
 package net.pl3x.map.core.world;
 
 import com.github.luben.zstd.ZstdInputStream;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -70,7 +18,7 @@ import net.pl3x.map.core.log.Logger;
 final class BLinearV3Region {
 
     // set to false to silence the verbose per-field debug logging
-    static boolean DEBUG = true;
+    static boolean DEBUG = false;
 
     static final String FILE_SUFFIX = ".b_linear";
 
@@ -93,6 +41,17 @@ final class BLinearV3Region {
     // don't spam the log 1024 times (once per chunk) for the same bad file
     private static final Set<String> SUPPRESSED_FILES =
             Collections.newSetFromMap(new ConcurrentHashMap<>());
+
+    // NEW: per-thread single-slot decompressed-bucket cache (see class
+    // javadoc "PERFORMANCE FIX" above). Renderer worker threads each get
+    // their own slot, so there is no cross-thread contention/locking.
+    private static final ThreadLocal<BucketCache> BUCKET_CACHE = new ThreadLocal<>();
+
+    private static final class BucketCache {
+        RandomAccessFile raf;
+        long bucketOffset;
+        byte[] decompressed;
+    }
 
     private BLinearV3Region() {
     }
@@ -134,11 +93,10 @@ final class BLinearV3Region {
             throw new IOException("Unsupported BLinear version (" + version + ") in " + path);
         }
 
-        // CONFIRMED (reference source): 1-byte compressionLevel + 4-byte
-        // xxHashSeed follow the version byte -- 5 bytes total.
+        // 1-byte compressionLevel + 4-byte xxHashSeed follow the version byte
         raf.skipBytes(1 + 4);
 
-        // CONFIRMED: 16 plain, absolute, unshifted file offsets. 0 = empty bucket.
+        // 16 plain, absolute, unshifted file offsets. 0 = empty bucket.
         long[] bucketOffsets = new long[BUCKET_COUNT];
         for (int i = 0; i < BUCKET_COUNT; i++) {
             bucketOffsets[i] = raf.readLong();
@@ -156,10 +114,81 @@ final class BLinearV3Region {
             return new EmptyChunk(region.getWorld(), region, index);
         }
 
+        // NEW: check the per-thread cache before touching the file/Zstd at all.
+        // Region.loadChunks() walks indices 0..1023 in order, so 64 consecutive
+        // calls share the same bucketOffset -- this turns 64 decompressions
+        // into 1 for that common access pattern.
+        byte[] decompressed = getOrDecompressBucket(raf, bucketOffset, bucketIndex, path);
+
+        DataInputStream bucketIn = new DataInputStream(new ByteArrayInputStream(decompressed));
+
+        // 64 chunk slots read strictly SEQUENTIALLY from the decompressed
+        // bucket bytes -- each slot's 4-byte sectionSize is immediately
+        // followed by that slot's full payload, then the next slot's
+        // sectionSize comes right after. This is all in-memory array
+        // navigation now (no stream skip() calls), so it's fast regardless.
+        for (int i = 0; i < CHUNKS_PER_BUCKET; i++) {
+            int sectionSize = bucketIn.readInt();
+
+            if (i != chunkInBucket) {
+                if (sectionSize > 0) {
+                    bucketIn.skipBytes(sectionSize);
+                }
+                continue;
+            }
+
+            if (sectionSize <= 0) {
+                return new EmptyChunk(region.getWorld(), region, index);
+            }
+            if (sectionSize > MAX_SECTION_LENGTH) {
+                throw new IOException("Implausible BLinear section length (" + sectionSize + ") in " + path
+                        + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
+            }
+            if (sectionSize <= SECTOR_META_SIZE) {
+                throw new IOException("BLinear section too short (" + sectionSize + " bytes) to contain meta header in "
+                        + path + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
+            }
+
+            byte[] section = new byte[sectionSize];
+            bucketIn.readFully(section);
+
+            DataInputStream sectionIn = new DataInputStream(new ByteArrayInputStream(section));
+            int dataLen = sectionIn.readInt();
+            sectionIn.skipBytes(8); // timestamp, unused
+            sectionIn.skipBytes(4);
+
+            if (dataLen < 0 || dataLen > MAX_SECTION_LENGTH) {
+                throw new IOException("Implausible BLinear chunk dataLen (" + dataLen + ") in " + path
+                        + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
+            }
+            if (SECTOR_META_SIZE + dataLen != sectionSize) {
+                throw new IOException("BLinear section size mismatch: header says dataLen=" + dataLen
+                        + " (expected sectionSize=" + (SECTOR_META_SIZE + dataLen) + ") but actual sectionSize=" + sectionSize
+                        + " in " + path + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
+            }
+
+            byte[] nbt = new byte[dataLen];
+            sectionIn.readFully(nbt);
+
+            return chunkLoader.load(new ByteArrayInputStream(nbt), index);
+        }
+
+        return new EmptyChunk(region.getWorld(), region, index);
+    }
+
+    /**
+     * Returns the decompressed bytes for the bucket at {@code bucketOffset},
+     * using the per-thread single-slot cache when possible instead of
+     * re-reading and re-decompressing from disk.
+     */
+    private static byte[] getOrDecompressBucket(RandomAccessFile raf, long bucketOffset, int bucketIndex, String path) throws IOException {
+        BucketCache cache = BUCKET_CACHE.get();
+        if (cache != null && cache.raf == raf && cache.bucketOffset == bucketOffset) {
+            return cache.decompressed;
+        }
+
         raf.seek(bucketOffset);
 
-        // CONFIRMED: 4-byte decompressed size + 4-byte compressed size,
-        // then a Zstd frame (no separate per-bucket compression flag).
         int decompressedSize = raf.readInt();
         int compressedSize = raf.readInt();
 
@@ -169,7 +198,9 @@ final class BLinearV3Region {
         }
 
         if (compressedSize <= 0) {
-            return new EmptyChunk(region.getWorld(), region, index);
+            byte[] empty = new byte[0];
+            updateCache(raf, bucketOffset, empty);
+            return empty;
         }
         if (compressedSize > MAX_BUCKET_LENGTH || decompressedSize > MAX_BUCKET_LENGTH * 4) {
             throw new IOException("Implausible BLinear bucket size (decompressed=" + decompressedSize
@@ -179,85 +210,20 @@ final class BLinearV3Region {
         byte[] compressed = new byte[compressedSize];
         raf.readFully(compressed);
 
-        try (DataInputStream bucketIn = new DataInputStream(new BufferedInputStream(
-                new ZstdInputStream(new ByteArrayInputStream(compressed))))) {
-
-            // CONFIRMED: 64 chunk slots read strictly SEQUENTIALLY (not a
-            // flat table followed by a data area) -- each slot's 4-byte
-            // sectionSize is immediately followed by that slot's full
-            // payload, then the next slot's sectionSize comes right after.
-            for (int i = 0; i < CHUNKS_PER_BUCKET; i++) {
-                int sectionSize = bucketIn.readInt();
-
-                if (i != chunkInBucket) {
-                    // not the slot we want: skip its payload (0 bytes if
-                    // empty) and move to the next slot's size-prefix
-                    if (sectionSize > 0) {
-                        skipFully(bucketIn, sectionSize);
-                    }
-                    continue;
-                }
-
-                // this is our slot
-                if (sectionSize <= 0) {
-                    return new EmptyChunk(region.getWorld(), region, index);
-                }
-                if (sectionSize > MAX_SECTION_LENGTH) {
-                    throw new IOException("Implausible BLinear section length (" + sectionSize + ") in " + path
-                            + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
-                }
-                if (sectionSize <= SECTOR_META_SIZE) {
-                    throw new IOException("BLinear section too short (" + sectionSize + " bytes) to contain meta header in "
-                            + path + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
-                }
-
-                byte[] section = new byte[sectionSize];
-                bucketIn.readFully(section);
-
-                DataInputStream sectionIn = new DataInputStream(new ByteArrayInputStream(section));
-                int dataLen = sectionIn.readInt();
-                sectionIn.skipBytes(8); // timestamp, unused
-                sectionIn.skipBytes(4); // xxhash32, unverified (see class javadoc TODO)
-
-                if (dataLen < 0 || dataLen > MAX_SECTION_LENGTH) {
-                    throw new IOException("Implausible BLinear chunk dataLen (" + dataLen + ") in " + path
-                            + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
-                }
-                if (SECTOR_META_SIZE + dataLen != sectionSize) {
-                    throw new IOException("BLinear section size mismatch: header says dataLen=" + dataLen
-                            + " (expected sectionSize=" + (SECTOR_META_SIZE + dataLen) + ") but actual sectionSize=" + sectionSize
-                            + " in " + path + " at bucket " + bucketIndex + " chunk " + chunkInBucket);
-                }
-
-                // FIX (confirmed against buildBucketRecord() in the
-                // reference source): the payload here is RAW, already-
-                // decompressed NBT -- LZ4 is only used in the transient
-                // swap file and is unwrapped before the master file is
-                // ever written. No LZ4 decompression step needed here.
-                byte[] nbt = new byte[dataLen];
-                sectionIn.readFully(nbt);
-
-                return chunkLoader.load(new ByteArrayInputStream(nbt), index);
-            }
-
-            // shouldn't reach here (loop always returns once i == chunkInBucket),
-            // but keep the compiler happy and fail safe just in case
-            return new EmptyChunk(region.getWorld(), region, index);
+        byte[] decompressed;
+        try (InputStream zstdIn = new ZstdInputStream(new ByteArrayInputStream(compressed))) {
+            decompressed = zstdIn.readAllBytes();
         }
+
+        updateCache(raf, bucketOffset, decompressed);
+        return decompressed;
     }
 
-    private static void skipFully(InputStream in, long toSkip) throws IOException {
-        long remaining = toSkip;
-        while (remaining > 0) {
-            long skipped = in.skip(remaining);
-            if (skipped <= 0) {
-                if (in.read() < 0) {
-                    throw new IOException("Unexpected EOF while skipping " + toSkip + " bytes within bucket");
-                }
-                remaining--;
-            } else {
-                remaining -= skipped;
-            }
-        }
+    private static void updateCache(RandomAccessFile raf, long bucketOffset, byte[] decompressed) {
+        BucketCache cache = new BucketCache();
+        cache.raf = raf;
+        cache.bucketOffset = bucketOffset;
+        cache.decompressed = decompressed;
+        BUCKET_CACHE.set(cache);
     }
 }
