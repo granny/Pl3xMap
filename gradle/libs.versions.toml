@@ -17,9 +17,9 @@ run-paper="3.0.2" # https://github.com/jpenilla/run-task
 indra-git="4.0.0" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.9" # https://github.com/GradleUp/shadow
 
-adventure="5.0.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure
+adventure="5.0.0" # https://github.com/KyoriPowered/adventure
 adventureBukkit="b4bfb8a" # https://github.com/OvercastCommunity/adventure-platform
-adventureFabric="7.0.0-SNAPSHOT" # https://github.com/KyoriPowered/adventure-platform-fabric
+adventureFabric="7.0.0" # https://github.com/KyoriPowered/adventure-platform-fabric
 
 cloud="2.0.0" # https://github.com/incendo/cloud
 cloud-minecraft="2.0.0-SNAPSHOT" # https://github.com/Incendo/cloud-minecraft
