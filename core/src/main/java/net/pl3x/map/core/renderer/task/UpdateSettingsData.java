@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import net.pl3x.map.core.Pl3xMap;
@@ -46,14 +47,14 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class UpdateSettingsData extends Task {
-    private int fileTick;
     private final Gson gson = new GsonBuilder()
             //.setPrettyPrinting()
             .disableHtmlEscaping()
             .serializeNulls()
             .setLenient()
             .create();
-    private int jsonHashCache = -1;
+    
+    private HashMap<String, Long> jsonHashCache = new HashMap<>();
     private final ExecutorService executor;
 
     private CompletableFuture<Void> future;
@@ -126,7 +127,15 @@ public class UpdateSettingsData extends Task {
             settings.put("zoom", zoom);
             settings.put("ui", ui);
 
-            FileUtil.writeJson(this.gson.toJson(settings), world.getTilesDirectory().resolve("settings.json"));
+            String key = world.getName();
+            long lastHashCode = this.jsonHashCache.getOrDefault(key, 0L);
+            String worldSettingsJson = this.gson.toJson(settings);
+            long hashCode = worldSettingsJson.hashCode();
+            if (lastHashCode != hashCode)
+            {
+                FileUtil.writeJson(worldSettingsJson, world.getTilesDirectory().resolve("settings.json"));
+                this.jsonHashCache.put(key, hashCode);
+            }
 
             List<Object> renderers = new ArrayList<>();
             world.getRenderers().forEach((rendererKey, builder) -> {
@@ -185,15 +194,12 @@ public class UpdateSettingsData extends Task {
         }
 
         String json = this.gson.toJson(map);
-
-        if (jsonHashCache != json.hashCode()) {
+        long lastHashCode = this.jsonHashCache.getOrDefault("", 0L);
+        long hashCode = json.hashCode();
+        if (lastHashCode != hashCode) {
             Pl3xMap.api().getHttpdServer().getLiveDataHandler().send("settings", json);
-            jsonHashCache = json.hashCode();
-        }
-
-        if (fileTick++ >= 20) {
-            fileTick = 0;
             FileUtil.writeJson(json, FileUtil.getTilesDir().resolve("settings.json"));
+            this.jsonHashCache.put("", hashCode);
         }
     }
 }
