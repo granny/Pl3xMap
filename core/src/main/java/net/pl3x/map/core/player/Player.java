@@ -140,6 +140,13 @@ public abstract class Player extends Keyed {
     public abstract boolean isSpectator();
 
     /**
+     * Get whether player is allowed to hide from the map.
+     *
+     * @return true if player can be hidden
+     */
+    public abstract boolean canBeHidden();
+
+    /**
      * Get whether player is hidden from the map.
      *
      * @return true if player is hidden

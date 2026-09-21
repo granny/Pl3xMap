@@ -148,6 +148,11 @@ public class BukkitPlayer extends Player {
     }
 
     @Override
+    public boolean canBeHidden() {
+        return getPlayer().hasPermission("pl3xmap.player.can-be-hidden");
+    }
+
+    @Override
     public boolean isPersistentlyHidden() {
         return getPlayer().getPersistentDataContainer().getOrDefault(hiddenKey, PersistentDataType.BYTE, (byte) 0) != 0;
     }

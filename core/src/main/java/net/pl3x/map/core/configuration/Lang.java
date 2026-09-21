@@ -95,6 +95,9 @@ public final class Lang extends AbstractConfig {
     @Key("command.hide.success")
     public static String COMMAND_HIDE_SUCCESS = "<grey><player> <green>is now hidden from the map";
 
+    // TODO: what should the key be?
+    public static String PLAYER_CANNOT_BE_HIDDEN_OR_SHOWN = "<red><player> cannot be hidden or shown from the map.";
+
     @Key("command.pause.description")
     public static String COMMAND_PAUSE_DESCRIPTION = "Pause renderers";
     @Key("command.pause.paused")
