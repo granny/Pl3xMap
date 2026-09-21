@@ -34,7 +34,8 @@ dependencies {
     implementation(project(":webmap"))
 
     compileOnly(libs.log4j)
-
+    implementation(libs.lz4Java)
+    implementation(libs.zstdJni)
     implementation(libs.jspecifyAnnotations)
 
     implementation(libs.undertow)

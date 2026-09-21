@@ -28,11 +28,13 @@ import de.bluecolored.bluenbt.BlueNBT;
 import de.bluecolored.bluenbt.NamingStrategy;
 import de.bluecolored.bluenbt.TypeToken;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.List;
+import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 
 public class ChunkLoader {
@@ -70,6 +72,11 @@ public class ChunkLoader {
 
     private ChunkVersionLoader<?> lastUsedLoader = CHUNK_VERSION_LOADERS.getFirst();
 
+    /**
+     * Original MCA entry point (unchanged behavior): reads compression id from
+     * the region file at {@code offset+4}, decompresses via {@link CompressionType},
+     * and hands the stream off to {@link #loadNbt}.
+     */
     public Chunk load(RandomAccessFile raf, long offset, int index) throws IOException {
         raf.seek(offset + 4);
         int compressionTypeId = Byte.toUnsignedInt(raf.readByte());
@@ -78,18 +85,48 @@ public class ChunkLoader {
         if (compression == null)
             throw new IOException("Unknown chunk compression-id: " + compressionTypeId);
 
-        // optimistic: try last used version
-        ChunkVersionLoader<?> usedLoader = lastUsedLoader;
-        Chunk chunk;
         InputStream decompressedIn = new BufferedInputStream(compression.decompress(new FileInputStream(raf.getFD())));
-        chunk = usedLoader.load(world, region, decompressedIn, index);
+
+        // retry-supplier re-seeks the RandomAccessFile and re-decompresses from
+        // scratch - this is exactly what the old inline code did on a loader mismatch.
+        Supplier<InputStream> retrySupplier = () -> {
+            try {
+                raf.seek(offset + 5);
+                return new BufferedInputStream(compression.decompress(new FileInputStream(raf.getFD())));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        return loadNbt(decompressedIn, retrySupplier, index);
+    }
+
+    /**
+     * NEW: entry point for readers that already produced a fully decompressed
+     * NBT byte stream themselves (e.g. {@link BLinearV3Region}, or any future
+     * non-Anvil region format). The stream is buffered into memory once so that
+     * both the optimistic loader attempt and the version-mismatch retry can
+     * read from the same bytes without needing file-seek support.
+     */
+    public Chunk load(InputStream decompressedNbt, int index) throws IOException {
+        byte[] bytes = decompressedNbt.readAllBytes();
+        return loadNbt(new ByteArrayInputStream(bytes), () -> new ByteArrayInputStream(bytes), index);
+    }
+
+    /**
+     * Shared logic (factored out of the old {@code load(RandomAccessFile, long, int)}
+     * body): try the optimistically-cached loader first, and if the actual data
+     * version indicates a better-suited loader exists, re-read and use that one.
+     */
+    private Chunk loadNbt(InputStream decompressedIn, Supplier<InputStream> retrySupplier, int index) throws IOException {
+        ChunkVersionLoader<?> usedLoader = lastUsedLoader;
+        Chunk chunk = usedLoader.load(world, region, decompressedIn, index);
 
         // check version and reload chunk if the wrong loader has been used and a better one has been found
         ChunkVersionLoader<?> actualLoader = findBestLoaderForVersion(chunk.getDataVersion());
         if (actualLoader != null && usedLoader != actualLoader) {
-            raf.seek(offset + 5);
-            decompressedIn = new BufferedInputStream(compression.decompress(new FileInputStream(raf.getFD())));
-            chunk = actualLoader.load(world, region, decompressedIn, index);
+            InputStream retryIn = retrySupplier.get();
+            chunk = actualLoader.load(world, region, retryIn, index);
             lastUsedLoader = actualLoader;
         }
 
