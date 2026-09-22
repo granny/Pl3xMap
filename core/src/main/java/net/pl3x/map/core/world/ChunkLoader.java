@@ -29,6 +29,7 @@ import de.bluecolored.bluenbt.NamingStrategy;
 import de.bluecolored.bluenbt.TypeToken;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -81,15 +82,17 @@ public class ChunkLoader {
         // optimistic: try last used version
         ChunkVersionLoader<?> usedLoader = lastUsedLoader;
         Chunk chunk;
-        InputStream decompressedIn = new BufferedInputStream(compression.decompress(new FileInputStream(raf.getFD())));
-        chunk = usedLoader.load(world, region, decompressedIn, index);
+        try (InputStream decompressedIn = new BufferedInputStream(compression.decompress(nonClosing(new FileInputStream(raf.getFD()))))) {
+            chunk = usedLoader.load(world, region, decompressedIn, index);
+        }
 
         // check version and reload chunk if the wrong loader has been used and a better one has been found
         ChunkVersionLoader<?> actualLoader = findBestLoaderForVersion(chunk.getDataVersion());
         if (actualLoader != null && usedLoader != actualLoader) {
             raf.seek(offset + 5);
-            decompressedIn = new BufferedInputStream(compression.decompress(new FileInputStream(raf.getFD())));
-            chunk = actualLoader.load(world, region, decompressedIn, index);
+            try (InputStream decompressedIn = new BufferedInputStream(compression.decompress(nonClosing(new FileInputStream(raf.getFD()))))) {
+                chunk = actualLoader.load(world, region, decompressedIn, index);
+            }
             lastUsedLoader = actualLoader;
         }
 
@@ -101,6 +104,13 @@ public class ChunkLoader {
             if (loader.mightSupport(version)) return loader;
         }
         return null;
+    }
+
+    private static InputStream nonClosing(InputStream in) {
+        return new FilterInputStream(in) {
+            @Override
+            public void close() {}
+        };
     }
 
     private static class ChunkVersionLoader<D extends Chunk.Data> {
