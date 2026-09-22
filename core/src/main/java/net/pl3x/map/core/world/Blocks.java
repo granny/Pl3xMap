@@ -1331,6 +1331,7 @@ public class Blocks {
     public static final Block YELLOW_POPLAR_LEAVES = register(new Block(1282, "minecraft:yellow_poplar_leaves", 0xDA8C29));
     public static final Block YELLOW_WOOL_SLAB = register(new Block(1283, "minecraft:yellow_wool_slab", 0xF8C527));
     public static final Block YELLOW_WOOL_STAIRS = register(new Block(1284, "minecraft:yellow_wool_stairs", 0xF8C527));
+    public static final Block LIME_CONCRETE_SLAB = register(new Block(1285, "minecraft:lime_concrete_slab", 0x5EA818));
 
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
