@@ -25,6 +25,7 @@
 package net.pl3x.map.core.world;
 
 import de.bluecolored.bluenbt.NBTReader;
+import de.bluecolored.bluenbt.TagType;
 import de.bluecolored.bluenbt.TypeDeserializer;
 import java.io.IOException;
 import java.util.LinkedHashMap;
