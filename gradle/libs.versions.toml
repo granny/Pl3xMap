@@ -1,42 +1,42 @@
 [versions]
-bukkit="26.2.build.+"
-minecraft="26.2"
+bukkit="26.3.build.+"
+minecraft="26.3"
 
 # https://fabricmc.net/develop/
-fabricApi="0.152.2+26.2"
-fabricLoader="0.19.3"
-fabricLoom="1.17-SNAPSHOT"
+fabricApi="0.161.0+26.3"
+fabricLoader="0.19.5"
+fabricLoom="1.18-SNAPSHOT"
 
 #forge="1.20.2-48.0.6"
 #forgeGradle="[6.0,6.2)"
 #forgeLoader="[48,)"
 
 minotaur="2.+" # https://github.com/modrinth/minotaur
-paperweight="2.0.0-beta.21" # https://github.com/PaperMC/Paperweight
-run-paper="3.0.2" # https://github.com/jpenilla/run-task
-indra-git="4.0.0" # https://github.com/KyoriPowered/indra
+paperweight="2.0.0-beta.23" # https://github.com/PaperMC/Paperweight
+run-paper="3.1.0" # https://github.com/jpenilla/run-task
+indra-git="4.1.0" # https://github.com/KyoriPowered/indra
 shadowJar="8.3.9" # https://github.com/GradleUp/shadow
 
-adventure="5.0.0" # https://github.com/KyoriPowered/adventure
-adventureBukkit="b4bfb8a" # https://github.com/OvercastCommunity/adventure-platform
-adventureFabric="7.0.0" # https://github.com/KyoriPowered/adventure-platform-fabric
+adventure="5.2.0" # https://github.com/KyoriPowered/adventure
+adventureBukkit="ceb8ff2" # https://github.com/OvercastCommunity/adventure-platform
+adventureFabric="7.2.0" # https://github.com/KyoriPowered/adventure-platform-fabric
 
-cloud="2.0.0" # https://github.com/incendo/cloud
-cloud-minecraft="2.0.0-SNAPSHOT" # https://github.com/Incendo/cloud-minecraft
-cloud-minecraft-modded="2.0.0-SNAPSHOT" # https://github.com/Incendo/cloud-minecraft-modded
+cloud="2.1.0" # https://github.com/incendo/cloud
+cloud-minecraft="2.0.1" # https://github.com/Incendo/cloud-minecraft
+cloud-minecraft-modded="2.1.0" # https://github.com/Incendo/cloud-minecraft-modded
 cloud-processors="1.0.0-rc.1" # https://github.com/Incendo/cloud-processors
 
-caffeine="3.2.3" # https://github.com/ben-manes/caffeine
-gson="2.13.2" # https://github.com/google/gson
-guava="33.5.0-jre" # https://github.com/google/guava
-log4j="2.25.2" # https://github.com/apache/logging-log4j2
+caffeine="3.3.0" # https://github.com/ben-manes/caffeine
+gson="2.14.0" # https://github.com/google/gson
+guava="33.7.1-jre" # https://github.com/google/guava
+log4j="2.25.5" # https://github.com/apache/logging-log4j2
 
-bluenbt="3.5.0" # https://github.com/BlueMap-Minecraft/BlueNBT
+bluenbt="3.5.1" # https://github.com/BlueMap-Minecraft/BlueNBT
 
-lz4Java="1.11.0" # https://github.com/yawkat/lz4-java
-simpleYaml="1.8.4" # https://github.com/Carleslc/Simple-YAML
+lz4Java="1.11.3" # https://github.com/yawkat/lz4-java
+simpleYaml="1.8.5" # https://github.com/Carleslc/Simple-YAML
 slf4j="2.0.1"
-undertow="2.4.1.Final" # https://github.com/undertow-io/undertow
+undertow="2.4.3.Final" # https://github.com/undertow-io/undertow
 #xnio="3.8.8.Final"
 
 
