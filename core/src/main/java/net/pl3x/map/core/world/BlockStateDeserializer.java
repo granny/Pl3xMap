@@ -35,6 +35,9 @@ public class BlockStateDeserializer implements TypeDeserializer<BlockState> {
 
     @Override
     public BlockState read(NBTReader reader) throws IOException {
+        if (reader.peek() == TagType.STRING)
+            return new BlockState(Key.parse(reader.nextString()));
+
         reader.beginCompound();
 
         String id = null;
@@ -42,8 +45,8 @@ public class BlockStateDeserializer implements TypeDeserializer<BlockState> {
 
         while (reader.hasNext()) {
             switch (reader.name()) {
-                case "Name" -> id = reader.nextString();
-                case "Properties" -> {
+                case "id", "Name", "" -> id = reader.nextString();
+                case "properties", "Properties" -> {
                     properties = new LinkedHashMap<>();
                     reader.beginCompound();
                     while (reader.hasNext())
