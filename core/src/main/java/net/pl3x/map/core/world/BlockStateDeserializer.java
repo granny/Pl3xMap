@@ -37,7 +37,7 @@ public class BlockStateDeserializer implements TypeDeserializer<BlockState> {
     @Override
     public BlockState read(NBTReader reader) throws IOException {
         if (reader.peek() == TagType.STRING)
-            return new BlockState(Key.parse(reader.nextString()));
+            return new BlockState(Pl3xMap.api().getBlockRegistry().getOrDefault(reader.nextString(), Blocks.AIR));
 
         reader.beginCompound();
 
