@@ -289,18 +289,18 @@ public class Colors {
             return getWaterColor(region, biome, x, z);
         }
         String key = blockstate.getBlock().getKey();
+        int age = Math.max(blockstate.getAge(), 0);
         if (key.equals("minecraft:melon_stem") || key.equals("minecraft:pumpkin_stem")) {
-            int age = blockstate.getAge();
-            return rgb(age << 5, 0xFF - (age << 3), age << 2);
+            return rgb((int) age << 5, 0xFF - ((int) age << 3), (int) age << 2);
         }
         if (key.equals("minecraft:wheat")) {
-            return lerpRGB(0x007C00, 0xDCBB65, (blockstate.getAge() + 1) / 8F);
+            return lerpRGB(0x007C00, 0xDCBB65, (age + 1) / 8F);
         }
         if (key.equals("minecraft:redstone_wire")) {
             return Pl3xMap.api().getColorForPower(blockstate.getPower());
         }
         if (key.equals("minecraft:cocoa")) {
-            return switch (blockstate.getAge()) {
+            return switch (age) {
                 case 0 -> 0x6A682E;
                 case 1 -> 0x654721;
                 default -> 0x703715;
