@@ -55,6 +55,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -223,7 +224,7 @@ public class Pl3xMapFabricServer extends Pl3xMap implements DedicatedServerModIn
 
     @Override
     public int getColorForPower(byte power) {
-        return RedstoneWireBlock.getColorForPower(power);
+        return RedstoneWireBlock.getColorForPower(Mth.clamp(power, 0, 15));
     }
 
     private List<Feature> getBoneMealFeatures(Biome biome) {
