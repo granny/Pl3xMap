@@ -1188,7 +1188,7 @@ public class Blocks {
     public static final Block COPPER_LANTERN = register(new Block(1146, "minecraft:copper_lantern", 0x9E6C4C));
     public static final Block EXPOSED_COPPER_LANTERN = register(new Block(1147, "minecraft:exposed_copper_lantern", 0x948369));
     public static final Block WEATHERED_COPPER_LANTERN = register(new Block(1148, "minecraft:weathered_copper_lantern", 0x608664));
-    public static final Block OXIDIZED_COPPER_LANTERN = register(new Block(11349, "minecraft:oxidized_copper_lantern", 0x4E8B6F));
+    public static final Block OXIDIZED_COPPER_LANTERN = register(new Block(1149, "minecraft:oxidized_copper_lantern", 0x4E8B6F));
     public static final Block WAXED_COPPER_LANTERN = register(new Block(1150, "minecraft:waxed_copper_lantern", 0x9E6C4C));
     public static final Block WAXED_EXPOSED_COPPER_LANTERN = register(new Block(1151, "minecraft:waxed_exposed_copper_lantern", 0x948369));
     public static final Block WAXED_WEATHERED_COPPER_LANTERN = register(new Block(1152, "minecraft:waxed_weathered_copper_lantern", 0x608664));
