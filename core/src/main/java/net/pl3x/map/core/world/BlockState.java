@@ -35,15 +35,15 @@ public class BlockState {
 
     public BlockState(Block block) {
         this.block = block;
-        this.age = this.moisture = this.power = -1;
+        this.age = this.moisture = this.power = 0;
     }
 
     public BlockState(Block block, Map<String, String> properties) {
         this.block = block;
 
-        byte age = -1;
-        byte moisture = -1;
-        byte power = -1;
+        byte age = 0;
+        byte moisture = 0;
+        byte power = 0;
 
         if (!properties.isEmpty()) {
             String ageProperty = properties.get("age");
