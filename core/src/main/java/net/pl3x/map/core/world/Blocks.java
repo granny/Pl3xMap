@@ -1242,8 +1242,6 @@ public class Blocks {
     public static final Block CHISELED_SULFUR = register(new Block(1196, "minecraft:chiseled_sulfur", 0xBCAA5B));
     public static final Block SULFUR_BRICK_WALL = register(new Block(1197, "minecraft:sulfur_brick_wall", 0xBBA85B));
 
-    public static final Block BLACK_CONCRETE_SLAB = register(new Block(1196, "minecraft:black_concrete_slab", 0x080A0F));
-    public static final Block BLACK_CONCRETE_STAIRS = register(new Block(1197, "minecraft:black_concrete_stairs", 0x080A0F));
     public static final Block BLACK_WOOL_SLAB = register(new Block(1198, "minecraft:black_wool_slab", 0x141519));
     public static final Block BLACK_WOOL_STAIRS = register(new Block(1199, "minecraft:black_wool_stairs", 0x141519));
     public static final Block BLUE_CONCRETE_SLAB = register(new Block(1200, "minecraft:blue_concrete_slab", 0x2C2E8F));
@@ -1332,6 +1330,8 @@ public class Blocks {
     public static final Block YELLOW_WOOL_SLAB = register(new Block(1283, "minecraft:yellow_wool_slab", 0xF8C527));
     public static final Block YELLOW_WOOL_STAIRS = register(new Block(1284, "minecraft:yellow_wool_stairs", 0xF8C527));
     public static final Block LIME_CONCRETE_SLAB = register(new Block(1285, "minecraft:lime_concrete_slab", 0x5EA818));
+    public static final Block BLACK_CONCRETE_SLAB = register(new Block(1286, "minecraft:black_concrete_slab", 0x080A0F));
+    public static final Block BLACK_CONCRETE_STAIRS = register(new Block(1287, "minecraft:black_concrete_stairs", 0x080A0F));
 
     private static Block register(Block block) {
         blocks.put(block.getKey(), block);
