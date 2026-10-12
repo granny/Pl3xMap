@@ -142,6 +142,11 @@ public class FabricPlayer extends Player {
     }
 
     @Override
+    public boolean canBeHidden() {
+        return true; // TODO: make this customizable on fabric.. maybe directly integrate with LuckPerms?
+    }
+
+    @Override
     public boolean isPersistentlyHidden() {
         return ((AccessServerPlayer) getPlayer()).pl3xMap$isHidden();
     }

@@ -95,7 +95,7 @@ public class PlayersLayer extends WorldLayer {
     public Collection<Marker<?>> getMarkers() {
         Set<Marker<?>> icons = new HashSet<>();
         getWorld().getPlayers().forEach(player -> {
-            if (player.isHidden()) {
+            if (player.canBeHidden() && player.isHidden()) {
                 return;
             }
             if (player.isNPC()) {

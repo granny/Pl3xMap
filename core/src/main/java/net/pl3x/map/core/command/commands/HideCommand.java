@@ -62,6 +62,12 @@ public class HideCommand extends Pl3xMapCommand {
             return;
         }
 
+        if (!player.canBeHidden()) {
+            sender.sendMessage(Lang.PLAYER_CANNOT_BE_HIDDEN_OR_SHOWN,
+                    Placeholder.unparsed("player", player.getName()));
+            return;
+        }
+
         if (player.isHidden()) {
             sender.sendMessage(Lang.COMMAND_HIDE_ALREADY_HIDDEN,
                     Placeholder.unparsed("player", player.getName()));
