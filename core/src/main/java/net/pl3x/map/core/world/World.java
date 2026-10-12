@@ -71,6 +71,8 @@ import org.jspecify.annotations.Nullable;
 public abstract class World extends Keyed {
     public static final PathMatcher JSON_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.json");
     public static final PathMatcher MCA_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*.mca");
+    // NEW: matcher for Luminol/EarthMe "BLinear v3" region files.
+    public static final PathMatcher BLINEAR_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/r.*.*." + BLinearV3Region.FILE_SUFFIX.substring(1));
     public static final PathMatcher PNG_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*_*.png");
 
     private final Path customMarkersDirectory;
@@ -365,7 +367,8 @@ public abstract class World extends Keyed {
             return Collections.emptySet();
         }
         try (Stream<Path> stream = Files.list(getRegionDirectory())) {
-            return stream.filter(MCA_MATCHER::matches).toList();
+            // NEW: also accept .b_linear (BLinear v3) region files alongside .mca
+            return stream.filter(p -> MCA_MATCHER.matches(p) || BLINEAR_MATCHER.matches(p)).toList();
         } catch (IOException e) {
             throw new RuntimeException("Failed to list region files in directory '" + getRegionDirectory().toAbsolutePath() + "'", e);
         }
@@ -389,11 +392,36 @@ public abstract class World extends Keyed {
     private Region loadRegion(long pos) {
         int x = Mathf.longToX(pos);
         int z = Mathf.longToZ(pos);
-        return new Region(this, x, z, getMCAFile(x, z));
+        return new Region(this, x, z, resolveRegionFile(x, z));
+    }
+
+    /**
+     * NEW: resolves the on-disk region file for the given coordinates.
+     * Prefers the classic Anvil ".mca" file (preserves 100% original behavior
+     * when only .mca files exist), and falls back to the BLinear-v3 ".b_linear"
+     * file if that's what's present instead.
+     */
+    private Path resolveRegionFile(int regionX, int regionZ) {
+        Path mcaFile = getMCAFile(regionX, regionZ);
+        if (Files.exists(mcaFile)) {
+            return mcaFile;
+        }
+        Path blinearFile = getBLinearFile(regionX, regionZ);
+        if (Files.exists(blinearFile)) {
+            return blinearFile;
+        }
+        // preserves original behavior: Region will report an empty/non-existent
+        // file and every chunk will resolve to EmptyChunk, exactly as before.
+        return mcaFile;
     }
 
     private Path getMCAFile(int regionX, int regionZ) {
         return getRegionDirectory().resolve("r." + regionX + "." + regionZ + ".mca");
+    }
+
+    // NEW
+    private Path getBLinearFile(int regionX, int regionZ) {
+        return getRegionDirectory().resolve("r." + regionX + "." + regionZ + BLinearV3Region.FILE_SUFFIX);
     }
 
     @Override
