@@ -1188,7 +1188,7 @@ public class Blocks {
     public static final Block COPPER_LANTERN = register(new Block(1146, "minecraft:copper_lantern", 0x9E6C4C));
     public static final Block EXPOSED_COPPER_LANTERN = register(new Block(1147, "minecraft:exposed_copper_lantern", 0x948369));
     public static final Block WEATHERED_COPPER_LANTERN = register(new Block(1148, "minecraft:weathered_copper_lantern", 0x608664));
-    public static final Block OXIDIZED_COPPER_LANTERN = register(new Block(11349, "minecraft:oxidized_copper_lantern", 0x4E8B6F));
+    public static final Block OXIDIZED_COPPER_LANTERN = register(new Block(1149, "minecraft:oxidized_copper_lantern", 0x4E8B6F));
     public static final Block WAXED_COPPER_LANTERN = register(new Block(1150, "minecraft:waxed_copper_lantern", 0x9E6C4C));
     public static final Block WAXED_EXPOSED_COPPER_LANTERN = register(new Block(1151, "minecraft:waxed_exposed_copper_lantern", 0x948369));
     public static final Block WAXED_WEATHERED_COPPER_LANTERN = register(new Block(1152, "minecraft:waxed_weathered_copper_lantern", 0x608664));
@@ -1239,8 +1239,8 @@ public class Blocks {
     public static final Block SULFUR_BRICK_SLAB = register(new Block(1193, "minecraft:sulfur_brick_slab", 0xBBA85B));
     public static final Block SULFUR_BRICK_STAIRS = register(new Block(1194, "minecraft:sulfur_brick_stairs", 0xBBA85B));
     public static final Block SULFUR_SPIKE = register(new Block(1195, "minecraft:sulfur_spike", 0xB8AB5F));
-    public static final Block CHISELED_SULFUR = register(new Block(1195, "minecraft:chiseled_sulfur", 0xBCAA5B));
-    public static final Block SULFUR_BRICK_WALL = register(new Block(1195, "minecraft:sulfur_brick_wall", 0xBBA85B));
+    public static final Block CHISELED_SULFUR = register(new Block(1196, "minecraft:chiseled_sulfur", 0xBCAA5B));
+    public static final Block SULFUR_BRICK_WALL = register(new Block(1197, "minecraft:sulfur_brick_wall", 0xBBA85B));
 
     public static final Block BLACK_CONCRETE_SLAB = register(new Block(1196, "minecraft:black_concrete_slab", 0x080A0F));
     public static final Block BLACK_CONCRETE_STAIRS = register(new Block(1197, "minecraft:black_concrete_stairs", 0x080A0F));
