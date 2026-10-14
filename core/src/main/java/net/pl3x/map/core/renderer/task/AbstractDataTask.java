@@ -53,6 +53,7 @@ public abstract class AbstractDataTask extends Task {
 
     protected final World world;
     protected final Map<String, Long> lastUpdated = new HashMap<>();
+    protected final Map<String, Long> lastHashCode = new HashMap<>();
     protected final ExecutorService executor;
     protected final String executorName;
 
