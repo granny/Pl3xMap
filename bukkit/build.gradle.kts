@@ -62,7 +62,7 @@ tasks {
             modrinth("chunky", "MdY6JATr")
 
             // https://luckperms.net/download
-            url("https://download.luckperms.net/1664/bukkit/loader/LuckPerms-Bukkit-5.5.77.jar")
+            url("https://download.luckperms.net/1674/bukkit/loader/LuckPerms-Bukkit-5.5.87.jar")
         }
     }
 
